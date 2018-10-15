@@ -1,0 +1,13 @@
+{
+  "name": "energy-sharing",
+  "version": "0.0.1",
+  "description": "Front end implementation of energy-sharing ui",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "electron": "^3.0.4"
+  }
+}
