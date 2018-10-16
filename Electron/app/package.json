@@ -1,6 +1,6 @@
 {
   "name": "energy-sharing",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Front end implementation of energy-sharing project",
   "main": "main.js",
   "scripts": {
