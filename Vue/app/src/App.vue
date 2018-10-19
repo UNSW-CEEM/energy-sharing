@@ -1,11 +1,18 @@
 <template>
     <div id="app">
-        <h1>Hello</h1>
+        <h1>Energy Sharing</h1>
+        <TopNavBar/>
+        <router-view/>
     </div>
 </template>
 
 <script>
+    import TopNavBar from './pages/TopNavBar'
     export default {
+        name: 'app',
+        components: {
+            TopNavBar
+        },
         data () {
             return  {
 
