@@ -3,20 +3,19 @@
         <h1>This View is named {{ view_name }}</h1>
         <ul>
             <li
-                v-for="ex in examples"
-                :key="ex.id">
-                <span class="name">{{ ex.name }}</span>
-            </li>
-            <li
                 v-for="ex in examplesGetter"
                 :key="ex.id">
-                <span class="name">{{ ex.name }}</span>
+                <span class="name">{{ ex.name }}, ${{ ex.price }}</span>
             </li>
+            <button v-on:click="reducePrice(10)">Reduce Price</button>
         </ul>
     </div>
 </template>
 
 <script>
+    import { mapActions } from 'vuex';
+    import { mapGetters } from 'vuex';
+
     export default {
         name: "Model",
         data () {
@@ -28,9 +27,14 @@
             examples() {
                 return this.$store.state.examples;
             },
-            examplesGetter() {
-                return this.$store.getters.examplesGetter;
-            }
+            ...mapGetters([
+                'examplesGetter',
+            ])
+        },
+        methods: {
+            ...mapActions([
+                'reducePrice'
+            ])
         }
     }
 </script>

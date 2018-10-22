@@ -5,7 +5,7 @@
             <li
                 v-for="ex in examples"
                 :key="ex.id">
-                <span class="name">{{ ex.name }}</span>
+                <span class="name">{{ ex.name }}, ${{ ex.price }}</span>
             </li>
         </ul>
     </div>
