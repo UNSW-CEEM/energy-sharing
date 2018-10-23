@@ -1,8 +1,8 @@
 <template>
-    <div>
+    <div class="content">
         <h1>Contact Us</h1>
         <p>
-            <ul>
+            <ul class="noBullets">
                     <li>Email: {{email}}</li>
                     <li>Website: {{web}}</li>
             </ul>
@@ -23,5 +23,8 @@
 </script>
 
 <style scoped>
+    .noBullets {
+        list-style: none;
+    }
 
 </style>

@@ -38,11 +38,40 @@ export default new Router({
             name: 'inputs',
             component: Inputs
         },
-
         {
             path: '/model',
             name: 'model',
             component: () => import(/* webpackChunkName: "model" */ './pages/inputs/Model.vue')
+        },
+        {
+            path: '/central_battery',
+            name: 'central_battery',
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/CentralBattery.vue')
+        },
+        {
+            path: '/central_solar',
+            name: 'central_solar',
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/CentralSolar.vue')
+        },
+        {
+            path: '/financing',
+            name: 'financing',
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/Financing.vue')
+        },
+        {
+            path: '/participants',
+            name: 'participants',
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/Participants.vue')
+        },
+        {
+            path: '/review',
+            name: 'review',
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/Review.vue')
+        },
+        {
+            path: '/tariffs',
+            name: 'tariffs',
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/Tariffs.vue')
         },
     ]
 })

@@ -1,20 +1,20 @@
 <template>
     <div>
-        <h2>Nav Bar</h2>
-        <nav>
+        <span>
+            <p>Energy Sharing</p>
             <router-link
-                class="spacing"
-                v-for="routes in links"
-                v-bind:key="routes.id"
-                :to="`${routes.page}`">{{ routes.text }}</router-link>
-        </nav>
+                    class="spacing"
+                    v-for="routes in links"
+                    v-bind:key="routes.id"
+                    :to="`${routes.page}`">{{ routes.text }}</router-link>
+        </span>
     </div>
 </template>
 
 <script>
     export default {
         name: "TopNavBar",
-        data () {
+        data() {
             return {
                 links: [
                     {
@@ -32,16 +32,6 @@
                         text: 'Contact',
                         page: '/contact'
                     },
-                    {
-                        id: 3,
-                        text: 'Data',
-                        page: '/data'
-                    },
-                    {
-                        id: 4,
-                        text: 'Model',
-                        page: '/model'
-                    }
                 ]
             }
         }
