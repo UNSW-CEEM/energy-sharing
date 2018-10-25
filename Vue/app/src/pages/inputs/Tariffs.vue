@@ -2,18 +2,7 @@
     <div>
         <h1>{{ view_name }}</h1>
         <form>
-            <input v-model="inputOne">
-            <input v-model="inputTwo">
         </form>
-        <br>
-        <ul class="noBullets">
-            <li>
-                <span>{{inputOne}}</span>
-            </li>
-            <li>
-                <span>{{inputTwo}}</span>
-            </li>
-        </ul>
     </div>
 </template>
 

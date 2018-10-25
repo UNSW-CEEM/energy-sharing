@@ -15,24 +15,36 @@ export const store = new Vuex.Store({
             { id: 4, name: "Example 4", price: 80 },
         ],
 
-        example_inputs: [
-            {
-                id: 0,
-                class:"text_input",
-                type:"text",
-                placeholder:"FROM STORE",
-                data_model:"this_title",
-                value: ""
+        saved_data: {
+            model: {
+                simulation:"",
+                network_type: "",
             },
-            {
-                id: 1,
-                class:"text_input",
-                type:"text",
-                placeholder:"ALSO FROM STORE",
-                data_model:"another_title",
-                value: ""
+            data: {
+
             },
-        ],
+            participants: {
+
+            },
+            tariffs: {
+
+            },
+            central_solar: {
+                data_source: "",
+                sharing_algorithm: "",
+            }
+        },
+
+        inputs_data: {
+            central_solar: {
+                data_source: [
+                    {id: 0, name: "data0.csv", link: ""},
+                    {id: 1, name: "data1.csv", link: ""},
+                    {id: 2, name: "data2.csv", link: ""},
+                    {id: 3, name: "data3.csv", link: ""},
+                ]
+            }
+        },
     },
 
     getters: {
