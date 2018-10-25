@@ -16,6 +16,9 @@ export const store = new Vuex.Store({
         ],
 
         saved_data: {
+            default_value: {
+                default_value: ""
+            },
             model: {
                 simulation:"",
                 network_type: "",
@@ -36,6 +39,9 @@ export const store = new Vuex.Store({
         },
 
         inputs_data: {
+            default_value: {
+                default_value: ""
+            },
             central_solar: {
                 data_source: [
                     {id: 0, name: "data0.csv", link: ""},

@@ -18,8 +18,7 @@
         },
         computed: {
             ...mapFields({
-                inputOne: 'example_inputs[0].value',
-                inputTwo: 'example_inputs[1].value',
+
             }),
         },
         methods: {
