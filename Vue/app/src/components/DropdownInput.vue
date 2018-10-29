@@ -13,6 +13,7 @@
 </template>
 
 <script>
+    import { required } from 'vuelidate/lib/validators'
 
     export default {
         name: "DropdownInput",
@@ -55,6 +56,12 @@
         methods: {
 
         },
+
+        validations: {
+            output_field: {
+                required,
+            }
+        }
     }
 </script>
 
