@@ -18,7 +18,6 @@
 
 <script>
     import { mapActions, mapGetters } from 'vuex';
-    import { mapFields } from 'vuex-map-fields';
 
     export default {
         name: "Model",
@@ -28,10 +27,7 @@
             }
         },
         computed: {
-            ...mapFields({
-                simulation: 'saved_data.model.simulation',
-                network_type: 'saved_data.model.network_type',
-            }),
+
         },
         methods: {
 

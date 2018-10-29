@@ -30,7 +30,6 @@
 </template>
 
 <script>
-    import { mapFields } from 'vuex-map-fields';
 
     export default {
         name: "CentralSolar",
@@ -41,11 +40,7 @@
             }
         },
         computed: {
-            ...mapFields({
-                sharing_algorithm: 'saved_data.central_solar.sharing_algorithm',
-                data_source: 'saved_data.central_solar.data_source',
-                input_data_source: 'inputs_data.central_solar.data_source',
-            }),
+
         },
         methods: {
 

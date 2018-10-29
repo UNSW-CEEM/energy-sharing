@@ -3,9 +3,12 @@
     <div>
         <h1>{{ view_name }}</h1>
         <DropdownInput
-            child_store="data_source"
-            parent_store="central_solar" />
-            <!--placeholder="Select your data source" -->
+            field_name="dispatch_algorithm"
+            input_page="central_battery"
+            placeholder="Select your data source" />
+        <DropdownInput
+            field_name="data_source"
+            input_page="central_solar"/>
     </div>
 </template>
 
@@ -14,7 +17,6 @@
 
     export default {
         name: "CentralBattery",
-
         components: {
           DropdownInput
         },

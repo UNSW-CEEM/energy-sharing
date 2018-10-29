@@ -1,51 +1,60 @@
 <template>
     <div>
-        <h1>{{ child_store }}</h1>
         <select v-model="output_field">
-            <option value="" disabled selected hidden>{{ this_placeholder }}</option>
+            <option value="" disabled selected hidden>{{ placeholder }}</option>
             <option
-                v-for="source in input_fields"
-                :key="source.id"
-                :value="source.name">
-                {{ source.name }}
+                v-for="input in input_fields"
+                :key="input.id"
+                :value="input.name">
+                {{ input.name }}
             </option>
         </select>
     </div>
 </template>
 
 <script>
-    import { mapFields } from 'vuex-map-fields';
 
     export default {
         name: "DropdownInput",
         props: {
-            child_store: {
+            field_name: {
                 default: "default_value"
             },
-            parent_store: {
+            input_page: {
                 default: "default_value"
             },
             placeholder: {
-                default: "default_value"
+                default: "Override your placeholder"
             }
         },
 
         data() {
             return {
                 this_name: this.$options.name,
-                // I think these are pointless
-                this_parent_store: this.parent_store,
-                this_child_store: this.child_store,
-                this_placeholder: this.placeholder,
+                input_fields: this.$store.state.input_data[this.input_page][this.field_name]
             }
         },
+
         computed: {
-            ...mapFields({
-                // input_fields: 'inputs_data.central_solar.data_source',
-                input_fields: ["inputs_data", this.parent_store, this.child_store].join('.'),
-                output_field: 'saved_data.central_solar.data_source',
-            })
-        }
+            output_field: {
+                get () {
+                    return this.$store.state.output_data[this.input_page][this.field_name]
+                },
+
+                set(value) {
+                    let payload = {
+                        value: value,
+                        input_page: this.input_page,
+                        field_name: this.field_name,
+                    };
+                    this.$store.commit('setValue', payload)
+                }
+            }
+        },
+
+        methods: {
+
+        },
     }
 </script>
 
