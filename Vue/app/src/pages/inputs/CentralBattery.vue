@@ -9,16 +9,21 @@
         <DropdownInput
             field_name="data_source"
             input_page="central_solar"/>
+        <NumberInput
+        field_name="capacity"
+        input_page="central_battery"/>
     </div>
 </template>
 
 <script>
     import DropdownInput from '@/components/DropdownInput.vue';
+    import NumberInput from '@/components/NumberInput.vue';
 
     export default {
         name: "CentralBattery",
         components: {
-          DropdownInput
+            DropdownInput,
+            NumberInput,
         },
 
         data () {

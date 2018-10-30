@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex);
 
+// This is largely (completely?) static and fills outs drop downs etc.
 const input_data = {
     namespaced: true,
     state: {
@@ -28,6 +29,7 @@ const input_data = {
     }
 };
 
+// This is output/saved data that will be sent to the python/remote server.
 const output_data = {
     state: {
         default_value: {
@@ -51,7 +53,8 @@ const output_data = {
             sharing_algorithm: "",
         },
         central_battery: {
-            dispatch_algorithm: ""
+            dispatch_algorithm: "",
+            capacity: "",
         }
     },
 }
