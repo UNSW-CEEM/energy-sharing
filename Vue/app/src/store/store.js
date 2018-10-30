@@ -77,18 +77,7 @@ export const store = new Vuex.Store({
         setValue (state, payload) {
             state.output_data[payload.input_page][payload.field_name] = payload.value
         },
-
-        // reducePrice: (state, payload) => {
-        //     state.examples.forEach( example => {
-        //         example.price -= payload;
-        //     });
-        // },
     },
-    // actions: {
-    //     reducePrice: (context, payload) => {
-    //         context.commit('reducePrice', payload)
-    //     }
-    // }
 });
 
 

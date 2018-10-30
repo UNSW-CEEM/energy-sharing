@@ -73,5 +73,10 @@ export default new Router({
             name: 'tariffs',
             component: () => import(/* webpackChunkName: "model" */ './pages/inputs/Tariffs.vue')
         },
+        {
+            path: '/sockets_tester',
+            name: 'sockets_tester',
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/SocketsTester.vue')
+        },
     ]
 })

@@ -50,6 +50,11 @@
                         text: 'Review',
                         page: 'review'
                     },
+                    {
+                        id: 8,
+                        text: 'Sockets',
+                        page: '/sockets_tester'
+                    }
                 ]
             }
         }
