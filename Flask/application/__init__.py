@@ -10,7 +10,7 @@ socketio = SocketIO(app, async_mode=async_mode)
 thread = None
 thread_lock = Lock()
 
-from .endpoints.sockets import SocketsJSON
+from .endpoints.io_api import SocketsJSON
 
 
 @app.route('/')
