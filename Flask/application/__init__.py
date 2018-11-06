@@ -10,6 +10,8 @@ socketio = SocketIO(app, async_mode=async_mode)
 thread = None
 thread_lock = Lock()
 
+from .endpoints.sockets import SocketsJSON
+
 
 @app.route('/')
 def index():
@@ -23,7 +25,10 @@ def handle_message(message):
 
 @socketio.on('pingServer')
 def handle_message(message):
+    response_message = "PONG!"
     print('received message: ' + message)
+    emit('messageChannel', response_message)
+    print('Sent message', response_message)
 
 
 @socketio.on('connect')
@@ -35,6 +40,13 @@ def test_connect():
 @socketio.on('disconnect')
 def test_disconnect():
     print('Client disconnected')
+
+
+@socketio.on('exampleJSON')
+def test_example_json(this_json):
+    print('JSON Parse Attempted')
+    print(this_json)
+    SocketsJSON().parse(this_json)
 
 
 if __name__ == 'main':

@@ -14,49 +14,63 @@
         name: "SideNavBar",
         data () {
             return {
+                // TODO I think these links should be moved to the state. And retrieved from there.
                 links: [
                     {
                         id: 0,
                         text: 'Model',
-                        page: '/model'
+                        page: '/model',
+                        storage_key: "model"
                     },
                     {
                         id: 1,
                         text: 'Data',
-                        page: '/data'
+                        page: '/data',
+                        storage_key: "data"
                     },
                     {
                         id: 2,
                         text: 'Participants',
-                        page: '/participants'
+                        page: '/participants',
+                        storage_key: "participants"
                     },{
                         id: 3,
                         text: 'Tariffs',
-                        page: '/tariffs'
+                        page: '/tariffs',
+                        storage_key: "tariffs"
                     },{
                         id: 4,
                         text: 'Central Solar',
-                        page: '/central_solar'
+                        page: '/central_solar',
+                        storage_key: "central_solar"
                     },{
                         id: 5,
                         text: 'Central Battery',
-                        page: '/central_battery'
+                        page: '/central_battery',
+                        storage_key: "central_battery"
                     },{
                         id: 6,
                         text: 'Financing',
-                        page: '/financing'
+                        page: '/financing',
+                        storage_key: "financing"
                     },{
                         id: 7,
                         text: 'Review',
-                        page: 'review'
+                        page: 'review',
+                        storage_key: "review"
                     },
                     {
                         id: 8,
                         text: 'Sockets',
-                        page: '/sockets_tester'
+                        page: '/sockets_tester',
+                        storage_key: "sockets_tester"
                     }
                 ]
             }
+        },
+
+        methods: {
+        //    TODO: Add a method that returns the number of pages that are marked as complete.
         }
     }
 </script>

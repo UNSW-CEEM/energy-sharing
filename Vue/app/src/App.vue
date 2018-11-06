@@ -4,11 +4,7 @@
             <TopNavBar class="topnav"/>
             <SideNavBar class="sidenav"/>
             <router-view class="main"/>
-
-            <div class="footer">
-                <h4>This Is My Footer</h4>
-            </div>
-
+            <ModelFooter class="footer"/>
         </div>
     </div>
 </template>
@@ -16,9 +12,11 @@
 <script>
     import SideNavBar from './pages/SideNavBar';
     import TopNavBar from './pages/TopNavBar';
+    import ModelFooter from './pages/ModelFooter';
     export default {
         name: 'app',
         components: {
+            ModelFooter,
             SideNavBar,
             TopNavBar
         },
