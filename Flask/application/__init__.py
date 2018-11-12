@@ -1,6 +1,7 @@
 from threading import Lock
 from flask import Flask, render_template, session, request
 from flask_socketio import SocketIO, emit, rooms, disconnect, join_room, leave_room, close_room
+from .endpoints.io_api import SocketsJSON
 
 async_mode = None
 
@@ -9,8 +10,6 @@ app.config['SECRET_KEY'] = 'pleasedonthackme'
 socketio = SocketIO(app, async_mode=async_mode)
 thread = None
 thread_lock = Lock()
-
-from .endpoints.io_api import SocketsJSON
 
 
 @app.route('/')
@@ -45,7 +44,6 @@ def test_disconnect():
 @socketio.on('exampleJSON')
 def test_example_json(this_json):
     print('JSON Parse Attempted')
-    print(this_json)
     SocketsJSON().parse(this_json)
 
 
