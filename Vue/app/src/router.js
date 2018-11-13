@@ -31,7 +31,7 @@ export default new Router({
         {
             path: '/data',
             name: 'data',
-            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/Data.vue')
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelData.vue')
         },
         {
             path: '/inputs',
@@ -41,37 +41,37 @@ export default new Router({
         {
             path: '/model',
             name: 'model',
-            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/Model.vue')
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelType.vue')
         },
         {
             path: '/central_battery',
             name: 'central_battery',
-            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/CentralBattery.vue')
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelBattery.vue')
         },
         {
             path: '/central_solar',
             name: 'central_solar',
-            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/CentralSolar.vue')
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelSolar.vue')
         },
         {
             path: '/financing',
             name: 'financing',
-            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/Financing.vue')
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelFinancing.vue')
         },
         {
             path: '/participants',
             name: 'participants',
-            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/Participants.vue')
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelParticipants.vue')
         },
         {
             path: '/review',
             name: 'review',
-            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/Review.vue')
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelReview.vue')
         },
         {
             path: '/tariffs',
             name: 'tariffs',
-            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/Tariffs.vue')
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelTariffs.vue')
         },
         {
             path: '/sockets_tester',
