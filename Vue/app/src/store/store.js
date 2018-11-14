@@ -71,18 +71,18 @@ const output_data = {
         },
         model_finance: {
             table_rows: [
-                // {
-                //     id: 0,
-                //     inputs: [
-                //         {id: 0, name: "comp", tag: "button"},
-                //         {id: 1, name: "capex", tag: "button"},
-                //         {id: 2, name: "whopays", tag: "button"},
-                //         {id: 3, name: "Discount Rate", tag: "button"},
-                //         {id: 4, name: "Amortization", tag: "button"},
-                //         {id: 5, name: "OPEX", tag: "button"},
-                //         {id: 6, name: "Who Pays", tag: "button"},
-                //     ]
-                // },
+                {
+                    id: 0,
+                    inputs: [
+                            {id: 0, text: "Comp", name: "comp", tag: "NumberInput"},
+                            {id: 1, text: "CAP", name: "capex", tag: "NumberInput"},
+                            {id: 2, text: "CAP PAY", name: "capex_payer", tag: "TableDropdownInput"},
+                            {id: 3, text: "DISC RAT", name: "discount_rate", tag: "NumberInput"},
+                            {id: 4, text: "AMORT", name: "amortization", tag: "NumberInput"},
+                            {id: 5, text: "OPEX", name: "opex", tag: "NumberInput"},
+                            {id: 6, text: "OP PAY", name: "opex_payer", tag: "TableDropdownInput"},
+                        ]
+                },
             ]
         }
     },
@@ -124,6 +124,10 @@ export const store = new Vuex.Store({
     mutations: {
         setValue (state, payload) {
             state.output_data[payload.input_page][payload.field_name] = payload.value
+        },
+
+        setTableDropdown (state, payload) {
+            state.output_data[payload.input_page][payload.array_name][payload.row_index][payload.field_name] = payload.value
         },
 
         addRow(state, payload) {

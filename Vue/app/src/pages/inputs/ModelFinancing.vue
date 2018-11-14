@@ -1,6 +1,7 @@
 <template>
     <div>
         <h1>{{ view_name }}</h1>
+        <p>{{ this_parent }}</p>
         <table>
             <tr>
                 <th
@@ -14,7 +15,12 @@
                 <td
                     v-for="input in row.inputs"
                     :key="input.id"
-                    :is="input.tag">{{ input.name }}</td>
+                    :is="input.tag"
+                    :placeholder="input.name"
+                    :field_name="input.name"
+                    :input_page="model_name"
+                    :array_name="'table_rows'"
+                    :row_index="row.id">{{ input.text }}</td>
             </tr>
             <button @click="add_row()">Add Row</button>
         </table>
@@ -22,20 +28,22 @@
 </template>
 
 <script>
-    import DropdownInput from '@/components/DropdownInput.vue';
+    import TableDropdownInput from '@/components/TableDropdownInput.vue';
     import NumberInput from '@/components/NumberInput.vue';
 
     export default {
         name: "Financing",
 
         components: {
-            DropdownInput,
+            TableDropdownInput,
             NumberInput,
         },
 
         data () {
             return {
                 view_name: this.$options.name,
+                this_parent: this.$parent.$options.name,
+                model_name: "model_finance",
                 table_headers: this.$store.state.input_data["model_finance"]["table_headers"],
             }
         },
@@ -52,14 +60,15 @@
             add_row() {
                 let payload = {
                     row: {
+                        row_id: 0,
                         inputs: [
-                            {id: 0, name: "comp", tag: "NumberInput"},
-                            {id: 1, name: "capex", tag: "NumberInput"},
-                            {id: 2, name: "whopays", tag: "DropdownInput"},
-                            {id: 3, name: "Discount Rate", tag: "NumberInput"},
-                            {id: 4, name: "Amortization", tag: "NumberInput"},
-                            {id: 5, name: "OPEX", tag: "NumberInput"},
-                            {id: 6, name: "Who Pays", tag: "DropdownInput"},
+                            {id: 0, text: "Comp", name: "comp", tag: "NumberInput"},
+                            {id: 1, text: "CAP", name: "capex", tag: "NumberInput"},
+                            {id: 2, text: "CAP PAY", name: "capex_payer", tag: "TableDropdownInput"},
+                            {id: 3, text: "DISC RAT", name: "discount_rate", tag: "NumberInput"},
+                            {id: 4, text: "AMORT", name: "amortization", tag: "NumberInput"},
+                            {id: 5, text: "OPEX", name: "opex", tag: "NumberInput"},
+                            {id: 6, text: "OP PAY", name: "opex_payer", tag: "TableDropdownInput"},
                         ]
                     },
                     input_page: "model_finance",
