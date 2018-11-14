@@ -26,6 +26,17 @@ const input_data = {
                 {id: 2, name: "algorithm 3", link: ""},
                 {id: 3, name: "algorithm 4", link: ""},
             ]
+        },
+        model_finance: {
+            table_headers: [
+                {id: 0, name: "Component"},
+                {id: 1, name: "CAPEX"},
+                {id: 2, name: "Who Pays"},
+                {id: 3, name: "Discount Rate"},
+                {id: 4, name: "Amortization"},
+                {id: 5, name: "OPEX"},
+                {id: 6, name: "Who Pays"},
+            ]
         }
     }
 };
@@ -57,6 +68,22 @@ const output_data = {
         central_battery: {
             dispatch_algorithm: "",
             capacity: "",
+        },
+        model_finance: {
+            table_rows: [
+                // {
+                //     id: 0,
+                //     inputs: [
+                //         {id: 0, name: "comp", tag: "button"},
+                //         {id: 1, name: "capex", tag: "button"},
+                //         {id: 2, name: "whopays", tag: "button"},
+                //         {id: 3, name: "Discount Rate", tag: "button"},
+                //         {id: 4, name: "Amortization", tag: "button"},
+                //         {id: 5, name: "OPEX", tag: "button"},
+                //         {id: 6, name: "Who Pays", tag: "button"},
+                //     ]
+                // },
+            ]
         }
     },
 };
@@ -97,6 +124,10 @@ export const store = new Vuex.Store({
     mutations: {
         setValue (state, payload) {
             state.output_data[payload.input_page][payload.field_name] = payload.value
+        },
+
+        addRow(state, payload) {
+            state.output_data[payload.input_page][payload.field_name].push(payload.row)
         },
     },
 });
