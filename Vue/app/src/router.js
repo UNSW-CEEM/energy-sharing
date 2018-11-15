@@ -41,7 +41,7 @@ export default new Router({
         {
             path: '/model',
             name: 'model',
-            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelType.vue')
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelSelection.vue')
         },
         {
             path: '/central_battery',
