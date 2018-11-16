@@ -8,6 +8,11 @@
                     :key="header.header_id"
                     :value="header.name">{{ header.name }}</th>
             </tr>
+            <tr>
+                <td
+                    v-for="header in table_headers"
+                    :key="header.header_id">{{ header.help_text }}</td>
+            </tr>
             <tr
                 v-for="row in table_rows"
                 :key="row.row_id">
@@ -15,11 +20,15 @@
                 :key="input.col_id"
                 >
                     <!-- If a simple input use this component.-->
-                    <SimpleNumberInput v-if="input.tag==='my_number'" v-model="input.value"/>
+                    <SimpleNumberInput
+                            v-if="input.tag==='my_number'"
+                            v-model="input.value"
+                            :my_placeholder="input.placeholder"/>
                     <!-- If a dropdown use this component.-->
                     <SimpleDropdown v-else-if="input.tag==='my_dropdown'"
                                     v-model="input.value"
-                                    :my_options="my_options[input.dropdown_key]"/>
+                                    :my_options="my_options[input.dropdown_key]"
+                                    :my_placeholder="input.placeholder"/>
                 </td>
             </tr>
             <button @click="add_row()">Add Row</button>
@@ -45,13 +54,13 @@
                 model_name: "model_finance",
 
                 table_headers: [
-                    {id: 0, name: "Component"},
-                    {id: 1, name: "CAPEX"},
-                    {id: 2, name: "Who Pays"},
-                    {id: 3, name: "Discount Rate"},
-                    {id: 4, name: "Amortization"},
-                    {id: 5, name: "OPEX"},
-                    {id: 6, name: "Who Pays"},
+                    {id: 0, name: "Component", help_text:"Name"},
+                    {id: 1, name: "CAPEX", help_text:"$"},
+                    {id: 2, name: "Who Pays", help_text:"Who"},
+                    {id: 3, name: "Discount Rate", help_text:"%"},
+                    {id: 4, name: "Amortization", help_text:"years"},
+                    {id: 5, name: "OPEX", help_text:"$"},
+                    {id: 6, name: "Who Pays", help_text:"Who"},
                 ],
 
                 table_rows: [],
@@ -83,13 +92,57 @@
                 let new_row = {
                     row_id: array_length,
                     row_inputs: [
-                        {id: 0, text: "Comp", name: "comp", tag: "my_number", value:""},
-                        {id: 1, text: "CAP", name: "capex", tag: "my_number", value:""},
-                        {id: 2, text: "CAP PAY", name: "capex_payer", tag: "my_dropdown", value:"", dropdown_key:"who_pays"},
-                        {id: 3, text: "DISC RAT", name: "discount_rate", tag: "my_number", value:""},
-                        {id: 4, text: "AMORT", name: "amortization", tag: "my_number", value:""},
-                        {id: 5, text: "OPEX", name: "opex", tag: "my_number", value:""},
-                        {id: 6, text: "OP PAY", name: "opex_payer", tag: "my_dropdown", value:"", dropdown_key:"example"},
+                        {
+                            id: 0,
+                            name: "comp",
+                            tag: "my_number",
+                            value:"",
+                            placeholder:"Name",
+                        },
+                        {
+                            id: 1,
+                            name: "capex",
+                            tag: "my_number",
+                            value:"",
+                            placeholder:"$",
+                        },
+                        {
+                            id: 2,
+                            name: "capex_payer",
+                            tag: "my_dropdown",
+                            value:"",
+                            dropdown_key:"who_pays",
+                            placeholder:"Select Payer",
+                        },
+                        {
+                            id: 3,
+                            name: "discount_rate",
+                            tag: "my_number",
+                            value:"",
+                            placeholder:"%",
+                        },
+                        {
+                            id: 4,
+                            name: "amortization",
+                            tag: "my_number",
+                            value:"",
+                            placeholder:"Years",
+                        },
+                        {
+                            id: 5,
+                            name: "opex",
+                            tag: "my_number",
+                            value:"",
+                            placeholder:"$",
+                        },
+                        {
+                            id: 6,
+                            name: "opex_payer",
+                            tag: "my_dropdown",
+                            value:"",
+                            dropdown_key:"example",
+                            placeholder:"Select Payer",
+                        },
                     ]
                 };
 

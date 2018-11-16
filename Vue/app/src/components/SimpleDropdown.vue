@@ -3,7 +3,7 @@
         <select
                 v-bind:value="value"
                 v-on:input="$emit('input', $event.target.value)">
-            <option value="" disabled selected hidden></option>
+            <option value="" disabled selected hidden>{{ my_placeholder }}</option>
             <option
                 v-for="option in my_options"
                 :value="option">
@@ -18,7 +18,7 @@
 
     export default {
         name: "DropdownInput",
-        props: ["value", "my_options"],
+        props: ["value", "my_options", "my_placeholder"],
 
         data () {
             return {
