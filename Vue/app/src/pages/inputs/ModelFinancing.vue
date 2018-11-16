@@ -19,7 +19,7 @@
                     <!-- If a dropdown use this component.-->
                     <SimpleDropdown v-else-if="input.tag==='my_dropdown'"
                                     v-model="input.value"
-                                    :my_options="my_options"/>
+                                    :my_options="my_options[input.dropdown_key]"/>
                 </td>
             </tr>
             <button @click="add_row()">Add Row</button>
@@ -57,9 +57,15 @@
                 table_rows: [],
 
                 my_options: {
-                    option_one: "Option One",
-                    option_two: "Option Two",
-                }
+                    example: {
+                        option_one: "Option One",
+                        option_two: "Option Two",
+                    },
+                    who_pays: {
+                        option_one: "Option 1",
+                        option_two: "Option 2",
+                    }
+                },
             }
         },
 
@@ -79,11 +85,11 @@
                     row_inputs: [
                         {id: 0, text: "Comp", name: "comp", tag: "my_number", value:""},
                         {id: 1, text: "CAP", name: "capex", tag: "my_number", value:""},
-                        {id: 2, text: "CAP PAY", name: "capex_payer", tag: "my_dropdown", value:""},
+                        {id: 2, text: "CAP PAY", name: "capex_payer", tag: "my_dropdown", value:"", dropdown_key:"who_pays"},
                         {id: 3, text: "DISC RAT", name: "discount_rate", tag: "my_number", value:""},
                         {id: 4, text: "AMORT", name: "amortization", tag: "my_number", value:""},
                         {id: 5, text: "OPEX", name: "opex", tag: "my_number", value:""},
-                        {id: 6, text: "OP PAY", name: "opex_payer", tag: "my_dropdown", value:""},
+                        {id: 6, text: "OP PAY", name: "opex_payer", tag: "my_dropdown", value:"", dropdown_key:"example"},
                     ]
                 };
 
