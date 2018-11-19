@@ -32,6 +32,8 @@
             </tr>
             <button @click="add_row()">Add Row</button>
         </table>
+        <button @click="load_config()">Load from config file</button>
+        <button @click="save_config()">Save to config file</button>
     </div>
 </template>
 
@@ -41,6 +43,7 @@
 
     export default {
         name: "Participants",
+
         components: {
             SimpleNumberInput,
             SimpleDropdown
@@ -49,6 +52,8 @@
         data () {
             return {
                 view_name: this.$options.name,
+                model_page_name:"model_participants",
+
                 table_headers: [
                     {id: 0, name: "Participant ID", additional_text:"ID"},
                     {id: 1, name: "Participant Type", additional_text:"Type"},
@@ -62,25 +67,48 @@
                 table_rows: [],
 
                 my_options: {
-                    example: {
-                        option_one: "Option One",
-                        option_two: "Option Two",
-                    },
-                    who_pays: {
-                        option_one: "Option 1",
-                        option_two: "Option 2",
-                    }
+                    participant_type_options: [
+                        "PV & Load",
+                        "Load",
+                        "PV",
+                    ],
+
+                    tariff_type_options: [
+                        "AGL TOU 1",
+                        "Tariff 2",
+                        "Another Tariff",
+                    ],
+
+                    battery_options: [
+                        "Battery Option 1",
+                        "Battery Option 2",
+                    ],
+
+                    solar_data_options: [],
+
+                    load_data_options: [],
+
                 },
             }
         },
 
         created() {
-            this.add_row()
+            if (this.model_page_name in this.$store.state.frontend_state) {
+                this.table_rows = this.$store.state.frontend_state[this.model_page_name]
+            } else {
+                this.add_row()
+            }
+        },
+
+        beforeDestroy() {
+            this.save_page()
+            this.save_page_server()
         },
 
         methods: {
             add_row() {
                 let array_length = this.table_rows.length;
+                let participant_default = "Participant " + array_length.toString();
                 let new_row = {
                     row_id: array_length,
                     row_inputs: [
@@ -88,14 +116,15 @@
                             id: 0,
                             name: "participant_id",
                             tag: "my_number",
-                            value:"",
-                            placeholder:"ID",
+                            value:participant_default,
+                            placeholder:participant_default,
                         },
                         {
                             id: 1,
                             name: "participant_type",
-                            tag: "my_number",
+                            tag: "my_dropdown",
                             value:"",
+                            dropdown_key: "participant_type_options",
                             placeholder:"Type",
                         },
                         {
@@ -103,21 +132,23 @@
                             name: "tariff_type",
                             tag: "my_dropdown",
                             value:"",
-                            dropdown_key:"tariff_options",
+                            dropdown_key:"tariff_type_options",
                             placeholder:"Select One",
                         },
                         {
                             id: 3,
                             name: "load_data",
-                            tag: "my_number",
+                            tag: "my_dropdown",
                             value:"",
+                            dropdown_key:"load_data_options",
                             placeholder:"Select One",
                         },
                         {
                             id: 4,
                             name: "solar_data",
-                            tag: "my_number",
+                            tag: "my_dropdown",
                             value:"",
+                            dropdown_key:"solar_data_options",
                             placeholder:"Select One",
                         },
                         {
@@ -139,6 +170,48 @@
                 };
 
                 this.table_rows.push(new_row);
+            },
+
+            save_page() {
+                let payload = {
+                    model_page_name: this.model_page_name,
+                    data: this.table_rows
+                };
+                this.$store.commit('save_page', payload)
+            },
+
+            save_page_server() {
+                let data = [];
+
+                for(var i = 0; i < this.table_rows.length; i++) {
+                    let row = this.table_rows[i].row_inputs;
+                    let row_data = []
+
+                    for( var j = 0; j < row.length; j++) {
+                        row_data.push({
+                            "name": row[j].name,
+                            "value": row[j].value
+                        })
+                    }
+                    data.push({
+                        row_id: i,
+                        row_inputs: row_data
+                    })
+                }
+
+                let payload = {
+                    model_page_name: this.model_page_name,
+                    data: data,
+                };
+                this.$store.commit('save_server_page', payload)
+            },
+
+            load_config() {
+
+            },
+
+            save_config() {
+
             }
         }
     }

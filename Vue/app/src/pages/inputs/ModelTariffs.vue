@@ -1,22 +1,34 @@
 <template>
     <div>
         <h1>{{ view_name }}</h1>
-        <table style="width:100%">
-            <!--Headers added from table_headers array-->
+        <table>
             <tr>
-                <th v-for="header in table_headers"
-                :key="header.header_id"
-                :value="header.name">{{ header.name }}</th>
+                <th
+                    v-for="header in table_headers"
+                    :key="header.header_id"
+                    :value="header.name">{{ header.name }}</th>
             </tr>
-            <!--Rows added for each item in table_rows array-->
-            <tr v-for="row in table_rows"
-            :key="row.row_id">
-                <!--Fields added for each column in each row-->
+            <tr>
+                <td
+                    v-for="header in table_headers"
+                    :key="header.header_id">{{ header.additional_text }}</td>
+            </tr>
+            <tr
+                v-for="row in table_rows"
+                :key="row.row_id">
                 <td v-for="input in row.row_inputs"
                 :key="input.col_id"
                 >
-                    <!-- Use my custom input component.-->
-                    <SimpleNumberInput v-model="input.value"/>
+                    <!-- If a simple input use this component.-->
+                    <SimpleNumberInput
+                            v-if="input.tag==='my_number'"
+                            v-model="input.value"
+                            :my_placeholder="input.placeholder"/>
+                    <!-- If a dropdown use this component.-->
+                    <SimpleDropdown v-else-if="input.tag==='my_dropdown'"
+                                    v-model="input.value"
+                                    :my_options="my_options[input.dropdown_key]"
+                                    :my_placeholder="input.placeholder"/>
                 </td>
             </tr>
             <button @click="add_row()">Add Row</button>
@@ -26,23 +38,27 @@
 
 <script>
     import SimpleNumberInput from '@/components/SimpleNumberInput.vue';
+    import SimpleDropdown from '@/components/SimpleDropdown.vue';
 
     export default {
         name: "Tariffs",
 
         components: {
-            SimpleNumberInput
+            SimpleNumberInput,
+            SimpleDropdown
         },
 
         data () {
             return {
                 view_name: this.$options.name,
+                model_page_name: "model_tariffs",
+
                 table_headers: [
-                    {header_id: 0, name: "tariff_name"},
-                    {header_id: 1, name: "fit_input"},
-                    {header_id: 2, name: "peak_price"},
-                    {header_id: 3, name: "shoulder_price"},
-                    {header_id: 4, name: "off_peak_price"},
+                    {header_id: 0, name: "tariff_name", additional_text:"Name"},
+                    {header_id: 1, name: "fit_input", additional_text:"$"},
+                    {header_id: 2, name: "peak_price", additional_text:"$"},
+                    {header_id: 3, name: "shoulder_price", additional_text:"$"},
+                    {header_id: 4, name: "off_peak_price", additional_text:"$"},
                 ],
                 table_rows: []
             }
@@ -53,7 +69,16 @@
         },
 
         created() {
-            this.add_row()
+            if (this.model_page_name in this.$store.state.frontend_state) {
+                this.table_rows = this.$store.state.frontend_state[this.model_page_name]
+            } else {
+                this.add_row()
+            }
+        },
+
+        beforeDestroy() {
+            this.save_page()
+            this.save_page_server()
         },
 
         methods: {
@@ -62,16 +87,80 @@
                 let new_row = {
                     row_id: array_length,
                     row_inputs: [
-                        {col_id: 0, field_name:"tariff_name", tag:"input", value:""},
-                        {col_id: 1, field_name:"fit_input", tag:"input", value:""},
-                        {col_id: 2, field_name:"peak_price", tag:"input", value:""},
-                        {col_id: 3, field_name:"shoulder_price", tag:"input", value:""},
-                        {col_id: 4, field_name:"off_peak_price", tag:"input", value:""},
+                        {
+                            col_id: 0,
+                            field_name:"tariff_name",
+                            tag:"my_number",
+                            value:"",
+                            placeholder:"Name",
+                        },
+                        {
+                            col_id: 1,
+                            field_name:"fit_input",
+                            tag:"my_number",
+                            value:"",
+                            placeholder:"$"
+                        },
+                        {
+                            col_id: 2,
+                            field_name:"peak_price",
+                            tag:"my_number",
+                            value:"",
+                            placeholder:"$",
+                        },
+                        {
+                            col_id: 3,
+                            field_name:"shoulder_price",
+                            tag:"my_number",
+                            value:"",
+                            placeholder:"$",
+                        },
+                        {
+                            col_id: 4,
+                            field_name:"off_peak_price",
+                            tag:"my_number",
+                            value:"",
+                            placeholder:"$",
+                        },
                     ]
                 };
 
                 this.table_rows.push(new_row);
-            }
+            },
+
+            save_page() {
+                let payload = {
+                    model_page_name: this.model_page_name,
+                    data: this.table_rows
+                };
+                this.$store.commit('save_page', payload)
+            },
+
+            save_page_server() {
+                let data = [];
+
+                for(var i = 0; i < this.table_rows.length; i++) {
+                    let row = this.table_rows[i].row_inputs;
+                    let row_data = []
+
+                    for( var j = 0; j < row.length; j++) {
+                        row_data.push({
+                            "name": row[j].name,
+                            "value": row[j].value
+                        })
+                    }
+                    data.push({
+                        row_id: i,
+                        row_inputs: row_data
+                    })
+                }
+
+                let payload = {
+                    model_page_name: this.model_page_name,
+                    data: data,
+                };
+                this.$store.commit('save_server_page', payload)
+            },
         }
     }
 </script>

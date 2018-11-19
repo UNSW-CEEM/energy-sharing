@@ -19,7 +19,7 @@
         },
         methods: {
             sendSavedState() {
-                var this_data = this.$store.state.output_data;
+                var this_data = this.$store.state.model_parameters;
                 console.log("Sending some json: ", this_data);
                 this.isConnected = true;
                 this.$socket.emit('exampleJSON', this_data);

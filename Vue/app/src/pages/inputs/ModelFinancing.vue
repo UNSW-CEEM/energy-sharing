@@ -51,7 +51,6 @@
         data () {
             return {
                 view_name: this.$options.name,
-                model_name: "model_finance",
                 model_page_name: "model_financing",
 
                 table_headers: [
@@ -154,6 +153,7 @@
 
                 this.table_rows.push(new_row);
             },
+
             save_page() {
                 let payload = {
                     model_page_name: this.model_page_name,
@@ -186,7 +186,7 @@
                     data: data,
                 };
                 this.$store.commit('save_server_page', payload)
-            }
+            },
         }
     }
 </script>
