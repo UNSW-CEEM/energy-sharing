@@ -65,14 +65,17 @@
                 ],
 
                 my_options: {
-                    data_source: {
-                        option_one: "Option 1",
-                        option_two: "ABC"
-                    },
-                    sharing_algorithm: {
-                        option_one: "Option 1",
-                        option_two: "ABC"
-                    },
+
+                    data_source: [
+                        "Option 1",
+                        "ABC",
+                    ],
+
+                    sharing_algorithm: [
+                        "Option 1",
+                        "ABC",
+                    ],
+
                 }
             }
         },

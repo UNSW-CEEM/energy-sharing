@@ -72,10 +72,10 @@
                 ],
 
                 my_options: {
-                    dispatch_algorithm: {
-                        option_one: "Option 1",
-                        option_two: "ABC"
-                    }
+                    dispatch_algorithm: [
+                        "Option 1",
+                        "ABC"
+                    ]
                 }
             }
         },

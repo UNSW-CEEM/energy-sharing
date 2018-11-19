@@ -11,7 +11,7 @@
             <tr>
                 <td
                     v-for="header in table_headers"
-                    :key="header.header_id">{{ header.help_text }}</td>
+                    :key="header.header_id">{{ header.additional_text }}</td>
             </tr>
             <tr
                 v-for="row in table_rows"
@@ -54,13 +54,13 @@
                 model_name: "model_finance",
 
                 table_headers: [
-                    {id: 0, name: "Component", help_text:"Name"},
-                    {id: 1, name: "CAPEX", help_text:"$"},
-                    {id: 2, name: "Who Pays", help_text:"Who"},
-                    {id: 3, name: "Discount Rate", help_text:"%"},
-                    {id: 4, name: "Amortization", help_text:"years"},
-                    {id: 5, name: "OPEX", help_text:"$"},
-                    {id: 6, name: "Who Pays", help_text:"Who"},
+                    {id: 0, name: "Component", additional_text:"Name"},
+                    {id: 1, name: "CAPEX", additional_text:"$"},
+                    {id: 2, name: "Who Pays", additional_text:"Who"},
+                    {id: 3, name: "Discount Rate", additional_text:"%"},
+                    {id: 4, name: "Amortization", additional_text:"years"},
+                    {id: 5, name: "OPEX", additional_text:"$"},
+                    {id: 6, name: "Who Pays", additional_text:"Who"},
                 ],
 
                 table_rows: [],
