@@ -1,16 +1,14 @@
 <template>
-    <div>
-        <select
-                v-bind:value="value"
-                v-on:input="$emit('input', $event.target.value)">
-            <option value="" disabled selected hidden>{{ my_placeholder }}</option>
-            <option
-                v-for="option in my_options"
-                :value="option">
-                {{ option }}
-            </option>
-        </select>
-    </div>
+    <select
+            v-bind:value="value"
+            v-on:input="$emit('input', $event.target.value)">
+        <option value="" disabled selected hidden>{{ my_placeholder }}</option>
+        <option
+            v-for="option in my_options"
+            :value="option">
+            {{ option }}
+        </option>
+    </select>
 </template>
 
 <script>

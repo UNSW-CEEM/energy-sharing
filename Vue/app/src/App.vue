@@ -13,12 +13,13 @@
     import SideNavBar from './pages/SideNavBar';
     import TopNavBar from './pages/TopNavBar';
     import ModelFooter from './pages/ModelFooter';
+
     export default {
         name: 'app',
         components: {
             ModelFooter,
             SideNavBar,
-            TopNavBar
+            TopNavBar,
         },
         data () {
             return  {

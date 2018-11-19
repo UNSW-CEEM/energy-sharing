@@ -1,12 +1,10 @@
 <template>
-    <div>
-        <input
-            class="my_input"
-            v-bind:value="value"
-            v-on:input="$emit('input', $event.target.value)"
-            :placeholder="my_placeholder"
-        >
-    </div>
+    <input
+        class="my_input"
+        v-bind:value="value"
+        v-on:input="$emit('input', $event.target.value)"
+        :placeholder="my_placeholder"
+    >
 </template>
 
 <script>
