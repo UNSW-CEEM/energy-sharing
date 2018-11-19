@@ -11,17 +11,12 @@ const model_parameters = {
     mutations: {
         save_server_page(state, payload) {
             state[payload.model_page_name] = payload.data;
-            console.log(state);
         }
     }
 };
 
 const frontend_state = {
     state: {
-
-    },
-
-    getters: {
 
     },
 
@@ -47,17 +42,7 @@ export const store = new Vuex.Store({
 
     },
     mutations: {
-        setValue (state, payload) {
-            state.output_data[payload.input_page][payload.field_name] = payload.value
-        },
 
-        setTableDropdown (state, payload) {
-            state.output_data[payload.input_page][payload.array_name][payload.row_index][payload.field_name] = payload.value
-        },
-
-        addRow(state, payload) {
-            state.output_data[payload.input_page][payload.field_name].push(payload.row)
-        },
     },
 });
 

@@ -52,6 +52,7 @@
             return {
                 view_name: this.$options.name,
                 model_name: "model_finance",
+                model_page_name: "model_financing",
 
                 table_headers: [
                     {id: 0, name: "Component", additional_text:"Name"},
@@ -78,12 +79,17 @@
             }
         },
 
-        computed: {
-
+        created() {
+            if (this.model_page_name in this.$store.state.frontend_state) {
+                this.table_rows = this.$store.state.frontend_state[this.model_page_name]
+            } else {
+                this.add_row()
+            }
         },
 
-        created() {
-            this.add_row()
+        beforeDestroy() {
+            this.save_page()
+            this.save_page_server()
         },
 
         methods: {
@@ -94,7 +100,7 @@
                     row_inputs: [
                         {
                             id: 0,
-                            name: "comp",
+                            name: "component",
                             tag: "my_number",
                             value:"",
                             placeholder:"Name",
@@ -147,6 +153,39 @@
                 };
 
                 this.table_rows.push(new_row);
+            },
+            save_page() {
+                let payload = {
+                    model_page_name: this.model_page_name,
+                    data: this.table_rows
+                };
+                this.$store.commit('save_page', payload)
+            },
+
+            save_page_server() {
+                let data = [];
+
+                for(var i = 0; i < this.table_rows.length; i++) {
+                    let row = this.table_rows[i].row_inputs;
+                    let row_data = []
+
+                    for( var j = 0; j < row.length; j++) {
+                        row_data.push({
+                            "name": row[j].name,
+                            "value": row[j].value
+                        })
+                    }
+                    data.push({
+                        row_id: i,
+                        row_inputs: row_data
+                    })
+                }
+
+                let payload = {
+                    model_page_name: this.model_page_name,
+                    data: data,
+                };
+                this.$store.commit('save_server_page', payload)
             }
         }
     }

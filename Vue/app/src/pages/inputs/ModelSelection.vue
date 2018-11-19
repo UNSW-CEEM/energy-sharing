@@ -95,7 +95,7 @@
 
             save_page_server() {
                 let data = [];
-                for(var i = 0; i < this.input_data.length; i++) {
+                for(let i = 0; i < this.input_data.length; i++) {
                     data.push({
                         "name": this.input_data[i].name,
                         "value": this.input_data[i].value
