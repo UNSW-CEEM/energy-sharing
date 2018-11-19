@@ -14,19 +14,37 @@
                 v-model="input.value"
                 :my_options="my_options[input.dropdown_key]"
                 :my_placeholder="input.placeholder"/>
+
+            <button @click="">{{ input.button_text }}</button>
         <br>
         </span>
+
+        <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
+            <h1>Upload Solar Data</h1>
+            <div class="dropbox">
+                <input type="file" multiple :name="uploadFieldName" :disabled="isSaving"
+                       @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
+                       accept="image/*" class="input-file">
+
+                    <p v-if="isInitial">Drag your file(s) here to begin<br>Or click to browse</p>
+                    <p v-if="isSaving">Upload {{ fileCount }} files</p>
+            </div>
+        </form>
     </div>
 </template>
 
 <script>
+    // Example code taken from https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
+
     import SimpleNumberInput from '@/components/SimpleNumberInput.vue';
     import SimpleDropdown from '@/components/SimpleDropdown.vue';
 
+    import { upload } from "../../services/FileUpload";
+
+    const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
+
     export default {
         name: "Data",
-
-        model_page_name: "model_data",
 
         components: {
             SimpleDropdown,
@@ -36,46 +54,64 @@
         data () {
             return {
                 view_name: this.$options.name,
+                model_page_name: "model_data",
+
+                // File service attempts
+                uploadedFiles: [],
+                uploadError: null,
+                currentStatus: null,
+                uploadFieldName: 'photos',
 
                 input_data: [
                     {
                         id: 0,
-                        name: "data_source",
-                        display_text: "Data Source  ",
+                        name: "solar_data_source",
+                        display_text: "Solar Data Sources",
                         value: "",
-                        dropdown_key: "data_source",
+                        dropdown_key: "solar_data_options",
                         placeholder: "Select One",
                         tag:"my_dropdown",
+                        button_text:"Add",
+                        add_function: this.add_solar_source(),
                     },
                     {
                         id: 1,
-                        name: "scaling_factor",
-                        display_text: "Scaling Factor ",
+                        name: "load_data_source",
+                        display_text: "Load Data Sources",
                         value: "",
-                        placeholder: "Decimal Scaling Factor",
-                        tag:"my_number"
-                    },
-                    {
-                        id: 2,
-                        name:"sharing_algorithm",
-                        display_text: "Sharing Algorithm ",
-                        value: "",
-                        dropdown_key: "sharing_algorithm",
+                        dropdown_key: "load_data_options",
                         placeholder: "Select One",
-                        tag:"my_dropdown"
+                        tag:"my_dropdown",
+                        button_text:"Add",
+                        add_function: this.add_load_source(),
                     },
                 ],
 
                 my_options: {
-                    data_source: {
-                        option_one: "Option 1",
-                        option_two: "ABC"
-                    },
-                    sharing_algorithm: {
-                        option_one: "Option 1",
-                        option_two: "ABC"
-                    },
+                    solar_data_options: [
+                        "Solar Option 1",
+                        "Solar Option 2",
+                    ],
+                    load_data_options: [
+                        "Load Option 1",
+                        "Load Option 2",
+                    ],
                 }
+            }
+        },
+
+        computed: {
+            isInitial() {
+                return this.currentStatus === STATUS_INITIAL;
+            },
+            isSaving() {
+                return this.currentStatus === STATUS_SAVING;
+            },
+            isSuccess() {
+                return this.currentStatus === STATUS_SUCCESS;
+            },
+            isFailed() {
+                return this.currentStatus === STATUS_FAILED;
             }
         },
 
@@ -112,7 +148,59 @@
                     data: data,
                 };
                 this.$store.commit('save_server_page', payload)
+            },
+
+            add_solar_source() {
+
+            },
+
+            add_load_source() {
+
+            },
+
+            reset() {
+            //    reset form to inital state
+                this.currentStatus = STATUS_INITIAL;
+                this.uploadedFiles = [];
+                this.uploadError = null;
+            },
+
+            save(formData) {
+            //    Upload data to the server
+                this.currentStatus = STATUS_SAVING;
+
+                upload(formData)
+                    .then( x => {
+                        this.uploadedFiles = [].concat(x);
+                        this.currentStatus = STATUS_SUCCESS;
+                    })
+                    .catch(err => {
+                        this.uploadError = err.response;
+                        this.currentStatus = STATUS_FAILED;
+                    });
+
+            },
+
+            filesChange(fieldName, fileList) {
+            //    Handle file changes
+                const formData = new FormData();
+
+                if(!fileList.length) return;
+
+            //    Append the files to formData
+                Array
+                    .from(Array(fileList.length).keys())
+                    .map(x => {
+                        formData.append(fieldName, fileList[x], fileList[x].name);
+                    });
+
+            //    Save it
+                this.save(formData);
             }
+        },
+
+        mounted() {
+            this.reset();
         }
     }
 </script>

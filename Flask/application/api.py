@@ -1,7 +1,9 @@
 from threading import Lock
 from flask import Flask, render_template, session, request
+from flask_cors import CORS
+
 from flask_socketio import SocketIO, emit, rooms, disconnect, join_room, leave_room, close_room
-from .endpoints.io_api import SocketsJSON
+# from .endpoints.io_api import SocketsJSON
 from .services import file_service
 
 file_service = file_service.OSFileService()
@@ -11,6 +13,9 @@ async_mode = None
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'pleasedonthackme'
+
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+
 socketio = SocketIO(app, async_mode=async_mode)
 thread = None
 thread_lock = Lock()
@@ -22,6 +27,14 @@ def index():
 
 # File upload endpoint, based on code here:
 # http://flask.pocoo.org/docs/0.12/patterns/fileuploads/
+
+
+@app.route('/uploadTest', methods=['POST'])
+def upload_test():
+    if request.method == 'POST':
+
+        return {"response": "SUCCESS"}
+
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
@@ -78,7 +91,7 @@ def test_disconnect():
 @socketio.on('exampleJSON')
 def test_example_json(this_json):
     print('JSON Parse Attempted')
-    SocketsJSON().parse(this_json)
+    # SocketsJSON().parse(this_json)
 
 
 if __name__ == 'main':
