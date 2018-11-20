@@ -18,30 +18,12 @@
             <button @click="">{{ input.button_text }}</button>
         <br>
         </span>
-
-        <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
-            <h1>Upload Solar Data</h1>
-            <div class="dropbox">
-                <input type="file" multiple :name="uploadFieldName" :disabled="isSaving"
-                       @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
-                       accept="image/*" class="input-file">
-
-                    <p v-if="isInitial">Drag your file(s) here to begin<br>Or click to browse</p>
-                    <p v-if="isSaving">Upload {{ fileCount }} files</p>
-            </div>
-        </form>
     </div>
 </template>
 
 <script>
-    // Example code taken from https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
-
     import SimpleNumberInput from '@/components/SimpleNumberInput.vue';
     import SimpleDropdown from '@/components/SimpleDropdown.vue';
-
-    import { upload } from "../../services/FileUpload";
-
-    const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
 
     export default {
         name: "Data",
@@ -55,12 +37,7 @@
             return {
                 view_name: this.$options.name,
                 model_page_name: "model_data",
-
-                // File service attempts
-                uploadedFiles: [],
-                uploadError: null,
-                currentStatus: null,
-                uploadFieldName: 'photos',
+                is_connected: false,
 
                 input_data: [
                     {
@@ -68,50 +45,29 @@
                         name: "solar_data_source",
                         display_text: "Solar Data Sources",
                         value: "",
-                        dropdown_key: "solar_data_options",
+                        dropdown_key: "solar_files_list",
                         placeholder: "Select One",
                         tag:"my_dropdown",
                         button_text:"Add",
-                        add_function: this.add_solar_source(),
+                        add_function: "",
                     },
                     {
                         id: 1,
                         name: "load_data_source",
                         display_text: "Load Data Sources",
                         value: "",
-                        dropdown_key: "load_data_options",
+                        dropdown_key: "load_files_list",
                         placeholder: "Select One",
                         tag:"my_dropdown",
                         button_text:"Add",
-                        add_function: this.add_load_source(),
+                        add_function: "",
                     },
                 ],
 
                 my_options: {
-                    solar_data_options: [
-                        "Solar Option 1",
-                        "Solar Option 2",
-                    ],
-                    load_data_options: [
-                        "Load Option 1",
-                        "Load Option 2",
-                    ],
+                    solar_files_list: [],
+                    load_files_list: [],
                 }
-            }
-        },
-
-        computed: {
-            isInitial() {
-                return this.currentStatus === STATUS_INITIAL;
-            },
-            isSaving() {
-                return this.currentStatus === STATUS_SAVING;
-            },
-            isSuccess() {
-                return this.currentStatus === STATUS_SUCCESS;
-            },
-            isFailed() {
-                return this.currentStatus === STATUS_FAILED;
             }
         },
 
@@ -119,6 +75,8 @@
             if (this.model_page_name in this.$store.state.frontend_state) {
                 this.input_data = this.$store.state.frontend_state[this.model_page_name]
             }
+            this.get_solar_files()
+            this.get_load_files()
         },
 
         beforeDestroy() {
@@ -158,49 +116,31 @@
 
             },
 
-            reset() {
-            //    reset form to inital state
-                this.currentStatus = STATUS_INITIAL;
-                this.uploadedFiles = [];
-                this.uploadError = null;
+            get_solar_files() {
+                console.log("Getting solar files")
+                this.$socket.emit('get_solar_files')
             },
 
-            save(formData) {
-            //    Upload data to the server
-                this.currentStatus = STATUS_SAVING;
-
-                upload(formData)
-                    .then( x => {
-                        this.uploadedFiles = [].concat(x);
-                        this.currentStatus = STATUS_SUCCESS;
-                    })
-                    .catch(err => {
-                        this.uploadError = err.response;
-                        this.currentStatus = STATUS_FAILED;
-                    });
-
-            },
-
-            filesChange(fieldName, fileList) {
-            //    Handle file changes
-                const formData = new FormData();
-
-                if(!fileList.length) return;
-
-            //    Append the files to formData
-                Array
-                    .from(Array(fileList.length).keys())
-                    .map(x => {
-                        formData.append(fieldName, fileList[x], fileList[x].name);
-                    });
-
-            //    Save it
-                this.save(formData);
+            get_load_files() {
+                this.$socket.emit('get_load_files')
             }
         },
 
-        mounted() {
-            this.reset();
+        sockets: {
+            connect: function() {
+                console.log("This client connected");
+                this.is_connected = true;
+            },
+
+            disconnect: function() {
+                this.is_connected = false;
+            },
+
+            filesChannel: function(response) {
+                console.log("received response: ", response)
+                this.is_connected = true;
+                this.my_options[response.key] = response.data;
+            }
         }
     }
 </script>

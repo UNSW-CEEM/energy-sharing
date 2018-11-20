@@ -1,6 +1,6 @@
 from threading import Lock
 from flask import Flask, render_template, session, request
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 from flask_socketio import SocketIO, emit, rooms, disconnect, join_room, leave_room, close_room
 # from .endpoints.io_api import SocketsJSON
@@ -14,7 +14,7 @@ async_mode = None
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'pleasedonthackme'
 
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+cors = CORS(app, resources={r'/*': {"origins": '*'}})
 
 socketio = SocketIO(app, async_mode=async_mode)
 thread = None
@@ -29,14 +29,16 @@ def index():
 # http://flask.pocoo.org/docs/0.12/patterns/fileuploads/
 
 
-@app.route('/uploadTest', methods=['POST'])
+@app.route('/uploadTest', methods=['GET', 'POST', 'OPTIONS'])
+@cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
 def upload_test():
     if request.method == 'POST':
 
         return {"response": "SUCCESS"}
 
 
-@app.route('/upload', methods=['GET', 'POST'])
+@app.route('/upload', methods=['GET', 'POST', 'OPTIONS'])
+@cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
 def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
@@ -92,6 +94,18 @@ def test_disconnect():
 def test_example_json(this_json):
     print('JSON Parse Attempted')
     # SocketsJSON().parse(this_json)
+
+
+@socketio.on('get_solar_files')
+def test_get_solar_files():
+    data = file_service.list_solar_files()
+    emit('filesChannel', {"key": "solar_files_list", "data": data})
+
+
+@socketio.on('get_load_files')
+def test_get_load_files():
+    data = file_service.list_load_files()
+    emit('filesChannel', {"key": "load_files_list", "data": data})
 
 
 if __name__ == 'main':

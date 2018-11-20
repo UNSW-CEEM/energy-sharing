@@ -84,7 +84,7 @@
                         "Battery Option 2",
                     ],
 
-                    solar_data_options: [],
+                    solar_data_files: [],
 
                     load_data_options: [],
 
@@ -148,7 +148,7 @@
                             name: "solar_data",
                             tag: "my_dropdown",
                             value:"",
-                            dropdown_key:"solar_data_options",
+                            dropdown_key:"solar_data_files",
                             placeholder:"Select One",
                         },
                         {
