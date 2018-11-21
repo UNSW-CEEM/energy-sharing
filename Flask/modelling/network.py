@@ -33,7 +33,7 @@ class Network:
 
     def add_participants_from_csv(self, data_dir, participant_csv):
         with open(os.path.join(data_dir,participant_csv)) as f:
-            reader = csv.DictReader(f, delimiter = ",")
+            reader = csv.DictReader(f, delimiter=",")
             for line in reader: 
                 # print line
                 participant = CSV_Participant(
@@ -47,4 +47,3 @@ class Network:
                     solar_capacity=float(line['solar_capacity'])
                 )
                 self.add_participant(participant)
-        

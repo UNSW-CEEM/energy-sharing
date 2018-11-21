@@ -32,11 +32,11 @@ class LoadDialog(FloatLayout):
 class SimulatorUI(BoxLayout):
     
     def run_simulation(self):
-        print "Simulation Running!"
+        print("Simulation Running!")
         output_path = 'output' if not self.output_path else self.output_path
         data_path = 'data' if not self.data_path else self.data_path
         battery_capacity = self.ids.battery_slider.value
-        print "Output:", self.output_path, "Data", data_path, "Battery Capacity", battery_capacity
+        print("Output:", self.output_path, "Data", data_path, "Battery Capacity", battery_capacity)
         self.set_status("Simulation Running")
         t = Thread(target=run_en_csv, args=(output_path, data_path, {'battery_capacity':battery_capacity}, self.set_status))
         t.start()
@@ -56,7 +56,7 @@ class SimulatorUI(BoxLayout):
     def set_data_folder(self, path, filename):
         # selected = os.path.join(path, filename[0])
         selected = path
-        print "Selected", selected
+        print("Selected", selected)
         self.ids.data_folder.text="Data Folder: "+ selected
         self.data_path = selected
         self.dismiss_popup()
@@ -69,7 +69,7 @@ class SimulatorUI(BoxLayout):
     def set_output_folder(self, path, filename):
         # selected = os.path.join(path, filename[0])
         selected = path
-        print "Selected", selected
+        print("Selected", selected)
         self.ids.output_folder.text="Output Folder: "+ selected
         self.output_path = selected
         self.dismiss_popup()

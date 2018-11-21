@@ -3,6 +3,7 @@ import pandas as pd
 import datetime
 import util
 
+
 class Participant: 
     # Need to update to have both network and retail tariffs as inputs
     def __init__(self, participant_id, participant_type, retail_tariff_type, network_tariff_type,retailer):

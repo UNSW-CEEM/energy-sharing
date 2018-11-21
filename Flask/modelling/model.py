@@ -90,7 +90,7 @@ def run_en_csv(output_dir, data_dir, scenario=None, status_callback=None):
         status_callback('Running EN CSV')
 
     result = run_en(scenario, status_callback=status_callback, data_dir=data_dir)
-    print "Writing to CSV"
+    print("Writing to CSV")
     if status_callback:
         status_callback('Writing Output to CSV Files')
     battery_capacity = str(scenario['battery_capacity']) if 'battery_capacity' in scenario else ""
@@ -104,7 +104,7 @@ def run_en_csv(output_dir, data_dir, scenario=None, status_callback=None):
 # Start here! :)
 
 if __name__ == "__main__":
-    print "Running Simulation: ",0.001, "kWh"
+    print("Running Simulation: ",0.001, "kWh")
     run_en_csv('output', 'data', {'battery_capacity':0.001})
     # for battery_capacity in range(5,35,5):
     #     print "Running Simulation: ",battery_capacity, "kWh"

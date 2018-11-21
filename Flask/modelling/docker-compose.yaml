@@ -1,7 +1,0 @@
-en-sim:
-  build: .
-  container_name: en_sim
-  ports:
-    - "5000:5000"
-  volumes:
-    - .:/simulation

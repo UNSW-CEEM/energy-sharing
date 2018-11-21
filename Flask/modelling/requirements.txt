@@ -1,9 +1,0 @@
-Flask
-datetime
-pandas
-numpy
-pprintpp
-pendulum
-
-Cython==0.26.1
-https://github.com/kivy/kivy/archive/master.zip

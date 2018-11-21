@@ -9,13 +9,14 @@ import json
 # test
 @app.route("/")
 def hello():
-    print type(request.get_json())
+    print(type(request.get_json()))
     scenario = {
         'participants':request.get_json()
         }
     result = main.run_en_json(scenario)
     # return json.dumps(result)
     return jsonify(result)
+
 
 @app.route("/participantNames")
 def participantNames():
@@ -26,11 +27,10 @@ def participantNames():
     return jsonify(result)
 
 
-
-
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
