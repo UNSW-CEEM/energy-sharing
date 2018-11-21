@@ -1,0 +1,78 @@
+#:kivy 1.0.9
+
+	
+<SimulatorUI>:
+	orientation:'vertical'
+	Label:
+		id:heading
+		size_hint: (1,0.15)
+		font_size:30
+		text:"Local Energy Simulator"
+		center_x: root.width/2.0
+		center_y:root.height / 2.0
+
+	
+	BoxLayout:
+		orientation:'horizontal'
+		size_hint:(1, 0.1)
+		Button:
+			text: 'Select Output Folder'
+			on_release: root.show_select_output_folder()
+			size_hint:(0.3, 1)
+		Label:
+			id:output_folder
+			text:"No Output Folder Selected"
+			
+	BoxLayout:
+		orientation:'horizontal'
+		size_hint:(1, 0.1)
+		Button:
+			text: 'Select Data Folder'
+			on_release: root.show_select_data_folder()
+			size_hint:(0.3, 1)
+		Label:
+			id:data_folder
+			text:"No Data Folder Selected"
+
+	BoxLayout:
+		orientation:'horizontal'
+		size_hint:(1,0.1)
+		Label:
+			id:battery_sizing
+			text:"Central Battery: "+str(round(battery_slider.value,2))+" MW"
+			size_hint:(0.3, 1)
+		Slider:
+			id:battery_slider
+			orientation:'horizontal'
+			min:0
+			max:10
+			value:1
+			value_track:True
+
+	Label:
+		id:status
+		text:"Ready"
+	Button:
+		id:run_button
+		text:"Run Simulation"
+		on_press:root.run_simulation()
+		size_hint:(1, 0.1)
+
+<LoadDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserListView:
+            id: filechooser
+
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: "Cancel"
+                on_release: root.cancel()
+
+            Button:
+                text: "Load"
+                on_release: root.load(filechooser.path, filechooser.selection)
