@@ -12,6 +12,17 @@
         <ul> Load Files
             <li v-for="file in filesList.load_files_list">{{ file }}</li>
         </ul>
+
+        <!--Test stuff-->
+        <div v-if="!my_file">
+            <h2>Select a File</h2>
+            <input type="file" @change="onFileChange"/>
+        </div>
+        <div v-else>
+            <button @click="removeFile">Remove file</button>
+            <p>{{ my_file }}</p>
+            <!--<img :src="my_file"/>-->
+        </div>
     </div>
 </template>
 
@@ -20,6 +31,8 @@
         name: "SocketsTester",
         data() {
             return {
+                my_file:'',
+
                 isConnected: false,
                 socketMessage: '',
                 filesList: {
@@ -27,6 +40,10 @@
                     load_files_list: [],
                 },
             }
+        },
+
+        computed: {
+            
         },
 
         sockets: {
@@ -72,7 +89,47 @@
                 this.$socket.emit('get_load_files')
             },
 
-        }
+            upload_test(data) {
+                this.$socket.emit('upload_test', data)
+            },
+
+            // Tests
+            onFileChange(e) {
+                var files = e.target.files || e.dataTransfer.files;
+                if (!files.length)
+                    return;
+                // this.createImage(files[0])
+                this.saveFile(files[0])
+            },
+
+
+            saveFile(file) {
+                var reader = new FileReader();
+                var vm = this;
+
+                reader.onload = (e) => {
+                    vm.my_file = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            },
+
+            createImage(file) {
+                var my_file = new File();
+                var reader = new FileReader();
+                var vm = this;
+
+                reader.onload = (e) => {
+                    vm.my_file = e.target.result;
+                };
+                reader.readAsDataURL(file);
+
+            },
+
+            removeFile: function (e) {
+                this.my_file = '';
+            }
+        },
+
     }
 </script>
 

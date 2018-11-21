@@ -123,7 +123,8 @@
 
             get_load_files() {
                 this.$socket.emit('get_load_files')
-            }
+            },
+
         },
 
         sockets: {
@@ -140,7 +141,7 @@
                 console.log("received response: ", response)
                 this.is_connected = true;
                 this.my_options[response.key] = response.data;
-            }
+            },
         }
     }
 </script>

@@ -64,6 +64,12 @@
                         text: 'Sockets',
                         page: '/sockets_tester',
                         storage_key: "sockets_tester"
+                    },
+                    {
+                        id: 9,
+                        text: 'Data Upload',
+                        page: '/data_upload',
+                        storage_key: "data_upload"
                     }
                 ]
             }

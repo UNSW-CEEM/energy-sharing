@@ -78,5 +78,10 @@ export default new Router({
             name: 'sockets_tester',
             component: () => import(/* webpackChunkName: "model" */ './pages/inputs/SocketsTester.vue')
         },
+        {
+            path: '/data_upload',
+            name: 'data_upload',
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/DataUpload.vue')
+        },
     ]
 })

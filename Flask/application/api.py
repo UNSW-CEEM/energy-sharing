@@ -29,14 +29,6 @@ def index():
 # http://flask.pocoo.org/docs/0.12/patterns/fileuploads/
 
 
-@app.route('/uploadTest', methods=['GET', 'POST', 'OPTIONS'])
-@cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
-def upload_test():
-    if request.method == 'POST':
-
-        return {"response": "SUCCESS"}
-
-
 @app.route('/upload', methods=['GET', 'POST', 'OPTIONS'])
 @cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
 def upload_file():
@@ -64,6 +56,12 @@ def upload_file():
             <input type=submit value=Upload>
         </form>
         '''
+
+
+@socketio.on('upload_test')
+def upload_test(data):
+    print("Received a file")
+    print(data)
 
 
 @socketio.on('message')
