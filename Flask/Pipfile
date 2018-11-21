@@ -7,6 +7,12 @@ name = "pypi"
 flask = "*"
 flask-socketio = "*"
 flask-cors = "*"
+pandas = "*"
+numpy = "*"
+pprintpp = "*"
+pendulum = "*"
+DateTime = "*"
+Cython = "==0.26.1"
 
 [dev-packages]
 

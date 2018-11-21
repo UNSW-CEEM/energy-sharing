@@ -32,7 +32,8 @@ class Central_Battery(Battery):
         self.ui_battery_discharge_windows_path = ui_battery_discharge_windows_path
         self.discharge_times_data = pd.read_csv(ui_battery_discharge_windows_path)
         # Get pandas series containing all allowed discharge hours
-        # Note - end time is NOT inclusive (i.e. if end time is 10 then allowed time period will be up to and including 9)
+        # Note - end time is NOT inclusive
+        # (i.e. if end time is 10 then allowed time period will be up to and including 9)
         self.allowed_discharge_hours = pd.Series()
         for row in self.discharge_times_data.index.values:
             self.start_time = self.discharge_times_data.loc[row,'start_time']
@@ -60,7 +61,8 @@ class Central_Battery(Battery):
                 return self.discharge(abs(net_participant_kWh))
             else:
                 return 0.0
-        
+
+
 if __name__=="__main__":
-    my_batt = Central_Battery(10,5,0.9,"data/ui_battery_discharge_window_eg.csv")
+    my_batt = Central_Battery(10, 5, 0.9, "data/ui_battery_discharge_window_eg.csv")
 

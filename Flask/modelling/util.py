@@ -7,7 +7,7 @@ import pandas as pd
 
 def generate_dates_in_range(start_dt, end_dt, interval_minutes):
     """Return list of dates between start and end."""
-    start_dt = start_dt.replace(second = 0, microsecond = 0)
+    start_dt = start_dt.replace(second=0, microsecond=0)
     
     date_time_list = []
     current = start_dt
@@ -18,6 +18,7 @@ def generate_dates_in_range(start_dt, end_dt, interval_minutes):
         current = current + datetime.timedelta(minutes = interval_minutes)
 
     return date_time_list
+
 
 def date_parser(date_string):
     # print("parsing", date_string)
