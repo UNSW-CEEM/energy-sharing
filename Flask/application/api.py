@@ -1,10 +1,9 @@
 from threading import Lock
 from flask import Flask, render_template, session, request
 from flask_cors import CORS, cross_origin
-
 from flask_socketio import SocketIO, emit, rooms, disconnect, join_room, leave_room, close_room
-# from .endpoints.io_api import SocketsJSON
 from .services import file_service
+from .modelling.model_runner import ModelRunner
 
 file_service = file_service.OSFileService()
 
@@ -104,6 +103,13 @@ def test_get_solar_files():
 def test_get_load_files():
     data = file_service.list_load_files()
     emit('filesChannel', {"key": "load_files_list", "data": data})
+
+
+@socketio.on('run_model')
+def test_run_sim():
+    ModelRunner()
+    print("Running El Modelo")
+    emit('sim_channel', "Running the Sim!!! Maybe.")
 
 
 if __name__ == 'main':

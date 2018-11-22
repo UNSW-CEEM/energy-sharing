@@ -1,6 +1,6 @@
 import csv
 import os
-from participant import CSV_Participant
+from .participant import CSV_Participant
 
 class Network:
     def __init__(self, name) :

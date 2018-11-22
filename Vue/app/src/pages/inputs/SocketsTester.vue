@@ -6,6 +6,7 @@
         <button @click="exampleJSON()">Send Output Data State to Server</button>
         <button @click="get_solar_files()">Test Get Solar Files</button>
         <button @click="get_load_files()">Test Get Load Files</button>
+        <button @click="run_model()">Run Model</button>
         <ul> Solar Files
             <li v-for="file in filesList.solar_files_list">{{ file }}</li>
         </ul>
@@ -127,6 +128,10 @@
 
             removeFile: function (e) {
                 this.my_file = '';
+            },
+
+            run_model() {
+                this.$socket.emit('run_model')
             }
         },
 
