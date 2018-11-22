@@ -17,7 +17,7 @@ class Participant:
 
     # TODO - make this work
     def calc_net_export(self, date_time, interval_min):
-        return np.random.uniform(-10,10) 
+        return np.random.uniform(-10, 10)
 
     def get_id(self):
         return self.participant_id
@@ -27,6 +27,7 @@ class Participant:
 
     def get_network_tariff_type(self):
         return self.network_tariff_type
+
 
 class CSV_Participant(Participant):
     def __init__(self, participant_id, participant_type, retail_tariff_type, network_tariff_type, retailer, solar_path, load_path, solar_capacity):
