@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from .modelling import util
+from . import util
 
 
 class Participant: 
