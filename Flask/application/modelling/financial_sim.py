@@ -1,4 +1,3 @@
-
 # Custom modules
 from .network import Network
 from .participant import Participant, CSV_Participant
@@ -17,6 +16,7 @@ import os
 
 TIME_PERIOD_LENGTH_MINS = 30
 
+
 def simulate(time_periods, mynetwork, my_tariffs, results, status_callback=None):
     
     # --------------------------------------------------------------
@@ -27,7 +27,7 @@ def simulate(time_periods, mynetwork, my_tariffs, results, status_callback=None)
         status_callback('Calculating Financial Flows: 0%')
         percent_finished = 0
         single_step_percent = 100.0 / float(len(time_periods) * len(mynetwork.get_participants()))
-        
+
 
     for p in mynetwork.get_participants():
         # Initialise params used in block tariff calcs.

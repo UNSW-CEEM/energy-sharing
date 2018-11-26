@@ -2,6 +2,7 @@ import csv
 import os
 from .participant import CSV_Participant
 
+
 class Network:
     def __init__(self, name) :
         self.name = name
@@ -32,7 +33,7 @@ class Network:
         return self.battery_list
 
     def add_participants_from_csv(self, data_dir, participant_csv):
-        with open(os.path.join(data_dir,participant_csv)) as f:
+        with open(os.path.join(data_dir, participant_csv)) as f:
             reader = csv.DictReader(f, delimiter=",")
             for line in reader: 
                 # print line

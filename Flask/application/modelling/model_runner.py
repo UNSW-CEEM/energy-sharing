@@ -1,7 +1,7 @@
 from .network import Network
 from .battery import Battery, Central_Battery
 from .tariffs import Tariffs
-from . import util
+from .import util
 from .results import Results
 from . import energy_sim
 from . import financial_sim
@@ -12,8 +12,8 @@ import os
 
 class ModelRunner:
     def __init__(self):
-        output_dir = 'test_output'
-        data_dir = 'data'
+        output_dir = 'application/modelling/test_output'
+        data_dir = os.path.realpath('application/modelling/data')
         my_network = Network('Byron')
         my_network.add_participants_from_csv(data_dir, "participant_meta_data.csv")
 
