@@ -66,6 +66,12 @@
             filesChannel: function(response) {
                 this.isConnected = true;
                 this.filesList[response.key] = response.data;
+            },
+
+            sim_channel: function(response) {
+                this.isConnected = true;
+                this.sim_result = response.data;
+                console.log(this.sim_result);
             }
         },
 
@@ -131,7 +137,10 @@
             },
 
             run_model() {
-                this.$socket.emit('run_model')
+                let params = this.$store.state.model_parameters;
+
+                console.log(params);
+                this.$socket.emit('run_model', params)
             }
         },
 
@@ -140,4 +149,4 @@
 
 <style scoped>
 
-</style>
+</style>chr

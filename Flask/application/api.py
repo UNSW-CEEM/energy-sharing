@@ -3,7 +3,7 @@ from flask import Flask, render_template, session, request
 from flask_cors import CORS, cross_origin
 from flask_socketio import SocketIO, emit, rooms, disconnect, join_room, leave_room, close_room
 from .services import file_service
-from .modelling.model_runner import ModelRunner, ModelRunnerBeta
+from .modelling.model_runner import ModelRunner
 
 file_service = file_service.OSFileService()
 
@@ -106,31 +106,14 @@ def test_get_load_files():
 
 
 @socketio.on('run_model')
-def test_run_sim():
-    print("Running El Modelo")
+def test_run_sim(params):
+    print(params)
 
-    params = {
-        "network_name": "Byron",
-        "data_dir": "application/modelling/data",
-        "output_dir": "application/modelling/test_output",
-        "participants_csv": "participant_meta_data.csv",
-        "battery_capacity": 0.001,
-        "cycle_efficiency": 0.99,
-        "battery_discharge_file": "ui_battery_discharge_window_eg.csv",
-        "tariffs": {
-            "scheme_name": "Test",
-            "retail_tariff_file": "retail_tariffs.csv",
-            "duos_file": "duos.csv",
-            "tuos_file": "tuos.csv",
-            "nuos_file": "nuos.csv",
-            "ui_tariff_file": "ui_tariffs_eg.csv",
-        }
-    }
-
-    my_model = ModelRunnerBeta()
+    my_model = ModelRunner()
     my_model.load_parameters(params)
-    my_model.run()
-    emit('sim_channel', "Running the Sim!!! Maybe.")
+    results = my_model.run()
+
+    emit('sim_channel', {"data": results})
 
 
 if __name__ == 'main':
