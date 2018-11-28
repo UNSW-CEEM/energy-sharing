@@ -20,9 +20,9 @@ class ModelParameters:
             "ui_tariff_file": None,
         }
         self.central_battery = {
-            "capacity": None,
-            "max_discharge": None,
-            "cycle_efficiency": None,
+            "capacity": 0.01,
+            "max_discharge": 0.01,
+            "cycle_efficiency": 0.95,
             "dispatch_algorithm": None
         }
         self.central_solar = None
