@@ -18,8 +18,6 @@ import csv
 import os
 
 
-
-
 def run_en(scenario= None, status_callback=None, data_dir='data'):
 
     # Create a network

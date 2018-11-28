@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h4> Progress: {{ completed_pages }}/{{ total_pages }} input pages completed.</h4>
+        <h4 v-if="!sleeping"> Status: {{ status }}</h4>
     </div>
 </template>
 
@@ -10,7 +10,17 @@
 
         data() {
             return {
+                is_connected: false,
+                sleeping: true,
+                status: "",
+            }
+        },
 
+        sockets: {
+            status_channel: function (response) {
+                this.is_connected = true;
+                this.sleeping = false;
+                this.status = response.data.message;
             }
         },
 

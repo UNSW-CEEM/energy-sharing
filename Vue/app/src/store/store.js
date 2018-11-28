@@ -10,14 +10,14 @@ const model_parameters = {
         "output_dir": "application/modelling/test_output",
         "participants_csv": "participant_meta_data.csv",
         "battery_discharge_file": "ui_battery_discharge_window_eg.csv",
-        "tariffs": {
-            "scheme_name": "Test",
-            "retail_tariff_file": "retail_tariffs.csv",
-            "duos_file": "duos.csv",
-            "tuos_file": "tuos.csv",
-            "nuos_file": "nuos.csv",
-            "ui_tariff_file": "ui_tariffs_eg.csv",
-        }
+        "tariffs": [
+            {"name": "scheme_name", "value": "Test"},
+            {"name": "retail_tariff_file", "value": "retail_tariffs.csv"},
+            {"name": "duos_file", "value": "duos.csv"},
+            {"name": "tuos_file", "value": "tuos.csv"},
+            {"name": "nuos_file", "value": "nuos.csv"},
+            {"name": "ui_tariff_file", "value": "ui_tariffs_eg.csv"},
+        ]
     },
 
     mutations: {

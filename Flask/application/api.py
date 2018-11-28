@@ -4,6 +4,7 @@ from flask_cors import CORS, cross_origin
 from flask_socketio import SocketIO, emit, rooms, disconnect, join_room, leave_room, close_room
 from .services import file_service
 from .modelling.model_runner import ModelRunner
+from .modelling.model_parameters import ModelParameters
 
 file_service = file_service.OSFileService()
 
@@ -107,13 +108,29 @@ def test_get_load_files():
 
 @socketio.on('run_model')
 def test_run_sim(params):
-    print(params)
+    # Show an initialising message while the model gets started.
+    status_callback("Initialising Server")
 
+    # Start the process of modelling
     my_model = ModelRunner()
-    my_model.load_parameters(params)
-    results = my_model.run()
+    my_params = ModelParameters(params)
+    my_model.load_parameters(my_params)
+    results = my_model.run(status_callback)
 
+    # Send (some) results back to the front end.
     emit('sim_channel', {"data": results})
+    status_callback("Modelling Complete")
+
+
+def status_callback(message):
+    # my_status = "Status: " + message
+    emit('status_channel',
+         {
+             "data": {
+                 "message": message
+             }
+         }
+    )
 
 
 if __name__ == 'main':
