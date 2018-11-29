@@ -55,7 +55,7 @@ class ModelRunner:
         )
 
         start = datetime.datetime(year=2017, month=2, day=26, hour=4)
-        end = datetime.datetime(year=2017, month=2, day=26, hour=8)
+        end = datetime.datetime(year=2017, month=2, day=26, hour=5)
 
         self.time_periods = util.generate_dates_in_range(start, end, 30)
 
@@ -73,12 +73,12 @@ class ModelRunner:
     def temp_return_data(self):
         energy_flows_path = os.path.join(
             self.output_dir,
-            ("df_network_energy_flows" + self.params.central_battery["capacity"] + ".csv")
+            ("df_network_energy_flows" + str(self.params.central_battery["capacity"]) + ".csv")
         )
 
         total_participant_bill_path = os.path.join(
             self.output_dir,
-            ("df_total_participant_bill" + self.params.central_battery["capacity"] + ".csv")
+            ("df_total_participant_bill" + str(self.params.central_battery["capacity"]) + ".csv")
         )
         energy_flows_data = []
         total_participant_bill = []
