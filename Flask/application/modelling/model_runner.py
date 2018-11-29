@@ -7,6 +7,7 @@ from .import util
 from .results import Results
 from . import energy_sim
 from . import financial_sim
+from . import model_data_parser as mdp
 
 import datetime
 import os
@@ -93,9 +94,11 @@ class ModelRunner:
             for row in reader:
                 total_participant_bill.append(row)
 
+        tpb = mdp.parse_total_participants_bill(total_participant_bill)
+
         results = {
             "energy_flows": energy_flows_data,
-            "total_participant_bill": total_participant_bill
+            "total_participant_bill": tpb
         }
 
         return results

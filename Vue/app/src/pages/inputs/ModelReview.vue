@@ -14,7 +14,7 @@
         <div class="right-graph">
             <BarChart
                 v-if="chart_two_loaded"
-                :chartdata="chart_two_data"
+                :chartData="chart_two_data"
                 :options="chart_two_options"/>
         </div>
     </div>
@@ -67,8 +67,28 @@
             },
 
             parse_participants_bill(data) {
-                console.log(data);
+                let labels = [];
+                let data_points = [];
+
+                for (let key in data) {
+                   labels.push(key);
+                   data_points.push(data[key])
+                }
+
+                let response = {
+                    labels: labels,
+                    datasets: [{
+                        label: "Total Participant Bill",
+                        data: data_points
+                    }]
+                };
+                console.log(labels, data_points);
+                return response
             },
+        },
+
+        async mounted () {
+
         }
     }
 </script>
