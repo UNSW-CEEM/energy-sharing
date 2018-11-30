@@ -169,4 +169,14 @@
     .noBullets {
         list-style: none;
     }
+
+    h1{
+        animation-name: fade-in;
+    animation-duration: 2s;
+    }
+
+    table{
+        animation-name: fade-in;
+    animation-duration: 2s;
+    }
 </style>

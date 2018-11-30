@@ -36,6 +36,21 @@
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
         /*color: #2c3e50;*/
+        
+    }
+    body{
+        background-color:#202225;
+        color:#cfcfcf;
+
+    }
+
+    select{
+        // width: 220px;
+        // border: 0;
+        // position: relative;
+        // z-index: 99;
+        
+        
     }
 
     .container {
@@ -44,36 +59,60 @@
         grid-template-columns: repeat(10, 1fr);
         grid-template-rows: 100px 500px 50px;
         height: 100vh;
+        
     }
 
     .topnav {
         grid-column-start: 1;
         grid-column-end: 11;
-        background: #3bbced;
+        // background: #3bbced;
         padding: 20px;
         /*min-width:100vw;*/
+        // margin-bottom: 1px solid black;
+        
     }
 
     .sidenav {
         grid-column-start: 1;
         grid-column-end: 3;
-        background: green;
+        background: rgb(219, 219, 219);
+        border-radius:5px;
+        background-color:#2F3136;
     }
 
     .main {
         grid-column-start: 3;
         grid-column-end: 11;
-        background: #3bbced;
+        background: rgb(219, 219, 219);
+        border-radius:5px;
+
+        display:flex;
+        flex-direction:column;
+        justify-content:flex-start;
+        align-items:center;
+        background-color: #36393F;
     }
 
     .footer {
         grid-column-start: 1;
         grid-column-end: 11;
-        background: green;
+        background: rgb(219, 219, 219);
+        border-radius:5px;
+        background-color:#2F3136;
     }
 
     .one {
         background: #3bbced;
+    }
+
+
+    @keyframes fade-in {
+    from {
+        opacity:0;
+    }
+    to {
+        opacity:1;
+    }
     }
 
 </style>

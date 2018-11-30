@@ -218,5 +218,18 @@
 </script>
 
 <style scoped>
+h1{
+    animation-name: fade-in;
+    animation-duration: 2s;
+}
 
+table{
+    animation-name: fade-in;
+    animation-duration: 2s;
+}
+
+button{
+    animation-name: fade-in;
+    animation-duration: 2s;
+}
 </style>

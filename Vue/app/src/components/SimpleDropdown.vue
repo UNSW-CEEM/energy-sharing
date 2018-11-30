@@ -1,4 +1,5 @@
 <template>
+    <div class="styled-select slate semi-square">
     <select
             v-bind:value="value"
             v-on:input="$emit('input', $event.target.value)">
@@ -9,6 +10,7 @@
             {{ option }}
         </option>
     </select>
+    </div>
 </template>
 
 <script>
@@ -27,5 +29,9 @@
 </script>
 
 <style scoped>
+select{
+    width:10vw;
+}
+
 
 </style>

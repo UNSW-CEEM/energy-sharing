@@ -147,5 +147,13 @@
 </script>
 
 <style scoped>
+h1{
+    animation-name: fade-in;
+    animation-duration: 2s;
+}
 
+span{
+    animation-name: fade-in;
+    animation-duration: 2s;
+}
 </style>

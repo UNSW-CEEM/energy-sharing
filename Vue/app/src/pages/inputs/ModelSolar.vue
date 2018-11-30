@@ -1,7 +1,7 @@
 <template>
      <div>
         <h1>{{ view_name }}</h1>
-        <span
+        <span class="input-line"
             v-for="input in input_data"
             :key="input.id">{{ input.display_text }}
 
@@ -14,7 +14,7 @@
                 v-model="input.value"
                 :my_options="my_options[input.dropdown_key]"
                 :my_placeholder="input.placeholder"/>
-        <br>
+        
         </span>
     </div>
 </template>
@@ -24,7 +24,7 @@
     import SimpleDropdown from '@/components/SimpleDropdown.vue';
 
     export default {
-        name: "CentralSolar",
+        name: "Central Solar",
 
         model_page_number: "central_solar",
 
@@ -124,6 +124,25 @@
         list-style: none;
         background: white;
         margin: 10px;
+    }
+
+    h1{
+        animation-name: fade-in;
+    animation-duration: 2s;
+    }
+
+    span{
+        animation-name: fade-in;
+        animation-duration: 2s;
+    }
+
+    .input-line{
+        display:flex;
+        flex-direction:row;
+        justify-content:space-between;
+        align-items:center;
+        margin: 1vh 0 1vh 0;
+        width:30vw;
     }
 
 

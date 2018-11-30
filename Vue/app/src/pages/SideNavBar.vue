@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <h2>Side Nav Bar</h2>
+    <div >
+        <h2>Inputs</h2>
         <router-link
             class="myButton"
             v-for="routes in links"
@@ -59,18 +59,18 @@
                         page: 'review',
                         storage_key: "review"
                     },
-                    {
-                        id: 8,
-                        text: 'Sockets',
-                        page: '/sockets_tester',
-                        storage_key: "sockets_tester"
-                    },
-                    {
-                        id: 9,
-                        text: 'Data Upload',
-                        page: '/data_upload',
-                        storage_key: "data_upload"
-                    }
+                    // {
+                    //     id: 8,
+                    //     text: 'Sockets',
+                    //     page: '/sockets_tester',
+                    //     storage_key: "sockets_tester"
+                    // },
+                    // {
+                    //     id: 9,
+                    //     text: 'Data Upload',
+                    //     page: '/data_upload',
+                    //     storage_key: "data_upload"
+                    // }
                 ]
             }
         },
@@ -83,26 +83,38 @@
 
 <style scoped>
     .myButton {
-        background-color:#63b8ee;
+        /* background-color:#63b8ee; */
         border-radius:1px;
-        border:1px solid #3866a3;
+        /* border:1px solid #3866a3; */
+        
         display:inline-block;
         cursor:pointer;
-        color:#14396a;
-        font-size:15px;
+        color:grey;
+        text-decoration:none;
+        font-size:1.1em;
         padding:10px 10px;
-        width: 200px;
+        /* width: 200px; */
         height: 10px;
+        
+        display:flex;
+        flex-direction:row;
+        justify-content:center;
+        align-items:center;
+        /* width:100%; */
     }
 
     .myButton:hover {
-        background-color:#468ccf;
+        background-color:#36393F;
 
     }
 
     .myButton:active {
         position:relative;
         top:1px;
+    }
+
+    .router-link-active{
+        background-color:#42464D;
     }
 
 </style>

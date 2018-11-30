@@ -5,14 +5,15 @@
             <button @click="run_model()" v-if="!results_received">Run Model</button>
             <button @click="run_model()" v-if="results_received">Rerun Model</button>
         </div>
-        <div class="left-graph">
+        <!-- <div class="left-graph">
             <LineChart
                 v-if="chart_one_loaded"
                 :chartdata="chart_one_data"
                 :options="chart_one_options"/>
-        </div>
-        <div class="right-graph">
+        </div> -->
+        <div class="graph">
             <BarChart
+                :styles="myStyles"
                 v-if="chart_two_loaded"
                 :chartData="chart_two_data"
                 :options="chart_two_options"/>
@@ -43,9 +44,37 @@
 
                 chart_two_loaded: false,
                 chart_two_data: null,
-                chart_two_options: null,
+                chart_two_options: {
+                    maintainAspectRatio: false,
+                    legend: {
+                        labels: {
+                            fontColor: "white",
+                            fontSize: 10,
+                        }
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                fontColor: "white",
+                                fontSize: 18,
+                                stepSize: 1,
+                                beginAtZero: true
+                            }
+                        }],
+                        xAxes: [{
+                            ticks: {
+                                fontColor: "white",
+                                fontSize: 10,
+                                stepSize: 1,
+                                beginAtZero: true
+                            }
+                        }]
+                    },
+                },
             }
         },
+
+        
         sockets: {
             sim_channel: function(response) {
                 this.results_received = true;
@@ -76,10 +105,14 @@
                 }
 
                 let response = {
+                    
                     labels: labels,
                     datasets: [{
                         label: "Total Participant Bill",
-                        data: data_points
+                        backgroundColor:'#43B581',
+                        responsive:true,
+                        data: data_points,
+                        
                     }]
                 };
                 console.log(labels, data_points);
@@ -95,29 +128,39 @@
 
 <style scoped>
     .graphs {
-        background: darkslategrey;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 100px 400px;
+        /* background: darkslategrey; */
+        display: flex;
+        flex-direction:column;
+        justify-content:flex-start;
+        align-items:center;
+        margin-top:2vh;
     }
 
     .graph-heading {
-        background: slateblue;
+        /* background: slateblue; */
         grid-column-start: 1;
         grid-column-end: 3;
     }
 
-    .left-graph {
+    .graph{
+        width:70vw !important;
+    }
+
+    /* .left-graph {
         background: aliceblue;
         grid-column-start: 1;
         grid-column-end: 2;
         grid-row-start: 2;
+    } */
+
+    canvas{
+
+        width:100% !important;
+        max-height:50vh !important;
+
     }
 
-    .right-graph {
-        background: beige;
-        grid-column-start: 2;
-        grid-column-end: 3;
-        grid-row-start: 2;
-    }
+    
+
+    
 </style>
