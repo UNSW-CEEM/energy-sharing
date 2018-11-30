@@ -57,16 +57,18 @@
         display: grid;
         grid-gap: 10px;
         grid-template-columns: repeat(10, 1fr);
-        grid-template-rows: 100px 500px 50px;
-        height: 100vh;
+        grid-template-rows: 5vh 85vh 5vh;
+        // height: 100vh;
         
     }
 
     .topnav {
         grid-column-start: 1;
         grid-column-end: 11;
+        // background-color:blue;
+        max-height:30px;
         // background: #3bbced;
-        padding: 20px;
+        // padding: 20px;
         /*min-width:100vw;*/
         // margin-bottom: 1px solid black;
         

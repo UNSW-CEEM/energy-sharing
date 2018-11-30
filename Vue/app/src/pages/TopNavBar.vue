@@ -6,18 +6,26 @@
                 <img src="/images/ceem-logo.png"/> 
         </div> -->
         
-        <span>
-            <div class="sim-title">
-            <svg viewBox="0 0 200 18"><text text-anchor="middle" x="50%" y="60%" textLength="80%">Energy Sharing Sim</text></svg>    
+            <div class="logo">
+                <font-awesome-icon class="fa-icon" icon="network-wired" />  
             </div>
-            <router-link
+            <div class="sim-title">
+            <!-- <svg viewBox="0 0 200 18"><text text-anchor="middle" x="50%" y="60%" textLength="80%">Energy Sharing Sim</text></svg>     -->
+                Energy Sharing Sim
+            </div>
+
+            <div class="sponsor-title">
+
+                UNSW Center for Energy and Environmental Markets
+            </div>
+            <!-- <router-link
                     class="spacing"
                     v-for="routes in links"
                     v-bind:key="routes.id"
-                    :to="`${routes.page}`">{{ routes.text }}</router-link>
+                    :to="`${routes.page}`">{{ routes.text }}</router-link> -->
 
             
-        </span>
+        
 
 
         
@@ -57,27 +65,38 @@
 
 <style>
     .spacing {
-        Margin-right: 10px;
+        margin-right: 10px;
     }
 
     .top-nav{
         display:flex; 
         flex-direction:row;
-        justify-content:space-around;
+        justify-content:flex-start;
         align-items:center;
+        
     }
 
+    .sponsor-title{
+        font-size: 0.8em;
+        margin: 0 2vw 0 2vw;
+    }
     
+
+    .logo{
+        color:rgba(114, 137, 218,1);
+        font-size:1.4em;
+    }
 
 
     .sim-title{
-        font-size:0.5em;
+        margin:0 0 0 1vw;
+        font-size:1.2em;
         /* font-weight:bold; */
-        color:rgb(197, 197, 197);
-        /* animation-name: fade-in;
-        animation-duration: 2s; */
-        animation: 3s strokefill forwards; 
-        fill:rgba(114, 137, 218,1);
+        color:rgba(114, 137, 218,1);
+        animation-name: fade-in;
+        animation-duration: 2s;
+        /* animation: 3s strokefill forwards;  */
+        /* fill:rgba(114, 137, 218,1); */
         
     }
 
