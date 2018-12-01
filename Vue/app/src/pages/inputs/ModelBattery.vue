@@ -41,7 +41,7 @@
                         id: 0,
                         name: "capacity",
                         display_text: "Capacity (kWh) ",
-                        value: "",
+                        value: 9.8,
                         placeholder: "kWh",
                         tag:"my_number"
                     },
@@ -49,7 +49,7 @@
                         id: 1,
                         name: "max_discharge",
                         display_text: "Max Discharge (kW) ",
-                        value: "",
+                        value: 3.2,
                         placeholder: "kW",
                         tag:"my_number"
                     },
@@ -57,7 +57,7 @@
                         id: 2,
                         name: "cycle_efficiency",
                         display_text: "Cycle Efficiency (%) ",
-                        value: "",
+                        value: 0.95,
                         placeholder: "%",
                         tag:"my_number"
                     },
@@ -74,8 +74,8 @@
 
                 my_options: {
                     dispatch_algorithm: [
-                        "Option 1",
-                        "ABC"
+                        "ToU Arbitrage",
+                        "NEM Sync"
                     ]
                 }
             }

@@ -147,10 +147,12 @@
             },
 
             populate_rows(){
-                let array_length = this.table_rows.length;
+                
                 
                 for(var i = 0; i< this.my_options.tariff_type_options.length; i++){
+                    let array_length = this.table_rows.length;
                     let new_row = {
+                        
                         row_id: array_length,
                         row_inputs: [
                             {
@@ -165,7 +167,7 @@
                                 col_id: 1,
                                 field_name:"tariff_name",
                                 tag:"my_number",
-                                value:"AGL "+this.my_options.tariff_type_options[i],
+                                value:"LO3 "+this.my_options.tariff_type_options[i],
                                 placeholder:"Name",
                             },
                             {
