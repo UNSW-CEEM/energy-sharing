@@ -54,13 +54,23 @@
                 model_page_name: "model_tariffs",
 
                 table_headers: [
-                    {header_id: 0, name: "tariff_name", additional_text:"Name"},
-                    {header_id: 1, name: "fit_input", additional_text:"$"},
-                    {header_id: 2, name: "peak_price", additional_text:"$"},
-                    {header_id: 3, name: "shoulder_price", additional_text:"$"},
-                    {header_id: 4, name: "off_peak_price", additional_text:"$"},
+                    {header_id: 0, name: "Tariff Type", additional_text:"Select"},
+                    {header_id: 1, name: "Tariff Name", additional_text:"Label"},
+                    {header_id: 2, name: "Solar FiT", additional_text:"$/kWh"},
+                    {header_id: 3, name: "Peak", additional_text:"$/kWh"},
+                    {header_id: 4, name: "Shoulder", additional_text:"$/kWh"},
+                    {header_id: 5, name: "Off-Peak", additional_text:"$/kWh"},
                 ],
-                table_rows: []
+                table_rows: [],
+                my_options:{
+                     tariff_type_options: [
+                        "Retail",
+                        "TUOS",
+                        "DUOS",
+                        "NUOS",
+                        "Peer to Peer",
+                    ],
+                }
             }
         },
 
@@ -72,7 +82,7 @@
             if (this.model_page_name in this.$store.state.frontend_state) {
                 this.table_rows = this.$store.state.frontend_state[this.model_page_name]
             } else {
-                this.add_row()
+                this.populate_rows()
             }
         },
 
@@ -89,34 +99,42 @@
                     row_inputs: [
                         {
                             col_id: 0,
+                            field_name:"Tariff Type",
+                            tag:"my_dropdown",
+                            dropdown_key: "tariff_type_options",
+                            value:"",
+                            placeholder:"Select Tariff Type",
+                        },
+                        {
+                            col_id: 1,
                             field_name:"tariff_name",
                             tag:"my_number",
                             value:"",
                             placeholder:"Name",
                         },
                         {
-                            col_id: 1,
+                            col_id: 2,
                             field_name:"fit_input",
                             tag:"my_number",
                             value:"",
                             placeholder:"$"
                         },
                         {
-                            col_id: 2,
+                            col_id: 3,
                             field_name:"peak_price",
                             tag:"my_number",
                             value:"",
                             placeholder:"$",
                         },
                         {
-                            col_id: 3,
+                            col_id: 4,
                             field_name:"shoulder_price",
                             tag:"my_number",
                             value:"",
                             placeholder:"$",
                         },
                         {
-                            col_id: 4,
+                            col_id: 5,
                             field_name:"off_peak_price",
                             tag:"my_number",
                             value:"",
@@ -126,6 +144,64 @@
                 };
 
                 this.table_rows.push(new_row);
+            },
+
+            populate_rows(){
+                let array_length = this.table_rows.length;
+                
+                for(var i = 0; i< this.my_options.tariff_type_options.length; i++){
+                    let new_row = {
+                        row_id: array_length,
+                        row_inputs: [
+                            {
+                                col_id: 0,
+                                field_name:"Tariff Type",
+                                tag:"my_dropdown",
+                                dropdown_key: "tariff_type_options",
+                                value:this.my_options.tariff_type_options[i],
+                                placeholder:"Select Tariff Type",
+                            },
+                            {
+                                col_id: 1,
+                                field_name:"tariff_name",
+                                tag:"my_number",
+                                value:"AGL "+this.my_options.tariff_type_options[i],
+                                placeholder:"Name",
+                            },
+                            {
+                                col_id: 2,
+                                field_name:"fit_input",
+                                tag:"my_number",
+                                value:Math.random().toFixed(2),
+                                placeholder:"$"
+                            },
+                            {
+                                col_id: 3,
+                                field_name:"peak_price",
+                                tag:"my_number",
+                                value:Math.random().toFixed(2),
+                                placeholder:"$",
+                            },
+                            {
+                                col_id: 4,
+                                field_name:"shoulder_price",
+                                tag:"my_number",
+                                value:Math.random().toFixed(2),
+                                placeholder:"$",
+                            },
+                            {
+                                col_id: 5,
+                                field_name:"off_peak_price",
+                                tag:"my_number",
+                                value:Math.random().toFixed(2),
+                                placeholder:"$",
+                            },
+                        ]
+                    };
+
+                    this.table_rows.push(new_row);
+                }
+                
             },
 
             save_page() {
