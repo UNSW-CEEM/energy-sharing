@@ -105,7 +105,11 @@
             if (this.model_page_name in this.$store.state.frontend_state) {
                 this.table_rows = this.$store.state.frontend_state[this.model_page_name]
             } else {
-                this.add_row()
+                //arbitrarily add 11 participants
+                for(var i = 0; i< 11; i++){
+                    this.add_row()
+                }
+                
             }
         },
 
@@ -117,7 +121,7 @@
         methods: {
             add_row() {
                 let array_length = this.table_rows.length;
-                let participant_default = "Participant " + array_length.toString();
+                let participant_default = "Participant " + Number(array_length+1).toString();
                 let new_row = {
                     row_id: array_length,
                     row_inputs: [
