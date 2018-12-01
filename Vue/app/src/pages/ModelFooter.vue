@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h4 v-if="!sleeping"> Status: {{ status }}</h4>
+        <div class="status" v-if="!sleeping"> Status: {{ status }}</div>
     </div>
 </template>
 
@@ -44,5 +44,12 @@
 </script>
 
 <style scoped>
-
+.status{
+    display:flex;
+    flex-direction:row;
+    justify-content: center;
+    align-items: center;
+    width:100%;
+    height:100%;
+}
 </style>
