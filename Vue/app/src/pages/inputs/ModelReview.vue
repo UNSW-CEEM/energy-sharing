@@ -1,9 +1,12 @@
 <template>
     <div class="graphs">
         <div class="graph-heading">
-            <h4>{{ view_name }}</h4>
-            <button @click="run_model()" v-if="!results_received">Run Model</button>
-            <button @click="run_model()" v-if="results_received">Rerun Model</button>
+            <h1>{{ view_name }}</h1>
+        </div>
+
+        <div class="run-button" @click="run_model()">
+            <span v-if="!results_received">Run Model</span>
+            <span v-if="results_received">Run Model</span>
         </div>
         <!-- <div class="left-graph">
             <LineChart
@@ -11,13 +14,13 @@
                 :chartdata="chart_one_data"
                 :options="chart_one_options"/>
         </div> -->
-        <div class="graph">
+        <!-- <div class="graph">
             <BarChart
                 
                 v-if="chart_two_loaded"
                 :chartData="chart_two_data"
                 :options="chart_two_options"/>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -133,7 +136,7 @@
         /* background: darkslategrey; */
         display: flex;
         flex-direction:column;
-        justify-content:flex-start;
+        justify-content:space-between;
         align-items:center;
         margin-top:2vh;
     }
@@ -154,6 +157,15 @@
         grid-column-end: 2;
         grid-row-start: 2;
     } */
+
+    .run-button{
+        background-color:rgba(114, 137, 218,1);
+        cursor:pointer;
+        color:black;
+        padding: 1vh 3vw 1vh 3vw;
+        margin: 1vh 0 3vh 0;
+        border-radius:3px;
+    }
 
     canvas{
 

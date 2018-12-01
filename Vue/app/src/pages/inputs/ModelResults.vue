@@ -1,9 +1,9 @@
 <template>
     <div class="graphs">
         <div class="graph-heading">
-            <h4>{{ view_name }}</h4>
-            <button @click="run_model()" v-if="!results_received">Run Model</button>
-            <button @click="run_model()" v-if="results_received">Rerun Model</button>
+            <h1>{{ view_name }}</h1>
+            <!-- <button @click="run_model()" v-if="!results_received">Run Model</button>
+            <button @click="run_model()" v-if="results_received">Rerun Model</button> -->
         </div>
         <!-- <div class="left-graph">
             <LineChart

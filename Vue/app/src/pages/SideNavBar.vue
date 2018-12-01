@@ -78,7 +78,7 @@
                         text: 'Results',
                         page: 'results',
                         storage_key: "review",
-                        icon:"search"
+                        icon:"poll"
                     },
                     // {
                     //     id: 8,
