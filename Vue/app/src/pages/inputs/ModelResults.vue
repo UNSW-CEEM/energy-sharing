@@ -26,7 +26,7 @@
     import BarChart from '@/charts/BarChart.vue';
 
     export default {
-        name: "Review",
+        name: "Results",
 
         components: {
             LineChart,
@@ -89,8 +89,6 @@
             run_model() {
                 let params = this.$store.state.model_parameters;
                 this.$socket.emit('run_model', params)
-                console.log('Moving to review page');
-                this.$router.push('results');
             },
 
             parse_energy_flows(data) {

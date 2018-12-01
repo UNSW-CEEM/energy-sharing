@@ -73,6 +73,13 @@
                         storage_key: "review",
                         icon:"search"
                     },
+                    {
+                        id: 8,
+                        text: 'Results',
+                        page: 'results',
+                        storage_key: "review",
+                        icon:"search"
+                    },
                     // {
                     //     id: 8,
                     //     text: 'Sockets',
