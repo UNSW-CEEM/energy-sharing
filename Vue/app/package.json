@@ -5,7 +5,9 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit"
+    "test:unit": "vue-cli-service test:unit",
+    "postinstall":"npm run build",
+    "start": "node server.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.8",
@@ -13,6 +15,7 @@
     "@fortawesome/vue-fontawesome": "^0.1.2",
     "axios": "^0.18.0",
     "chart.js": "^2.7.3",
+    "express": "^4.16.4",
     "socket.io": "^2.1.1",
     "socket.io-client": "^2.1.1",
     "uws": "^99.0.0",
@@ -33,6 +36,7 @@
     "babel-jest": "^23.0.1",
     "less": "^3.0.4",
     "less-loader": "^4.1.0",
+    "serve-static": "^1.13.2",
     "vue-template-compiler": "^2.5.17"
   },
   "postcss": {
