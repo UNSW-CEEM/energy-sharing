@@ -29,3 +29,8 @@ npm run lint
 ```
 npm run test:unit
 ```
+
+
+#Deploy Steps
+1. npm run build (builds for production)
+2. then server.js just runs a static file server written in node. 

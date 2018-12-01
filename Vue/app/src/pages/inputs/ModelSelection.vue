@@ -66,13 +66,15 @@
 
                     network_type:
                     [
-                        "Option 1",
-                        "ABC"
+                        "Apartment",
+                        "Embedded Network",
+                        "Peer to Peer Retail",
                     ],
 
                     simulation_type: [
-                        "Sim 1",
-                        "Sim 2"
+                        "Mike Roberts",
+                        "'Luomi'",
+                        
                     ]
                 }
             }
