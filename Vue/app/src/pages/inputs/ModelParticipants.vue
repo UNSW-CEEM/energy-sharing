@@ -81,33 +81,14 @@
                     ],
 
                     battery_options: [
-<<<<<<< HEAD
                         "No Battery",
                         "Tesla PowerWall",
                         "RedFlow",
                     ],
 
-                    solar_data_files: [
-                        "sample_pv_1.csv",
-                        "sample_pv_2.csv",
-                        "sample_pv_3.csv"
-                    ],
-
-                    load_data_options: [
-                        "sample_load_1.csv",
-                        "sample_load_2.csv",
-                        "sample_load_3.csv",
-                    ],
-
-=======
-                        "Battery Option 1",
-                        "Battery Option 2",
-                        "None",
-                    ],
-
                     solar_files_list: [],
+
                     load_files_list: [],
->>>>>>> fcc5d382ee28dafdee8d0a7a9862d987fcb139bf
                 },
             }
         },
