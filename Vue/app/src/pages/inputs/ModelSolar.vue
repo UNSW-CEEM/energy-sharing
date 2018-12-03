@@ -25,9 +25,6 @@
 
     export default {
         name: "Central Solar",
-
-        model_page_number: "central_solar",
-
         components: {
             SimpleDropdown,
             SimpleNumberInput,
@@ -36,6 +33,7 @@
         data () {
             return {
                 view_name: this.$options.name,
+                model_page_name: "central_solar",
 
                 input_data: [
                     {
