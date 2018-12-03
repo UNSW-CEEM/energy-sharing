@@ -1,4 +1,4 @@
-<!--FOCUS ON ME AND MY COMPONENTS-->
+    <!--FOCUS ON ME AND MY COMPONENTS-->
 <template>
     <div>
         <h1>{{ view_name }}</h1>
@@ -53,6 +53,7 @@
             return {
                 view_name: this.$options.name,
                 model_page_name:"model_participants",
+                is_connected: false,
 
                 table_headers: [
                     {id: 0, name: "Participant ID", additional_text:"ID"},
@@ -80,6 +81,7 @@
                     ],
 
                     battery_options: [
+<<<<<<< HEAD
                         "No Battery",
                         "Tesla PowerWall",
                         "RedFlow",
@@ -97,6 +99,15 @@
                         "sample_load_3.csv",
                     ],
 
+=======
+                        "Battery Option 1",
+                        "Battery Option 2",
+                        "None",
+                    ],
+
+                    solar_files_list: [],
+                    load_files_list: [],
+>>>>>>> fcc5d382ee28dafdee8d0a7a9862d987fcb139bf
                 },
             }
         },
@@ -111,6 +122,8 @@
                 }
                 
             }
+            this.get_solar_files();
+            this.get_load_files();
         },
 
         beforeDestroy() {
@@ -153,7 +166,7 @@
                             name: "load_data",
                             tag: "my_dropdown",
                             value:"",
-                            dropdown_key:"load_data_options",
+                            dropdown_key:"load_files_list",
                             placeholder:"Select One",
                         },
                         {
@@ -161,7 +174,7 @@
                             name: "solar_data",
                             tag: "my_dropdown",
                             value:"",
-                            dropdown_key:"solar_data_files",
+                            dropdown_key:"solar_files_list",
                             placeholder:"Select One",
                         },
                         {
@@ -225,7 +238,23 @@
 
             save_config() {
 
-            }
+            },
+
+            get_solar_files() {
+                console.log("Getting solar files")
+                this.$socket.emit('get_solar_files')
+            },
+
+            get_load_files() {
+                this.$socket.emit('get_load_files')
+            },
+        },
+        sockets: {
+            filesChannel: function(response) {
+                console.log("received response: ", response)
+                this.is_connected = true;
+                this.my_options[response.key] = response.data;
+            },
         }
     }
 </script>

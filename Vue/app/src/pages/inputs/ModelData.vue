@@ -75,13 +75,13 @@
             if (this.model_page_name in this.$store.state.frontend_state) {
                 this.input_data = this.$store.state.frontend_state[this.model_page_name]
             }
-            this.get_solar_files()
-            this.get_load_files()
+            this.get_solar_files();
+            this.get_load_files();
         },
 
         beforeDestroy() {
-            this.save_page()
-            this.save_page_server()
+            this.save_page();
+            this.save_page_server();
         },
 
         methods: {
