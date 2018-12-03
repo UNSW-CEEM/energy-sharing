@@ -6,11 +6,22 @@ class ModelParameters:
     def __init__(self, ui_parameters):
         self.ui_parameters = ui_parameters
 
-        self.network_name = None
+        self.battery_discharge_file = None
+        self.central_battery = {
+            "capacity": 0.01,
+            "max_discharge": 0.01,
+            "cycle_efficiency": 0.95,
+            "dispatch_algorithm": None
+        }
+        self.central_solar = {
+            "data_source": 0,
+            "scaling_factor": 1,
+            "sharing_algorithm": "",
+        }
         self.data_dir = None
+        self.network_name = None
         self.output_dir = None
         self.participants_csv = None
-        self.battery_discharge_file = None
         self.tariffs = {
             "scheme_name": None,
             "retail_tariff_file": None,
@@ -19,16 +30,13 @@ class ModelParameters:
             "nuos_file": None,
             "ui_tariff_file": None,
         }
-        self.central_battery = {
-            "capacity": 0.01,
-            "max_discharge": 0.01,
-            "cycle_efficiency": 0.95,
-            "dispatch_algorithm": None
-        }
-        self.central_solar = None
 
+        self.parse_all()
+
+    def parse_all(self):
         self.parse_basics()
         self.parse_battery()
+        self.parse_solar()
         self.parse_tariffs()
 
     def parse_basics(self):
@@ -50,11 +58,18 @@ class ModelParameters:
     def parse_financing(self):
         pass
 
+    # Don't think this is needed as Data simply shows the files available.
     def parse_model(self):
         pass
 
     def parse_solar(self):
-        pass
+        try:
+            solar_params = self.ui_parameters["central_solar"]
+            for each in solar_params:
+                self.central_solar[each["name"]] = each["value"]
+
+        except:
+            print("Bad Solar Parameters")
 
     def parse_tariffs(self):
         try:
@@ -141,7 +156,7 @@ class ModelParameters:
                 ]
             }
         ],
-    'undefined':
+    'central_solar':
         [
             {'name': 'data_source', 'value': 'ABC'},
             {'name': 'scaling_factor', 'value': '2'},
