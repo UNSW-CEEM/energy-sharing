@@ -9,7 +9,12 @@ Vue.use(Vuelidate);
 import socketio from 'socket.io-client';
 import VueSocketIO from 'vue-socket.io';
 
-export const SocketInstance = socketio('http://localhost:5000/');
+export const SocketInstance = socketio('http://0.0.0.0:5000/'); //when with gunicorn
+// export const SocketInstance = socketio('http://localhost:8000/');
+// export const SocketInstance = socketio('https://localenergysim.herokuapp.com/');
+SocketInstance.on('connect', () => {
+    console.log("Websockets Connected"); // true
+});
 Vue.use(VueSocketIO, SocketInstance);
 
 import VModal from 'vue-js-modal'
