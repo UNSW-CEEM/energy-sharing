@@ -30,7 +30,7 @@
                                     :my_placeholder="input.placeholder"/>
                 </td>
             </tr>
-            <button @click="add_row()">Add Row</button>
+            <button @click="add_row()">Add Participant</button>
         </table>
         <button @click="load_config()">Load from config file</button>
         <button @click="save_config()">Save to config file</button>
@@ -81,6 +81,25 @@
                     ],
 
                     battery_options: [
+<<<<<<< HEAD
+                        "No Battery",
+                        "Tesla PowerWall",
+                        "RedFlow",
+                    ],
+
+                    solar_data_files: [
+                        "sample_pv_1.csv",
+                        "sample_pv_2.csv",
+                        "sample_pv_3.csv"
+                    ],
+
+                    load_data_options: [
+                        "sample_load_1.csv",
+                        "sample_load_2.csv",
+                        "sample_load_3.csv",
+                    ],
+
+=======
                         "Battery Option 1",
                         "Battery Option 2",
                         "None",
@@ -88,6 +107,7 @@
 
                     solar_files_list: [],
                     load_files_list: [],
+>>>>>>> fcc5d382ee28dafdee8d0a7a9862d987fcb139bf
                 },
             }
         },
@@ -96,7 +116,11 @@
             if (this.model_page_name in this.$store.state.frontend_state) {
                 this.table_rows = this.$store.state.frontend_state[this.model_page_name]
             } else {
-                this.add_row()
+                //arbitrarily add 11 participants
+                for(var i = 0; i< 11; i++){
+                    this.add_row()
+                }
+                
             }
             this.get_solar_files();
             this.get_load_files();
@@ -110,7 +134,7 @@
         methods: {
             add_row() {
                 let array_length = this.table_rows.length;
-                let participant_default = "Participant " + array_length.toString();
+                let participant_default = "Participant " + Number(array_length+1).toString();
                 let new_row = {
                     row_id: array_length,
                     row_inputs: [
@@ -157,14 +181,14 @@
                             id: 5,
                             name: "solar_scaling",
                             tag: "my_number",
-                            value:"",
+                            value:1,
                             placeholder:"Input Number",
                         },
                         {
                             id: 6,
                             name: "battery_type",
                             tag: "my_dropdown",
-                            value:"",
+                            value:"No Battery",
                             dropdown_key:"battery_options",
                             placeholder:"Select Battery",
                         },

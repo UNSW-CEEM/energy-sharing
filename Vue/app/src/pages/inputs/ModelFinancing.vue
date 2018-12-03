@@ -60,19 +60,19 @@
                     {id: 3, name: "Discount Rate", additional_text:"%"},
                     {id: 4, name: "Amortization", additional_text:"years"},
                     {id: 5, name: "OPEX", additional_text:"$"},
-                    {id: 6, name: "Who Pays", additional_text:"Who"},
+                    
                 ],
 
                 table_rows: [],
 
                 my_options: {
-                    example: {
-                        option_one: "Option One",
-                        option_two: "Option Two",
-                    },
+                    
                     who_pays: {
-                        option_one: "Option 1",
-                        option_two: "Option 2",
+                        option_one: "Retailer",
+                        option_two: "TNSP",
+                        option_three: "DNSP",
+                        option_four: "Scheme Operator",
+                        option_five: "Participants",
                     }
                 },
             }
@@ -82,7 +82,7 @@
             if (this.model_page_name in this.$store.state.frontend_state) {
                 this.table_rows = this.$store.state.frontend_state[this.model_page_name]
             } else {
-                this.add_row()
+                this.populate_rows()
             }
         },
 
@@ -140,18 +140,69 @@
                             value:"",
                             placeholder:"$",
                         },
-                        {
-                            id: 6,
-                            name: "opex_payer",
-                            tag: "my_dropdown",
-                            value:"",
-                            dropdown_key:"example",
-                            placeholder:"Select Payer",
-                        },
+                       
                     ]
                 };
 
                 this.table_rows.push(new_row);
+            },
+
+            populate_rows() {
+                var components = ["Central Solar", "Central Battery"]
+                for(var i = 0; i< components.length; i++){
+                    let array_length = this.table_rows.length;
+                    let new_row = {
+                        row_id: array_length,
+                        row_inputs: [
+                            {
+                                id: 0,
+                                name: "component",
+                                tag: "my_number",
+                                value:components[i],
+                                placeholder:"Name",
+                            },
+                            {
+                                id: 1,
+                                name: "capex",
+                                tag: "my_number",
+                                value: Number(Math.random() * 100000).toFixed(0),
+                                placeholder:"$",
+                            },
+                            {
+                                id: 2,
+                                name: "capex_payer",
+                                tag: "my_dropdown",
+                                value:"",
+                                dropdown_key:"who_pays",
+                                placeholder:"Select Payer",
+                            },
+                            {
+                                id: 3,
+                                name: "discount_rate",
+                                tag: "my_number",
+                                value:7,
+                                placeholder:"%",
+                            },
+                            {
+                                id: 4,
+                                name: "amortization",
+                                tag: "my_number",
+                                value:20,
+                                placeholder:"Years",
+                            },
+                            {
+                                id: 5,
+                                name: "opex",
+                                tag: "my_number",
+                                value:0,
+                                placeholder:"$",
+                            },
+                            
+                        ]
+                    };
+
+                    this.table_rows.push(new_row);
+                }
             },
 
             save_page() {

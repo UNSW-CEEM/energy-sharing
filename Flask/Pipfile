@@ -12,7 +12,8 @@ numpy = "*"
 pprintpp = "*"
 pendulum = "*"
 DateTime = "*"
-Cython = "==0.26.1"
+Cython = "*"
+gunicorn = "*"
 
 [dev-packages]
 

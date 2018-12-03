@@ -51,7 +51,7 @@
                         id: 1,
                         name: "scaling_factor",
                         display_text: "Scaling Factor ",
-                        value: "",
+                        value: 1,
                         placeholder: "Decimal Scaling Factor",
                         tag:"my_number"
                     },
@@ -69,13 +69,14 @@
                 my_options: {
 
                     data_source: [
-                        "Option 1",
-                        "ABC",
+                        "sample_pv_1.csv",
+                        "sample_pv_2.csv",
+                        "sample_pv_3.csv",
                     ],
 
                     sharing_algorithm: [
-                        "Option 1",
-                        "ABC",
+                        "Fractional Allocation",
+                        "Quota Allocation",
                     ],
 
                 }

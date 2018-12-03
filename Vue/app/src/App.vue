@@ -1,5 +1,10 @@
 <template>
+
+   
+
     <div id="app">
+
+        
         <div class="container">
             <TopNavBar class="topnav"/>
             <SideNavBar class="sidenav"/>
@@ -7,6 +12,7 @@
             <ModelFooter class="footer"/>
         </div>
     </div>
+
 </template>
 
 <script>
@@ -23,7 +29,7 @@
         },
         data () {
             return  {
-
+                
             }
         },
     }
