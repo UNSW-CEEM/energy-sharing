@@ -47,6 +47,15 @@ class ModelParameters:
         except:
             print("Bad Battery Parameters")
 
+    def parse_financing(self):
+        pass
+
+    def parse_model(self):
+        pass
+
+    def parse_solar(self):
+        pass
+
     def parse_tariffs(self):
         try:
             tariff_params = self.ui_parameters["tariffs"]
@@ -55,3 +64,5 @@ class ModelParameters:
 
         except:
             print("Bad Tariff Parameters")
+
+

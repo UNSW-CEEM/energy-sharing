@@ -88,8 +88,8 @@
         },
 
         beforeDestroy() {
-            this.save_page()
-            this.save_page_server()
+            this.save_page();
+            this.save_page_server();
         },
 
         methods: {
