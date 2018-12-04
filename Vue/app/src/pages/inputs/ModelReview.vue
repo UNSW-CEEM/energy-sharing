@@ -138,7 +138,7 @@
         flex-direction:column;
         justify-content:space-between;
         align-items:center;
-        margin-top:2vh;
+        /*margin-top:2vh;*/
     }
 
     .graph-heading {
