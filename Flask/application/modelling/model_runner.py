@@ -56,7 +56,7 @@ class ModelRunner:
         )
 
         start = datetime.datetime(year=2017, month=2, day=26, hour=4)
-        end = datetime.datetime(year=2017, month=2, day=26, hour=12)
+        end = datetime.datetime(year=2017, month=2, day=26, hour=5)
 
         self.time_periods = util.generate_dates_in_range(start, end, 30)
 

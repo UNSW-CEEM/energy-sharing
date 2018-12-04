@@ -7,14 +7,14 @@
                     <ul>
                         <li v-for="item in files_lists.solar_files_list">{{ item }}</li>
                     </ul>
-                <button @click=""> Plc Add Solar File </button>
+                <button @click="add_solar_source">Add Solar File</button>
             </div>
             <div class="load-files">
                 <h1>Load Files</h1>
                 <ul>
                         <li v-for="item in files_lists.load_files_list">{{ item }}</li>
                     </ul>
-                <button @click=""> Plc Add Load File </button>
+                <button @click="add_load_source">Add Load File</button>
             </div>
         </div>
 
@@ -76,11 +76,11 @@
             // },
 
             add_solar_source() {
-
+                console.log("Implement Me");
             },
 
             add_load_source() {
-
+                console.log("Implement Me");
             },
 
             get_solar_files() {

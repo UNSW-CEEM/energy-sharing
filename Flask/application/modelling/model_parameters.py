@@ -36,6 +36,7 @@ class ModelParameters:
     def parse_all(self):
         self.parse_basics()
         self.parse_battery()
+        self.parse_participants()
         self.parse_solar()
         self.parse_tariffs()
 
@@ -73,12 +74,20 @@ class ModelParameters:
 
     def parse_tariffs(self):
         try:
-            tariff_params = self.ui_parameters["tariffs"]
+            tariff_params = self.ui_parameters["model_tariffs"]
             for each in tariff_params:
                 self.tariffs[each["name"]] = each["value"]
 
         except:
             print("Bad Tariff Parameters")
+
+    def parse_participants(self):
+        try:
+            part_params = self.ui_parameters["model_participants"]
+            print(part_params)
+
+        except:
+            print("Error with participants")
 
 
 ''' {
@@ -88,7 +97,7 @@ class ModelParameters:
     'participants_csv': 'participant_meta_data.csv',
     'battery_discharge_file': 'ui_battery_discharge_window_eg.csv',
 
-    'tariffs':
+    'model_tariffs':
         [
             {'name': 'scheme_name', 'value': 'Test'},
             {'name': 'retail_tariff_file', 'value': 'retail_tariffs.csv'},
