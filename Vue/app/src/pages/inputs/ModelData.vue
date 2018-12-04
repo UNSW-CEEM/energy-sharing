@@ -1,37 +1,29 @@
 <template>
-    <div>
-        <h1>{{ view_name }}</h1>
-        <span
-            v-for="input in input_data"
-            :key="input.id">{{ input.display_text }}
+    <div class="main-container">
+        <h1 class="page-heading">{{ view_name }}</h1>
+        <div class="list-container">
+                <div class="solar-files">
+                <h1>Solar Files</h1>
+                    <ul>
+                        <li v-for="item in files_lists.solar_files_list">{{ item }}</li>
+                    </ul>
+                <button @click=""> Plc Add Solar File </button>
+            </div>
+            <div class="load-files">
+                <h1>Load Files</h1>
+                <ul>
+                        <li v-for="item in files_lists.load_files_list">{{ item }}</li>
+                    </ul>
+                <button @click=""> Plc Add Load File </button>
+            </div>
+        </div>
 
-            <SimpleNumberInput
-                v-if="input.tag==='my_number'"
-                v-model="input.value"
-                :my_placeholder="input.placeholder"/>
-
-            <SimpleDropdown v-else-if="input.tag==='my_dropdown'"
-                v-model="input.value"
-                :my_options="my_options[input.dropdown_key]"
-                :my_placeholder="input.placeholder"/>
-
-            <button @click="">{{ input.button_text }}</button>
-        <br>
-        </span>
     </div>
 </template>
 
 <script>
-    import SimpleNumberInput from '@/components/SimpleNumberInput.vue';
-    import SimpleDropdown from '@/components/SimpleDropdown.vue';
-
     export default {
         name: "Data",
-
-        components: {
-            SimpleDropdown,
-            SimpleNumberInput,
-        },
 
         data () {
             return {
@@ -39,32 +31,7 @@
                 model_page_name: "model_data",
                 is_connected: false,
 
-                input_data: [
-                    {
-                        id: 0,
-                        name: "solar_data_source",
-                        display_text: "Solar Data Sources",
-                        value: "",
-                        dropdown_key: "solar_files_list",
-                        placeholder: "Select One",
-                        tag:"my_dropdown",
-                        button_text:"Add",
-                        add_function: "",
-                    },
-                    {
-                        id: 1,
-                        name: "load_data_source",
-                        display_text: "Load Data Sources",
-                        value: "",
-                        dropdown_key: "load_files_list",
-                        placeholder: "Select One",
-                        tag:"my_dropdown",
-                        button_text:"Add",
-                        add_function: "",
-                    },
-                ],
-
-                my_options: {
+                files_lists: {
                     solar_files_list: [],
                     load_files_list: [],
                 }
@@ -80,33 +47,33 @@
         },
 
         beforeDestroy() {
-            this.save_page();
-            this.save_page_server();
+            // this.save_page();
+            // this.save_page_server();
         },
 
         methods: {
-            save_page() {
-                let payload = {
-                    model_page_name: this.model_page_name,
-                    data: this.input_data
-                };
-                this.$store.commit('save_page', payload)
-            },
-
-            save_page_server() {
-                let data = [];
-                for(var i = 0; i < this.input_data.length; i++) {
-                    data.push({
-                        "name": this.input_data[i].name,
-                        "value": this.input_data[i].value
-                    })
-                }
-                let payload = {
-                    model_page_name: this.model_page_name,
-                    data: data,
-                };
-                this.$store.commit('save_server_page', payload)
-            },
+            // save_page() {
+            //     let payload = {
+            //         model_page_name: this.model_page_name,
+            //         data: this.input_data
+            //     };
+            //     this.$store.commit('save_page', payload)
+            // },
+            //
+            // save_page_server() {
+            //     let data = [];
+            //     for(var i = 0; i < this.input_data.length; i++) {
+            //         data.push({
+            //             "name": this.input_data[i].name,
+            //             "value": this.input_data[i].value
+            //         })
+            //     }
+            //     let payload = {
+            //         model_page_name: this.model_page_name,
+            //         data: data,
+            //     };
+            //     this.$store.commit('save_server_page', payload)
+            // },
 
             add_solar_source() {
 
@@ -138,19 +105,40 @@
             },
 
             filesChannel: function(response) {
-                console.log("received response: ", response)
+                console.log("received response: ", response);
                 this.is_connected = true;
-                this.my_options[response.key] = response.data;
+                this.files_lists[response.key] = response.data;
             },
         }
     }
 </script>
 
 <style scoped>
-h1{
-    animation-name: fade-in;
-    animation-duration: 2s;
-}
+    .main-container {
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .list-container {
+        display: flex;
+        justify-content: space-between;
+        animation-name: fade-in;
+        animation-duration: 2s;
+    }
+
+    .solar-files {
+        width: 50%;
+    }
+
+    .load-files {
+        width: 50%;
+    }
+
+    .page-heading {
+        width: 100%;
+        animation-name: fade-in;
+        animation-duration: 2s;
+    }
 
 span{
     animation-name: fade-in;
