@@ -133,7 +133,7 @@
         flex-direction:column;
         justify-content:flex-start;
         align-items:center;
-        margin-top:2vh;
+        /*margin-top:2vh;*/
     }
 
     .graph-heading {
