@@ -92,7 +92,7 @@
             run_model() {
                 let params = this.$store.state.model_parameters;
                 this.$socket.emit('run_model', params)
-                console.log('Moving to review page');
+                console.log(params);
                 this.$router.push('results');
             },
 

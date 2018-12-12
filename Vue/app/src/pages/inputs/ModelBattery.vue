@@ -41,7 +41,7 @@
                         id: 0,
                         name: "capacity",
                         display_text: "Capacity (kWh) ",
-                        value: 9.8,
+                        value: "",
                         placeholder: "kWh",
                         tag:"my_number"
                     },
@@ -49,7 +49,7 @@
                         id: 1,
                         name: "max_discharge",
                         display_text: "Max Discharge (kW) ",
-                        value: 3.2,
+                        value: "",
                         placeholder: "kW",
                         tag:"my_number"
                     },
@@ -57,7 +57,7 @@
                         id: 2,
                         name: "cycle_efficiency",
                         display_text: "Cycle Efficiency (%) ",
-                        value: 0.95,
+                        value: "",
                         placeholder: "%",
                         tag:"my_number"
                     },

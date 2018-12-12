@@ -16,7 +16,7 @@
             return {
 
             }
-        }
+        },
     }
 </script>
 
