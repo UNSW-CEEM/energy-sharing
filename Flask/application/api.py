@@ -5,6 +5,7 @@ from flask_socketio import SocketIO, emit, rooms, disconnect, join_room, leave_r
 from .services import file_service
 from .modelling.model_runner import ModelRunner
 from .modelling.model_parameters import ModelParameters
+from .modelling.model_interface import ModelInterface
 
 file_service = file_service.OSFileService()
 
@@ -108,6 +109,9 @@ def test_get_load_files():
 
 @socketio.on('run_model')
 def test_run_sim(params):
+    # '''Test Code After This'''
+    mi = ModelInterface()
+
     # Show an initialising message while the model gets started.
     status_callback("Initialising Server")
 
