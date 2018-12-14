@@ -110,16 +110,18 @@ def test_get_load_files():
 @socketio.on('run_model')
 def test_run_sim(params):
     # '''Test Code After This'''
+
     mi = ModelInterface()
+    mi.load(params)
 
     # Show an initialising message while the model gets started.
     status_callback("Initialising Server")
 
     # Start the process of modelling
-    my_model = ModelRunner()
-    my_params = ModelParameters(params)
-    my_model.load_parameters(my_params)
-    results = my_model.run(status_callback)
+    # my_model = ModelRunner()
+    # my_params = ModelParameters(params)
+    # my_model.load_parameters(my_params)
+    # results = my_model.run(status_callback)
 
     # Send (some) results back to the front end.
     emit('sim_channel', {"data": results})

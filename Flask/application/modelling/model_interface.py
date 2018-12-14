@@ -14,17 +14,63 @@
     - Some custom parse methods for turning the model results back into easy to use data.
 '''
 
+from .network import Network
+
+import os
+
 
 class ModelInterface:
     def __init__(self):
         self.inputs = default_inputs()
-        self.setup = default_setup()
+
+        self.status = None
+        self.data_dir = None
+        self.output_dir = None
+        self.network = None
+        self.central_battery = None
+        self.participants_csv = None
+        self.tariffs = None
+        self.time_periods = None
+
+        self.results = None
 
     def load(self, ui_inputs):
         # Will overwrite input parameters etc starting here. And Setup parameters.
         # May change the structure of defaults and over rides etc. Will most likely make further
         # Functions to handle each aspect of the input as well as a default object stored locally.
-        pass
+        load_functions = [
+            self.create_network,
+            self.load_data_dir,
+            self.load_output_dir,
+            self.load_participants,
+        ]
+
+        for each in load_functions:
+            each(ui_inputs)
+
+    # <-------------- HERE ARE SOME LOAD RELATED FUNCTIONS ---------------->
+    def create_network(self, ui_inputs):
+        if "network_name" in ui_inputs.keys():
+            self.inputs["network_name"] = ui_inputs["network_name"]
+        self.network = Network(self.inputs["network_name"])
+
+    def load_data_dir(self, ui_inputs):
+        if "data_dir" in ui_inputs:
+            print("This should print")
+            self.inputs["data_dir"] = ui_inputs["data_dir"]
+            print(ui_inputs["data_dir"])
+        self.data_dir = os.path.realpath(self.inputs["data_dir"])
+
+    def load_output_dir(self, ui_inputs):
+        if "output_dir" in ui_inputs:
+            self.inputs["output_dir"] = ui_inputs["output_dir"]
+        self.output_dir = os.path.realpath(self.inputs["output_dir"])
+
+    def load_participants(self, ui_inputs):
+        if "model_participants" in ui_inputs and ui_inputs["model_participants"].length() > 0:
+            # Do some logic about parsing the participants
+            pass
+        self.participants_csv = ui_inputs["participants_csv"]
 
     def run(self, status_callback):
         # Should be reasonably simple and somewhat akin to the model runner. I want to pull as much
@@ -50,6 +96,12 @@ class ModelInterface:
 def default_inputs():
     # A default input representation.
     result = {
+        'network_name': 'Default_Network',
+        'data_dir': 'application/modelling/data',
+        'output_dir': 'application/modelling/test_output',
+        'participants_csv': 'participant_meta_data.csv',
+        'battery_discharge_file': 'ui_battery_discharge_window_eg.csv',
+
         'model_tariffs':
             [
                 {'name': 'scheme_name', 'value': 'Test'},
@@ -124,19 +176,6 @@ def default_inputs():
                     ]
                  }
             ]
-    }
-
-    return result
-
-
-def default_setup():
-    # A default setup representation.
-    result = {
-        'default_network_name': 'Default_Test_Network',
-        'default_data_dir': 'application/modelling/data',
-        'default_output_dir': 'application/modelling/test_output',
-        'default_participants_csv': 'participant_meta_data.csv',
-        'default_battery_discharge_file': 'ui_battery_discharge_window_eg.csv',
     }
 
     return result
