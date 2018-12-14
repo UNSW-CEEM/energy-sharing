@@ -68,7 +68,7 @@
                         "TUOS",
                         "DUOS",
                         "NUOS",
-                        "Peer to Peer",
+                        // "Peer to Peer",
                     ],
                 }
             }
@@ -217,13 +217,14 @@
             save_page_server() {
                 let data = [];
 
-                for(var i = 0; i < this.table_rows.length; i++) {
+                // For each row in our table
+                for(let i = 0; i < this.table_rows.length; i++) {
                     let row = this.table_rows[i].row_inputs;
-                    let row_data = []
+                    let row_data = [];
 
                     for( var j = 0; j < row.length; j++) {
                         row_data.push({
-                            "name": row[j].name,
+                            "name": row[j].field_name,
                             "value": row[j].value
                         })
                     }

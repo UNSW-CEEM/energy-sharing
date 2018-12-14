@@ -83,7 +83,7 @@ class ModelInterface:
             # print(ui_inputs[key])
             pass
         # Else use the default CSV
-        self.participants_csv = ui_inputs["participants_csv"]
+        self.participants_csv = self.inputs["participants_csv"]
 
     def load_battery_discharge(self, ui_inputs):
         key = "battery_discharge_file"
@@ -91,26 +91,48 @@ class ModelInterface:
             self.inputs[key] = ui_inputs[key]
         self.battery_discharge_path = os.path.join(self.data_dir, self.inputs[key])
 
+    # TODO This whole load_tariffs system needs a rethink at some point. Very hacky right now.
     def load_tariffs(self, ui_inputs):
         key = "model_tariffs"
+
+        # This just handles the fact the UI has a slightly different name than the existing Model.
+        # This may need to change later.
+        key_mappings = {
+            'Retail': 'retail_tariff_data_path',
+            'DUOS': 'duos_data_path',
+            'TUOS': 'tuos_data_path',
+            'NUOS': 'nuos_data_path',
+            'Peer to Peer': 'p2p_data_path',
+        }
+
         # Create default tariff paths
         for each in self.inputs[key]:
             if each["name"] is "scheme_name":
                 self.tariff_paths[each["name"]] = each["value"]
             else:
-                self.tariff_paths[each["name"]] = os.path.join(self.data_dir, each["value"])
-
-        print("Tariff paths:", self.tariff_paths)
+                # Slightly hacky naming here.. means we can just use **self.tariff_paths in the tariff object
+                # constructor. Which maps the key/values to the expected parameters
+                self.tariff_paths[(each["name"] + "_data_path")] = os.path.join(self.data_dir, each["value"])
 
         if key in ui_inputs and len(ui_inputs[key]) > 0:
             # Create tariff files
-            pass
+            for each in ui_inputs[key]:
+                # Get the "Tariff Type" value from the UI data
+                key = each["row_inputs"][0]["value"]
+                # Can use it's corrosponding model name from the key_mappings object
+                # print(key_mappings[key])
+                result = tariff_parser(each)
+
+                if result:
+                    self.tariff_paths[key_mappings[key]] = result
 
         # After creating the custom tariff files we need to ensure the paths are also updated.
+        print(self.tariff_paths)
 
     def run(self, status_callback):
         # Create necessary objects
         self.create_network()
+        self.create_tariffs()
 
         # Run the model
 
@@ -150,11 +172,11 @@ def default_inputs():
         'model_tariffs':
             [
                 {'name': 'scheme_name', 'value': 'Test'},
-                {'name': 'retail_tariff_file', 'value': 'retail_tariffs.csv'},
-                {'name': 'duos_file', 'value': 'duos.csv'},
-                {'name': 'tuos_file', 'value': 'tuos.csv'},
-                {'name': 'nuos_file', 'value': 'nuos.csv'},
-                {'name': 'ui_tariff_file', 'value': 'ui_tariffs_eg.csv'}
+                {'name': 'retail_tariff', 'value': 'retail_tariffs.csv'},
+                {'name': 'duos', 'value': 'duos.csv'},
+                {'name': 'tuos', 'value': 'tuos.csv'},
+                {'name': 'nuos', 'value': 'nuos.csv'},
+                {'name': 'ui_tariff', 'value': 'ui_tariffs_eg.csv'}
             ],
 
         'model_data':
@@ -245,3 +267,11 @@ def parse_total_participants_bill(tpb):
                     data_points[key] += float(value)
 
     return data_points
+
+
+def tariff_parser(tariff):
+    result = False
+
+    # Insert some logic creating a CSV for the tariff, and if successful return the path.
+
+    return result

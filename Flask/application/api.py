@@ -110,10 +110,12 @@ def test_get_load_files():
 @socketio.on('run_model')
 def test_run_sim(params):
     # '''Test Code After This'''
-
+    # print(params)
     mi = ModelInterface()
     mi.load(params)
+    mi.run(status_callback)
 
+    results = False
     # Show an initialising message while the model gets started.
     status_callback("Initialising Server")
 
