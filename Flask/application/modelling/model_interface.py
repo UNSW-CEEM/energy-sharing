@@ -24,6 +24,8 @@ class ModelInterface:
         self.inputs = default_inputs()
 
         self.status = None
+
+        self.battery_discharge_path = None
         self.data_dir = None
         self.output_dir = None
         self.network = None
@@ -39,42 +41,65 @@ class ModelInterface:
         # May change the structure of defaults and over rides etc. Will most likely make further
         # Functions to handle each aspect of the input as well as a default object stored locally.
         load_functions = [
-            self.create_network,
+            self.load_network,
             self.load_data_dir,
             self.load_output_dir,
             self.load_participants,
+            self.load_battery_discharge,
         ]
 
         for each in load_functions:
             each(ui_inputs)
 
-    # <-------------- HERE ARE SOME LOAD RELATED FUNCTIONS ---------------->
-    def create_network(self, ui_inputs):
-        if "network_name" in ui_inputs.keys():
-            self.inputs["network_name"] = ui_inputs["network_name"]
-        self.network = Network(self.inputs["network_name"])
+    # <-------------- HERE ARE SOME LOAD FUNCTIONS ---------------->
+    def load_network(self, ui_inputs):
+        key = "network_name"
+        if key in ui_inputs.keys():
+            self.inputs[key] = ui_inputs[key]
+        # TODO Address below.
+        # I think this should be created later. Should only be an overwrite function
+        self.network = Network(self.inputs[key])
 
     def load_data_dir(self, ui_inputs):
-        if "data_dir" in ui_inputs:
-            print("This should print")
-            self.inputs["data_dir"] = ui_inputs["data_dir"]
-            print(ui_inputs["data_dir"])
-        self.data_dir = os.path.realpath(self.inputs["data_dir"])
+        key = "data_dir"
+        if key in ui_inputs:
+            self.inputs[key] = ui_inputs[key]
+        self.data_dir = os.path.realpath(self.inputs[key])
 
     def load_output_dir(self, ui_inputs):
-        if "output_dir" in ui_inputs:
-            self.inputs["output_dir"] = ui_inputs["output_dir"]
-        self.output_dir = os.path.realpath(self.inputs["output_dir"])
+        key = "output_dir"
+        if key in ui_inputs:
+            self.inputs[key] = ui_inputs[key]
+        self.output_dir = os.path.realpath(self.inputs[key])
 
     def load_participants(self, ui_inputs):
-        if "model_participants" in ui_inputs and ui_inputs["model_participants"].length() > 0:
+        key = "model_participants"
+        if key in ui_inputs and len(ui_inputs[key]) > 0:
             # Do some logic about parsing the participants
-            pass
+            # TODO Sort out this creation of a participants CSV from the ui input.
+            print(ui_inputs[key])
+        # Else use the default CSV
         self.participants_csv = ui_inputs["participants_csv"]
 
+    def load_battery_discharge(self, ui_inputs):
+        key = "battery_discharge_file"
+        if key in ui_inputs:
+            self.inputs[key] = ui_inputs[key]
+        self.battery_discharge_path = os.path.join(self.data_dir, self.inputs[key])
+
+    def load_tariffs(self, ui_inputs):
+        key = "model_tariffs"
+        if key in ui_inputs and len(ui_inputs[key]) > 0:
+            pass
+
     def run(self, status_callback):
-        # Should be reasonably simple and somewhat akin to the model runner. I want to pull as much
-        # bespoke stuff as possible out of the function.
+        # Create necessary objects
+        self.create_network()
+
+        # Run the model
+
+    # <-------------- HERE ARE SOME CREATE (RUN) FUNCTIONS ---------------->
+    def create_network(self):
         pass
 
     def parse(self):
@@ -149,12 +174,14 @@ def default_inputs():
                     ]
                  }
             ],
+
         'central_solar':
             [
                 {'name': 'data_source', 'value': 'ABC'},
                 {'name': 'scaling_factor', 'value': '2'},
                 {'name': 'sharing_algorithm', 'value': 'ABC'}
             ],
+
         'central_battery':
             [
                 {'name': 'capacity', 'value': '0.01'},
@@ -162,6 +189,7 @@ def default_inputs():
                 {'name': 'cycle_efficiency', 'value': '0.8'},
                 {'name': 'dispatch_algorithm', 'value': 'ABC'}
             ],
+
         'model_financing':
             [
                 {'row_id': 0, 'row_inputs':
