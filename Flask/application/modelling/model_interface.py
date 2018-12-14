@@ -15,6 +15,7 @@
 '''
 
 from .network import Network
+from .tariffs import Tariffs
 
 import os
 
@@ -31,6 +32,7 @@ class ModelInterface:
         self.network = None
         self.central_battery = None
         self.participants_csv = None
+        self.tariff_paths = {}
         self.tariffs = None
         self.time_periods = None
 
@@ -46,6 +48,7 @@ class ModelInterface:
             self.load_output_dir,
             self.load_participants,
             self.load_battery_discharge,
+            self.load_tariffs,
         ]
 
         for each in load_functions:
@@ -77,7 +80,8 @@ class ModelInterface:
         if key in ui_inputs and len(ui_inputs[key]) > 0:
             # Do some logic about parsing the participants
             # TODO Sort out this creation of a participants CSV from the ui input.
-            print(ui_inputs[key])
+            # print(ui_inputs[key])
+            pass
         # Else use the default CSV
         self.participants_csv = ui_inputs["participants_csv"]
 
@@ -89,8 +93,20 @@ class ModelInterface:
 
     def load_tariffs(self, ui_inputs):
         key = "model_tariffs"
+        # Create default tariff paths
+        for each in self.inputs[key]:
+            if each["name"] is "scheme_name":
+                self.tariff_paths[each["name"]] = each["value"]
+            else:
+                self.tariff_paths[each["name"]] = os.path.join(self.data_dir, each["value"])
+
+        print("Tariff paths:", self.tariff_paths)
+
         if key in ui_inputs and len(ui_inputs[key]) > 0:
+            # Create tariff files
             pass
+
+        # After creating the custom tariff files we need to ensure the paths are also updated.
 
     def run(self, status_callback):
         # Create necessary objects
@@ -101,6 +117,10 @@ class ModelInterface:
     # <-------------- HERE ARE SOME CREATE (RUN) FUNCTIONS ---------------->
     def create_network(self):
         pass
+
+    def create_tariffs(self):
+        # This expands our paths dict into our Tariff object parameters. Verrrrrry niiiiiice.
+        self.tariffs = Tariffs(**self.tariff_paths)
 
     def parse(self):
         # A one stop function to call all the parsing functions.
