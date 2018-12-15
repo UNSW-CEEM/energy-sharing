@@ -115,7 +115,7 @@ def test_run_sim(params):
     mi.load(params)
     mi.run(status_callback)
 
-    results = False
+    # results = False
     # Show an initialising message while the model gets started.
     status_callback("Initialising Server")
 

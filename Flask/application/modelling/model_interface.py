@@ -18,6 +18,7 @@ from .network import Network
 from .tariffs import Tariffs
 
 import os
+import csv
 
 
 class ModelInterface:
@@ -95,16 +96,6 @@ class ModelInterface:
     def load_tariffs(self, ui_inputs):
         key = "model_tariffs"
 
-        # This just handles the fact the UI has a slightly different name than the existing Model.
-        # This may need to change later.
-        key_mappings = {
-            'Retail': 'retail_tariff_data_path',
-            'DUOS': 'duos_data_path',
-            'TUOS': 'tuos_data_path',
-            'NUOS': 'nuos_data_path',
-            'Peer to Peer': 'p2p_data_path',
-        }
-
         # Create default tariff paths
         for each in self.inputs[key]:
             if each["name"] is "scheme_name":
@@ -117,14 +108,7 @@ class ModelInterface:
         if key in ui_inputs and len(ui_inputs[key]) > 0:
             # Create tariff files
             for each in ui_inputs[key]:
-                # Get the "Tariff Type" value from the UI data
-                key = each["row_inputs"][0]["value"]
-                # Can use it's corrosponding model name from the key_mappings object
-                # print(key_mappings[key])
-                result = tariff_parser(each)
-
-                if result:
-                    self.tariff_paths[key_mappings[key]] = result
+                result = tariff_parser(each, self.tariff_paths)
 
         # After creating the custom tariff files we need to ensure the paths are also updated.
         print(self.tariff_paths)
@@ -269,9 +253,63 @@ def parse_total_participants_bill(tpb):
     return data_points
 
 
-def tariff_parser(tariff):
+def tariff_parser(tariff, tariff_paths):
     result = False
 
-    # Insert some logic creating a CSV for the tariff, and if successful return the path.
+    # This just handles the fact the UI has a slightly different name than the existing Model.
+    # This may need to change later.
+    key_mappings = {
+        'Retail': 'retail_tariff_data_path',
+        'DUOS': 'duos_data_path',
+        'TUOS': 'tuos_data_path',
+        'NUOS': 'nuos_data_path',
+        'Peer to Peer': 'p2p_data_path',
+    }
+
+    # More silly mappings to ease the pain.
+    field_mappings = {
+        'tariff_name': 'offer_name',
+        'fit_input': '',
+        'peak_price': 'peak_charge',
+        'shoulder_price': 'shoulder_charge',
+        'off_peak_price': 'offpeak_charge',
+    }
+
+    name = tariff["row_inputs"][0]["value"]
+    key = key_mappings[name]
+
+    # print("Path: ", path, "\nFull Data: ", tariff)
+
+    data_array = tariff["row_inputs"]
+    parsed_dict = {}
+
+    for each in data_array:
+        parsed_dict[each["name"]] = each["value"]
+
+    # print(parsed_dict)
+
+    with open(tariff_paths[key], 'a') as file:
+        reader = csv.DictReader(file)
+        writer = csv.writer(file)
+        writer.writerow(parsed_dict)
+
+        for row in reader:
+            print(row, "\n")
 
     return result
+
+'''
+Fields in the CSV's...
+
+Ref,dnsp,offer_name,type,
+daily_charge,flat_charge,peak_charge,shoulder_charge,
+offpeak_charge,block_1_charge,block_2_charge,controlled_load,
+peak_start_time,peak_end_time,peak_start_time_2,peak_end_time_2,
+shoulder_start_time,shoulder_end_time,shoulder_start_time_2,shoulder_end_time_2,
+block_1_volume,block_2_volume,demand,demand_units,
+tou_weekday_only_flag
+
+Fields from the UI...
+
+Tariff Type,tariff_name,fit_input,peak_price,shoulder_price,off_peak_price
+'''
