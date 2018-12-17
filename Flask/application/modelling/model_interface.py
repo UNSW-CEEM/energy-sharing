@@ -49,7 +49,9 @@ class ModelInterface:
             self.load_output_dir,
             self.load_participants,
             self.load_battery_discharge,
-            self.load_tariffs,
+            self.load_battery,
+            self.load_solar,
+            # self.load_tariffs,
         ]
 
         for each in load_functions:
@@ -92,6 +94,22 @@ class ModelInterface:
             self.inputs[key] = ui_inputs[key]
         self.battery_discharge_path = os.path.join(self.data_dir, self.inputs[key])
 
+    # TODO Consider refactor of UI storage format and JSON object sent.
+    # Enumerate method maaaaaybe makes this less hacky.
+    # Don't like that we have 'name' and 'value' through everything.
+    def load_battery(self, ui_inputs):
+        key = "central_battery"
+        if key in ui_inputs:
+            for index, each in enumerate(self.inputs[key]):
+                each["value"] = ui_inputs[key][index]["value"]
+
+    # Same as above method.
+    def load_solar(self, ui_inputs):
+        key = "central_solar"
+        if key in ui_inputs:
+            for index, each in enumerate(self.inputs[key]):
+                each["value"] = ui_inputs[key][index]["value"]
+
     # TODO This whole load_tariffs system needs a rethink at some point. Very hacky right now.
     def load_tariffs(self, ui_inputs):
         key = "model_tariffs"
@@ -116,7 +134,7 @@ class ModelInterface:
     def run(self, status_callback):
         # Create necessary objects
         self.create_network()
-        self.create_tariffs()
+        # self.create_tariffs()
 
         # Run the model
 
@@ -255,7 +273,6 @@ def parse_total_participants_bill(tpb):
 
 def tariff_parser(tariff, tariff_paths):
     result = False
-
     # This just handles the fact the UI has a slightly different name than the existing Model.
     # This may need to change later.
     key_mappings = {
@@ -294,7 +311,8 @@ def tariff_parser(tariff, tariff_paths):
         writer.writerow(parsed_dict)
 
         for row in reader:
-            print(row, "\n")
+            # print(row, "\n")
+            pass
 
     return result
 
