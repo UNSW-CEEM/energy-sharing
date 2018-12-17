@@ -135,7 +135,6 @@ def test_run_sim(params):
 def another_test_run_sim(params):
     status_callback("Running Test Model Interface")
     mp = ModelParameters()
-    print("No params coming through!", params)
     mp.load(params)
     emit('sim_channel', {"data": False})
 
