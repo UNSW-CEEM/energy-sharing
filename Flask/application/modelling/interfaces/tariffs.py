@@ -16,20 +16,24 @@ class Tariffs:
 
 
 class Tariff:
-    def __init__(self,
-                 tariff_type=None,
-                 tariff_name=None,
-                 fit_input=None,
-                 peak_price=None,
-                 shoulder_price=None,
-                 off_peak_price=None):
+    def __init__(
+                self,
+                tariff_type,
+                tariff_name,
+                fit_input,
+                peak_charge,
+                shoulder_charge,
+                offpeak_charge,
+            ):
 
         self.tariff_type = tariff_type
-        self.tariff_name = tariff_name,
-        self.fit_input = fit_input,
-        self.peak_price = peak_price,
-        self.shoulder_price = shoulder_price,
-        self.off_peak_price = off_peak_price
+        self.tariff_name = tariff_name
+        self.fit_input = fit_input
+        self.peak_charge = peak_charge
+        self.shoulder_charge = shoulder_charge
+        self.offpeak_charge = offpeak_charge
+
+        self.print()
 
     def print(self):
-        print("Tariff Object Contains: {}, {}, {}".format(self.tariff_type, self.tariff_name, self.peak_price))
+        print("Tariff Object Contains: {}, {}, {}".format(self.tariff_type, self.tariff_name, self.peak_charge))
