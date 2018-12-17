@@ -157,7 +157,7 @@
                         row_inputs: [
                             {
                                 col_id: 0,
-                                field_name:"Tariff Type",
+                                field_name:"tariff_type",
                                 tag:"my_dropdown",
                                 dropdown_key: "tariff_type_options",
                                 value:this.my_options.tariff_type_options[i],
