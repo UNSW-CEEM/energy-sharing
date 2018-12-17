@@ -136,7 +136,7 @@
                         },
                         {
                             id: 2,
-                            name: "tariff_type",
+                            name: "retail_tariff_type",
                             tag: "my_dropdown",
                             value:"",
                             dropdown_key:"tariff_type_options",

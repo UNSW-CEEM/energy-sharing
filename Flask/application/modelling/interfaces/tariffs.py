@@ -23,8 +23,7 @@ class Tariff:
                 fit_input,
                 peak_charge,
                 shoulder_charge,
-                offpeak_charge,
-            ):
+                offpeak_charge):
 
         self.tariff_type = tariff_type
         self.tariff_name = tariff_name
@@ -33,7 +32,7 @@ class Tariff:
         self.shoulder_charge = shoulder_charge
         self.offpeak_charge = offpeak_charge
 
-        self.print()
+        # self.print()
 
     def print(self):
         print("Tariff Object Contains: {}, {}, {}".format(self.tariff_type, self.tariff_name, self.peak_charge))

@@ -1,6 +1,7 @@
 from .central_battery import CentralBattery
 from .central_solar import CentralSolar
 from .tariffs import Tariffs
+from .participants import Participants
 
 import os
 
@@ -16,7 +17,7 @@ class ModelParameters:
         self.output_dir = None
 
         # Model setup objects
-        self.participants = None
+        self.participants = Participants(self.data_dir)
         self.tariffs = Tariffs(self.data_dir)
         self.finances = None
         self.central_battery = CentralBattery(self.data_dir)
@@ -27,7 +28,8 @@ class ModelParameters:
             self.load_network_name,
             self.load_network_type,
             self.load_central_battery,
-            self.load_tariffs
+            self.load_tariffs,
+            self.load_participants,
         ]
 
         for each in load_functions:
@@ -52,6 +54,11 @@ class ModelParameters:
         key = "model_tariffs"
         if key in ui_inputs:
             self.tariffs.load(ui_inputs[key])
+
+    def load_participants(self, ui_inputs):
+        key = "model_participants"
+        if key in ui_inputs:
+            self.participants.load(ui_inputs[key])
 
     def print(self):
         print("Model Type: ", self.model_type)
