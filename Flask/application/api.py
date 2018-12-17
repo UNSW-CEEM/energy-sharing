@@ -4,8 +4,9 @@ from flask_cors import CORS, cross_origin
 from flask_socketio import SocketIO, emit, rooms, disconnect, join_room, leave_room, close_room
 from .services import file_service
 from .modelling.model_runner import ModelRunner
-from .modelling.model_parameters import ModelParameters
+from .modelling.old_model_parameters import ModelParameters
 from .modelling.model_interface import ModelInterface
+from .modelling.interfaces.model_parameters import ModelParameters
 
 file_service = file_service.OSFileService()
 
@@ -128,6 +129,15 @@ def test_run_sim(params):
     # Send (some) results back to the front end.
     emit('sim_channel', {"data": results})
     status_callback("Modelling Complete")
+
+
+@socketio.on('run_test_model')
+def another_test_run_sim(params):
+    status_callback("Running Test Model Interface")
+    mp = ModelParameters()
+    print("No params coming through!", params)
+    mp.load(params)
+    emit('sim_channel', {"data": False})
 
 
 def status_callback(message):

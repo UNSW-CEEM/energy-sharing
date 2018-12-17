@@ -4,6 +4,10 @@
             <h1>{{ view_name }}</h1>
         </div>
 
+        <div class="run-test-button" @click="run_test_model()">
+            <span>Run Test Model</span>
+        </div>
+
         <div class="run-button" @click="run_model()">
             <span v-if="!results_received">Run Model</span>
             <span v-if="results_received">Run Model</span>
@@ -91,9 +95,14 @@
         methods: {
             run_model() {
                 let params = this.$store.state.model_parameters;
-                this.$socket.emit('run_model', params)
+                this.$socket.emit('run_model', params);
                 console.log(params);
                 this.$router.push('results');
+            },
+
+            run_test_model() {
+                let params = this.$store.model_parameters;
+                this.$socket.emit('run_test_model', params);
             },
 
             parse_energy_flows(data) {
@@ -159,6 +168,15 @@
     } */
 
     .run-button{
+        background-color:rgba(114, 137, 218,1);
+        cursor:pointer;
+        color:black;
+        padding: 1vh 3vw 1vh 3vw;
+        margin: 1vh 0 3vh 0;
+        border-radius:3px;
+    }
+
+    .run-test-button{
         background-color:rgba(114, 137, 218,1);
         cursor:pointer;
         color:black;
