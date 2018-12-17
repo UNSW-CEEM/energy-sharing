@@ -25,6 +25,7 @@ class ModelParameters:
         load_functions = [
             self.load_network_name,
             self.load_network_type,
+            self.load_central_battery
         ]
 
         for each in load_functions:

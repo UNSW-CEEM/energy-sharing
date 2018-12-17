@@ -12,7 +12,16 @@ class CentralBattery:
         self.battery_discharge_filepath = self.set_battery_discharge_filepath()
 
     def load(self, inputs):
-        print(inputs)
+        setters = {
+            'capacity': self.set_capacity,
+            'max_discharge': self.set_max_discharge,
+            'cycle_efficiency': self.set_cycle_efficiency,
+            'dispatch_algorithm': self.set_dispatch_algorithm,
+        }
+        for each in inputs:
+            setters[each["name"]](each["value"])
+
+        print(self.capacity, self.max_discharge, self.cycle_efficiency)
 
     def get_params_dict(self):
         params = {
@@ -35,6 +44,24 @@ class CentralBattery:
     def get_dispatch_algorithm(self):
         return self.dispatch_algorithm
 
-    def set_battery_discharge_filepath(self):
-        battery_discharge_filename = 'ui_battery_discharge_window_eg.csv'
-        return os.path.join(self.data_dir, battery_discharge_filename)
+    def set_battery_discharge_filepath(self, value=None):
+        file_name = 'ui_battery_discharge_window_eg.csv'
+        if value is not None:
+            file_name = value
+        return os.path.join(self.data_dir, file_name)
+
+    def set_capacity(self, value):
+        if value is not '':
+            self.capacity = value
+
+    def set_cycle_efficiency(self, value):
+        if value is not '':
+            self.cycle_efficiency = value
+
+    def set_dispatch_algorithm(self, value):
+        if value is not '':
+            self.dispatch_algorithm = value
+
+    def set_max_discharge(self, value):
+        if value is not '':
+            self.max_discharge = value
