@@ -37,6 +37,7 @@ class ModelParameters:
 
     def load_defaults(self):
         # Populate default participants from the CSV.
+        self.tariffs.load_defaults()
         self.participants.load_defaults()
 
     def load_network_name(self, ui_inputs):

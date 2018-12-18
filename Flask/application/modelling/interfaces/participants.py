@@ -12,7 +12,7 @@ class Participants:
         # Reset the list of participants
         self.participants = []
 
-        # Sort through the UI input arrays and create participants.
+        # Parse through the UI input arrays and create participants.
         for each in inputs:
             row = each["row_inputs"]
             parameters = {}
