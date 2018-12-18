@@ -35,6 +35,10 @@ class ModelParameters:
         for each in load_functions:
             each(ui_inputs)
 
+    def load_defaults(self):
+        # Populate default participants from the CSV.
+        self.participants.load_defaults()
+
     def load_network_name(self, ui_inputs):
         key = "network_name"
         if key in ui_inputs:

@@ -144,7 +144,7 @@
                         },
                         {
                             id: 3,
-                            name: "load_data",
+                            name: "load_path",
                             tag: "my_dropdown",
                             value:"",
                             dropdown_key:"load_files_list",
@@ -152,7 +152,7 @@
                         },
                         {
                             id: 4,
-                            name: "solar_data",
+                            name: "solar_path",
                             tag: "my_dropdown",
                             value:"",
                             dropdown_key:"solar_files_list",

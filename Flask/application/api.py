@@ -22,6 +22,10 @@ socketio = SocketIO(app, async_mode=async_mode)
 thread = None
 thread_lock = Lock()
 
+# Create a model parameters object and load up defaults.
+mp = ModelParameters()
+mp.load_defaults()
+
 
 @app.route('/')
 def index():
@@ -134,7 +138,7 @@ def test_run_sim(params):
 @socketio.on('run_test_model')
 def another_test_run_sim(params):
     status_callback("Running Test Model Interface")
-    mp = ModelParameters()
+    # Overwrite defaults with UI values.
     mp.load(params)
     emit('sim_channel', {"data": False})
 
