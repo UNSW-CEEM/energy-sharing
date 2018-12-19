@@ -1,0 +1,7 @@
+Ref,dnsp,offer_name,type,daily_charge,flat_charge,peak_charge,shoulder_charge,offpeak_charge,block_1_charge,block_2_charge,controlled_load,peak_start_time,peak_end_time,peak_start_time_2,peak_end_time_2,shoulder_start_time,shoulder_end_time,shoulder_start_time_2,shoulder_end_time_2,block_1_volume,block_2_volume,demand,demand_units,tou_weekday_only_flag
+1,essential_energy,Controlled Load 1,BLNC1AU,0,0,0,0,0,0,0,0.013964,0,0,0,0,0,0,0,0,0,0,0,,0
+2,essential_energy,Controlled Load 2,BLNC2AU,0,0,0,0,0,0,0,0.018011,0,0,0,0,0,0,0,0,0,0,0,,0
+3,essential_energy,LV Small Business Anytime,BLNN1AU,0,0.019286,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,0
+4,essential_energy,LV TOU <100MWh,BLNT2AU,0,0,0.026087,0.023602,0.013964,0,0,0,17,20,0,0,7,17,20,22,0,0,0,,1
+5,essential_energy,LV Business TOU_Interval meter,BLNT2AL,0,0,0.026087,0.023602,0.013964,0,0,0,17,20,0,0,7,17,20,22,0,0,0,,1
+6,essential_energy,Small Business - Opt in Demand,BLND1AB,0,0,0.026087,0.023602,0.013964,0,0,0,17,20,0,0,7,17,20,22,0,0,0,$/kVA/M,1
