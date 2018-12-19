@@ -6,8 +6,14 @@ class Tariffs:
     def __init__(self, data_dir):
         self.data_dir = data_dir
 
-        # TODO Add specific arrays of the different types?
+        # TODO remove this
         self.tariffs = []
+
+        # Tariff type specific arrays
+        self.duos_tariffs = []
+        self.nuos_tariffs = []
+        self.tuos_tariffs = []
+        self.retail_tariffs = []
 
     def load(self, inputs):
         # Reset the list of tariffs
@@ -84,16 +90,26 @@ class Tariff:
     def print(self):
         print("Tariff Object Contains: {}, {}, {}".format(self.tariff_type, self.tariff_name, self.peak_charge))
 
-'''
-Ref,dnsp,offer_name,type,
-daily_charge,flat_charge,peak_charge,shoulder_charge,
-offpeak_charge,block_1_charge,block_2_charge,controlled_load,
-peak_start_time,peak_end_time,peak_start_time_2,peak_end_time_2,
-shoulder_start_time,shoulder_end_time,shoulder_start_time_2,shoulder_end_time_2,
-block_1_volume,block_2_volume,demand,demand_units,
-tou_weekday_only_flag
 
-Fields from the UI...
+class DuosTariff:
+    def __init__(self,
+                 peak_charge=None):
+        self.peak_charge = peak_charge
 
-Tariff Type,tariff_name,fit_input,peak_price,shoulder_price,off_peak_price
-'''
+
+class NuosTariff:
+    def __init__(self,
+                 peak_charge=None):
+        self.peak_charge = peak_charge
+
+
+class TuosTariff:
+    def __init__(self,
+                 peak_charge=None):
+        self.peak_charge = peak_charge
+
+
+class RetailTariff:
+    def __init__(self,
+                 peak_charge=None):
+        self.peak_charge = peak_charge
