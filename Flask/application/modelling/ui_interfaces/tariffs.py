@@ -34,6 +34,7 @@ class Tariffs:
                 self.tariffs.append(Tariff(**row))
 
 
+# TODO Confirm these.
 class Tariff:
     def __init__(
                 self,

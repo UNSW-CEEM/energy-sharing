@@ -6,7 +6,7 @@ from .services import file_service
 from .modelling.model_runner import ModelRunner
 from .modelling.old_model_parameters import ModelParameters
 from .modelling.model_interface import ModelInterface
-from .modelling.interfaces.model_parameters import ModelParameters
+from .modelling.ui_interfaces.parameters import Parameters as ui_parameters
 
 file_service = file_service.OSFileService()
 
@@ -23,7 +23,7 @@ thread = None
 thread_lock = Lock()
 
 # Create a model parameters object and load up defaults.
-mp = ModelParameters()
+mp = ui_parameters()
 mp.load_defaults()
 
 
@@ -140,6 +140,8 @@ def another_test_run_sim(params):
     status_callback("Running Test Model Interface")
     # Overwrite defaults with UI values.
     mp.load(params)
+    mp.create_objects()
+
     emit('sim_channel', {"data": False})
 
 

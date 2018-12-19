@@ -34,6 +34,7 @@ class Participants:
                 self.participants.append(Participant(**row))
 
 
+# TODO Confirm which of these fields are needed.
 class Participant:
     def __init__(self,
                  participant_id,
