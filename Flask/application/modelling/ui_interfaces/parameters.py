@@ -1,14 +1,14 @@
 # UI Input parsing modules
-from .central_battery import CentralBattery as ui_central_battery
-from .central_solar import CentralSolar as ui_central_solar
-from .tariffs import Tariffs as ui_tariffs
-from .participants import Participants as ui_participants
-from .result_parsers import ResultParsers as ui_results_parsers
+from .central_battery import CentralBattery as Ui_Central_Battery
+from .central_solar import CentralSolar as Ui_Central_Solar
+from .tariffs import Tariffs as Ui_Tariffs
+from .participants import Participants as Ui_Participants
+from .result_parsers import ResultParsers as Ui_Results_Parsers
 
 # Model Modules
 from ..network import Network as Model_Network
-from ..battery import Central_Battery as model_central_battery
-from ..tariffs import Tariffs as model_tariffs
+from ..battery import Central_Battery as Model_Central_Battery
+from ..tariffs import Tariffs as Model_Tariffs
 from .. import util
 from ..results import Results
 from .. import energy_sim
@@ -28,12 +28,12 @@ class Parameters:
         self.output_dir = os.path.join(self.data_dir, "output")
 
         # UI Interface objects
-        self.ui_participants = ui_participants(self.data_dir)
-        self.ui_tariffs = ui_tariffs(self.data_dir)
+        self.ui_participants = Ui_Participants(self.data_dir)
+        self.ui_tariffs = Ui_Tariffs(self.data_dir)
         self.ui_finances = None
-        self.ui_central_battery = ui_central_battery(self.data_dir)
-        self.ui_central_solar = ui_central_solar(self.data_dir)
-        self.ui_results_parser = ui_results_parsers(self.data_dir)
+        self.ui_central_battery = Ui_Central_Battery(self.data_dir)
+        self.ui_central_solar = Ui_Central_Solar(self.data_dir)
+        self.ui_results_parser = Ui_Results_Parsers(self.data_dir)
 
         # Model Objects
         self.model_network = None
@@ -96,7 +96,8 @@ class Parameters:
         self.model_network = Model_Network(self.network_name)
         # Need to add participants into model
 
-        self.model_central_battery = None
+        # Create a central battery from the ui_central_battery.
+        self.model_central_battery = Model_Central_Battery(**self.ui_central_battery.get_params_dict())
         print("Made LUOMI Objects without error")
 
     def create_mike_objects(self):
