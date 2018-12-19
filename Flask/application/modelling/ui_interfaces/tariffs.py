@@ -6,6 +6,7 @@ class Tariffs:
     def __init__(self, data_dir):
         self.data_dir = data_dir
 
+        # TODO Add specific arrays of the different types?
         self.tariffs = []
 
     def load(self, inputs):
@@ -32,6 +33,10 @@ class Tariffs:
             reader = csv.DictReader(file)
             for row in reader:
                 self.tariffs.append(Tariff(**row))
+
+    def get_params_dict(self):
+        # Create the params dict here. Similar to in central battery
+        pass
 
 
 # TODO Confirm these.
