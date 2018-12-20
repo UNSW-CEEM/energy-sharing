@@ -98,6 +98,7 @@ class Parameters:
 
         # Create a central battery from the ui_central_battery.
         self.model_central_battery = Model_Central_Battery(**self.ui_central_battery.get_params_dict())
+        self.ui_tariffs.get_tariffs_dict()
         print("Made LUOMI Objects without error")
 
     def create_mike_objects(self):

@@ -6,9 +6,6 @@ class Tariffs:
     def __init__(self, data_dir):
         self.data_dir = data_dir
 
-        # TODO remove this
-        self.tariffs = []
-
         # Tariff type specific arrays
         self.duos_tariffs = []
         self.nuos_tariffs = []
@@ -16,9 +13,17 @@ class Tariffs:
         self.retail_tariffs = []
 
     # TODO Get normal load working (from UI_Input)
-    def load(self, inputs):
+    def load(self, inputs, debug_print=False):
         # Reset the list of tariffs
-        self.tariffs = []
+        self.reset_all_tariffs()
+
+        # Mappings to make things a little easier
+        mapping = {
+            'DUOS': {'array': self.duos_tariffs, 'tariff': DuosTariff},
+            'TUOS': {'array': self.nuos_tariffs, 'tariff': NuosTariff},
+            'NUOS': {'array': self.tuos_tariffs, 'tariff': TuosTariff},
+            'Retail': {'array': self.retail_tariffs, 'tariff': RetailTariff}
+        }
 
         # Parse through each line in the UI inputs and create a tariff
         for each in inputs:
@@ -27,11 +32,20 @@ class Tariffs:
             for each_dict in row:
                 # print(each_dict, "\n")
                 parameters[each_dict["name"]] = (each_dict["value"])
-            # print(parameters, "\n")
-            self.tariffs.append(Tariff(**parameters))
+            # print(parameters["tariff_type"], "\n")
 
-    def load_defaults(self):
-        self.tariffs = []
+            mapped_type = mapping[parameters["tariff_type"]]
+            array = mapped_type["array"]
+            tariff = mapped_type["tariff"]
+
+            array.append(tariff(**parameters))
+
+        if debug_print:
+            for each in self.duos_tariffs:
+                each.print()
+
+    def load_defaults(self, debug_print=False):
+        self.reset_all_tariffs()
 
         duos_path = os.path.join(self.data_dir, "defaults/duos.csv")
         nuos_path = os.path.join(self.data_dir, "defaults/nuos.csv")
@@ -48,8 +62,9 @@ class Tariffs:
         for each in mapping:
             self.load_tariff_from_csv(**each)
 
-        for each in self.duos_tariffs:
-            each.print()
+        if debug_print:
+            for each in self.duos_tariffs:
+                each.print()
 
     @staticmethod
     def load_tariff_from_csv(path, array, tariff):
@@ -59,9 +74,29 @@ class Tariffs:
             for row in reader:
                 array.append(tariff(**row))
 
-    def get_params_dict(self):
+    def get_tariffs_dict(self):
         # Create the params dict here. Similar to in central battery
-        pass
+        # TODO Figure out a nice way to do scheme name
+        duos_file = ''
+        w = csv.writer(duos_file, delimiter=',', quotechar='"')
+        for each in self.duos_tariffs:
+            w.writerow(each)
+
+        print(duos_file)
+
+        results = {
+            "scheme_name": "Scheme Name",
+            "duos_data_path": None,
+            "nuos_data_path": None,
+            "tuos_data:path": None,
+            "retail_data_path": None,
+        }
+
+    def reset_all_tariffs(self):
+        self.duos_tariffs = []
+        self.nuos_tariffs = []
+        self.tuos_tariffs = []
+        self.retail_tariffs = []
 
 
 class DuosTariff:
@@ -204,6 +239,7 @@ class RetailTariff:
                  offpeak_charge,
                  tariff_type=None,
                  tariff_name=None,
+                 fit_input=None,
                  ref=None,
                  retailer=None,
                  offer_name=None,
