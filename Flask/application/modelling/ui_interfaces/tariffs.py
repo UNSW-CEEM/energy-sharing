@@ -98,6 +98,25 @@ class Tariffs:
         self.tuos_tariffs = []
         self.retail_tariffs = []
 
+    def print_duos(self):
+        for each in self.duos_tariffs:
+            self.print_tariff(each)
+
+    @staticmethod
+    def print_tariff(tariff, ignore_empty=True):
+        label = "Tariff object contains"
+        lines = []
+
+        for attr, value in tariff.__dict__.items():
+            if value is '' and ignore_empty:
+                pass
+            else:
+                x = ":".join([attr, str(value)])
+                lines.append(x)
+
+        joined = "\n".join(lines)
+        print(label, joined)
+
 
 class DuosTariff:
     def __init__(
@@ -105,31 +124,31 @@ class DuosTariff:
                 peak_charge,
                 shoulder_charge,
                 offpeak_charge,
-                tariff_type=None,
-                tariff_name=None,
-                fit_input=None,
-                Ref = None,
-                dnsp = None,
-                offer_name=None,
-                type=None,
-                daily_charge=None,
-                flat_charge=None,
-                block_1_charge=None,
-                block_2_charge=None,
-                controlled_load=None,
-                peak_start_time=None,
-                peak_end_time=None,
-                peak_start_time_2=None,
-                peak_end_time_2=None,
-                shoulder_start_time=None,
-                shoulder_end_time=None,
-                shoulder_start_time_2=None,
-                shoulder_end_time_2=None,
-                block_1_volume=None,
-                block_2_volume=None,
-                demand=None,
-                demand_units=None,
-                tou_weekday_only_flag=None):
+                tariff_type='',
+                tariff_name='',
+                fit_input='',
+                Ref = '',
+                dnsp = '',
+                offer_name='',
+                type='',
+                daily_charge='',
+                flat_charge='',
+                block_1_charge='',
+                block_2_charge='',
+                controlled_load='',
+                peak_start_time='',
+                peak_end_time='',
+                peak_start_time_2='',
+                peak_end_time_2='',
+                shoulder_start_time='',
+                shoulder_end_time='',
+                shoulder_start_time_2='',
+                shoulder_end_time_2='',
+                block_1_volume='',
+                block_2_volume='',
+                demand='',
+                demand_units='',
+                tou_weekday_only_flag=''):
 
         self.tariff_type = tariff_type
         self.tariff_name = tariff_name
@@ -137,10 +156,6 @@ class DuosTariff:
         self.peak_charge = peak_charge
         self.shoulder_charge = shoulder_charge
         self.offpeak_charge = offpeak_charge
-
-    # TODO Stop repeating this generic print!
-    def print(self):
-        print("Tariff Object Contains: {}, {}, {}".format(self.tariff_type, self.tariff_name, self.peak_charge))
 
 
 class NuosTariff:
@@ -185,9 +200,6 @@ class NuosTariff:
         self.shoulder_charge = shoulder_charge
         self.offpeak_charge = offpeak_charge
 
-    def print(self):
-        print("Tariff Object Contains: {}, {}, {}".format(self.tariff_type, self.tariff_name, self.peak_charge))
-
 
 class TuosTariff:
     def __init__(
@@ -227,9 +239,6 @@ class TuosTariff:
         self.peak_charge = peak_charge
         self.shoulder_charge = shoulder_charge
         self.offpeak_charge = offpeak_charge
-
-    def print(self):
-        print("Tariff Object Contains: {}, {}, {}".format(self.tariff_type, self.tariff_name, self.peak_charge))
 
 
 class RetailTariff:
