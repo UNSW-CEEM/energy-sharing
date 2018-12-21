@@ -1,5 +1,6 @@
 import csv
 import os
+import io
 from .participant import CSV_Participant
 
 
@@ -48,3 +49,18 @@ class Network:
                     solar_capacity=float(line['solar_capacity'])
                 )
                 self.add_participant(participant)
+
+    def add_participants_from_string(self, data_dir, participants_string):
+        reader = csv.DictReader(io.StringIO(participants_string), delimiter=",")
+        for line in reader:
+            participant = CSV_Participant(
+                participant_id=line['participant_id'],
+                participant_type=line['participant_type'],
+                retail_tariff_type=line['retail_tariff_type'],
+                network_tariff_type=line['network_tariff_type'],
+                retailer=line['retailer'],
+                solar_path=os.path.join(data_dir, line['solar_path']),
+                load_path=os.path.join(data_dir, line['load_path']),
+                solar_capacity=float(line['solar_capacity'])
+            )
+            self.add_participant(participant)
