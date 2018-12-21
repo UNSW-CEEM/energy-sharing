@@ -1,5 +1,6 @@
 import os
 import csv
+import io
 
 
 class Participants:
@@ -33,37 +34,71 @@ class Participants:
             for row in reader:
                 self.participants.append(Participant(**row))
 
+    def get_participants_as_string(self):
+        output = io.StringIO()
+        participants_header = "participant_id," \
+                              "participant_type," \
+                              "retail_tariff_type," \
+                              "network_tariff_type," \
+                              "retailer," \
+                              "solar_path," \
+                              "load_path," \
+                              "solar_capacity," \
+                              "solar_scaling," \
+                              "battery_type\n"
+        output.write(participants_header)
+        for each in self.participants:
+            output.write(each.output_as_csv_line())
+
+        return output.getvalue()
+
 
 # TODO Confirm which of these fields are needed.
 class Participant:
     def __init__(self,
-                 participant_id,
-                 participant_type,
-                 retail_tariff_type,
-                 load_path,
-                 solar_path,
-                 solar_scaling=None,
-                 battery_type=None,
-                 network_tariff_type=None,
-                 retailer=None,
-                 solar_capacity=None):
+                 participant_id='',
+                 participant_type='',
+                 retail_tariff_type='',
+                 network_tariff_type='',
+                 retailer='',
+                 solar_path='',
+                 load_path='',
+                 solar_capacity=0,
+                 solar_scaling='',
+                 battery_type=''
+                 ):
 
+        # Ordering important here since I use __dict__.items() to spit out these.
         self.participant_id = participant_id
         self.participant_type = participant_type
         self.retail_tariff_type = retail_tariff_type
-
-        self.load_path = load_path
-        self.solar_path = solar_path
-
-        # Maybe optional parameter
-        self.solar_scaling = solar_scaling
-        self.battery_type = battery_type
         self.network_tariff_type = network_tariff_type
         self.retailer = retailer
+        self.solar_path = solar_path
+        self.load_path = load_path
         self.solar_capacity = solar_capacity
-
-        self.print()
+        self.solar_scaling = solar_scaling
+        self.battery_type = battery_type
 
     def print(self):
-        print("Participant Object Contains: {}, {}, {}".format(
-            self.participant_id, self.participant_type, self.solar_scaling))
+        label = "Participant Object Contains:\n"
+
+        lines = []
+        for attr, value in self.__dict__.items():
+            x = ":".join([attr, str(value)])
+            lines.append(x)
+
+        joined = "\n".join(lines)
+
+        print(label, joined)
+
+    # I think this could maybe be just done using __repr__
+    def output_as_csv_line(self):
+        csv_line = []
+        for attr, value in self.__dict__.items():
+            # print("Key values in this participant: ", attr, value)
+            csv_line.append(str(value))
+
+        joined_line = ",".join(csv_line)
+        joined_line += "\n"
+        return joined_line

@@ -95,10 +95,11 @@ class Parameters:
     def create_luomi_objects(self):
         self.model_network = Model_Network(self.network_name)
         # Need to add participants into model
-
+        participants_string = self.ui_participants.get_participants_as_string()
+        self.model_network.add_participants_from_string(self.data_dir, participants_string)
         # Create a central battery from the ui_central_battery.
         self.model_central_battery = Model_Central_Battery(**self.ui_central_battery.get_params_dict())
-        self.ui_tariffs.get_tariffs_dict()
+        # self.ui_tariffs.get_tariffs_dict()
         print("Made LUOMI Objects without error")
 
     def create_mike_objects(self):
