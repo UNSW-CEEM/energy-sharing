@@ -2,6 +2,10 @@ import os
 import csv
 import io
 
+DEFAULT_DATA_PATH = os.path.realpath('application/modelling/data/defaults')
+DEFAULT_SOLAR_PATH = os.path.join(DEFAULT_DATA_PATH, 'solar_data.csv')
+DEFAULT_LOAD_PATH = os.path.join(DEFAULT_DATA_PATH, 'load_data.csv')
+
 
 class Participants:
     def __init__(self, data_dir):
@@ -20,7 +24,16 @@ class Participants:
             for each_dict in row:
                 # print(each_dict, "\n")
                 parameters[each_dict["name"]] = (each_dict["value"])
-            self.participants.append(Participant(**parameters))
+
+            # TODO I think this will be temporary
+            if parameters["solar_path"] is '':
+                parameters["solar_path"] = "defaults/solar_data.csv"
+            if parameters["load_path"] is '':
+                parameters["load_path"] = "defaults/load_data.csv"
+
+            p = Participant(**parameters)
+            # p.print()
+            self.participants.append(p)
 
     def load_defaults(self):
         # Reset the list of participants
@@ -61,8 +74,8 @@ class Participant:
                  retail_tariff_type='',
                  network_tariff_type='',
                  retailer='',
-                 solar_path='',
-                 load_path='',
+                 solar_path=DEFAULT_SOLAR_PATH,
+                 load_path=DEFAULT_LOAD_PATH,
                  solar_capacity=0,
                  solar_scaling='',
                  battery_type=''
