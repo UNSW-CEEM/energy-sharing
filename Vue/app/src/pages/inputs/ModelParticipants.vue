@@ -115,7 +115,7 @@
         methods: {
             add_row() {
                 let array_length = this.table_rows.length;
-                let participant_default = "Participant " + Number(array_length+1).toString();
+                let participant_default = "participant_" + Number(array_length+1).toString();
                 let new_row = {
                     row_id: array_length,
                     row_inputs: [
