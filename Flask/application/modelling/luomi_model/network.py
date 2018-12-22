@@ -1,6 +1,5 @@
 import csv
 import os
-import io
 from .participant import CSV_Participant
 
 

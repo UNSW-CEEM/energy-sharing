@@ -35,7 +35,7 @@ class CSV_Participant(Participant):
         self.solar_path = solar_path
         self.load_path = load_path
         solar_data = pd.read_csv(solar_path, index_col='date_time', parse_dates=True, date_parser=util.date_parser)
-        load_data = pd.read_csv(load_path, index_col='date_time', parse_dates=False,  date_parser=util.date_parser)
+        load_data = pd.read_csv(load_path, index_col='date_time', parse_dates=False, date_parser=util.date_parser)
         # Delete all cols not relevant to this participant
         self.load_data = load_data[participant_id]
         self.solar_data = solar_data[participant_id]

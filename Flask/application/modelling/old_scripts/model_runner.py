@@ -1,13 +1,11 @@
 # from mongoengine import Document, StringField
 
-from .network import Network
-from .battery import Battery, Central_Battery
-from .tariffs import Tariffs
-from .import util
-from .results import Results
-from . import energy_sim
-from . import financial_sim
-from . import model_data_parser as mdp
+from modelling.luomi_model.network import Network
+from modelling.luomi_model.battery import Central_Battery
+from modelling.luomi_model.tariffs import Tariffs
+from modelling.luomi_model.results import Results
+from modelling.luomi_model import financial_sim, energy_sim, util
+from modelling import model_data_parser as mdp
 
 import datetime
 import os

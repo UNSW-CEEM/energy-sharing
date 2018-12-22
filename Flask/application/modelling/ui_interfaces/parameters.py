@@ -6,13 +6,11 @@ from .participants import Participants as Ui_Participants
 from .result_parsers import ResultParsers as Ui_Results_Parsers
 
 # Model Modules
-from ..network import Network as Model_Network
-from ..battery import Central_Battery as Model_Central_Battery
-from ..tariffs import Tariffs as Model_Tariffs
-from .. import util
-from ..results import Results
-from .. import energy_sim
-from .. import financial_sim
+from ..luomi_model.network import Network as Model_Network
+from ..luomi_model.battery import Central_Battery as Model_Central_Battery
+from ..luomi_model.tariffs import Tariffs as Model_Tariffs
+from ..luomi_model.results import Results
+from ..luomi_model import energy_sim, financial_sim, util
 
 import os
 import datetime
