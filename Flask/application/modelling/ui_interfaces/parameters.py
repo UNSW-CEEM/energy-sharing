@@ -101,7 +101,7 @@ class Parameters:
         self.model_central_battery = Model_Central_Battery(**self.ui_central_battery.get_params_dict())
         tariffs_dict = self.ui_tariffs.get_tariffs_dict()
         # print(tariffs_dict)
-        # self.model_tariffs = Model_Tariffs(**tariffs_dict)
+        self.model_tariffs = Model_Tariffs(**tariffs_dict)
         print("Made LUOMI Objects without error")
 
     def create_mike_objects(self):

@@ -12,6 +12,9 @@ class Tariffs:
         self.nuos_data_path = nuos_data_path
         # Get tariff data (note tuos not considered as yet)
         self.retail_tariff_data = pd.read_csv(retail_tariff_data_path, index_col = ['offer_name'])
+
+        print("Duos data path: ", duos_data_path.getvalue())
+
         self.duos_tariff_data = pd.read_csv(duos_data_path, index_col = ['offer_name'])
         self.tuos_tariff_data = pd.read_csv(tuos_data_path, index_col = ['offer_name'])
         self.nuos_tariff_data = pd.read_csv(nuos_data_path, index_col = ['offer_name'])

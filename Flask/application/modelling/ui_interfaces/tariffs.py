@@ -80,14 +80,7 @@ class Tariffs:
         # Create the params dict here. Similar to in central battery
         # TODO Figure out a nice way to do scheme name
 
-        duos_string = io.StringIO()
-        header_tariff = self.duos_tariffs[0]
-        duos_string.write(header_tariff.output_fields_as_csv_line())
-
-        for each in self.duos_tariffs:
-            duos_string.write(each.output_values_as_csv_line())
-
-        print("Created IO String:\n", duos_string.getvalue())
+        duos_string = self.array_to_string_buffer(self.duos_tariffs)
 
         results = {
             "scheme_name": "Scheme Name",
@@ -124,6 +117,19 @@ class Tariffs:
 
         joined = "\n".join(lines)
         print(label, joined)
+
+    @staticmethod
+    def array_to_string_buffer(array):
+        t_string = io.StringIO()
+        header_tariff = array[0]
+        t_string.write(header_tariff.output_fields_as_csv_line())
+
+        for each in array:
+            t_string.write(each.output_values_as_csv_line())
+
+        # This moves the pointer to the start of the file.
+        t_string.seek(0)
+        return t_string
 
 
 class DuosTariff:
@@ -164,8 +170,8 @@ class DuosTariff:
         self.tariff_type = tariff_type
         self.tariff_name = tariff_name
         self.fit_input = fit_input
-        self.offer_name = offer_name
-
+        # TODO This is temporary
+        self.offer_name = self.tariff_name
 
     def output_values_as_csv_line(self):
         csv_line = []
