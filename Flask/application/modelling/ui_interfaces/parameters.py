@@ -15,6 +15,7 @@ from .. import energy_sim
 from .. import financial_sim
 
 import os
+import datetime
 
 
 class Parameters:
@@ -40,6 +41,10 @@ class Parameters:
         self.model_central_battery = None
         self.model_tariffs = None
         self.model_time_periods = None
+        self.model_results = None
+
+        # Legacy Stuff.
+        self.time_periods = None
 
     def load(self, ui_inputs):
         load_functions = [
@@ -102,7 +107,26 @@ class Parameters:
         tariffs_dict = self.ui_tariffs.get_tariffs_dict()
         # print(tariffs_dict)
         self.model_tariffs = Model_Tariffs(**tariffs_dict)
+
+        # TODO Remove these/come up with a new system later
+        start = datetime.datetime(year=2017, month=2, day=26, hour=4)
+        end = datetime.datetime(year=2017, month=2, day=26, hour=5)
+
+        self.time_periods = util.generate_dates_in_range(start, end, 30)
+
         print("Made LUOMI Objects without error")
 
     def create_mike_objects(self):
         pass
+
+    def run(self, status):
+        bc = self.ui_central_battery.get_capacity()
+
+        self.model_results = Results(self.time_periods, [p.get_id() for p in self.model_network.get_participants()])
+        energy_sim.simulate(self.time_periods, self.model_network, self.model_tariffs, self.model_results, status)
+        financial_sim.simulate(self.time_periods, self.model_network, self.model_tariffs, self.model_results, status)
+        self.model_results.to_csv(self.output_dir, info_tag=bc)
+
+        parsed_results = self.ui_results_parser.temp_parser(bc)
+
+        return parsed_results

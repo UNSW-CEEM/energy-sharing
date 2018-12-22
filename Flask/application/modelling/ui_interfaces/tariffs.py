@@ -120,7 +120,7 @@ class Tariffs:
 
     @staticmethod
     def print_tariff(tariff, ignore_empty=True):
-        label = "Tariff object contains"
+        label = "Tariff object contains\n"
         lines = []
 
         for attr, value in tariff.__dict__.items():
@@ -137,10 +137,12 @@ class Tariffs:
     def output_values(tariff):
         csv_line = []
         for attr, value in tariff.__dict__.items():
-            csv_line.append(str(value))
+            # print("Attr: ", attr, " Value: ", value)
+            csv_line.append(value)
 
         joined_line = ','.join(csv_line)
         joined_line += "\n"
+
         return joined_line
 
     @staticmethod
@@ -163,7 +165,7 @@ class DuosTariff:
                 tariff_type='',
                 tariff_name='',
                 fit_input='',
-                Ref = '',
+                ref = '',
                 dnsp = '',
                 offer_name='',
                 type='',
@@ -192,8 +194,29 @@ class DuosTariff:
         self.tariff_type = tariff_type
         self.tariff_name = tariff_name
         self.fit_input = fit_input
-        # TODO This is temporary
-        self.offer_name = self.tariff_name
+        self.ref = ref
+        self.dnsp = dnsp
+        self.offer_name = offer_name
+        self.type = type
+        self.daily_charge = daily_charge
+        self.flat_charge = flat_charge
+        self.block_1_charge = block_1_charge
+        self.block_2_charge = block_2_charge
+        self.controlled_load = controlled_load
+        self.peak_start_time = peak_start_time
+        self.peak_end_time = peak_end_time
+        self.peak_start_time = peak_start_time
+        self.peak_start_time_2 = peak_start_time_2
+        self.peak_end_time_2 = peak_end_time_2
+        self.shoulder_start_time = shoulder_start_time
+        self.shoulder_end_time = shoulder_end_time
+        self.shoulder_start_time_2 = shoulder_start_time_2
+        self.shoulder_end_time_2 = shoulder_end_time_2
+        self.block_1_volume = block_1_volume
+        self.block_2_volume = block_2_volume
+        self.demand = demand
+        self.demand_units = demand_units
+        self.tou_weekday_only_flag = tou_weekday_only_flag
 
 
 class NuosTariff:
@@ -202,44 +225,67 @@ class NuosTariff:
                 peak_charge,
                 shoulder_charge,
                 offpeak_charge,
-                tariff_type=None,
-                tariff_name=None,
-                fit_input=None,
-                Ref = None,
-                dnsp = None,
-                offer_name=None,
-                type=None,
-                daily_charge=None,
-                flat_charge=None,
-                block_1_charge=None,
-                block_2_charge=None,
-                controlled_load=None,
-                peak_start_time=None,
-                peak_end_time=None,
-                peak_start_time_2=None,
-                peak_end_time_2=None,
-                shoulder_start_time=None,
-                shoulder_end_time=None,
-                shoulder_start_time_2=None,
-                shoulder_end_time_2=None,
-                block_1_volume=None,
-                block_2_volume=None,
-                demand=None,
-                demand_units=None,
-                tou_weekday_only_flag=None,
-                local_solar_import=None,
-                central_battery_import=None,
-                central_battery_local_solar_import=None):
+                tariff_type='',
+                tariff_name='',
+                fit_input='',
+                ref = '',
+                dnsp = '',
+                offer_name='',
+                type='',
+                daily_charge='',
+                flat_charge='',
+                block_1_charge='',
+                block_2_charge='',
+                controlled_load='',
+                peak_start_time='',
+                peak_end_time='',
+                peak_start_time_2='',
+                peak_end_time_2='',
+                shoulder_start_time='',
+                shoulder_end_time='',
+                shoulder_start_time_2='',
+                shoulder_end_time_2='',
+                block_1_volume='',
+                block_2_volume='',
+                demand='',
+                demand_units='',
+                tou_weekday_only_flag='',
+                local_solar_import='',
+                central_battery_import='',
+                central_battery_local_solar_import=''):
 
-        self.tariff_type = tariff_type
-        self.tariff_name = tariff_name
-        self.fit_input = fit_input
         self.peak_charge = peak_charge
         self.shoulder_charge = shoulder_charge
         self.offpeak_charge = offpeak_charge
-
-        # TODO This is temporary
-        self.offer_name = self.tariff_name
+        self.tariff_type = tariff_type
+        self.tariff_name = tariff_name
+        self.fit_input = fit_input
+        self.ref = ref
+        self.dnsp = dnsp
+        self.offer_name = offer_name
+        self.type = type
+        self.daily_charge = daily_charge
+        self.flat_charge = flat_charge
+        self.block_1_charge = block_1_charge
+        self.block_2_charge = block_2_charge
+        self.controlled_load = controlled_load
+        self.peak_start_time = peak_start_time
+        self.peak_end_time = peak_end_time
+        self.peak_start_time = peak_start_time
+        self.peak_start_time_2 = peak_start_time_2
+        self.peak_end_time_2 = peak_end_time_2
+        self.shoulder_start_time = shoulder_start_time
+        self.shoulder_end_time = shoulder_end_time
+        self.shoulder_start_time_2 = shoulder_start_time_2
+        self.shoulder_end_time_2 = shoulder_end_time_2
+        self.block_1_volume = block_1_volume
+        self.block_2_volume = block_2_volume
+        self.demand = demand
+        self.demand_units = demand_units
+        self.tou_weekday_only_flag = tou_weekday_only_flag
+        self.local_solar_import = local_solar_import
+        self.central_battery_import = central_battery_import
+        self.central_battery_local_solar_import = central_battery_local_solar_import
 
 
 class TuosTariff:
@@ -248,41 +294,61 @@ class TuosTariff:
                 peak_charge,
                 shoulder_charge,
                 offpeak_charge,
-                tariff_type=None,
-                tariff_name=None,
-                fit_input=None,
-                Ref = None,
-                dnsp = None,
-                offer_name=None,
-                type=None,
-                daily_charge=None,
-                flat_charge=None,
-                block_1_charge=None,
-                block_2_charge=None,
-                controlled_load=None,
-                peak_start_time=None,
-                peak_end_time=None,
-                peak_start_time_2=None,
-                peak_end_time_2=None,
-                shoulder_start_time=None,
-                shoulder_end_time=None,
-                shoulder_start_time_2=None,
-                shoulder_end_time_2=None,
-                block_1_volume=None,
-                block_2_volume=None,
-                demand=None,
-                demand_units=None,
-                tou_weekday_only_flag=None):
+                tariff_type='',
+                tariff_name='',
+                fit_input='',
+                ref = '',
+                dnsp = '',
+                offer_name='',
+                type='',
+                daily_charge='',
+                flat_charge='',
+                block_1_charge='',
+                block_2_charge='',
+                controlled_load='',
+                peak_start_time='',
+                peak_end_time='',
+                peak_start_time_2='',
+                peak_end_time_2='',
+                shoulder_start_time='',
+                shoulder_end_time='',
+                shoulder_start_time_2='',
+                shoulder_end_time_2='',
+                block_1_volume='',
+                block_2_volume='',
+                demand='',
+                demand_units='',
+                tou_weekday_only_flag=''):
 
-        self.tariff_type = tariff_type
-        self.tariff_name = tariff_name
-        self.fit_input = fit_input
         self.peak_charge = peak_charge
         self.shoulder_charge = shoulder_charge
         self.offpeak_charge = offpeak_charge
-
-        # TODO This is temporary
-        self.offer_name = self.tariff_name
+        self.tariff_type = tariff_type
+        self.tariff_name = tariff_name
+        self.fit_input = fit_input
+        self.ref = ref
+        self.dnsp = dnsp
+        self.offer_name = offer_name
+        self.type = type
+        self.daily_charge = daily_charge
+        self.flat_charge = flat_charge
+        self.block_1_charge = block_1_charge
+        self.block_2_charge = block_2_charge
+        self.controlled_load = controlled_load
+        self.peak_start_time = peak_start_time
+        self.peak_end_time = peak_end_time
+        self.peak_start_time = peak_start_time
+        self.peak_start_time_2 = peak_start_time_2
+        self.peak_end_time_2 = peak_end_time_2
+        self.shoulder_start_time = shoulder_start_time
+        self.shoulder_end_time = shoulder_end_time
+        self.shoulder_start_time_2 = shoulder_start_time_2
+        self.shoulder_end_time_2 = shoulder_end_time_2
+        self.block_1_volume = block_1_volume
+        self.block_2_volume = block_2_volume
+        self.demand = demand
+        self.demand_units = demand_units
+        self.tou_weekday_only_flag = tou_weekday_only_flag
 
 
 class RetailTariff:
@@ -290,40 +356,64 @@ class RetailTariff:
                  peak_charge,
                  shoulder_charge,
                  offpeak_charge,
-                 tariff_type=None,
-                 tariff_name=None,
-                 fit_input=None,
-                 ref=None,
-                 retailer=None,
-                 offer_name=None,
-                 type=None,
-                 daily_charge=None,
-                 flat_charge=None,
-                 block_1_charge=None,
-                 block_2_charge=None,
-                 controlled_load=None,
-                 peak_start_time=None,
-                 peak_end_time=None,
-                 peak_start_time_2=None,
-                 peak_end_time_2=None,
-                 shoulder_start_time=None,
-                 shoulder_end_time=None,
-                 shoulder_start_time_2=None,
-                 shoulder_end_time_2=None,
-                 block_1_volume=None,
-                 block_2_volume=None,
-                 demand=None,
-                 demand_units=None,
-                 solar_tariff_1=None,
-                 solar_cap_1=None,
-                 solar_tariff_2=None,
-                 tou_weekday_only_flag=None):
+                 tariff_type='',
+                 tariff_name='',
+                 fit_input='',
+                 ref='',
+                 retailer='',
+                 offer_name='',
+                 type='',
+                 daily_charge='',
+                 flat_charge='',
+                 block_1_charge='',
+                 block_2_charge='',
+                 controlled_load='',
+                 peak_start_time='',
+                 peak_end_time='',
+                 peak_start_time_2='',
+                 peak_end_time_2='',
+                 shoulder_start_time='',
+                 shoulder_end_time='',
+                 shoulder_start_time_2='',
+                 shoulder_end_time_2='',
+                 block_1_volume='',
+                 block_2_volume='',
+                 demand='',
+                 demand_units='',
+                 solar_tariff_1='',
+                 solar_cap_1='',
+                 solar_tariff_2='',
+                 tou_weekday_only_flag=''):
 
         self.peak_charge = peak_charge
         self.shoulder_charge = shoulder_charge
         self.offpeak_charge = offpeak_charge
         self.tariff_type = tariff_type
         self.tariff_name = tariff_name
+        self.fit_input = fit_input
+        self.ref = ref
+        self.retailer = retailer
+        self.offer_name = offer_name
+        self.type = type
+        self.daily_charge = daily_charge
+        self.flat_charge = flat_charge
+        self.block_1_charge = block_1_charge
+        self.block_2_charge = block_2_charge
+        self.controlled_load = controlled_load
+        self.peak_start_time = peak_start_time
+        self.peak_end_time = peak_end_time
+        self.peak_start_time_2 = peak_start_time_2
+        self.peak_end_time_2 = peak_end_time_2
+        self.shoulder_start_time = shoulder_start_time
+        self.shoulder_end_time = shoulder_end_time
+        self.shoulder_start_time_2 = shoulder_start_time_2
+        self.shoulder_end_time_2 = shoulder_end_time_2
+        self.block_1_volume = block_1_volume
+        self.block_2_volume = block_2_volume
+        self.demand = demand
+        self.demand_units = demand_units
+        self.solar_tariff_1 = solar_tariff_1
+        self.solar_cap_1 = solar_cap_1
+        self.solar_tariff_2 = solar_tariff_2
+        self.tou_weekday_only_flag = tou_weekday_only_flag
 
-        # TODO This is temporary
-        self.offer_name = self.tariff_name

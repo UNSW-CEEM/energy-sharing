@@ -141,8 +141,10 @@ def another_test_run_sim(params):
     # Overwrite defaults with UI values.
     mp.load(params)
     mp.create_objects()
+    results = mp.run(status_callback)
 
-    emit('sim_channel', {"data": False})
+    emit('sim_channel', {"data": results})
+    status_callback("Modelling Complete")
 
 
 def status_callback(message):
