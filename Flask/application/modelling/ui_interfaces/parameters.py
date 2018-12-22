@@ -118,6 +118,12 @@ class Parameters:
         pass
 
     def run(self, status):
+        if self.model_type is 'mike':
+            self.run_mike_model(status)
+        else:
+            self.run_luomi_model(status)
+
+    def run_luomi_model(self, status):
         bc = self.ui_central_battery.get_capacity()
 
         self.model_results = Results(self.time_periods, [p.get_id() for p in self.model_network.get_participants()])
@@ -128,3 +134,6 @@ class Parameters:
         parsed_results = self.ui_results_parser.temp_parser(bc)
 
         return parsed_results
+
+    def run_mike_model(self, status):
+        pass
