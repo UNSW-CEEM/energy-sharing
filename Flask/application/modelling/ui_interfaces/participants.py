@@ -53,7 +53,8 @@ class Participants:
         for each in self.participants:
             output.write(each.output_values())
 
-        return output.getvalue()
+        output.seek(0)
+        return output
 
 
 class Participant:

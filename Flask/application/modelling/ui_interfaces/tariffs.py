@@ -49,7 +49,6 @@ class Tariffs:
         self.reset_all_tariffs()
 
         duos_path = os.path.join(self.data_dir, "defaults/duos.csv")
-        print(duos_path)
         nuos_path = os.path.join(self.data_dir, "defaults/nuos.csv")
         tuos_path = os.path.join(self.data_dir, "defaults/tuos.csv")
         retail_path = os.path.join(self.data_dir, "defaults/retail_tariffs.csv")
@@ -81,13 +80,17 @@ class Tariffs:
         # TODO Figure out a nice way to do scheme name
 
         duos_string = self.array_to_string_buffer(self.duos_tariffs)
+        nuos_string = self.array_to_string_buffer(self.nuos_tariffs)
+        tuos_string = self.array_to_string_buffer(self.tuos_tariffs)
+        retail_string = self.array_to_string_buffer(self.retail_tariffs)
+        # ui_tariff_string = self.array_to_string_buffer(self.duos_tariffs)
 
         results = {
             "scheme_name": "Scheme Name",
             "duos_data_path": duos_string,
-            "nuos_data_path": os.path.join(self.data_dir, 'defaults/nuos.csv'),
-            "tuos_data_path": os.path.join(self.data_dir, 'defaults/tuos.csv'),
-            "retail_tariff_data_path": os.path.join(self.data_dir, 'defaults/retail_tariffs.csv'),
+            "nuos_data_path": nuos_string,
+            "tuos_data_path": tuos_string,
+            "retail_tariff_data_path": retail_string,
             "ui_tariff_data_path": os.path.join(self.data_dir, 'defaults/ui_tariffs.csv'),
         }
 
@@ -102,6 +105,18 @@ class Tariffs:
     def print_duos(self):
         for each in self.duos_tariffs:
             self.print_tariff(each)
+
+    def array_to_string_buffer(self, array):
+        t_string = io.StringIO()
+        header_tariff = array[0]
+        t_string.write(self.output_fields(header_tariff))
+
+        for each in array:
+            t_string.write(self.output_values(each))
+
+        # This moves the pointer to the start of the file.
+        t_string.seek(0)
+        return t_string
 
     @staticmethod
     def print_tariff(tariff, ignore_empty=True):
@@ -119,17 +134,24 @@ class Tariffs:
         print(label, joined)
 
     @staticmethod
-    def array_to_string_buffer(array):
-        t_string = io.StringIO()
-        header_tariff = array[0]
-        t_string.write(header_tariff.output_fields_as_csv_line())
+    def output_values(tariff):
+        csv_line = []
+        for attr, value in tariff.__dict__.items():
+            csv_line.append(str(value))
 
-        for each in array:
-            t_string.write(each.output_values_as_csv_line())
+        joined_line = ','.join(csv_line)
+        joined_line += "\n"
+        return joined_line
 
-        # This moves the pointer to the start of the file.
-        t_string.seek(0)
-        return t_string
+    @staticmethod
+    def output_fields(tariff):
+        csv_line = []
+        for attr, value in tariff.__dict__.items():
+            csv_line.append(attr)
+
+        joined_line = ','.join(csv_line)
+        joined_line += "\n"
+        return joined_line
 
 
 class DuosTariff:
@@ -172,24 +194,6 @@ class DuosTariff:
         self.fit_input = fit_input
         # TODO This is temporary
         self.offer_name = self.tariff_name
-
-    def output_values_as_csv_line(self):
-        csv_line = []
-        for attr, value in self.__dict__.items():
-            csv_line.append(str(value))
-
-        joined_line = ','.join(csv_line)
-        joined_line += "\n"
-        return joined_line
-
-    def output_fields_as_csv_line(self):
-        csv_line = []
-        for attr, value in self.__dict__.items():
-            csv_line.append(attr)
-
-        joined_line = ','.join(csv_line)
-        joined_line += "\n"
-        return joined_line
 
 
 class NuosTariff:
@@ -234,6 +238,9 @@ class NuosTariff:
         self.shoulder_charge = shoulder_charge
         self.offpeak_charge = offpeak_charge
 
+        # TODO This is temporary
+        self.offer_name = self.tariff_name
+
 
 class TuosTariff:
     def __init__(
@@ -273,6 +280,9 @@ class TuosTariff:
         self.peak_charge = peak_charge
         self.shoulder_charge = shoulder_charge
         self.offpeak_charge = offpeak_charge
+
+        # TODO This is temporary
+        self.offer_name = self.tariff_name
 
 
 class RetailTariff:
@@ -314,3 +324,6 @@ class RetailTariff:
         self.offpeak_charge = offpeak_charge
         self.tariff_type = tariff_type
         self.tariff_name = tariff_name
+
+        # TODO This is temporary
+        self.offer_name = self.tariff_name

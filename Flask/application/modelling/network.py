@@ -51,7 +51,7 @@ class Network:
                 self.add_participant(participant)
 
     def add_participants_from_string(self, data_dir, participants_string):
-        reader = csv.DictReader(io.StringIO(participants_string), delimiter=",")
+        reader = csv.DictReader(participants_string, delimiter=",")
         for line in reader:
             participant = CSV_Participant(
                 participant_id=line['participant_id'],
