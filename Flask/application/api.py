@@ -6,7 +6,7 @@ from .services import file_service
 from .modelling.model_runner import ModelRunner
 from .modelling.old_model_parameters import ModelParameters
 from .modelling.model_interface import ModelInterface
-from .modelling.ui_interfaces.parameters import Parameters as ui_parameters
+from .modelling.ui_interfaces.parameters import Parameters as Ui_Parameters
 
 file_service = file_service.OSFileService()
 
@@ -23,7 +23,7 @@ thread = None
 thread_lock = Lock()
 
 # Create a model parameters object and load up defaults.
-mp = ui_parameters()
+mp = Ui_Parameters()
 mp.load_defaults()
 
 

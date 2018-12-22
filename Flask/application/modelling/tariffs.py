@@ -20,16 +20,16 @@ class Tariffs:
         self.ui_tariff_data_path = ui_tariff_data_path
         self.ui_tariff_data = pd.read_csv(ui_tariff_data_path, index_col = ['gen_type'])
         # Extract individual charges to reduce code below
-        self.local_solar_energy = self.ui_tariff_data.loc['local_solar','energy_charge']
-        self.local_solar_retail = self.ui_tariff_data.loc['local_solar','retail_charge']
-        self.local_solar_duos = self.ui_tariff_data.loc['local_solar','duos_charge']
-        self.central_battery_energy = self.ui_tariff_data.loc['central_battery','energy_charge']
-        self.central_battery_retail = self.ui_tariff_data.loc['central_battery','retail_charge']
-        self.central_battery_duos = self.ui_tariff_data.loc['central_battery','duos_charge']
-        self.central_battery_profit = self.ui_tariff_data.loc['central_battery','profit_charge']
-        self.central_battery_importing_ls_energy = self.ui_tariff_data.loc['central_battery_importing_local_solar','energy_charge']
-        self.central_battery_importing_ls_retail = self.ui_tariff_data.loc['central_battery_importing_local_solar','retail_charge']
-        self.central_battery_importing_ls_duos = self.ui_tariff_data.loc['central_battery_importing_local_solar','duos_charge']       
+        self.local_solar_energy = self.ui_tariff_data.loc['local_solar', 'energy_charge']
+        self.local_solar_retail = self.ui_tariff_data.loc['local_solar', 'retail_charge']
+        self.local_solar_duos = self.ui_tariff_data.loc['local_solar', 'duos_charge']
+        self.central_battery_energy = self.ui_tariff_data.loc['central_battery', 'energy_charge']
+        self.central_battery_retail = self.ui_tariff_data.loc['central_battery', 'retail_charge']
+        self.central_battery_duos = self.ui_tariff_data.loc['central_battery', 'duos_charge']
+        self.central_battery_profit = self.ui_tariff_data.loc['central_battery', 'profit_charge']
+        self.central_battery_importing_ls_energy = self.ui_tariff_data.loc['central_battery_importing_local_solar', 'energy_charge']
+        self.central_battery_importing_ls_retail = self.ui_tariff_data.loc['central_battery_importing_local_solar', 'retail_charge']
+        self.central_battery_importing_ls_duos = self.ui_tariff_data.loc['central_battery_importing_local_solar', 'duos_charge']
         # print(self.ui_tariff_data)
         # print(self.retail_tariff_data)
         # print(self.duos_tariff_data)
