@@ -3,5 +3,3 @@ ref,retailer,offer_name,type,daily_charge,flat_charge,peak_charge,shoulder_charg
 2,Enova,Business TOU,TOU,6.55,0,0.29,0.29,0.178,0,0,0,7,9,17,20,9,17,20,22,0,0,0,0,0.1,10,0.06,1
 3,Enova,Controlled Load 1,CL,0.125,0,0,0,0,0,0,0.117,0,0,0,0,0,0,0,0,0,0,0,0,0.1,10,0.06,0
 4,Enova,Controlled Load 2,CL,0.125,0,0,0,0,0,0,0.165,0,0,0,0,0,0,0,0,0,0,0,0,0.1,10,0.06,0
-,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,
