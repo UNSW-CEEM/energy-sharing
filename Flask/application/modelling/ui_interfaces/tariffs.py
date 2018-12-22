@@ -1,5 +1,6 @@
 import os
 import csv
+import io
 
 
 class Tariffs:
@@ -48,6 +49,7 @@ class Tariffs:
         self.reset_all_tariffs()
 
         duos_path = os.path.join(self.data_dir, "defaults/duos.csv")
+        print(duos_path)
         nuos_path = os.path.join(self.data_dir, "defaults/nuos.csv")
         tuos_path = os.path.join(self.data_dir, "defaults/tuos.csv")
         retail_path = os.path.join(self.data_dir, "defaults/retail_tariffs.csv")
@@ -77,20 +79,26 @@ class Tariffs:
     def get_tariffs_dict(self):
         # Create the params dict here. Similar to in central battery
         # TODO Figure out a nice way to do scheme name
-        duos_file = ''
-        w = csv.writer(duos_file, delimiter=',', quotechar='"')
-        for each in self.duos_tariffs:
-            w.writerow(each)
 
-        print(duos_file)
+        duos_string = io.StringIO()
+        header_tariff = self.duos_tariffs[0]
+        duos_string.write(header_tariff.output_fields_as_csv_line())
+
+        for each in self.duos_tariffs:
+            duos_string.write(each.output_values_as_csv_line())
+
+        print("Created IO String:\n", duos_string.getvalue())
 
         results = {
             "scheme_name": "Scheme Name",
-            "duos_data_path": None,
-            "nuos_data_path": None,
-            "tuos_data:path": None,
-            "retail_data_path": None,
+            "duos_data_path": duos_string,
+            "nuos_data_path": os.path.join(self.data_dir, 'defaults/nuos.csv'),
+            "tuos_data_path": os.path.join(self.data_dir, 'defaults/tuos.csv'),
+            "retail_tariff_data_path": os.path.join(self.data_dir, 'defaults/retail_tariffs.csv'),
+            "ui_tariff_data_path": os.path.join(self.data_dir, 'defaults/ui_tariffs.csv'),
         }
+
+        return results
 
     def reset_all_tariffs(self):
         self.duos_tariffs = []
@@ -150,12 +158,32 @@ class DuosTariff:
                 demand_units='',
                 tou_weekday_only_flag=''):
 
-        self.tariff_type = tariff_type
-        self.tariff_name = tariff_name
-        self.fit_input = fit_input
         self.peak_charge = peak_charge
         self.shoulder_charge = shoulder_charge
         self.offpeak_charge = offpeak_charge
+        self.tariff_type = tariff_type
+        self.tariff_name = tariff_name
+        self.fit_input = fit_input
+        self.offer_name = offer_name
+
+
+    def output_values_as_csv_line(self):
+        csv_line = []
+        for attr, value in self.__dict__.items():
+            csv_line.append(str(value))
+
+        joined_line = ','.join(csv_line)
+        joined_line += "\n"
+        return joined_line
+
+    def output_fields_as_csv_line(self):
+        csv_line = []
+        for attr, value in self.__dict__.items():
+            csv_line.append(attr)
+
+        joined_line = ','.join(csv_line)
+        joined_line += "\n"
+        return joined_line
 
 
 class NuosTariff:

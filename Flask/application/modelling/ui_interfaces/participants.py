@@ -49,24 +49,13 @@ class Participants:
 
     def get_participants_as_string(self):
         output = io.StringIO()
-        participants_header = "participant_id," \
-                              "participant_type," \
-                              "retail_tariff_type," \
-                              "network_tariff_type," \
-                              "retailer," \
-                              "solar_path," \
-                              "load_path," \
-                              "solar_capacity," \
-                              "solar_scaling," \
-                              "battery_type\n"
-        output.write(participants_header)
+        output.write(self.participants[0].output_header_fields())
         for each in self.participants:
-            output.write(each.output_as_csv_line())
+            output.write(each.output_values())
 
         return output.getvalue()
 
 
-# TODO Confirm which of these fields are needed.
 class Participant:
     def __init__(self,
                  participant_id='',
@@ -106,11 +95,21 @@ class Participant:
         print(label, joined)
 
     # I think this could maybe be just done using __repr__
-    def output_as_csv_line(self):
+    def output_values(self):
         csv_line = []
         for attr, value in self.__dict__.items():
             # print("Key values in this participant: ", attr, value)
             csv_line.append(str(value))
+
+        joined_line = ",".join(csv_line)
+        joined_line += "\n"
+        return joined_line
+
+    def output_header_fields(self):
+        csv_line = []
+        for attr, value in self.__dict__.items():
+            # print("Key values in this participant: ", attr, value)
+            csv_line.append(attr)
 
         joined_line = ",".join(csv_line)
         joined_line += "\n"

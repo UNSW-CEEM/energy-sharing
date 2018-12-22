@@ -1,12 +1,13 @@
 import numpy as np
 import pandas as pd
 import datetime
+import io
 
-class Tariffs :
+
+class Tariffs:
     def __init__(self, scheme_name, retail_tariff_data_path, duos_data_path, tuos_data_path, nuos_data_path, ui_tariff_data_path):
         self.scheme_name = scheme_name
         self.retail_tariff_data_path = retail_tariff_data_path
-        self.duos_data_path = duos_data_path
         self.tuos_data_path = tuos_data_path
         self.nuos_data_path = nuos_data_path
         # Get tariff data (note tuos not considered as yet)

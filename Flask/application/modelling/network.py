@@ -5,7 +5,7 @@ from .participant import CSV_Participant
 
 
 class Network:
-    def __init__(self, name) :
+    def __init__(self, name):
         self.name = name
         self.participant_list = []
         self.battery_list = []
