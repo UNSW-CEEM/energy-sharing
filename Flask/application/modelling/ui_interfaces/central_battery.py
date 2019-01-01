@@ -45,10 +45,10 @@ class CentralBattery:
         return self.dispatch_algorithm
 
     def set_battery_discharge_filepath(self, value=None):
-        file_name = 'ui_battery_discharge_window_eg.csv'
+        file_name = 'battery_discharge.csv'
         if value is not None:
             file_name = value
-        return os.path.join(self.data_dir, file_name)
+        return os.path.join(self.data_dir, 'defaults', file_name)
 
     def set_capacity(self, value):
         if value is not '':

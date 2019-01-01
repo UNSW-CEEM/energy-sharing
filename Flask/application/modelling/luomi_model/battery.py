@@ -61,8 +61,3 @@ class Central_Battery(Battery):
                 return self.discharge(abs(net_participant_kWh))
             else:
                 return 0.0
-
-
-if __name__=="__main__":
-    my_batt = Central_Battery(10, 5, 0.9, "data/ui_battery_discharge_window_eg.csv")
-
