@@ -46,7 +46,7 @@ class Network(Customer):
 
         # set eno load, cumulative load and generation to zero
         # ----------------------------------------------------
-        self.initialiseCustomerLoad(np.zeros(self.ts.num_steps))
+        self.initialise_customer_load(np.zeros(self.ts.num_steps))
         self.cum_resident_imports = np.zeros(self.ts.num_steps)
         self.cum_resident_exports = np.zeros(self.ts.num_steps)
         self.cum_local_imports = np.zeros(self.ts.num_steps)
@@ -75,7 +75,7 @@ class Network(Customer):
 
     def initialiseAllTariffs(self, scenario):
         # initialise parent meter tariff
-        self.initialiseCustomerTariff(scenario.tariff_in_use['parent'], scenario)
+        self.initialise_customer_tariff(scenario.tariff_in_use['parent'], scenario)
         # initialise internal customer tariffs
         for c in self.resident_list:
             self.resident[c].initialise_customer_tariff(scenario.tariff_in_use[c], scenario)
@@ -168,7 +168,7 @@ class Network(Customer):
         # -----------------------------------------------------------
         for c in self.resident_list:
             self.resident[c].initialise_customer_pv(np.array(self.pv[c]).astype(np.float64))
-        self.initialiseCustomerPV(np.array(self.pv['central']).astype(np.float64))
+        self.initialise_customer_pv(np.array(self.pv['central']).astype(np.float64))
 
         # # For diagnostics only
         # pvpath = os.path.join(study.output_path, 'pv')
@@ -389,7 +389,7 @@ class Network(Customer):
 
     def calcAllDemandCharges(self):
         """Calculates demand charges for ENO and for all residents."""
-        self.calcDemandCharge()
+        self.calc_demand_charge()
         for c in self.resident_list:
             self.resident[c].calc_demand_charge()
         self.retailer.calc_demand_charge()

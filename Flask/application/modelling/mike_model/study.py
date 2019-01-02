@@ -294,7 +294,7 @@ class Study:
                 # If battery, reset then calculate energy flows stepwise:
                 # -------------------------------------------------------
                 eno.resetAllBatteries(scenario)
-                for step in np.arange(0, self.ts.num_steps):
+                for step in np.arange(0, self.ts_ng.num_steps):
                     eno.calcBuildingDynamicEnergyFlows(step)
 
             # Energy Flows for retailer (static)

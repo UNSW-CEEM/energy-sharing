@@ -534,3 +534,9 @@ class Scenario:
             i = cols.index(c)
             self.study.op.loc[self.name, mcols[i]] = self.results.loc[:, c].mean(axis=0)
             self.study.op.loc[self.name, stdcols[i]] = self.results.loc[:, c].std(axis=0)
+
+    def get_study(self):
+        return self.study
+
+    def get_timeseries(self):
+        return self.ts

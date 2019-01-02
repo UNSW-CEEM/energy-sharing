@@ -68,15 +68,15 @@ def model_run(base_path, project, study_name, override_output='', use_threading=
             for scenario in study_ng.get_scenario_list():
                 study_ng.run_scenario(scenario)
 
-        study.log_study_data()
+        study_ng.log_study_data()
 
         end_time = dt.datetime.now()
         duration = end_time - start_time
         print("***COMPLETED STUDY ***", study_name)
         logging.info("***COMPLETED STUDY %s ***", study_name)
-        logging.info(" ********* Completed %i scenarios in %f **************", len(study.scenario_list),
+        logging.info(" ********* Completed %i scenarios in %f **************", len(study_ng.scenario_list),
                      duration.seconds)
-        logging.info(" ********* Time per Scenario is  %f **************", duration.seconds / len(study.scenario_list))
+        logging.info(" ********* Time per Scenario is  %f **************", duration.seconds / len(study_ng.scenario_list))
 
     except:
         pass
