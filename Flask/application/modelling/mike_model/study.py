@@ -266,7 +266,7 @@ class Study:
         logging.info("Running Scenario number %i ", scenario_name)
         # Initialise scenario
         scenario = Scenario(scenario_name=scenario_name, study=self, timeseries=self.ts_ng)
-        eno = Network(scenario=scenario)
+        eno = Network(scenario=scenario, study=self, timeseries=self.ts_ng)
         # N.B. in embedded network scenarios, eno is the actual embedded network operator,
         # but in other scenarios, it is a virtual intermediary to organise energy and cash flows
         eno.initialiseAllTariffs(scenario)
@@ -281,7 +281,7 @@ class Study:
 
         # Iterate through all load profiles for this scenario:
         for load_name in scenario.load_list:
-            eno.initialiseBuildingLoads(load_name, scenario)
+            eno.initialise_building_loads(load_name, scenario)
             if scenario.pv_allocation == 'load_dependent':  # ie. for btm_i_c, btm_s and btm_p arrangements
                 eno.allocatePV(scenario, scenario.pv)
             # eno.initialiseSolarInstQuotas(scenario)  # depends on load and pv - not implemented. Solar Inst for EN

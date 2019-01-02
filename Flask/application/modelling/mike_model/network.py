@@ -1,6 +1,12 @@
+import logging
 import os
+import numpy as np
+import pandas as pd
+import sys
 
+from battery import Battery
 from customer import Customer
+import en_utilities as util
 
 
 class Network(Customer):
@@ -10,24 +16,28 @@ class Network(Customer):
     and pays the retailer. It may be the strata body (when resident 'cp' has null tariffs) or a retailer or ENO.
     In other scenarios, it has no meaning irw, just passes energy and $ between other players"""
 
-    def __init__(self, scenario):
-        self.resident_list = scenario.resident_list.copy()  # all residents plus cp
-        self.households = scenario.households.copy()  # just residents, not cp
-        self.battery_list = []  # residents (inc cp) with batteries - initial state
+    def __init__(self, scenario, study, timeseries):
+        # all residents plus cp
+        self.resident_list = scenario.resident_list.copy()
+        # just residents, not cp
+        self.households = scenario.households.copy()
+        # residents (inc cp) with batteries - initial state
+        self.battery_list = []
         # (these may change later if different_loads)
         # initialise characteristics of the network as a customer:
-        super().__init__('network')
+
+        self.study = study
+        self.timeseries = timeseries
+
+        super().__init__('network', self.study, self.timeseries)
         #  initialise the customers / members within the network
         # (includes residents and cp)
-        self.resident = {c: Customer(name=c) for c in self.resident_list}
-        self.retailer = Customer(name='retailer')
+        self.resident = {c: Customer(name=c, study=self.study, timeseries=self.timeseries) for c in self.resident_list}
+        self.retailer = Customer(name='retailer', study=self.study, timeseries=self.timeseries)
         if 'btm_p' in scenario.arrangement:
-            self.solar_retailer = Customer(name='solar_retailer')
+            self.solar_retailer = Customer(name='solar_retailer', study=self.study, timeseries=self.timeseries)
 
-    def initialiseBuildingLoads(self,
-                                load_name,  # file name only
-                                scenario
-                                ):
+    def initialise_building_loads(self, load_name, scenario):
         """Initialise network for new load profiles."""
         # read load data
         # --------------
@@ -36,13 +46,13 @@ class Network(Customer):
 
         # set eno load, cumulative load and generation to zero
         # ----------------------------------------------------
-        self.initialiseCustomerLoad(np.zeros(ts.num_steps))
-        self.cum_resident_imports = np.zeros(ts.num_steps)
-        self.cum_resident_exports = np.zeros(ts.num_steps)
-        self.cum_local_imports = np.zeros(ts.num_steps)
-        self.total_aggregated_coincidence = np.zeros(ts.num_steps)
-        self.sum_of_coincidences = np.zeros(ts.num_steps)
-        self.total_discharge = np.zeros(ts.num_steps)
+        self.initialiseCustomerLoad(np.zeros(self.ts.num_steps))
+        self.cum_resident_imports = np.zeros(self.ts.num_steps)
+        self.cum_resident_exports = np.zeros(self.ts.num_steps)
+        self.cum_local_imports = np.zeros(self.ts.num_steps)
+        self.total_aggregated_coincidence = np.zeros(self.ts.num_steps)
+        self.sum_of_coincidences = np.zeros(self.ts.num_steps)
+        self.total_discharge = np.zeros(self.ts.num_steps)
 
         # initialise residents' loads
         # ---------------------------
@@ -225,7 +235,7 @@ class Network(Customer):
         # --------------------
         # Individual Batteries
         # --------------------
-        self.cum_ind_bat_charge = np.zeros(ts.num_steps)
+        self.cum_ind_bat_charge = np.zeros(self.ts.num_steps)
         self.tot_ind_bat_capacity = 0
         self.any_resident_has_battery = False
         self.any_householder_has_battery = False
@@ -350,7 +360,7 @@ class Network(Customer):
             self.battery.reset(annual_load=np.array(self.network_load.sum(axis=1)))
         # Individual Batteries
         # --------------------
-        self.cum_ind_bat_charge = np.zeros(ts.num_steps)
+        self.cum_ind_bat_charge = np.zeros(self.ts.num_steps)
         # self.tot_ind_bat_capacity = 0
         # self.any_resident_has_battery = False
         if self.any_resident_has_battery:
@@ -550,7 +560,7 @@ class Network(Customer):
             self.central_battery_capacity = 0
             self.battery_cycles = 0
             self.battery_SOH = 0
-            self.total_discharge = np.zeros(ts.num_steps)
+            self.total_discharge = np.zeros(self.ts.num_steps)
 
         for c in self.battery_list:
             self.total_battery_losses += self.resident[c].battery.cumulative_losses
@@ -598,7 +608,7 @@ class Network(Customer):
     def logTimeseriesDetailed(self, scenario):
         """Logs timeseries data for whole building to csv file."""
 
-        timedata = pd.DataFrame(index=ts.timeseries)
+        timedata = pd.DataFrame(index=self.ts.timeseries)
         timedata['network_load'] = self.network_load.sum(axis=1)
         timedata['pv_generation'] = self.pv.sum(axis=1)
         timedata['grid_import'] = self.imports
@@ -620,16 +630,16 @@ class Network(Customer):
             #         timedata[bc2] = self.resident[c].battery.SOH
             #         timedata[bc3] = self.resident[c].battery.SOC_log
 
-        time_file = os.path.join(study.timeseries_path,
+        time_file = os.path.join(self.study.timeseries_path,
                                  self.scenario.label + '_' +
                                  scenario.arrangement + '_' +
                                  self.load_name)
-        um.df_to_csv(timedata, time_file)
+        util.df_to_csv(timedata, time_file)
 
     def logTimeseriesBrief(self, scenario):
         """Logs basic timeseries data for whole building to csv file."""
 
-        timedata = pd.DataFrame(index=ts.timeseries)
+        timedata = pd.DataFrame(index=self.ts.timeseries)
         timedata['network_load'] = self.network_load.sum(axis=1)
         # timedata['pv_generation'] = self.pv.sum(axis=1)
         timedata['grid_import'] = self.imports
@@ -637,8 +647,8 @@ class Network(Customer):
         timedata['sum_of_customer_imports'] = self.cum_resident_imports
         # timedata['sum_of_customer_exports'] = self.cum_resident_exports
 
-        time_file = os.path.join(study.timeseries_path,
+        time_file = os.path.join(self.study.timeseries_path,
                                  self.scenario.label + '_' +
                                  scenario.arrangement + '_' +
                                  self.load_name)
-        um.df_to_csv(timedata, time_file)
+        util.df_to_csv(timedata, time_file)
