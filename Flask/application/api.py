@@ -1,7 +1,7 @@
 from threading import Lock
-from flask import Flask, render_template, session, request
+from flask import Flask, render_template, request
 from flask_cors import CORS, cross_origin
-from flask_socketio import SocketIO, emit, rooms, disconnect, join_room, leave_room, close_room
+from flask_socketio import SocketIO, emit
 from .services import file_service
 from .modelling.ui_interfaces.parameters import Parameters as Ui_Parameters
 

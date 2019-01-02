@@ -14,6 +14,7 @@ pendulum = "*"
 DateTime = "*"
 Cython = "*"
 gunicorn = "*"
+matplotlib = "*"
 
 [dev-packages]
 

@@ -1,0 +1,644 @@
+import os
+
+from customer import Customer
+
+
+class Network(Customer):
+    """A group of customers (residents) with loads, flows, financials, and is itself an aggregated customer.
+
+    In embedded network scenarios, this object is equivalent to the ENO, takes payments from residents,
+    and pays the retailer. It may be the strata body (when resident 'cp' has null tariffs) or a retailer or ENO.
+    In other scenarios, it has no meaning irw, just passes energy and $ between other players"""
+
+    def __init__(self, scenario):
+        self.resident_list = scenario.resident_list.copy()  # all residents plus cp
+        self.households = scenario.households.copy()  # just residents, not cp
+        self.battery_list = []  # residents (inc cp) with batteries - initial state
+        # (these may change later if different_loads)
+        # initialise characteristics of the network as a customer:
+        super().__init__('network')
+        #  initialise the customers / members within the network
+        # (includes residents and cp)
+        self.resident = {c: Customer(name=c) for c in self.resident_list}
+        self.retailer = Customer(name='retailer')
+        if 'btm_p' in scenario.arrangement:
+            self.solar_retailer = Customer(name='solar_retailer')
+
+    def initialiseBuildingLoads(self,
+                                load_name,  # file name only
+                                scenario
+                                ):
+        """Initialise network for new load profiles."""
+        # read load data
+        # --------------
+        self.load_name = load_name
+        self.network_load = scenario.dict_load_profiles[load_name]
+
+        # set eno load, cumulative load and generation to zero
+        # ----------------------------------------------------
+        self.initialiseCustomerLoad(np.zeros(ts.num_steps))
+        self.cum_resident_imports = np.zeros(ts.num_steps)
+        self.cum_resident_exports = np.zeros(ts.num_steps)
+        self.cum_local_imports = np.zeros(ts.num_steps)
+        self.total_aggregated_coincidence = np.zeros(ts.num_steps)
+        self.sum_of_coincidences = np.zeros(ts.num_steps)
+        self.total_discharge = np.zeros(ts.num_steps)
+
+        # initialise residents' loads
+        # ---------------------------
+        for c in self.resident_list:
+            self.resident[c].initialiseCustomerLoad(
+                customer_load=np.array(self.network_load[c])
+                    .astype(np.float64))
+
+        # Calculate total site load
+        # --------------------------
+        self.total_building_load = self.network_load.sum().sum()
+
+        # Initialise cash totals
+        # ----------------------
+        self.receipts_from_residents = 0.0
+        self.total_building_payment = 0.0
+        self.cum_resident_total_payments = 0.0
+        self.cum_local_solar_bill = 0.0
+        self.energy_bill = 0.0
+
+    def initialiseAllTariffs(self, scenario):
+        # initialise parent meter tariff
+        self.initialiseCustomerTariff(scenario.tariff_in_use['parent'], scenario)
+        # initialise internal customer tariffs
+        for c in self.resident_list:
+            self.resident[c].initialiseCustomerTariff(scenario.tariff_in_use[c], scenario)
+        # initialise retailer's network tariff
+        self.retailer.initialiseCustomerTariff(scenario.dnsp_tariff, scenario)
+        # copy tariff parameter(s) from scenario
+        self.has_dynamic_tariff = scenario.has_dynamic_tariff
+
+    def allocatePV(self, scenario, pv):
+        """set up and allocate pv generation for this scenario."""
+
+        # PV allocation is used to allocate PV capex costs for some arrangements
+        # Copy profile from scenario and then allocate
+        # Allocation happens here as the Customers are part of the Network (not scenario)
+        self.pv_exists = scenario.pv_exists
+        self.pv = pv.copy()
+
+        # Set up PV dataframe for each scenario:
+        # --------------------------------------
+        if 'en' in scenario.arrangement:
+            # rename single column in pv file if necessary
+            # TODO Change PV allocation to allow individual distributed PV within EN
+            if len(self.pv.columns) == 1:
+                self.pv.columns = ['central']
+
+        elif 'cp_only' in scenario.arrangement:
+            # no action required
+            # rename single column in pv file if necessary
+            if 'cp' not in self.pv.columns:
+                self.pv.columns = ['cp']
+
+        elif 'btm_i_u' in scenario.arrangement:
+            # For btm_i, if only single pv column, split equally between all units (NOT CP)
+            # If more than 1 column, leave as allocated
+            if len(self.pv.columns) == 1:
+                self.pv.columns = ['total']
+                for r in scenario.households:
+                    self.pv[r] = self.pv['total'] / len(scenario.households)
+                self.pv = self.pv.drop('total', axis=1)
+
+        elif 'btm_i_c' in scenario.arrangement:
+            # For btm_i_c, if only single pv column, split % to cp according tp cp_ratio and split remainder equally between all units
+            # If more than 1 column, leave as allocated
+            if len(self.pv.columns) == 1:
+                self.pv.columns = ['total']
+                self.pv['cp'] = self.pv['total'] * (self.resident['cp'].load.sum() / self.total_building_load)
+                for r in scenario.households:
+                    self.pv[r] = (self.pv['total'] - self.pv['cp']) / len(scenario.households)
+                self.pv = self.pv.drop('total', axis=1)
+
+        elif any(word in scenario.arrangement for word in ['btm_s_c', 'btm_p_c']):
+            # For btm_s_c and btm_p_c, split pv between all residents INCLUDING CP according to INSTANTANEOUS load
+            if len(self.pv.columns) != 1:
+                self.pv['total'] = self.pv.sum(axis=1)
+                self.pv = self.pv.loc[:, ['total']]
+            self.pv.columns = ['total']
+            self.pv = self.network_load.div(self.network_load.sum(axis=1), axis=0) \
+                .fillna(1 / len(self.resident_list)) \
+                .multiply(self.pv.loc[:, 'total'], axis=0)
+
+        elif any(word in scenario.arrangement for word in ['btm_s_u', 'btm_p_u']):
+            # For btm_s_u and btm_p_u, split pv between all residents EXCLUDING CP according to INSTANTANEOUS  load
+            if len(self.pv.columns) != 1:
+                self.pv['total'] = self.pv.sum(axis=1)
+                self.pv = self.pv.loc[:, ['total']]
+            self.pv.columns = ['total']
+            load_units_only = self.network_load.copy().drop('cp', axis=1)
+            self.pv = load_units_only.div(load_units_only.sum(axis=1), axis=0) \
+                .fillna(1 / len(self.households)) \
+                .multiply(self.pv.loc[:, 'total'], axis=0)
+            self.pv['cp'] = 0
+
+        elif 'bau' not in scenario.arrangement:
+            logging.info('*********** Exception!!! Invalid technical arrangement %s for scenario %s',
+                         scenario.arrangement, scenario.name)
+            print('***************Exception!!! Invalid technical arrangement ', scenario.arrangement, ' for scenario ',
+                  scenario.name)
+            sys.exit("Invalid technical Arrangement")
+
+        # Create list of customers with PV:
+        if not self.pv_exists:
+            self.pv_customers = []
+        else:
+            self.pv_customers = [c for c in self.pv.columns if self.pv[c].sum() > 0]
+        # Add blank columns for all residents with no pv and for central
+        blank_columns = [x for x in (self.resident_list + ['central']) if x not in self.pv.columns]
+        self.pv = pd.concat([self.pv, pd.DataFrame(columns=blank_columns)], sort=False).fillna(0)
+
+        # Initialise all residents with their allocated PV generation
+        # -----------------------------------------------------------
+        for c in self.resident_list:
+            self.resident[c].initialiseCustomerPV(np.array(self.pv[c]).astype(np.float64))
+        self.initialiseCustomerPV(np.array(self.pv['central']).astype(np.float64))
+
+        # # For diagnostics only
+        # pvpath = os.path.join(study.output_path, 'pv')
+        # os.makedirs(pvpath, exist_ok=True)
+        # pvFile = os.path.join(pvpath, self.name + '_pv_' + str(scenario.name) +'_' + scenario.arrangement + '.csv')
+        # um.df_to_csv(self.pv, pvFile)
+
+    # def initialiseDailySolarBlockQuotas(self, scenario):
+    #     # REMOVED - IMPLEMENTATION NEEDS CORRECTION
+    #     """For Solar Block Daily tariff, share allocation of central PV generation amongst all residents."""
+    #     # Intended for `en` arrangement
+    #     # Check that all residents have same solar_cp_allocation basis , otherwise raise an exception:
+    #     allocation_list = list(set((self.resident[c].tariff.solar_cp_allocation for c in self.resident_list)))
+    #     if len(allocation_list) > 1:
+    #         sys.exit("Inconsistent cp allocation of local generation")
+    #     else:
+    #         solar_cp_allocation = allocation_list[0]
+    #     # Calc daily quotas for cp and households based on proportion of annual PV generation:
+    #     self.resident['cp'].daily_local_quota = self.pv.loc[
+    #                                                 self.resident['cp'].tariff.solar_period, 'central'].sum() * solar_cp_allocation / 365
+    #     for c in self.households:
+    #         self.resident[c].daily_local_quota = self.pv.loc[self.resident[c].tariff.solar_period, 'central'].sum() * (
+    #                     1 - solar_cp_allocation) / (365 * len(self.households))
+
+    # def initialiseSolarInstQuotas(self, scenario):
+    #     """Calculate local quotas for solar instantaneous tariffs in an EN."""
+    #     # CURRENTLY NOT IMPLEMENTED
+    #     # -------------------------
+    #     # (NB PV allocation is fixed and PV has already been initialised.)
+    #     # Quota is equal share of pv generation at this timestep
+    #     # Applies to EN arrangements only
+    #     # This is for instantaneous solar tariff.
+    #     self.solar_instantaneous_quota = np.zeros(ts.num_steps)
+    #     self.retailer.solar_instantaneous_quota = np.zeros(ts.num_steps)
+    #     if 'en' in scenario.arrangement:
+    #         for c in self.resident_list:
+    #             if self.resident[c].tariff.is_solar_inst:
+    #                 self.resident[c].solar_instantaneous_quota = np.where((self.pv['central'] > self.resident['cp'].load),\
+    #                                                         (self.pv['central'] - self.resident['cp'].load) / len(
+    #                                                         self.households), 0)
+    #             else:
+    #                 self.resident[c].solar_instantaneous_quota = np.zeros(ts.num_steps)
+    #     else:
+    #         for c in self.resident_list:
+    #             self.resident[c].solar_instantaneous_quota = np.zeros(ts.num_steps)
+
+    def initialiseAllBatteries(self, scenario):
+        """Initialise central and individual batteries as required."""
+        # -------------------------------
+        # Total battery losses in network
+        # -------------------------------
+        self.total_battery_losses = 0
+
+        # ---------------
+        # Central Battery
+        # ---------------
+        self.has_central_battery = scenario.has_central_battery
+        if self.has_central_battery:
+            self.battery = Battery(scenario=scenario,
+                                   battery_id=scenario.central_battery_id,
+                                   battery_strategy=scenario.central_battery_strategy,
+                                   battery_capacity=scenario.central_battery_capacity_kWh)
+
+        # --------------------
+        # Individual Batteries
+        # --------------------
+        self.cum_ind_bat_charge = np.zeros(ts.num_steps)
+        self.tot_ind_bat_capacity = 0
+        self.any_resident_has_battery = False
+        self.any_householder_has_battery = False
+
+        # CP battery
+        # ----------
+        if 'cp_battery_id' in scenario.parameters.index and 'cp_battery_strategy' in scenario.parameters.index:
+            if not pd.isnull(scenario.parameters['cp_battery_id']) and \
+                    not pd.isnull(scenario.parameters['cp_battery_strategy']):
+                self.resident['cp'].has_battery = True
+                self.any_resident_has_battery = True  # NB 'resident' here means householder or cp
+                self.battery_list = ['cp']
+                scenario.has_ind_batteries = 'True'
+                cp_battery_capacity_kWh = 1
+                # Scalable battery:
+                if 'cp_battery_capacity_kWh' in scenario.parameters.index:
+                    if not pd.isnull(scenario.parameters['cp_battery_capacity_kWh']):
+                        cp_battery_capacity_kWh = scenario.parameters['cp_battery_capacity_kWh']
+                # Initialise battery:
+                self.resident['cp'].battery = Battery(scenario=scenario,
+                                                      battery_id=scenario.parameters['cp_battery_id'],
+                                                      battery_strategy=scenario.parameters['cp_battery_strategy'],
+                                                      battery_capacity=cp_battery_capacity_kWh)
+                self.tot_ind_bat_capacity += self.resident['cp'].battery.capacity_kWh
+            else:
+                self.resident['cp'].has_battery = False
+        else:
+            self.resident['cp'].has_battery = False
+
+        # Household batteries - all the same
+        # ----------------------------------
+        bat_name = 'all_battery_id'
+        bat_strategy = 'all_battery_strategy'
+        if bat_name in scenario.parameters.index and bat_strategy in scenario.parameters.index and \
+                not pd.isnull(scenario.parameters[bat_name]) and \
+                not pd.isnull(scenario.parameters[bat_strategy]):
+            self.any_resident_has_battery = True
+            self.any_householder_has_battery = True
+            self.battery_list += self.households
+            scenario.has_ind_batteries = 'True'
+            all_battery_capacity_kWh = 1
+            # Scalable batteries:
+            if 'all_battery_capacity_kWh' in scenario.parameters.index:
+                if not pd.isnull(scenario.parameters['all_battery_capacity_kWh']):
+                    all_battery_capacity_kWh = scenario.parameters['all_battery_capacity_kWh']
+            for c in self.households:
+                self.resident[c].battery = Battery(scenario=scenario,
+                                                   battery_id=scenario.parameters[bat_name],
+                                                   battery_strategy=scenario.parameters[bat_strategy],
+                                                   battery_capacity=all_battery_capacity_kWh)
+                self.resident[c].has_battery = True
+                self.tot_ind_bat_capacity += self.resident[c].battery.capacity_kWh
+
+        # Household batteries - separately defined
+        # ----------------------------------------
+        elif scenario.has_ind_batteries != 'none':
+            for c in self.households:
+                bat_name = str(c) + '_battery_id'
+                bat_strategy = str(c) + '_battery_strategy'
+                bat_capacity = str(c) + '_battery_capacity_kWh'
+                battery_capacity_kWh = 1
+                if bat_name in scenario.parameters.index and bat_strategy in scenario.parameters.index:
+                    if not pd.isnull(scenario.parameters[bat_name]) and \
+                            not pd.isnull(scenario.parameters[bat_strategy]):
+                        self.resident[c].has_battery = True
+                        self.any_resident_has_battery = True
+                        self.any_householder_has_battery = True
+                        self.battery_list.append(c)
+                        scenario.has_ind_batteries = 'True'
+                        # Scalable battery:
+                        if bat_capacity in scenario.parameters.index:
+                            if not pd.isnull(scenario.parameters[bat_capacity]):
+                                battery_capacity_kWh = scenario.parameters[bat_capacity]
+                    self.resident[c].battery = Battery(scenario=scenario,
+                                                       battery_id=scenario.parameters[bat_name],
+                                                       battery_strategy=scenario.parameters[bat_strategy],
+                                                       battery_capacity=battery_capacity_kWh)
+                    self.tot_ind_bat_capacity += self.resident[c].battery.capacity_kWh
+                else:
+                    self.resident[c].has_battery = False
+            else:
+                self.resident[c].has_battery = False
+
+        # No individual household batteries
+        # ---------------------------------
+        else:
+            for c in self.households:
+                self.resident[c].has_battery = False
+            self.any_householder_has_battery = False
+
+        # Flag battery arrangements that don't exist in the model:
+        # --------------------------------------------------------
+        if 'btm' in scenario.arrangement and self.has_central_battery:
+            logging.info('***************Warning!!! Scenario %s has btm arrangement with central battery \
+                       - not included in this model', str(scenario.name))
+            print('***************Warning!!! Scenario %s has btm arrangement with central battery \
+                       - not included in this model', str(scenario.name))
+        if 'cp_only' in scenario.arrangement and self.any_householder_has_battery:
+            logging.info('***************Warning!!! Scenario %s has cp_only arrangement with unit battery(s) \
+                                   - not included in this model', str(scenario.name))
+            print('***************Warning!!! Scenario %s has cp_only arrangement with unit battery(s) \
+                                   - not included in this model', str(scenario.name))
+
+        if 'cp_only' in scenario.arrangement and self.has_central_battery:
+            logging.info('***************Warning!!! Scenario %s has cp_only arrangement with central battery(s) \
+                                          - not included in this model', str(scenario.name))
+            logging.info('*************** For cp_only with battery, use cp_battery *******************')
+            print('***************Warning!!! Scenario %s has cp_only arrangement with central battery(s) \
+                                          - not included in this model', str(scenario.name))
+
+        if ('bau' == scenario.arrangement) and (self.any_resident_has_battery or self.has_central_battery):
+            logging.info('***************Warning!!! Scenario %s is bau with battery(s) \
+                                   - please use `bau_bat`', str(scenario.name))
+            print('***************Warning!!! Scenario %s is bau with battery(s) \
+                                    - please use `bau_bat`', str(scenario.name))
+
+    def resetAllBatteries(self, scenario):
+        """reset batteries to new as required."""
+        # Central Battery
+        # ---------------
+        if self.has_central_battery:
+            self.battery.reset(annual_load=np.array(self.network_load.sum(axis=1)))
+        # Individual Batteries
+        # --------------------
+        self.cum_ind_bat_charge = np.zeros(ts.num_steps)
+        # self.tot_ind_bat_capacity = 0
+        # self.any_resident_has_battery = False
+        if self.any_resident_has_battery:
+            for c in self.battery_list:
+                self.resident[c].battery.reset(annual_load=self.resident[c].load)
+            # NB ###@@@@@ check max here for ind bats
+        self.total_battery_losses = 0
+
+    def calcBuildingStaticEnergyFlows(self):
+        """Calculate all internal energy flows for all timesteps (no storage or dm)."""
+
+        # Calculate flows for each resident and cumulative values for ENO
+        for c in self.resident_list:
+            self.resident[c].calcStaticEnergy()
+            # Cumulative load and generation are what the "ENO" presents to the retailer:
+            self.cum_resident_imports += self.resident[c].imports
+            self.cum_resident_exports += self.resident[c].exports
+            # Cumulative local imports are load presented to solar_retailer (in btm_s PPA scenario)
+            self.cum_local_imports += self.resident[c].solar_allocation
+
+        # Calculate aggregate flows for ENO
+        self.flows = self.generation + self.cum_resident_exports - self.cum_resident_imports
+        self.exports = self.flows.clip(0)
+        self.imports = (-1 * self.flows).clip(0)
+        pass
+
+    def calcAllDemandCharges(self):
+        """Calculates demand charges for ENO and for all residents."""
+        self.calcDemandCharge()
+        for c in self.resident_list:
+            self.resident[c].calcDemandCharge()
+        self.retailer.calcDemandCharge()
+
+    def calcBuildingDynamicEnergyFlows(self, step):
+        """Calculate all internal energy flows for SINGLE timestep (with storage)."""
+
+        # ---------------------------------------------------------------
+        # Calculate flows for each resident and cumulative values for ENO
+        # ---------------------------------------------------------------
+        for c in self.resident_list:
+            # Calc flows (inc battery dispatch) for each resident
+            # ---------------------------------------------------
+            self.resident[c].calcDynamicEnergy(step)
+            # Cumulative load and generation are what the "ENO" presents to the retailer:
+            self.cum_resident_imports[step] += self.resident[c].imports[step]
+            self.cum_resident_exports[step] += self.resident[c].exports[step]
+            # Log cumulative charge state and amount of discharge (charge)
+            if self.resident[c].has_battery:
+                self.cum_ind_bat_charge[step] += self.resident[c].battery.charge_level_kWh
+
+        # ----------------------------------------------------------------------------------------
+        # Calculate energy flow without central  battery, then modify by calling battery.dispatch:
+        # ----------------------------------------------------------------------------------------
+        self.flows[step] = self.generation[step] \
+                           + self.cum_resident_exports[step] \
+                           - self.cum_resident_imports[step]
+        if self.has_central_battery:
+            self.flows[step] = self.battery.dispatch(generation=self.generation[step] + self.cum_resident_exports[step],
+                                                     load=self.cum_resident_imports[step],
+                                                     step=step)
+        else:
+            self.flows[step] = self.generation[step] \
+                               + self.cum_resident_exports[step] \
+                               - self.cum_resident_imports[step]
+        # Calc imports and exports
+        # ------------------------
+        self.exports[step] = self.flows[step].clip(0)
+        self.imports[step] = (-1 * self.flows[step]).clip(0)
+
+    def allocateAllCapex(self, scenario):
+        """ Allocates capex repayments and opex to customers according to arrangement"""
+        # For some arrangements, this depends on pv allocation, so must FOLLOW allocatePV call
+        # Called once per load profile where capex is allocated according to load; once per scenario otherwise
+        # Moved from start of iterations to end to incorporate battery lifecycle impacts
+
+        # Initialise all to zero:
+        # -----------------------
+        self.en_opex = 0
+        self.pv_capex_repayment = 0
+        self.en_capex_repayment = 0
+        self.bat_capex_repayment = 0
+        scenario.total_battery_capex_repayment = 0
+
+        # Individual battery capex:
+        # -------------------------
+        for c in self.resident_list:
+            self.resident[c].pv_capex_repayment = 0
+            self.resident[c].bat_capex_repayment = 0
+            if self.resident[c].has_battery:
+                self.resident[c].bat_capex = self.resident[c].battery.calcBatCapex()
+                self.resident[c].bat_capex_repayment = -12 * np.pmt(rate=scenario.a_rate / 12,
+                                                                    nper=12 * scenario.a_term,
+                                                                    pv=self.resident[c].bat_capex,
+                                                                    fv=0,
+                                                                    when='end')
+                scenario.total_battery_capex_repayment += self.resident[c].bat_capex_repayment
+            else:
+                self.resident[c].bat_capex_repayment = 0
+
+        # Central battery capex
+        # ---------------------
+        if self.has_central_battery:
+            central_bat_capex = self.battery.calcBatCapex()
+        else:
+            central_bat_capex = 0
+            central_bat_capex_repayment = 0
+        if central_bat_capex > 0:
+            central_bat_capex_repayment = -12 * np.pmt(rate=scenario.a_rate / 12,
+                                                       nper=12 * scenario.a_term,
+                                                       pv=central_bat_capex,
+                                                       fv=0,
+                                                       when='end')
+        else:
+            central_bat_capex_repayment = 0
+        scenario.total_battery_capex_repayment += central_bat_capex_repayment
+
+        # Allocate network, pv and battery capex & opex payments depending on network arrangements
+        # ----------------------------------------------------------------------------------------
+        # TODO Allocation of capex needs refining. e.g in some `btm_s` arrangements, capex is payable by owners, not residents
+        if 'en' in scenario.arrangement:
+            # For en, all capex & opex are borne by the ENO
+            self.en_opex = scenario.en_opex
+            self.pv_capex_repayment = scenario.pv_capex_repayment
+            self.en_capex_repayment = scenario.en_capex_repayment
+            self.bat_capex_repayment = central_bat_capex_repayment
+
+        elif 'cp_only' in scenario.arrangement:
+            # pv and central battery capex allocated to customer 'cp' (ie strata)
+            self.resident['cp'].pv_capex_repayment = scenario.pv_capex_repayment
+            self.resident['cp'].bat_capex_repayment += central_bat_capex_repayment
+
+        elif 'btm_i' in scenario.arrangement:
+            # For btm_i apportion pv AND central bat capex costs according to pv allocation
+            for c in self.pv_customers:
+                self.resident[c].pv_capex_repayment = self.pv[
+                                                          c].sum() / self.pv.sum().sum() * scenario.pv_capex_repayment
+                self.resident[c].bat_capex_repayment += self.pv[
+                                                            c].sum() / self.pv.sum().sum() * central_bat_capex_repayment
+
+        elif 'btm_s_c' in scenario.arrangement:
+            # For btm_s_c, apportion capex costs equally between units and cp.
+            # (Not ideal - needs more sophisticated analysis of practical btm_s arrangements)
+            for c in self.resident_list:
+                self.resident[c].pv_capex_repayment = scenario.pv_capex_repayment / len(self.resident_list)
+                self.resident[c].en_capex_repayment = scenario.en_capex_repayment / len(self.resident_list)
+                self.resident[c].en_opex = scenario.en_opex / len(self.resident_list)
+                self.resident[c].bat_capex_repayment += central_bat_capex_repayment / len(self.resident_list)
+
+        elif 'btm_s_u' in scenario.arrangement:
+            # For btm_s_u, apportion capex costs equally between units only
+            # (Not ideal - needs more sophisticated analysis of practical btm_s arrangements)
+            for c in self.households:
+                self.resident[c].pv_capex_repayment = scenario.pv_capex_repayment / len(self.households)
+                self.resident[c].en_opex = scenario.en_opex / len(self.households)
+                self.resident[c].en_capex_repayment = scenario.en_capex_repayment / len(self.households)
+                self.resident[c].bat_capex_repayment += central_bat_capex_repayment / len(self.households)
+
+        elif 'btm_p' in scenario.arrangement:
+            # all solar and btm capex costs paid by solar retailer
+            self.solar_retailer.pv_capex_repayment = scenario.pv_capex_repayment
+            self.solar_retailer.en_capex_repayment = scenario.en_capex_repayment
+            self.solar_retailer.en_opex = scenario.en_opex
+            self.solar_retailer.bat_capex_repayment = central_bat_capex_repayment
+        pass
+
+    def calcEnergyMetrics(self, scenario):
+
+        # -----------------------------------------------
+        # calculate total exports / imports & pvr, cpr
+        # ----------------------------------------------
+        if 'bau' in scenario.arrangement or 'cp_only' in scenario.arrangement or 'btm' in scenario.arrangement:
+            # Building export is sum of customer exports
+            # Building import is sum of customer imports
+            self.total_building_export = 0
+            self.total_import = 0
+            for c in self.resident_list:
+                self.total_building_export += self.resident[c].exports.sum()
+                self.total_import += self.resident[c].imports.sum()
+        elif 'en' in scenario.arrangement:
+            # For en scenarios, import and exports are aggregated:
+            self.total_building_export = self.exports.sum()
+            self.total_import = self.imports.sum()
+
+        self.pv_ratio = self.pv.sum().sum() / self.total_building_load * 100
+        self.cp_ratio = self.resident['cp'].load.sum() / self.total_building_load * 100
+
+        # ----------------------------------------------------------------------
+        # Calc sum of battery losses & discharge across all batteries in network
+        # ----------------------------------------------------------------------
+        if self.has_central_battery:
+            self.central_battery_capacity = self.battery.capacity_kWh
+            self.total_battery_losses += self.battery.cumulative_losses
+            self.battery_cycles = self.battery.number_cycles
+            self.battery_SOH = self.battery.SOH
+            self.total_discharge = self.battery.net_discharge
+        else:
+            self.central_battery_capacity = 0
+            self.battery_cycles = 0
+            self.battery_SOH = 0
+            self.total_discharge = np.zeros(ts.num_steps)
+
+        for c in self.battery_list:
+            self.total_battery_losses += self.resident[c].battery.cumulative_losses
+            self.total_discharge += self.resident[c].battery.net_discharge
+        # ----------------------------------------------
+        # Calculate Self-Consumption & Self-Sufficiency
+        # ----------------------------------------------
+        # 1) Luthander method: accounts correctly for battery losses
+        # ----------------------------------------------------------
+        # Calculate coincidence (ie overlap of load and generation profiles accounting for battery losses)
+        # ...for individual or btm PV:
+        if self.pv_exists:
+            for c in self.resident_list:
+                if self.resident[c].has_battery:
+                    self.resident[c].coincidence = np.minimum(self.resident[c].load,
+                                                              self.resident[c].generation +
+                                                              self.resident[c].battery.net_discharge)
+                else:
+                    self.resident[c].coincidence = np.minimum(self.resident[c].load,
+                                                              self.resident[c].generation)
+                self.sum_of_coincidences += self.resident[c].coincidence
+            # ... for central PV:
+            self.total_aggregated_coincidence = np.minimum(self.network_load.sum(axis=1),
+                                                           self.pv['central'] + self.total_discharge)
+
+            if 'en_pv' in scenario.arrangement:
+                self.self_consumption = np.sum(self.total_aggregated_coincidence) / self.pv.sum().sum() * 100
+                self.self_sufficiency = np.sum(self.total_aggregated_coincidence) / self.total_building_load * 100
+            else:
+                self.self_consumption = np.sum(self.sum_of_coincidences) / self.pv.sum().sum() * 100
+                self.self_sufficiency = np.sum(self.sum_of_coincidences) / self.total_building_load * 100
+        else:
+            self.self_consumption = 100
+            self.self_sufficiency = 0
+
+        # 2) OLD VERSIONS - for checking. Same for non battery scenarios and for SS
+        # -------------------------------------------------------------------------
+        if scenario.pv_exists:
+            self.self_consumption_OLD = 100 - (self.total_building_export / self.pv.sum().sum() * 100)
+            self.self_sufficiency_OLD = 100 - (self.total_import / self.total_building_load * 100)
+        else:
+            self.self_consumption_OLD = 100  # NB No PV implies 100% self consumption
+            self.self_sufficiency_OLD = 0
+
+    def logTimeseriesDetailed(self, scenario):
+        """Logs timeseries data for whole building to csv file."""
+
+        timedata = pd.DataFrame(index=ts.timeseries)
+        timedata['network_load'] = self.network_load.sum(axis=1)
+        timedata['pv_generation'] = self.pv.sum(axis=1)
+        timedata['grid_import'] = self.imports
+        timedata['grid_export'] = self.exports
+        timedata['sum_of_customer_imports'] = self.cum_resident_imports
+        timedata['sum_of_customer_exports'] = self.cum_resident_exports
+
+        if scenario.has_central_battery:
+            timedata['battery_SOC'] = self.battery.SOC_log
+            timedata['battery_charge_kWh'] = self.battery.SOC_log * self.battery.capacity_kWh / 100
+        if scenario.has_ind_batteries == 'True':
+            timedata['ind_battery_SOC'] = self.cum_ind_bat_charge / self.tot_ind_bat_capacity * 100
+            # for c in self.resident_list:
+            #     bc1 = 'battery_'+c+'cycles'
+            #     bc2 = 'SOH_battery_'+c
+            #     bc3 = 'SOC_battery_'+c
+            #     if self.resident[c].has_battery:
+            #         timedata[bc1] = self.resident[c].battery.number_cycles
+            #         timedata[bc2] = self.resident[c].battery.SOH
+            #         timedata[bc3] = self.resident[c].battery.SOC_log
+
+        time_file = os.path.join(study.timeseries_path,
+                                 self.scenario.label + '_' +
+                                 scenario.arrangement + '_' +
+                                 self.load_name)
+        um.df_to_csv(timedata, time_file)
+
+    def logTimeseriesBrief(self, scenario):
+        """Logs basic timeseries data for whole building to csv file."""
+
+        timedata = pd.DataFrame(index=ts.timeseries)
+        timedata['network_load'] = self.network_load.sum(axis=1)
+        # timedata['pv_generation'] = self.pv.sum(axis=1)
+        timedata['grid_import'] = self.imports
+        # timedata['grid_export'] = self.exports
+        timedata['sum_of_customer_imports'] = self.cum_resident_imports
+        # timedata['sum_of_customer_exports'] = self.cum_resident_exports
+
+        time_file = os.path.join(study.timeseries_path,
+                                 self.scenario.label + '_' +
+                                 scenario.arrangement + '_' +
+                                 self.load_name)
+        um.df_to_csv(timedata, time_file)
