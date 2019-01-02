@@ -27,15 +27,15 @@ class Network(Customer):
         # initialise characteristics of the network as a customer:
 
         self.study = study
-        self.timeseries = timeseries
+        self.ts = timeseries
 
-        super().__init__('network', self.study, self.timeseries)
+        super().__init__('network', self.study, self.ts)
         #  initialise the customers / members within the network
         # (includes residents and cp)
-        self.resident = {c: Customer(name=c, study=self.study, timeseries=self.timeseries) for c in self.resident_list}
-        self.retailer = Customer(name='retailer', study=self.study, timeseries=self.timeseries)
+        self.resident = {c: Customer(name=c, study=self.study, timeseries=self.ts) for c in self.resident_list}
+        self.retailer = Customer(name='retailer', study=self.study, timeseries=self.ts)
         if 'btm_p' in scenario.arrangement:
-            self.solar_retailer = Customer(name='solar_retailer', study=self.study, timeseries=self.timeseries)
+            self.solar_retailer = Customer(name='solar_retailer', study=self.study, timeseries=self.ts)
 
     def initialise_building_loads(self, load_name, scenario):
         """Initialise network for new load profiles."""

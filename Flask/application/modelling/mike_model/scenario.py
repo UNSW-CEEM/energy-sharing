@@ -104,8 +104,7 @@ class Scenario:
         if not self.pv_exists:
             self.pv = pd.DataFrame(index=self.ts.timeseries, columns=self.resident_list).fillna(0)
         else:
-            self.pvFile = os.path.join(study.pv_path,
-                                       self.parameters['pv_filename'])
+            self.pvFile = os.path.join(study.pv_path, self.parameters['pv_filename'])
             if '.csv' not in self.pvFile:
                 self.pvFile = self.pvFile + '.csv'
             if not os.path.exists(self.pvFile):
