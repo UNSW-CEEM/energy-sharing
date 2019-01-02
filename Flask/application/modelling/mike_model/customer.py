@@ -1,44 +1,59 @@
+import numpy as np
+import sys
+
 from tariff import Tariff
 
 
 class Customer:
     """Can be resident, strata body, or ENO representing aggregation of residents."""
 
-    def __init__(self, name):
+    def __init__(self, name, study, timeseries):
         self.name = name
-        self.tariff_data = study.tariff_data
+        self.study = study
+        self.ts = timeseries
+
+        self.tariff_data = self.study.tariff_data
         self.en_capex_repayment = 0
         self.en_opex = 0
         self.bat_capex_repayment = 0
-        self.exports = np.zeros(ts.num_steps)
-        self.imports = np.zeros(ts.num_steps)
+        self.exports = np.zeros(self.ts.num_steps)
+        self.imports = np.zeros(self.ts.num_steps)
         # self.local_exports = np.zeros(ts.num_steps)  # not used, available for local trading
-        self.solar_allocation = np.zeros(ts.num_steps)  # used for allocation of local generation
-        self.local_consumption = np.zeros(ts.num_steps)
-        self.flows = np.zeros(ts.num_steps)
-        self.cashflows = np.zeros(ts.num_steps)
-        self.import_charge = np.zeros(ts.num_steps)
+        self.solar_allocation = np.zeros(self.ts.num_steps)  # used for allocation of local generation
+        self.local_consumption = np.zeros(self.ts.num_steps)
+        self.flows = np.zeros(self.ts.num_steps)
+        self.cash_flows = np.zeros(self.ts.num_steps)
+        self.import_charge = np.zeros(self.ts.num_steps)
         self.local_solar_bill = 0
         self.total_payment = 0
 
-    def initialiseCustomerLoad(self,
-                               customer_load):  # as 1-d np.array
+        # TODO My linter wants everything instantiated within the init
+        self.load = None
+        self.coincidence = None
+        self.tariff_id = None
+        self.scenario = None
+        self.tariff = None
+        self.generation = None
+        self.demand_charge = None
+        self.npv = None
+        self.energy_bill = None
+
+    # as 1-d np.array
+    def initialise_customer_load(self, customer_load):
         """Set customer load, energy flows and cashflows to zero."""
         self.load = customer_load
-        self.coincidence = np.zeros(ts.num_steps)  # used for calculating self-consumption and self sufficiency
+        # used for calculating self-consumption and self sufficiency
+        self.coincidence = np.zeros(self.ts.num_steps)
 
-    def initialiseCustomerTariff(self,
-                                 customer_tariff_id,  # string
-                                 scenario):
+    def initialise_customer_tariff(self, customer_tariff_id, scenario):
         self.tariff_id = customer_tariff_id
         self.scenario = scenario
-        self.tariff = Tariff(tariff_id=self.tariff_id,
-                             scenario=scenario)
+        self.tariff = Tariff(tariff_id=self.tariff_id, scenario=scenario)
 
-    def initialiseCustomerPV(self, pv_generation):  # 1-D array
+    def initialise_customer_pv(self, pv_generation):  # 1-D array
         self.generation = pv_generation
 
-    def calcStaticEnergy(self):
+    def calc_static_energy(self):
         """Calculate Customer imports and exports for whole time period"""
         self.flows = self.generation - self.load
         self.exports = self.flows.clip(0)
@@ -48,7 +63,7 @@ class Customer:
         # for btm_p and btm_s arrangements:
         self.local_consumption = np.minimum(self.generation, self.load)
 
-    def calcDynamicEnergy(self, step):
+    def calc_dynamic_energy(self, step):
         """Calculate Customer imports and exports for single timestep"""
         # Used for scenarios with batteries
         # -------------------------------------------------------------------------------
@@ -71,17 +86,17 @@ class Customer:
         # Local Consumption is PV self-consumed by customer (which is charged for in btm_p arrangement)
         self.local_consumption[step] = np.minimum(self.generation[step], self.load[step])
 
-    def calcDemandCharge(self):
+    def calc_demand_charge(self):
         if self.tariff.is_demand:
             max_demand = np.multiply(self.imports, self.tariff.demand_period_array).max() * 2  # convert kWh to kW
-            self.demand_charge = max_demand * self.tariff.demand_tariff * ts.num_days
+            self.demand_charge = max_demand * self.tariff.demand_tariff * self.ts.num_days
             # Use nominal pf to convert to kVA?
             if self.tariff.demand_type == 'kVA':
                 self.demand_charge = self.demand_charge / self.tariff.assumed_pf
         else:
             self.demand_charge = 0
 
-    def calcCashflow(self):
+    def calc_cash_flow(self):
         """Calculate receipts and payments for customer.
 
         self.cashflows is net volumetric import & export charge,
@@ -102,7 +117,7 @@ class Customer:
             # ------------------------------------
             # calculate tariffs and costs stepwise
             # ------------------------------------
-            for step in np.arange(0, ts.num_steps):
+            for step in np.arange(0, self.ts.num_steps):
                 # print(step)
                 # --------------------------------------------------------------
                 # Solar Block Daily Tariff : Calculate energy used at solar rate
@@ -144,11 +159,10 @@ class Customer:
                         else:
                             previous_energy = self.imports[step - steps_since_reset:step].sum()  # NB adds to step-1
 
-
                     # Block Daily Tariff
                     # -------------------
                     elif self.tariff.tariff_type == 'Block_Daily':
-                        steps_today = ts.steps_today(step)
+                        steps_today = self.ts.steps_today(step)
                         cumulative_energy = self.imports[steps_today].sum()
                         if len(steps_today) <= 1:
                             previous_energy = 0
@@ -184,25 +198,24 @@ class Customer:
             self.import_charge = np.multiply((self.imports - self.solar_allocation), self.tariff.import_tariff)
         # For all dynamic and static tariffs:
         # -----------------------------------
-        self.cashflows = self.import_charge \
-                         + np.multiply(self.solar_allocation, self.tariff.solar_import_tariff) \
-                         - np.multiply(self.exports, self.tariff.export_tariff)
+        self.cash_flows = self.import_charge \
+                          + np.multiply(self.solar_allocation, self.tariff.solar_import_tariff) \
+                          - np.multiply(self.exports, self.tariff.export_tariff)
         # - np.multiply(self.local_exports, self.tariff.local_export_tariff) could be added for LET / P2P
         # (These are all 1x17520 Arrays.)
 
-        self.energy_bill = self.cashflows.sum() + \
-                           self.tariff.fixed_charge * ts.num_days + \
-                           self.demand_charge
+        self.energy_bill = self.cash_flows.sum() + self.tariff.fixed_charge * self.ts.num_days + self.demand_charge
 
         if self.name == 'retailer':
             self.total_payment = self.energy_bill
         else:
+            # capex, opex in $, energy in c (because tariffs in c/kWh)
             self.total_payment = self.energy_bill + \
                                  self.local_solar_bill + \
-                                 (self.pv_capex_repayment + \
-                                  self.en_capex_repayment + \
-                                  self.en_opex + \
-                                  self.bat_capex_repayment) * 100  # capex, opex in $, energy in c (because tariffs in c/kWh)
+                                 (self.pv_capex_repayment +
+                                  self.en_capex_repayment +
+                                  self.en_opex +
+                                  self.bat_capex_repayment) * 100
 
         # --------
         # Calc NPV

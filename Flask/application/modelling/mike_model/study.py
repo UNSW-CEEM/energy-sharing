@@ -170,20 +170,20 @@ class Study:
         self.dict_load_profiles = {}
         if not self.different_loads:
             for load_name in self.load_list:
-                loadFile = os.path.join(self.load_path, load_name)
-                temp_load = pd.read_csv(loadFile,
+                load_file = os.path.join(self.load_path, load_name)
+                temp_load = pd.read_csv(load_file,
                                         parse_dates=['timestamp'],
                                         dayfirst=True)
                 temp_load = temp_load.set_index('timestamp')
-                if not 'cp' in temp_load.columns:
+                if 'cp' not in temp_load.columns:
                     temp_load['cp'] = 0
                 self.dict_load_profiles[load_name] = temp_load
 
         # Otherwise, get the first load anyway:#@
         # -------------------------------------
         else:
-            loadFile = os.path.join(self.load_path, self.load_list[0])
-            temp_load = pd.read_csv(loadFile,
+            load_file = os.path.join(self.load_path, self.load_list[0])
+            temp_load = pd.read_csv(load_file,
                                     parse_dates=['timestamp'],
                                     dayfirst=True)
             self.dict_load_profiles[self.load_list[0]] = temp_load.set_index('timestamp')
@@ -194,8 +194,8 @@ class Study:
         # Initialise timeseries
         # ---------------------
         # TODO More globals. ts_ng = timeseries not global
-        global ts  # (assume timeseries are all the same for all load profiles)
-        ts_ng = Timeseries(
+        # global ts  # (assume timeseries are all the same for all load profiles)
+        self.ts_ng = Timeseries(
             load=self.dict_load_profiles[self.load_list[0]],
             dst_lookup=self.dst_lookup,
             dst_region=dst_region)
@@ -222,15 +222,15 @@ class Study:
             tariff_lookup_path=self.t_lookupFile,
             output_path=self.output_path,
             parameter_list=parameter_list,
-            ts=ts_ng)
+            ts=self.ts_ng)
 
         self.tariff_data.generateStaticTariffs()
         # -----------------------------
-        # Initialise output dataframes:
+        # Initialise output data frames:
         # -----------------------------
         self.op = pd.DataFrame(index=self.scenario_list)
 
-    def logStudyData(self):
+    def log_study_data(self):
         """Saves study outputs and summary to .csv files."""
 
         # For ease of handling, 3 csv files are created:
@@ -242,20 +242,20 @@ class Study:
         self.op.index.name = 'scenario'
         # Separate individual customer data and save as csv
         if not self.different_loads:
-            op_cust = self.op[[c for c in self.op.columns if 'cust_' in c and 'cp' not in c]]
-            self.op = self.op.drop(op_cust.columns, axis=1)
-            opcustFile = os.path.join(self.output_path, self.name + '_customer_results.csv')
-            util.df_to_csv(op_cust, opcustFile)
+            op_customer = self.op[[c for c in self.op.columns if 'cust_' in c and 'cp' not in c]]
+            self.op = self.op.drop(op_customer.columns, axis=1)
+            op_customer_file = os.path.join(self.output_path, self.name + '_customer_results.csv')
+            util.df_to_csv(op_customer, op_customer_file)
 
         # Separate standard deviations and save as csv
         op_std = self.op[[c for c in self.op.columns if 'std' in c]]
         self.op = self.op.drop(op_std.columns, axis=1)
-        opstdFile = os.path.join(self.output_path, self.name + '_results_std_dev.csv')
-        util.df_to_csv(op_std, opstdFile)
+        op_std_file = os.path.join(self.output_path, self.name + '_results_std_dev.csv')
+        util.df_to_csv(op_std, op_std_file)
 
         # Save remaining results for all scenarios
-        opFile = os.path.join(self.output_path, self.name + '_results.csv')
-        util.df_to_csv(self.op, opFile)
+        op_file = os.path.join(self.output_path, self.name + '_results.csv')
+        util.df_to_csv(self.op, op_file)
 
     def get_scenario_list(self):
         return self.scenario_list
@@ -265,7 +265,7 @@ class Study:
 
         logging.info("Running Scenario number %i ", scenario_name)
         # Initialise scenario
-        scenario = Scenario(scenario_name=scenario_name, study=self, timeseries=self.ts)
+        scenario = Scenario(scenario_name=scenario_name, study=self, timeseries=self.ts_ng)
         eno = Network(scenario=scenario)
         # N.B. in embedded network scenarios, eno is the actual embedded network operator,
         # but in other scenarios, it is a virtual intermediary to organise energy and cash flows
@@ -301,18 +301,19 @@ class Study:
             # -----------------------------------
             # retailer acts like a customer too, buying from DNSP
             # These are the load and generation that it presents to DNSP
-            eno.retailer.initialiseCustomerLoad(eno.imports)
-            eno.retailer.initialiseCustomerPV(eno.exports)
-            eno.retailer.calcStaticEnergy()
+            eno.retailer.initialise_customer_load(eno.imports)
+            eno.retailer.initialise_customer_pv(eno.exports)
+            eno.retailer.calc_static_energy()
 
             # Summary energy metrics
             # ----------------------lo
             eno.calcEnergyMetrics(scenario)
 
-            # Financials
+            # Financial's
             # ----------
             eno.calcAllDemandCharges()
-            eno.allocateAllCapex(scenario)  # per load profile to allow for scenarios where capex allocation depends on load
+            # per load profile to allow for scenarios where capex allocation depends on load
+            eno.allocateAllCapex(scenario)
             # If tariffs are dynamic (e.g block), calculate them stepwise:
             # ------------------------------------------------------------
 

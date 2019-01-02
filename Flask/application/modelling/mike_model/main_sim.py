@@ -68,7 +68,7 @@ def model_run(base_path, project, study_name, override_output='', use_threading=
             for scenario in study_ng.get_scenario_list():
                 study_ng.run_scenario(scenario)
 
-        study.logStudyData()
+        study.log_study_data()
 
         end_time = dt.datetime.now()
         duration = end_time - start_time
@@ -143,12 +143,3 @@ if __name__ == "__main__":
         base_path=base_path,
         use_threading=use_threading,
         override_output=override_output)
-
-# TODO - FUTURE - Variable allocation of pv between cp and residents
-# TODO - test solar block and inst tariffs
-# TODO - Add combined central and individual PV
-# TODO - Battery: Add capex calcs for individual batteries Need to update Network.allocateAllCapex
-# TODO - Optimisation Separate financial settings from energy calcs to reduce calculation
-# TODO - Optimisation: for loops -> i in np.arange rather than iter  thru' list
-# TODO - Optimisation: change all calcs to np.calcs
-# TODO - Exception handling

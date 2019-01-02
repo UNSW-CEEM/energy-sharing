@@ -47,7 +47,7 @@ class Network(Customer):
         # initialise residents' loads
         # ---------------------------
         for c in self.resident_list:
-            self.resident[c].initialiseCustomerLoad(
+            self.resident[c].initialise_customer_load(
                 customer_load=np.array(self.network_load[c])
                     .astype(np.float64))
 
@@ -68,9 +68,9 @@ class Network(Customer):
         self.initialiseCustomerTariff(scenario.tariff_in_use['parent'], scenario)
         # initialise internal customer tariffs
         for c in self.resident_list:
-            self.resident[c].initialiseCustomerTariff(scenario.tariff_in_use[c], scenario)
+            self.resident[c].initialise_customer_tariff(scenario.tariff_in_use[c], scenario)
         # initialise retailer's network tariff
-        self.retailer.initialiseCustomerTariff(scenario.dnsp_tariff, scenario)
+        self.retailer.initialise_customer_tariff(scenario.dnsp_tariff, scenario)
         # copy tariff parameter(s) from scenario
         self.has_dynamic_tariff = scenario.has_dynamic_tariff
 
@@ -157,7 +157,7 @@ class Network(Customer):
         # Initialise all residents with their allocated PV generation
         # -----------------------------------------------------------
         for c in self.resident_list:
-            self.resident[c].initialiseCustomerPV(np.array(self.pv[c]).astype(np.float64))
+            self.resident[c].initialise_customer_pv(np.array(self.pv[c]).astype(np.float64))
         self.initialiseCustomerPV(np.array(self.pv['central']).astype(np.float64))
 
         # # For diagnostics only
@@ -364,7 +364,7 @@ class Network(Customer):
 
         # Calculate flows for each resident and cumulative values for ENO
         for c in self.resident_list:
-            self.resident[c].calcStaticEnergy()
+            self.resident[c].calc_static_energy()
             # Cumulative load and generation are what the "ENO" presents to the retailer:
             self.cum_resident_imports += self.resident[c].imports
             self.cum_resident_exports += self.resident[c].exports
@@ -381,8 +381,8 @@ class Network(Customer):
         """Calculates demand charges for ENO and for all residents."""
         self.calcDemandCharge()
         for c in self.resident_list:
-            self.resident[c].calcDemandCharge()
-        self.retailer.calcDemandCharge()
+            self.resident[c].calc_demand_charge()
+        self.retailer.calc_demand_charge()
 
     def calcBuildingDynamicEnergyFlows(self, step):
         """Calculate all internal energy flows for SINGLE timestep (with storage)."""
@@ -393,7 +393,7 @@ class Network(Customer):
         for c in self.resident_list:
             # Calc flows (inc battery dispatch) for each resident
             # ---------------------------------------------------
-            self.resident[c].calcDynamicEnergy(step)
+            self.resident[c].calc_dynamic_energy(step)
             # Cumulative load and generation are what the "ENO" presents to the retailer:
             self.cum_resident_imports[step] += self.resident[c].imports[step]
             self.cum_resident_exports[step] += self.resident[c].exports[step]

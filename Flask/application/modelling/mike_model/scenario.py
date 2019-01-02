@@ -343,13 +343,13 @@ class Scenario:
         # (plus dynamic battery calcs)
         # to calculate external cashflows.
         # NB if non-en scenario, tariffs are zero, so cashflows =0
-        net.calcCashflow()
+        net.calc_cash_flow()
 
         # ----------------------------------
         # Cashflows for individual residents
         # ----------------------------------
         for c in net.resident_list:
-            net.resident[c].calcCashflow()
+            net.resident[c].calc_cash_flow()
             net.receipts_from_residents += net.resident[c].energy_bill
             net.cum_resident_total_payments += net.resident[c].total_payment
             net.cum_local_solar_bill += net.resident[c].local_solar_bill
@@ -357,7 +357,7 @@ class Scenario:
         # ----------------------------
         # External retailer cashflows:
         # ----------------------------
-        net.retailer.calcCashflow()
+        net.retailer.calc_cash_flow()
         # -----------------
         # Retailer receipts
         # -----------------
