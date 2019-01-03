@@ -18,4 +18,4 @@ from ..mike_model.study import Study
 class NewSim:
     def __init__(self, folder_routes):
         self.base_dir = folder_routes.get_route("mike_base_dir")
-        print(self.base_dir)
+        print("\n\n It be working", self.base_dir)

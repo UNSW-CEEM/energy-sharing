@@ -6,12 +6,16 @@ from .participants import Participants as Ui_Participants
 from .result_parsers import ResultParsers as Ui_Results_Parsers
 from .folder_routes import FolderRoutes as FolderRoutes
 
-# Model Modules
-from ..luomi_model.network import Network as Model_Network
-from ..luomi_model.battery import Central_Battery as Model_Central_Battery
-from ..luomi_model.tariffs import Tariffs as Model_Tariffs
+# Luomi Modules
+from ..luomi_model.network import Network as Luomi_Network
+from ..luomi_model.battery import Central_Battery as Luomi_Central_Battery
+from ..luomi_model.tariffs import Tariffs as Luomi_Tariffs
 from ..luomi_model.results import Results
 from ..luomi_model import energy_sim, financial_sim, util
+
+# Mike Modules
+# Would rather package this import up properly
+from ..mike_model.new_sim import NewSim
 
 import os
 import datetime
@@ -23,7 +27,7 @@ class Parameters:
         self.folder_routes = FolderRoutes()
 
         # Model setup parameters
-        self.model_type = 'luomi'
+        self.model_type = 'mike'
         self.network_name = 'Default_Network'
         self.network_type = 'embedded_network'
         self.data_dir = self.folder_routes.get_route('data_dir')
@@ -51,8 +55,8 @@ class Parameters:
 
     def load(self, ui_inputs):
         load_functions = [
+            self.load_model_selection,
             self.load_network_name,
-            self.load_network_type,
             self.load_central_battery,
             self.load_tariffs,
             self.load_participants,
@@ -66,15 +70,21 @@ class Parameters:
         self.ui_tariffs.load_defaults()
         self.ui_participants.load_defaults()
 
+    def load_model_selection(self, ui_inputs):
+        key = "model_selection"
+        if key in ui_inputs:
+            model_array = ui_inputs[key]
+            for each in model_array:
+                if each["name"] is "model_type":
+                    print("TRURURURURU")
+                    self.model_type = each["value"]
+                elif each["name"] is "network_type":
+                    self.network_type = each["value"]
+
     def load_network_name(self, ui_inputs):
         key = "network_name"
         if key in ui_inputs:
             self.network_name = ui_inputs[key]
-
-    def load_network_type(self, ui_inputs):
-        key = "network_type"
-        if key in ui_inputs:
-            self.network_type = ui_inputs[key]
 
     def load_central_battery(self, ui_inputs):
         key = "central_battery"
@@ -101,15 +111,15 @@ class Parameters:
             self.create_luomi_objects()
 
     def create_luomi_objects(self):
-        self.model_network = Model_Network(self.network_name)
+        self.model_network = Luomi_Network(self.network_name)
         # Need to add participants into model
         participants_string = self.ui_participants.get_participants_as_string()
         self.model_network.add_participants_from_string(self.data_dir, participants_string)
         # Create a central battery from the ui_central_battery.
-        self.model_central_battery = Model_Central_Battery(**self.ui_central_battery.get_params_dict())
+        self.model_central_battery = Luomi_Central_Battery(**self.ui_central_battery.get_params_dict())
         tariffs_dict = self.ui_tariffs.get_tariffs_dict()
         # print(tariffs_dict)
-        self.model_tariffs = Model_Tariffs(**tariffs_dict)
+        self.model_tariffs = Luomi_Tariffs(**tariffs_dict)
 
         # TODO Remove these/come up with a new system later
         start = datetime.datetime(year=2017, month=2, day=26, hour=4)
@@ -141,4 +151,4 @@ class Parameters:
         return parsed_results
 
     def run_mike_model(self, status):
-        pass
+        NewSim(self.folder_routes)

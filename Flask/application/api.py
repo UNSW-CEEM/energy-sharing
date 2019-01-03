@@ -125,6 +125,7 @@ def test_run_sim(params):
 def another_test_run_sim(params):
     status_callback("Running Test Model Interface")
     # Overwrite defaults with UI values.
+    # print(params)
     mp.load(params)
     mp.create_objects()
     results = mp.run(status_callback)

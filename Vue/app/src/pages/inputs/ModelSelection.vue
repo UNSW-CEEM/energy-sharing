@@ -44,11 +44,11 @@
                 input_data: [
                     {
                         id: 0,
-                        name: "simulation",
-                        display_text: "Simulation ",
+                        name: "model_type",
+                        display_text: "Model ",
                         value: "",
-                        dropdown_key:"simulation_type",
-                        placeholder: "select simulation",
+                        dropdown_key:"model_type",
+                        placeholder: "select model",
                         tag:"my_dropdown"
                     },
                     {
@@ -71,9 +71,9 @@
                         "Peer to Peer Retail",
                     ],
 
-                    simulation_type: [
-                        "Mike Roberts",
-                        "'Luomi'",
+                    model_type: [
+                        "mike",
+                        "luomi",
                         
                     ]
                 }

@@ -1,7 +1,8 @@
 import pandas as pd
 import os
 
-class Results():
+
+class Results:
     def __init__(self, time_periods, participant_ids):
         # Make empty df to store energy calcs
         self.energy_output = {

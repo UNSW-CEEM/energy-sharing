@@ -8,7 +8,7 @@ LUOMI_DEFAULTS_DIR_NAME = "defaults"
 LUOMI_INPUT_DIR_NAME = "input"
 LUOMI_OUTPUT_DIR_NAME = "output"
 
-MIKE_DIR_NAME = ""
+MIKE_DIR_NAME = "mike"
 
 
 class FolderRoutes:
@@ -18,6 +18,8 @@ class FolderRoutes:
         self.luomi_defaults_dir = os.path.join(self.luomi_dir, LUOMI_DEFAULTS_DIR_NAME)
         self.luomi_input_dir = os.path.join(self.luomi_dir, LUOMI_INPUT_DIR_NAME)
         self.luomi_output_dir = os.path.join(self.luomi_dir, LUOMI_OUTPUT_DIR_NAME)
+
+        self.mike_base_dir = os.path.join(self.data_dir, MIKE_DIR_NAME)
 
     def get_route(self, route):
         response = False
