@@ -1,0 +1,12 @@
+participant_id,participant_type,retail_tariff_type,network_tariff_type,retailer,solar_path,load_path,solar_capacity
+participant_1,solar,Business TOU,LV TOU <100MWh,ENOVA,solar_data.csv,load_data.csv,0
+participant_2,solar,Business TOU,LV TOU <100MWh,ENOVA,solar_data.csv,load_data.csv,0
+participant_3,solar,Business TOU,LV TOU <100MWh,ENOVA,solar_data.csv,load_data.csv,0
+participant_4,solar,Business TOU,LV TOU <100MWh,ENOVA,solar_data.csv,load_data.csv,26
+participant_5,solar,Business TOU,LV TOU <100MWh,ENOVA,solar_data.csv,load_data.csv,0
+participant_6,solar,Business TOU,LV TOU <100MWh,ENOVA,solar_data.csv,load_data.csv,14.8
+participant_7,solar,Business TOU,LV TOU <100MWh,ENOVA,solar_data.csv,load_data.csv,0
+participant_8,solar,Business TOU,LV TOU <100MWh,ENOVA,solar_data.csv,load_data.csv,27.5
+participant_9,solar,Business Anytime,LV Small Business Anytime,ENOVA,solar_data.csv,load_data.csv,3
+participant_10,solar,Business Anytime,LV Small Business Anytime,ENOVA,solar_data.csv,load_data.csv,0
+participant_11,solar,Business Anytime,LV Small Business Anytime,ENOVA,solar_data.csv,load_data.csv,0

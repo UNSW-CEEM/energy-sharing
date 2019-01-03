@@ -4,6 +4,7 @@ from .central_solar import CentralSolar as Ui_Central_Solar
 from .tariffs import Tariffs as Ui_Tariffs
 from .participants import Participants as Ui_Participants
 from .result_parsers import ResultParsers as Ui_Results_Parsers
+from .folder_routes import FolderRoutes as FolderRoutes
 
 # Model Modules
 from ..luomi_model.network import Network as Model_Network
@@ -18,21 +19,25 @@ import datetime
 
 class Parameters:
     def __init__(self):
+        # Folder Routes
+        self.folder_routes = FolderRoutes()
+
         # Model setup parameters
         self.model_type = 'luomi'
         self.network_name = 'Default_Network'
         self.network_type = 'embedded_network'
-        self.data_dir = os.path.realpath('application/modelling/data')
-        self.input_dir = os.path.join(self.data_dir, "input")
-        self.output_dir = os.path.join(self.data_dir, "output")
+        self.data_dir = self.folder_routes.get_route('data_dir')
+        self.luomi_defaults_dir = self.folder_routes.get_route("luomi_defaults_dir")
+        self.luomi_input_dir = self.folder_routes.get_route("luomi_input_dir")
+        self.luomi_output_dir = self.folder_routes.get_route("luomi_output_dir")
 
         # UI Interface objects
-        self.ui_participants = Ui_Participants(self.data_dir)
-        self.ui_tariffs = Ui_Tariffs(self.data_dir)
+        self.ui_participants = Ui_Participants(self.folder_routes)
+        self.ui_tariffs = Ui_Tariffs(self.folder_routes)
         self.ui_finances = None
-        self.ui_central_battery = Ui_Central_Battery(self.data_dir)
-        self.ui_central_solar = Ui_Central_Solar(self.data_dir)
-        self.ui_results_parser = Ui_Results_Parsers(self.data_dir)
+        self.ui_central_battery = Ui_Central_Battery(self.folder_routes)
+        self.ui_central_solar = Ui_Central_Solar(self.folder_routes)
+        self.ui_results_parser = Ui_Results_Parsers(self.folder_routes)
 
         # Model Objects
         self.model_network = None
@@ -129,7 +134,7 @@ class Parameters:
         self.model_results = Results(self.time_periods, [p.get_id() for p in self.model_network.get_participants()])
         energy_sim.simulate(self.time_periods, self.model_network, self.model_tariffs, self.model_results, status)
         financial_sim.simulate(self.time_periods, self.model_network, self.model_tariffs, self.model_results, status)
-        self.model_results.to_csv(self.output_dir, info_tag=bc)
+        self.model_results.to_csv(self.luomi_output_dir, info_tag=bc)
 
         parsed_results = self.ui_results_parser.temp_parser(bc)
 

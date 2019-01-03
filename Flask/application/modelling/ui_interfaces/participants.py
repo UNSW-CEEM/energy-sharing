@@ -2,14 +2,14 @@ import os
 import csv
 import io
 
-DEFAULT_DATA_PATH = os.path.realpath('application/modelling/data/defaults')
-DEFAULT_SOLAR_PATH = os.path.join(DEFAULT_DATA_PATH, 'solar_data.csv')
-DEFAULT_LOAD_PATH = os.path.join(DEFAULT_DATA_PATH, 'load_data.csv')
+DEFAULT_PARTICIPANTS_NAME = 'participants.csv'
+DEFAULT_SOLAR_NAME = 'solar_data.csv'
+DEFAULT_LOAD_NAME = 'load_data.csv'
 
 
 class Participants:
-    def __init__(self, data_dir):
-        self.data_dir = data_dir
+    def __init__(self, folder_routes):
+        self.luomi_defaults_dir = folder_routes.get_route("luomi_defaults_dir")
 
         self.participants = []
 
@@ -27,9 +27,9 @@ class Participants:
 
             # TODO I think this will be temporary
             if parameters["solar_path"] is '':
-                parameters["solar_path"] = "defaults/solar_data.csv"
+                parameters["solar_path"] = os.path.join(self.luomi_defaults_dir, DEFAULT_SOLAR_NAME)
             if parameters["load_path"] is '':
-                parameters["load_path"] = "defaults/load_data.csv"
+                parameters["load_path"] = os.path.join(self.luomi_defaults_dir, DEFAULT_LOAD_NAME)
 
             p = Participant(**parameters)
             # p.print()
@@ -39,12 +39,19 @@ class Participants:
         # Reset the list of participants
         self.participants = []
 
-        default_participants_path = os.path.join(self.data_dir, "defaults/participants.csv")
+        default_participants_path = os.path.join(self.luomi_defaults_dir, DEFAULT_PARTICIPANTS_NAME)
 
         # Parse through each line in the default csv and create participants.
         with open(default_participants_path) as file:
             reader = csv.DictReader(file)
             for row in reader:
+
+                # TODO Think of a better way to handle this.
+                # I don't want to have hardcoded paths in the csv. Which means having to use
+                # OS to create the path somewhere. Here seems best for now.
+                row["solar_path"] = os.path.join(self.luomi_defaults_dir, row["solar_path"])
+                row["load_path"] = os.path.join(self.luomi_defaults_dir, row["load_path"])
+
                 self.participants.append(Participant(**row))
 
     def get_participants_as_string(self):
@@ -64,8 +71,8 @@ class Participant:
                  retail_tariff_type='',
                  network_tariff_type='',
                  retailer='',
-                 solar_path=DEFAULT_SOLAR_PATH,
-                 load_path=DEFAULT_LOAD_PATH,
+                 solar_path='',
+                 load_path='',
                  solar_capacity=0,
                  solar_scaling='',
                  battery_type=''

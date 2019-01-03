@@ -4,19 +4,19 @@ import csv
 
 # May change this to a helper module with no class. Just functions
 class ResultParsers:
-    def __init__(self, data_dir):
-        self.data_dir = data_dir
+    def __init__(self, folder_routes):
+        self.luomi_dir = folder_routes.get_route("luomi_dir")
 
-        self.output_dir = os.path.join(self.data_dir, 'output')
+        self.luomi_output_dir = folder_routes.get_route("luomi_output_dir")
 
     def temp_parser(self, battery_capacity):
         energy_flows_path = os.path.join(
-            self.output_dir,
+            self.luomi_output_dir,
             ("df_network_energy_flows" + str(battery_capacity) + ".csv")
         )
 
         total_participant_bill_path = os.path.join(
-            self.output_dir,
+            self.luomi_output_dir,
             ("df_total_participant_bill" + str(battery_capacity) + ".csv")
         )
         energy_flows_data = []

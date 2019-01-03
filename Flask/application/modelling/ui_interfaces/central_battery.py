@@ -1,9 +1,11 @@
 import os
 
+DEFAULT_BATTERY_NAME = 'battery_discharge.csv'
+
 
 class CentralBattery:
-    def __init__(self, data_dir):
-        self.data_dir = data_dir
+    def __init__(self, folder_routes):
+        self.luomi_data_dir = folder_routes.get_route("luomi_defaults_dir")
 
         self.capacity = 1
         self.max_discharge = 1
@@ -45,10 +47,10 @@ class CentralBattery:
         return self.dispatch_algorithm
 
     def set_battery_discharge_filepath(self, value=None):
-        file_name = 'battery_discharge.csv'
+        file_name = DEFAULT_BATTERY_NAME
         if value is not None:
             file_name = value
-        return os.path.join(self.data_dir, 'defaults', file_name)
+        return os.path.join(self.luomi_data_dir, file_name)
 
     def set_capacity(self, value):
         if value is not '':

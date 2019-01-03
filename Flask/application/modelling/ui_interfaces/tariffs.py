@@ -2,10 +2,16 @@ import os
 import csv
 import io
 
+DUOS_NAME = "duos.csv"
+NUOS_NAME = "nuos.csv"
+TUOS_NAME = "tuos.csv"
+RETAIL_NAME = "retail_tariffs.csv"
+UI_TARIFFS_NAME = "ui_tariffs.csv"
+
 
 class Tariffs:
-    def __init__(self, data_dir):
-        self.data_dir = data_dir
+    def __init__(self, folder_routes):
+        self.luomi_defaults_dir = folder_routes.get_route("luomi_defaults_dir")
 
         # Tariff type specific arrays
         self.duos_tariffs = []
@@ -48,10 +54,10 @@ class Tariffs:
     def load_defaults(self, debug_print=False):
         self.reset_all_tariffs()
 
-        duos_path = os.path.join(self.data_dir, "defaults/duos.csv")
-        nuos_path = os.path.join(self.data_dir, "defaults/nuos.csv")
-        tuos_path = os.path.join(self.data_dir, "defaults/tuos.csv")
-        retail_path = os.path.join(self.data_dir, "defaults/retail_tariffs.csv")
+        duos_path = os.path.join(self.luomi_defaults_dir, DUOS_NAME)
+        nuos_path = os.path.join(self.luomi_defaults_dir, NUOS_NAME)
+        tuos_path = os.path.join(self.luomi_defaults_dir, TUOS_NAME)
+        retail_path = os.path.join(self.luomi_defaults_dir, RETAIL_NAME)
 
         mapping = [
             {'path': duos_path, 'array': self.duos_tariffs, 'tariff': DuosTariff},
@@ -91,7 +97,7 @@ class Tariffs:
             "nuos_data_path": nuos_string,
             "tuos_data_path": tuos_string,
             "retail_tariff_data_path": retail_string,
-            "ui_tariff_data_path": os.path.join(self.data_dir, 'defaults/ui_tariffs.csv'),
+            "ui_tariff_data_path": os.path.join(self.luomi_defaults_dir, UI_TARIFFS_NAME),
         }
 
         return results
