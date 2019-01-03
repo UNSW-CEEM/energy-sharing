@@ -1,7 +1,0 @@
-scenario,std_hh_bill$,std_hh_solar_bill$,std_hh_total$,central_battery_SOH_std,central_battery_capacity_kWh_std,central_battery_cycles_std,checksum_total_payments$_std,cp_ratio_std,cust_bill_cp_std,cust_solar_bill_cp_std,cust_total$_cp_std,eno$_bat_capex_repay_std,eno$_demand_charge_std,eno$_energy_bill_std,eno$_npv_building_std,eno$_receipts_from_residents_std,eno$_total_payment_std,eno_net$_std,export_kWh_std,import_kWh_std,pv_ratio_std,retailer_bill$_std,retailer_receipt$_std,self-consumption_std,self-consumption_OLD_std,self-sufficiency_std,self-sufficiency_OLD_std,solar_retailer_profit_std,total$_building_costs_std,total_battery_losses_std,total_building_load_std
-3,346.42648592482897,0.0,346.42648592482897,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-4,305.670428757202,0.0,305.670428757202,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-5,312.639585443759,0.0,312.639585443759,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-66,331.15864241414044,0.0,331.15864241414044,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-67,318.82038685106687,0.0,318.82038685106687,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-68,298.89411267287505,0.0,298.89411267287505,,,,,,,,,,,,,,,,,,,,,,,,,,,,
