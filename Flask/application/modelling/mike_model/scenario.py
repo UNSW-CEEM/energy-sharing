@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import logging
 
-import en_utilities as util
+from ..mike_model import en_utilities as util
 
 
 class Scenario:

@@ -4,12 +4,12 @@ import sys
 import pandas as pd
 import numpy as np
 
-import en_utilities as util
+from ..mike_model import en_utilities as util
 
-from network import Network
-from scenario import Scenario
-from tariff_data import TariffData
-from timeseries import Timeseries
+from ..mike_model.network import Network
+from ..mike_model.scenario import Scenario
+from ..mike_model.tariff_data import TariffData
+from ..mike_model.timeseries import Timeseries
 
 
 class Study:

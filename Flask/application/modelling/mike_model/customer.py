@@ -1,7 +1,7 @@
 import numpy as np
 import sys
 
-from tariff import Tariff
+from ..mike_model.tariff import Tariff
 
 
 class Customer:

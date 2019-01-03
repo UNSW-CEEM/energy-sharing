@@ -4,9 +4,9 @@ import numpy as np
 import pandas as pd
 import sys
 
-from battery import Battery
-from customer import Customer
-import en_utilities as util
+from ..mike_model.battery import Battery
+from ..mike_model.customer import Customer
+from ..mike_model import en_utilities as util
 
 
 class Network(Customer):
