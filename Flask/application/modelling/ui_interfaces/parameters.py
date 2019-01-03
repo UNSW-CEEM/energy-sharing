@@ -50,6 +50,9 @@ class Parameters:
         self.model_time_periods = None
         self.model_results = None
 
+        # Mike Model Objects
+        self.mike_model = None
+
         # Legacy Stuff.
         self.time_periods = None
 
@@ -75,10 +78,9 @@ class Parameters:
         if key in ui_inputs:
             model_array = ui_inputs[key]
             for each in model_array:
-                if each["name"] is "model_type":
-                    print("TRURURURURU")
+                if each["name"] == "model_type":
                     self.model_type = each["value"]
-                elif each["name"] is "network_type":
+                elif each["name"] == "network_type":
                     self.network_type = each["value"]
 
     def load_network_name(self, ui_inputs):
@@ -130,7 +132,7 @@ class Parameters:
         print("Made LUOMI Objects without error")
 
     def create_mike_objects(self):
-        pass
+        self.mike_model = NewSim(self.folder_routes)
 
     def run(self, status):
         if self.model_type is 'mike':
@@ -151,4 +153,6 @@ class Parameters:
         return parsed_results
 
     def run_mike_model(self, status):
-        NewSim(self.folder_routes)
+        status("Attempting Mike Model")
+        if self.mike_model:
+            self.mike_model.run()

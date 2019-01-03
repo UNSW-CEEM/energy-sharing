@@ -14,8 +14,22 @@
 import os
 from ..mike_model.study import Study
 
+# Need base_path, project study_name, override_output, use_threading
+
 
 class NewSim:
     def __init__(self, folder_routes):
         self.base_dir = folder_routes.get_route("mike_base_dir")
-        print("\n\n It be working", self.base_dir)
+        self.project = folder_routes.get_route("mike_project_name")
+        self.study_name = folder_routes.get_route("mike_study_name")
+        self.dst_region = 'nsw'
+        self.override_output = 'False'
+        self.use_threading = False
+
+        # print("\n\n It be working", self.base_dir, "\n", self.project, self.study_name)
+
+        self.study = Study(self.base_dir, self.project, self.study_name, self.dst_region, self.override_output, self.use_threading)
+
+    def run(self):
+        for scenario in self.study.get_scenario_list():
+            self.study.run_scenario(scenario)
