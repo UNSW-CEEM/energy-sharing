@@ -107,7 +107,7 @@ class Parameters:
         print("Model Type: ", self.model_type)
 
     def create_objects(self):
-        if self.model_type is 'mike':
+        if self.model_type == 'mike':
             self.create_mike_objects()
         else:
             self.create_luomi_objects()
@@ -135,7 +135,7 @@ class Parameters:
         self.mike_model = NewSim(self.folder_routes)
 
     def run(self, status):
-        if self.model_type is 'mike':
+        if self.model_type == 'mike':
             self.run_mike_model(status)
         else:
             self.run_luomi_model(status)
