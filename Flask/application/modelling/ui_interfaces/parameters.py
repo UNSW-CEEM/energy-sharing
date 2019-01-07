@@ -5,6 +5,7 @@ from .tariffs import Tariffs as Ui_Tariffs
 from .participants import Participants as Ui_Participants
 from .result_parsers import ResultParsers as Ui_Results_Parsers
 from .folder_routes import FolderRoutes as FolderRoutes
+from .mike_csv_helpers import create_csvs
 
 # Luomi Modules
 from ..luomi_model.network import Network as Luomi_Network
@@ -14,7 +15,6 @@ from ..luomi_model.results import Results
 from ..luomi_model import energy_sim, financial_sim, util
 
 # Mike Modules
-# Would rather package this import up properly
 from ..mike_model.new_sim import NewSim
 
 import os
@@ -132,7 +132,15 @@ class Parameters:
         print("Made LUOMI Objects without error")
 
     def create_mike_objects(self):
+        # Create the main Study object
         self.mike_model = NewSim(self.folder_routes)
+        # Create the CSV's from the standard objects.
+        create_csvs(self.ui_participants,
+                    self.ui_tariffs,
+                    self.ui_finances,
+                    self.ui_central_battery,
+                    self.ui_central_solar,
+                    self.folder_routes)
 
     def run(self, status):
         if self.model_type == 'mike':
@@ -156,3 +164,4 @@ class Parameters:
         status("Attempting Mike Model")
         if self.mike_model:
             self.mike_model.run()
+        status("Mike Model Complete - See Folder")

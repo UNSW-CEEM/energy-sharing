@@ -63,6 +63,14 @@ class Participants:
         output.seek(0)
         return output
 
+    # TODO this function could be improved maybe.
+    def get_name_load_dict(self):
+        d = {}
+        for each in self.participants:
+            d[each.participant_id] = each.load_path
+
+        return d
+
 
 class Participant:
     def __init__(self,
