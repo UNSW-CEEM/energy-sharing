@@ -5,7 +5,7 @@ from .tariffs import Tariffs as Ui_Tariffs
 from .participants import Participants as Ui_Participants
 from .result_parsers import ResultParsers as Ui_Results_Parsers
 from .folder_routes import FolderRoutes as FolderRoutes
-from .mike_csv_helpers import create_csvs
+from .csv_helpers import create_csvs
 
 # Luomi Modules
 from ..luomi_model.network import Network as Luomi_Network
@@ -27,7 +27,7 @@ class Parameters:
         self.folder_routes = FolderRoutes()
 
         # Model setup parameters
-        self.model_type = 'mike'
+        self.model_type = 'luomi'
         self.network_name = 'Default_Network'
         self.network_type = 'embedded_network'
         self.data_dir = self.folder_routes.get_route('data_dir')
@@ -146,7 +146,7 @@ class Parameters:
         if self.model_type == 'mike':
             self.run_mike_model(status)
         else:
-            self.run_luomi_model(status)
+            return self.run_luomi_model(status)
 
     def run_luomi_model(self, status):
         bc = self.ui_central_battery.get_capacity()

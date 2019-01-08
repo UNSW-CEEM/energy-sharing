@@ -16,6 +16,10 @@ MIKE_STUDY_NAME = "ceem_ui_default"
 MIKE_MODEL_INPUTS = "inputs"
 MIKE_MODEL_OUTPUTS = "outputs"
 
+PROFILES_DIR_NAME = "shared"
+LOAD_PROFILES_DIR_NAME = "load"
+SOLAR_PROFILES_DIR_NAME = "solar"
+
 
 class FolderRoutes:
     def __init__(self):
@@ -34,6 +38,11 @@ class FolderRoutes:
         # Dealing with the relative paths stuff in Mike's model
         self.mike_project_name = MIKE_PROJECT_NAME
         self.mike_study_name = MIKE_STUDY_NAME
+
+        # The shared data profiles folders.
+        self.profiles_dir = os.path.join(self.data_dir, PROFILES_DIR_NAME)
+        self.load_profiles_dir = os.path.join(self.profiles_dir, LOAD_PROFILES_DIR_NAME)
+        self.solar_profiles_dir = os.path.join(self.profiles_dir, SOLAR_PROFILES_DIR_NAME)
 
     def get_route(self, route):
         response = False

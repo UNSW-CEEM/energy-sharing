@@ -58,8 +58,8 @@ class Network:
                 retail_tariff_type=line['retail_tariff_type'],
                 network_tariff_type=line['network_tariff_type'],
                 retailer=line['retailer'],
-                solar_path=os.path.join(data_dir, line['solar_path']),
-                load_path=os.path.join(data_dir, line['load_path']),
+                solar_path=line['load_path'],
+                load_path=line['load_path'],
                 solar_capacity=float(line['solar_capacity'])
             )
             self.add_participant(participant)

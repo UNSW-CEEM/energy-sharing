@@ -98,7 +98,7 @@
                 this.table_rows = this.$store.state.frontend_state[this.model_page_name]
             } else {
                 //arbitrarily add 11 participants
-                for(var i = 0; i< 11; i++){
+                for(var i = 0; i< 3; i++){
                     this.add_row()
                 }
                 

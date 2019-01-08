@@ -20,14 +20,14 @@ class OSFileService(FileService):
     def __init__(self):
 
         self.solar_files = [
-            "Solar_From_Flask_1.csv",
-            "Solar_From_Flask_2.csv",
-            "Solar_From_Flask_3.csv",
+            "profile_1",
+            "profile_2",
+            "profile_3",
         ]
         self.load_files = [
-            "Load_From_Flask_1.csv",
-            "Load_From_Flask_2.csv",
-            "Load_From_Flask_3.csv",
+            "profile_1",
+            "profile_2",
+            "profile_3",
         ]
 
     def valid_file(self, filename):
