@@ -102,7 +102,7 @@
 
             run_test_model() {
                 let params = this.$store.state.model_parameters;
-                this.$socket.emit('run_test_model', params);
+                this.$socket.emit('run_model', params);
             },
 
             parse_energy_flows(data) {

@@ -21,7 +21,6 @@ thread_lock = Lock()
 
 # Create a model parameters object and load up defaults.
 mp = Ui_Parameters()
-mp.load_defaults()
 
 
 @app.route('/')
@@ -112,20 +111,10 @@ def test_get_load_files():
 @socketio.on('run_model')
 def test_run_sim(params):
     status_callback("Running Test Model Interface")
+    # Recreate the defaults between the requests while testing
+    mp.load_defaults()
+
     # Overwrite defaults with UI values.
-    mp.load(params)
-    mp.create_objects()
-    results = mp.run(status_callback)
-
-    emit('sim_channel', {"data": results})
-    status_callback("Modelling Complete")
-
-
-@socketio.on('run_test_model')
-def another_test_run_sim(params):
-    status_callback("Running Test Model Interface")
-    # Overwrite defaults with UI values.
-    # print(params)
     mp.load(params)
     mp.create_objects()
     results = mp.run(status_callback)

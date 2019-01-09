@@ -69,15 +69,16 @@
 
                 my_options: {
                     participant_type_options: [
-                        "PV & Load",
+                        "Solar & Load",
                         "Load",
-                        "PV",
+                        "solar",
                     ],
 
                     tariff_type_options: [
                         "AGL TOU 1",
                         "Tariff 2",
                         "Another Tariff",
+                        "Business TOU"
                     ],
 
                     battery_options: [
@@ -144,7 +145,7 @@
                         },
                         {
                             id: 3,
-                            name: "load_path",
+                            name: "load_profile",
                             tag: "my_dropdown",
                             value:"",
                             dropdown_key:"load_files_list",
@@ -152,7 +153,7 @@
                         },
                         {
                             id: 4,
-                            name: "solar_path",
+                            name: "solar_profile",
                             tag: "my_dropdown",
                             value:"",
                             dropdown_key:"solar_files_list",

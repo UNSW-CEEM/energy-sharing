@@ -18,7 +18,9 @@ MIKE_MODEL_OUTPUTS = "outputs"
 
 PROFILES_DIR_NAME = "shared"
 LOAD_PROFILES_DIR_NAME = "load"
+LOAD_PROFILES_FILE_NAME = "load_profiles.csv"
 SOLAR_PROFILES_DIR_NAME = "solar"
+SOLAR_PROFILES_FILE_NAME = "solar_profiles.csv"
 
 
 class FolderRoutes:
@@ -42,7 +44,9 @@ class FolderRoutes:
         # The shared data profiles folders.
         self.profiles_dir = os.path.join(self.data_dir, PROFILES_DIR_NAME)
         self.load_profiles_dir = os.path.join(self.profiles_dir, LOAD_PROFILES_DIR_NAME)
+        self.load_profiles_path = os.path.join(self.load_profiles_dir, LOAD_PROFILES_FILE_NAME)
         self.solar_profiles_dir = os.path.join(self.profiles_dir, SOLAR_PROFILES_DIR_NAME)
+        self.solar_profiles_path = os.path.join(self.solar_profiles_dir, SOLAR_PROFILES_FILE_NAME)
 
     def get_route(self, route):
         response = False
