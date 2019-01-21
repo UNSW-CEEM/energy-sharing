@@ -1,6 +1,21 @@
 <template>
     <div>
         <h1>{{ view_name }}</h1>
+        <div class="files-dd-container">
+            <h4>Solar File:</h4>
+            <SimpleDropdown
+                    v-model="selected_solar_file"
+                    :my_options="solar_files_list" />
+            <h4>Load File:</h4>
+            <SimpleDropdown
+                    v-model="selected_load_file"
+                    :my_options="load_files_list" />
+        </div>
+
+        <span class="load_file_dd">
+
+        </span>
+
          <table>
             <tr>
                 <th
@@ -58,6 +73,9 @@
                 selected_solar_file: 'solar_profiles.csv',
                 selected_load_file: 'load_profiles.csv',
 
+                solar_files_list: [],
+                load_files_list: [],
+
                 table_headers: [
                     {id: 0, name: "Participant ID", additional_text:"ID"},
                     {id: 1, name: "Participant Type", additional_text:"Type"},
@@ -90,8 +108,6 @@
                         "RedFlow",
                     ],
 
-                    solar_files_list: [],
-                    load_files_list: [],
                     solar_profiles_list: [],
                     load_profiles_list: [],
                 },
@@ -249,6 +265,15 @@
             filesChannel: function(response) {
                 console.log("received response: ", response);
                 this.is_connected = true;
+                if (response.key === 'solar_files_list') {
+                    this.solar_files_list = response.data;
+                } else {
+                    this.load_files_list = response.data;
+                }
+            },
+
+            profilesChannel: function(response) {
+                this.is_connected = true;
                 this.my_options[response.key] = response.data;
             },
         }
@@ -256,18 +281,26 @@
 </script>
 
 <style scoped>
-h1{
-    animation-name: fade-in;
-    animation-duration: 2s;
-}
+    h1{
+        animation-name: fade-in;
+        animation-duration: 2s;
+    }
 
-table{
-    animation-name: fade-in;
-    animation-duration: 2s;
-}
+    table{
+        animation-name: fade-in;
+        animation-duration: 2s;
+    }
 
-button{
-    animation-name: fade-in;
-    animation-duration: 2s;
-}
+    button{
+        animation-name: fade-in;
+        animation-duration: 2s;
+    }
+
+    .files-dd-container {
+        display: flex;
+        flex-direction: row;
+        width:50%;
+        justify-content: space-evenly;
+        align-items: center;
+    }
 </style>
