@@ -1,10 +1,5 @@
 <template>
-
-   
-
     <div id="app">
-
-        
         <div class="container">
             <TopNavBar class="topnav"/>
             <SideNavBar class="sidenav"/>
@@ -12,7 +7,6 @@
             <ModelFooter class="footer"/>
         </div>
     </div>
-
 </template>
 
 <script>
@@ -115,12 +109,12 @@
 
 
     @keyframes fade-in {
-    from {
-        opacity:0;
-    }
-    to {
-        opacity:1;
-    }
+        from {
+            opacity:0;
+        }
+        to {
+            opacity:1;
+        }
     }
 
 </style>

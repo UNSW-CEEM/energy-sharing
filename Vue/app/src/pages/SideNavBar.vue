@@ -1,17 +1,12 @@
 <template>
     <div >
         <h2>Inputs</h2>
-        
-             
             <router-link class="myButton" v-for="routes in links" v-bind:key="routes.id" :to="`${routes.page}`">
             <span>
-                
-                <font-awesome-icon class="fa-icon" v-bind:icon="routes.icon" />  
-                
+                <font-awesome-icon class="fa-icon" v-bind:icon="routes.icon" />
                 {{ routes.text }}
             </span>
             </router-link>
-        
     </div>
 </template>
 
@@ -80,37 +75,22 @@
                         storage_key: "review",
                         icon:"poll"
                     },
-                    // {
-                    //     id: 8,
-                    //     text: 'Sockets',
-                    //     page: '/sockets_tester',
-                    //     storage_key: "sockets_tester",
-                    // icon:"coffee"
-                    // },
-                    // {
-                    //     id: 9,
-                    //     text: 'Data Upload',
-                    //     page: '/data_upload',
-                    //     storage_key: "data_upload",
-                    // icon:"coffee"
-                    // }
                 ]
             }
         },
 
         methods: {
-        //    TODO: Add a method that returns the number of pages that are marked as complete.
         }
     }
 </script>
 
 <style scoped>
-    .list-item{
+    .list-item {
         display:flex;
         flex-direction:row;
     }
 
-    .fa-icon{
+    .fa-icon {
         width:3vw;
     }
 
@@ -139,14 +119,14 @@
         
     }
 
-    .myButton span{
+    .myButton span {
         display:flex;
         width:80%;
         justify-content:flex-start;
         align-items: center;
     }
 
-    .myButton span .fa-icon{
+    .myButton span .fa-icon {
         margin: 0 1vw 0 0;
     }
 

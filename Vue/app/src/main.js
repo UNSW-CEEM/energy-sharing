@@ -18,26 +18,26 @@ SocketInstance.on('connect', () => {
 Vue.use(VueSocketIO, SocketInstance);
 
 import VModal from 'vue-js-modal'
-Vue.use(VModal)
+Vue.use(VModal);
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faCoffee, faStroopwafel, faNetworkWired, faPlaneDeparture, faTable, faUser, faExchangeAlt, faSolarPanel, faBatteryFull, faMoneyCheckAlt, faSearch, faPoll } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faCoffee)
-library.add(faStroopwafel)
-library.add(faNetworkWired)
-library.add(faPlaneDeparture)
-library.add(faTable)
-library.add(faUser)
-library.add(faExchangeAlt)
-library.add(faSolarPanel)
-library.add(faBatteryFull)
-library.add(faMoneyCheckAlt)
-library.add(faSearch)
-library.add(faPoll)
+library.add(faCoffee);
+library.add(faStroopwafel);
+library.add(faNetworkWired);
+library.add(faPlaneDeparture);
+library.add(faTable);
+library.add(faUser);
+library.add(faExchangeAlt);
+library.add(faSolarPanel);
+library.add(faBatteryFull);
+library.add(faMoneyCheckAlt);
+library.add(faSearch);
+library.add(faPoll);
 
-Vue.component('font-awesome-icon', FontAwesomeIcon)
+Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
 
@@ -45,4 +45,4 @@ new Vue({
     store,
     router,
     render: h => h(App)
-}).$mount('#app')
+}).$mount('#app');

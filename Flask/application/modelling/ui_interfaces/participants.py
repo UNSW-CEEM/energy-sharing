@@ -125,47 +125,6 @@ class Participants:
         # Finally write combined CSV to the output path
         a.to_csv(output_path, index=False)
 
-    def create_load_data(self):
-        # Find the final load csv and clear it
-        final_loads = os.path.join(self.luomi_defaults_dir, DEFAULT_LOAD_DATA_NAME)
-        self.clear_csv(final_loads)
-
-        # Get the path to the profiles data
-        load_profiles = os.path.join(self.load_profiles_dir, DEFAULT_LOAD_PROFILE_NAME)
-
-        # Column to merge everything upon
-        profile_index = "timestamp"
-        all_profiles = []
-
-        for each in self.participants:
-            this_profile = each.solar_profile
-            this_participant = each.participant_id
-            each.solar_path = os.path.realpath(os.path.join(self.luomi_defaults_dir, "solar_data.csv"))
-            each.load_path = final_loads
-
-            to_join = io.StringIO()
-
-            with open(load_profiles) as file:
-                reader = csv.DictReader(file)
-                writer = csv.DictWriter(to_join, fieldnames=[profile_index, this_participant])
-                writer.writeheader()
-                for row in reader:
-                    this_row = {profile_index: row[profile_index], this_participant: row[this_profile]}
-                    writer.writerow(this_row)
-
-                to_join.seek(0)
-
-            all_profiles.append(to_join)
-
-        a = pd.read_csv(all_profiles.pop(0))
-
-        for each in all_profiles:
-            b = pd.read_csv(each)
-            a = a.merge(b, on=profile_index)
-
-        a.to_csv(final_loads, index=False)
-        # return a
-
     @staticmethod
     def clear_csv(path):
         f = open(path, "w+")

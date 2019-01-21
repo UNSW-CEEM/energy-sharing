@@ -1,7 +1,7 @@
 import os
 
 
-class FileService():
+class FileService:
 
     # Checks that a file is valid.
     def valid_file(self, filename):
