@@ -97,15 +97,27 @@ def test_example_json(this_json):
 
 
 @socketio.on('get_solar_files')
-def test_get_solar_files():
+def get_solar_files():
     data = file_service.list_solar_files()
     emit('filesChannel', {"key": "solar_files_list", "data": data})
 
 
 @socketio.on('get_load_files')
-def test_get_load_files():
+def get_load_files():
     data = file_service.list_load_files()
     emit('filesChannel', {"key": "load_files_list", "data": data})
+
+
+@socketio.on('get_solar_profiles')
+def get_solar_profiles(filename):
+    data = file_service.list_solar_profiles(filename)
+    emit('filesChannel', {"key": "solar_profiles_list", "data": data})
+
+
+@socketio.on('get_load_profiles')
+def get_solar_profiles(filename):
+    data = file_service.list_load_profiles(filename)
+    emit('filesChannel', {"key": "load_profiles_list", "data": data})
 
 
 @socketio.on('run_model')

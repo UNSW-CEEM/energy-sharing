@@ -1,4 +1,6 @@
 import os
+import csv
+import pandas as pd
 
 SHARED_SOLAR_LOCATION = os.path.realpath(os.path.join(
     'application', 'modelling', 'data', 'shared', 'solar'))
@@ -25,12 +27,11 @@ class OSFileService(FileService):
     def __init__(self):
 
         # Solar Path/Load Path
-        sp = SHARED_SOLAR_LOCATION
-        lp = SHARED_LOAD_LOCATION
+        self.sp = SHARED_SOLAR_LOCATION
+        self.lp = SHARED_LOAD_LOCATION
 
-        self.solar_files = [f for f in os.listdir(sp) if os.path.isfile(os.path.join(sp, f))]
-        self.load_files = [f for f in os.listdir(lp) if os.path.isfile(os.path.join(lp, f))]
-
+        self.solar_files = [f for f in os.listdir(self.sp) if os.path.isfile(os.path.join(self.sp, f))]
+        self.load_files = [f for f in os.listdir(self.lp) if os.path.isfile(os.path.join(self.lp, f))]
 
     def valid_file(self, filename):
         return True
@@ -45,3 +46,19 @@ class OSFileService(FileService):
 
     def list_load_files(self):
         return self.load_files
+
+    def list_solar_profiles(self, filename):
+
+        solar_profiles = list(pd.read_csv(os.path.join(self.sp, filename)))
+        if solar_profiles[0] == 'timestamp':
+            solar_profiles.pop(0)
+
+        return solar_profiles
+
+    def list_load_profiles(self, filename):
+
+        load_profiles = list(pd.read_csv(os.path.join(self.lp, filename)))
+        if load_profiles[0] == 'timestamp':
+            load_profiles.pop(0)
+
+        return load_profiles

@@ -54,6 +54,10 @@
                 model_page_name:"model_participants",
                 is_connected: false,
 
+                // Constants for now
+                selected_solar_file: 'solar_profiles.csv',
+                selected_load_file: 'load_profiles.csv',
+
                 table_headers: [
                     {id: 0, name: "Participant ID", additional_text:"ID"},
                     {id: 1, name: "Participant Type", additional_text:"Type"},
@@ -87,8 +91,9 @@
                     ],
 
                     solar_files_list: [],
-
                     load_files_list: [],
+                    solar_profiles_list: [],
+                    load_profiles_list: [],
                 },
             }
         },
@@ -105,10 +110,12 @@
             }
             this.get_solar_files();
             this.get_load_files();
+            this.get_solar_profiles(this.selected_solar_file);
+            this.get_load_profiles(this.selected_load_file);
         },
 
         beforeDestroy() {
-            this.save_page()
+            this.save_page();
             this.save_page_server()
         },
 
@@ -147,7 +154,7 @@
                             name: "load_profile",
                             tag: "my_dropdown",
                             value:"",
-                            dropdown_key:"load_files_list",
+                            dropdown_key:"load_profiles_list",
                             placeholder:"Select One",
                         },
                         {
@@ -155,7 +162,7 @@
                             name: "solar_profile",
                             tag: "my_dropdown",
                             value:"",
-                            dropdown_key:"solar_files_list",
+                            dropdown_key:"solar_profiles_list",
                             placeholder:"Select One",
                         },
                         {
@@ -229,6 +236,14 @@
             get_load_files() {
                 this.$socket.emit('get_load_files')
             },
+
+            get_solar_profiles (filename) {
+                this.$socket.emit('get_solar_profiles', filename)
+            },
+
+            get_load_profiles (filename) {
+                this.$socket.emit('get_load_profiles', filename)
+            }
         },
         sockets: {
             filesChannel: function(response) {
