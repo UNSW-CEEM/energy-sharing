@@ -1,5 +1,10 @@
 import os
 
+SHARED_SOLAR_LOCATION = os.path.realpath(os.path.join(
+    'application', 'modelling', 'data', 'shared', 'solar'))
+SHARED_LOAD_LOCATION = os.path.realpath(os.path.join(
+    'application', 'modelling', 'data', 'shared', 'load'))
+
 
 class FileService:
 
@@ -19,16 +24,13 @@ class FileService:
 class OSFileService(FileService):
     def __init__(self):
 
-        self.solar_files = [
-            "profile_1",
-            "profile_2",
-            "profile_3",
-        ]
-        self.load_files = [
-            "profile_1",
-            "profile_2",
-            "profile_3",
-        ]
+        # Solar Path/Load Path
+        sp = SHARED_SOLAR_LOCATION
+        lp = SHARED_LOAD_LOCATION
+
+        self.solar_files = [f for f in os.listdir(sp) if os.path.isfile(os.path.join(sp, f))]
+        self.load_files = [f for f in os.listdir(lp) if os.path.isfile(os.path.join(lp, f))]
+
 
     def valid_file(self, filename):
         return True

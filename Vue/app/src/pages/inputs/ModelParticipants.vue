@@ -1,4 +1,3 @@
-    <!--FOCUS ON ME AND MY COMPONENTS-->
 <template>
     <div>
         <h1>{{ view_name }}</h1>
@@ -223,7 +222,7 @@
             },
 
             get_solar_files() {
-                console.log("Getting solar files")
+                console.log("Getting solar files");
                 this.$socket.emit('get_solar_files')
             },
 
@@ -233,7 +232,7 @@
         },
         sockets: {
             filesChannel: function(response) {
-                console.log("received response: ", response)
+                console.log("received response: ", response);
                 this.is_connected = true;
                 this.my_options[response.key] = response.data;
             },
