@@ -96,16 +96,16 @@ class OSFileService(FileService):
     def load_participants_config(self, filename):
         file_path = os.path.join(self.p_config_path, filename)
 
-        confusing_data = []
+        results = []
 
         if os.path.isfile(file_path):
             with open(file_path) as file:
                 reader = csv.DictReader(file)
                 counter = 0
                 for row in reader:
-                    confusing_data.append({'row_id': counter, 'row_inputs': row})
+                    results.append({'row_id': counter, 'row_inputs': row})
 
-        return confusing_data
+        return results
 
     @staticmethod
     def clear_csv(path):

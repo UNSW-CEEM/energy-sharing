@@ -2,18 +2,10 @@
     <div class="graphs">
         <div class="graph-heading">
             <h1>{{ view_name }}</h1>
-            <!-- <button @click="run_model()" v-if="!results_received">Run Model</button>
-            <button @click="run_model()" v-if="results_received">Rerun Model</button> -->
         </div>
-        <!-- <div class="left-graph">
-            <LineChart
-                v-if="chart_one_loaded"
-                :chartdata="chart_one_data"
-                :options="chart_one_options"/>
-        </div> -->
+
         <div class="graph">
             <BarChart
-                
                 v-if="chart_two_loaded"
                 :chartData="chart_two_data"
                 :options="chart_two_options"/>

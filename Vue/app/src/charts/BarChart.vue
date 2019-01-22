@@ -6,15 +6,18 @@
         extends: Bar,
         mixins: [ reactiveProp ],
         props: {
+            chart_data: {
+                type: Object,
+                default: null,
+            },
             options: {
                 type: Object,
                 default: null,
-                
             }
         },
 
         mounted () {
-            this.renderChart(this.chartData, this.options)
+            this.renderChart(this.chart_data, this.chart_options)
         },
     }
 </script>

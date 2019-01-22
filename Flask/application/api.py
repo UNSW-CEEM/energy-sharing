@@ -136,6 +136,7 @@ def load_participants_config(filename):
         emit('config_file_channel', data)
         status_callback("Participants configuration file loaded")
 
+
 @socketio.on('run_model')
 def test_run_sim(params):
     status_callback("Running Test Model Interface")
