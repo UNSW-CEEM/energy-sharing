@@ -122,10 +122,19 @@ def get_solar_profiles(filename):
 
 @socketio.on('save_participants_config')
 def save_participants_config(filename, data):
+    status_callback("Saving participants configuration file")
     result = file_service.save_participants_config(filename, data)
     if result:
-        status_callback("Saving Participants Config Successful")
+        status_callback("Saving participants configuration file successful")
 
+
+@socketio.on('load_participants_config')
+def load_participants_config(filename):
+    status_callback("Loading participants configuration file")
+    data = file_service.load_participants_config(filename)
+    if data:
+        emit('config_file_channel', data)
+        status_callback("Participants configuration file loaded")
 
 @socketio.on('run_model')
 def test_run_sim(params):

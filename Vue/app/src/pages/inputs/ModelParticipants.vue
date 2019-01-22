@@ -121,11 +121,11 @@
             if (this.model_page_name in this.$store.state.frontend_state) {
                 this.table_rows = this.$store.state.frontend_state[this.model_page_name]
             } else {
-                //arbitrarily add 11 participants
+                //arbitrarily add 1 participants
                 for(var i = 0; i< 1; i++){
                     this.add_row()
                 }
-                
+
             }
             this.get_solar_files();
             this.get_load_files();
@@ -139,7 +139,9 @@
         },
 
         methods: {
-            add_row() {
+            add_row(participant_type="", retail_tariff_type="", load_profile="", solar_profile="",
+            solar_scaling=1, battery_type="No Battery")
+            {
                 let array_length = this.table_rows.length;
                 let participant_default = "participant_" + Number(array_length+1).toString();
                 let new_row = {
@@ -156,7 +158,7 @@
                             id: 1,
                             name: "participant_type",
                             tag: "my_dropdown",
-                            value:"",
+                            value:participant_type,
                             dropdown_key: "participant_type_options",
                             placeholder:"Type",
                         },
@@ -164,7 +166,7 @@
                             id: 2,
                             name: "retail_tariff_type",
                             tag: "my_dropdown",
-                            value:"",
+                            value:retail_tariff_type,
                             dropdown_key:"tariff_type_options",
                             placeholder:"Select One",
                         },
@@ -172,7 +174,7 @@
                             id: 3,
                             name: "load_profile",
                             tag: "my_dropdown",
-                            value:"",
+                            value:load_profile,
                             dropdown_key:"load_profiles_list",
                             placeholder:"Select One",
                         },
@@ -180,7 +182,7 @@
                             id: 4,
                             name: "solar_profile",
                             tag: "my_dropdown",
-                            value:"",
+                            value:solar_profile,
                             dropdown_key:"solar_profiles_list",
                             placeholder:"Select One",
                         },
@@ -188,14 +190,14 @@
                             id: 5,
                             name: "solar_scaling",
                             tag: "my_number",
-                            value:1,
+                            value:solar_scaling,
                             placeholder:"Input Number",
                         },
                         {
                             id: 6,
                             name: "battery_type",
                             tag: "my_dropdown",
-                            value:"No Battery",
+                            value:battery_type,
                             dropdown_key:"battery_options",
                             placeholder:"Select Battery",
                         },
@@ -259,18 +261,18 @@
             },
 
             load_config() {
-
+                console.log("Loading config (for now from default_config.csv)");
+                this.$socket.emit('load_participants_config', this.selected_config_file)
             },
 
             save_config() {
-                console.log("Saving config (for now to default_config.csv)");
                 let table_data = this.combine_table_data();
 
                 let payload = {
                     model_page_name: this.model_page_name,
                     data: table_data,
                 };
-                // this.$store.commit('save_server_page', payload)
+                console.log(payload);
                 this.$socket.emit('save_participants_config', this.selected_config_file, payload)
             },
 
@@ -291,6 +293,7 @@
                 this.$socket.emit('get_load_profiles', filename)
             }
         },
+
         sockets: {
             filesChannel: function(response) {
                 console.log("received response: ", response);
@@ -306,6 +309,22 @@
                 this.is_connected = true;
                 this.my_options[response.key] = response.data;
             },
+
+            config_file_channel: function(response) {
+                this.is_connected = true;
+                this.table_rows = [];
+                for (let i = 0; i < response.length; i++) {
+                    let params = response[i]["row_inputs"];
+                    this.add_row(
+                        params["participant_type"],
+                        params["retail_tariff_type"],
+                        params["load_profile"],
+                        params["solar_profile"],
+                        params["solar_scaling"],
+                        params["battery_type"],
+                    );
+                }
+            }
         }
     }
 </script>

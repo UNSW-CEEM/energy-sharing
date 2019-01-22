@@ -70,6 +70,7 @@ class OSFileService(FileService):
         return load_profiles
 
     def save_participants_config(self, filename, data):
+        print(data)
         status = False
         table_data = data["data"]
         table_headers = []
@@ -80,17 +81,31 @@ class OSFileService(FileService):
         file_path = os.path.join(self.p_config_path, filename)
         self.clear_csv(file_path)
 
-        if os.path.isfile(file_path):
-            with open(file_path, 'w') as file:
-                writer = csv.DictWriter(file, fieldnames=table_headers)
+        with open(file_path, 'w') as file:
+            writer = csv.DictWriter(file, fieldnames=table_headers)
+            writer.writeheader()
 
-                for each in table_data:
-                    row = each["row_inputs"]
-                    writer.writerow(row)
+            for each in table_data:
+                row = each["row_inputs"]
+                writer.writerow(row)
 
-            status = True
+        status = True
 
         return status
+
+    def load_participants_config(self, filename):
+        file_path = os.path.join(self.p_config_path, filename)
+
+        confusing_data = []
+
+        if os.path.isfile(file_path):
+            with open(file_path) as file:
+                reader = csv.DictReader(file)
+                counter = 0
+                for row in reader:
+                    confusing_data.append({'row_id': counter, 'row_inputs': row})
+
+        return confusing_data
 
     @staticmethod
     def clear_csv(path):
