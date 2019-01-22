@@ -73,6 +73,9 @@
                 selected_solar_file: 'solar_profiles.csv',
                 selected_load_file: 'load_profiles.csv',
 
+                // Constants for now
+                selected_config_file: 'default_config.csv',
+
                 solar_files_list: [],
                 load_files_list: [],
 
@@ -210,6 +213,25 @@
                 this.$store.commit('save_page', payload)
             },
 
+            combine_table_data() {
+                let data = [];
+
+                for(var i = 0; i < this.table_rows.length; i++) {
+                    let row = this.table_rows[i].row_inputs;
+                    let row_data = {};
+
+                    for( var j = 0; j < row.length; j++) {
+                        row_data[row[j].name] = row[j].value
+                    }
+                    data.push({
+                        row_id: i,
+                        row_inputs: row_data
+                    })
+                }
+
+                return data
+            },
+
             save_page_server() {
                 let data = [];
 
@@ -241,7 +263,15 @@
             },
 
             save_config() {
+                console.log("Saving config (for now to default_config.csv)");
+                let table_data = this.combine_table_data();
 
+                let payload = {
+                    model_page_name: this.model_page_name,
+                    data: table_data,
+                };
+                // this.$store.commit('save_server_page', payload)
+                this.$socket.emit('save_participants_config', this.selected_config_file, payload)
             },
 
             get_solar_files() {

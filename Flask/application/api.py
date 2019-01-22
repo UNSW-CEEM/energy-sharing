@@ -120,6 +120,13 @@ def get_solar_profiles(filename):
     emit('profilesChannel', {"key": "load_profiles_list", "data": data})
 
 
+@socketio.on('save_participants_config')
+def save_participants_config(filename, data):
+    result = file_service.save_participants_config(filename, data)
+    if result:
+        status_callback("Saving Participants Config Successful")
+
+
 @socketio.on('run_model')
 def test_run_sim(params):
     status_callback("Running Test Model Interface")
