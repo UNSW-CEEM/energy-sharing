@@ -4,14 +4,14 @@
         <LineChart
             class="chart"
             v-if="chart_props.chart_type==='LineChart'"
-            :chart_data="chart_props.chart_data"
-            :chart_options="chart_props.chart_options"
+            :chartData="chart_props.chart_data"
+            :options="chart_props.chart_options"
         />
         <BarChart
             class="chart"
             v-if="chart_props.chart_type==='BarChart'"
-            :chart_data="chart_props.chart_data"
-            :chart_options="chart_props.chart_options"
+            :chartData="chart_props.chart_data"
+            :options="chart_props.chart_options"
         />
     </div>
 </template>

@@ -148,7 +148,7 @@ def test_run_sim(params):
     mp.create_objects()
     results = mp.run(status_callback)
 
-    emit('sim_channel', {"data": results})
+    emit('chart_results_channel', {"data": results})
     status_callback("Modelling Complete")
 
 
