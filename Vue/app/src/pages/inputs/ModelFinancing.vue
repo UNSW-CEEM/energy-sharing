@@ -45,6 +45,7 @@
 <script>
     import SimpleNumberInput from '@/components/SimpleNumberInput.vue';
     import SimpleDropdown from '@/components/SimpleDropdown.vue';
+    import SaveLoad from '@/mixins/SaveLoad.vue';
 
     export default {
         name: "Financing",
@@ -53,6 +54,8 @@
             SimpleNumberInput,
             SimpleDropdown
         },
+
+        mixins: [SaveLoad],
 
         data () {
             return {
@@ -102,8 +105,7 @@
         },
 
         methods: {
-            add_row(component="", capex="", capex_payer="", discount_rate="",
-                    amortization="", opex="") {
+            add_row(component = "", capex = "", capex_payer = "", discount_rate = "", amortization = "", opex = "") {
                 let array_length = this.table_rows.length;
                 let new_row = {
                     row_id: array_length,
@@ -113,119 +115,51 @@
                             name: "component",
                             tag: "my_number",
                             value: component,
-                            placeholder:"Name",
+                            placeholder: "Name",
                         },
                         {
                             id: 1,
                             name: "capex",
                             tag: "my_number",
                             value: capex,
-                            placeholder:"$",
+                            placeholder: "$",
                         },
                         {
                             id: 2,
                             name: "capex_payer",
                             tag: "my_dropdown",
                             value: capex_payer,
-                            dropdown_key:"who_pays",
-                            placeholder:"Select Payer",
+                            dropdown_key: "who_pays",
+                            placeholder: "Select Payer",
                         },
                         {
                             id: 3,
                             name: "discount_rate",
                             tag: "my_number",
                             value: discount_rate,
-                            placeholder:"%",
+                            placeholder: "%",
                         },
                         {
                             id: 4,
                             name: "amortization",
                             tag: "my_number",
                             value: amortization,
-                            placeholder:"Years",
+                            placeholder: "Years",
                         },
                         {
                             id: 5,
                             name: "opex",
                             tag: "my_number",
                             value: opex,
-                            placeholder:"$",
+                            placeholder: "$",
                         },
-                       
+
                     ]
                 };
 
                 this.table_rows.push(new_row);
             },
-
-            save_page() {
-                let payload = {
-                    model_page_name: this.model_page_name,
-                    data: this.table_rows
-                };
-                this.$store.commit('save_page', payload)
-            },
-
-            combine_table_data() {
-                let data = [];
-
-                for (let i = 0; i < this.table_rows.length; i++) {
-                    let row = this.table_rows[i].row_inputs;
-                    let row_data = {};
-
-                    for (let j = 0; j < row.length; j++) {
-                        row_data[row[j].name] = row[j].value
-                    }
-                    data.push({
-                        row_id: i,
-                        row_inputs: row_data
-                    })
-                }
-
-                return data
-            },
-
-            save_page_server() {
-                let data = [];
-
-                for(var i = 0; i < this.table_rows.length; i++) {
-                    let row = this.table_rows[i].row_inputs;
-                    let row_data = [];
-
-                    for( var j = 0; j < row.length; j++) {
-                        row_data.push({
-                            "name": row[j].name,
-                            "value": row[j].value
-                        })
-                    }
-                    data.push({
-                        row_id: i,
-                        row_inputs: row_data
-                    })
-                }
-
-                let payload = {
-                    model_page_name: this.model_page_name,
-                    data: data,
-                };
-                this.$store.commit('save_server_page', payload)
-            },
-
-            load_config() {
-                this.$socket.emit('load_config', this.model_page_name, this.selected_config_file)
-            },
-
-            save_config() {
-                let table_data = this.combine_table_data();
-
-                let payload = {
-                    model_page_name: this.model_page_name,
-                    data: table_data,
-                };
-                this.$socket.emit('save_config', this.model_page_name, this.selected_config_file, payload)
-            },
         },
-
         sockets: {
             financing_file_channel: function(response) {
                 this.is_connected = true;
@@ -242,7 +176,7 @@
                     );
                 }
             }
-        }
+        },
     }
 </script>
 

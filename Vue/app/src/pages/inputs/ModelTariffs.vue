@@ -45,6 +45,7 @@
 <script>
     import SimpleNumberInput from '@/components/SimpleNumberInput.vue';
     import SimpleDropdown from '@/components/SimpleDropdown.vue';
+    import SaveLoad from '@/mixins/SaveLoad.vue';
 
     export default {
         name: "Tariffs",
@@ -53,6 +54,8 @@
             SimpleNumberInput,
             SimpleDropdown
         },
+
+        mixings: [SaveLoad],
 
         data () {
             return {
@@ -101,8 +104,7 @@
         },
 
         methods: {
-            add_row(tariff_type="", tariff_name="", fit_input="",
-                    peak_price="", shoulder_price="", off_peak_price="") {
+            add_row(tariff_type="", tariff_name="", fit_input="", peak_price="", shoulder_price="", off_peak_price="") {
 
                 let array_length = this.table_rows.length;
                 let new_row = {
@@ -155,76 +157,6 @@
                 };
 
                 this.table_rows.push(new_row);
-            },
-
-            save_page() {
-                let payload = {
-                    model_page_name: this.model_page_name,
-                    data: this.table_rows
-                };
-                this.$store.commit('save_page', payload)
-            },
-
-            combine_table_data() {
-                let data = [];
-
-                for (let i = 0; i < this.table_rows.length; i++) {
-                    let row = this.table_rows[i].row_inputs;
-                    let row_data = {};
-
-                    for (let j = 0; j < row.length; j++) {
-                        row_data[row[j].name] = row[j].value
-                    }
-                    data.push({
-                        row_id: i,
-                        row_inputs: row_data
-                    })
-                }
-
-                return data
-            },
-
-            save_page_server() {
-                let data = [];
-
-                // For each row in our table
-                for(let i = 0; i < this.table_rows.length; i++) {
-                    let row = this.table_rows[i].row_inputs;
-                    let row_data = [];
-
-                    for( var j = 0; j < row.length; j++) {
-                        row_data.push({
-                            "name": row[j].field_name,
-                            "value": row[j].value
-                        })
-                    }
-                    data.push({
-                        row_id: i,
-                        row_inputs: row_data
-                    })
-                }
-
-                let payload = {
-                    model_page_name: this.model_page_name,
-                    data: data,
-                };
-                this.$store.commit('save_server_page', payload)
-            },
-
-            load_config() {
-                console.log("Loading config (for now from default_config.csv)");
-                this.$socket.emit('load_config', this.model_page_name, this.selected_config_file)
-            },
-
-            save_config() {
-                let table_data = this.combine_table_data();
-
-                let payload = {
-                    model_page_name: this.model_page_name,
-                    data: table_data,
-                };
-                console.log(payload);
-                this.$socket.emit('save_config', this.model_page_name, this.selected_config_file, payload)
             },
         },
 

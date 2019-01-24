@@ -54,6 +54,7 @@
 <script>
     import SimpleNumberInput from '@/components/SimpleNumberInput.vue';
     import SimpleDropdown from '@/components/SimpleDropdown.vue';
+    import SaveLoad from '@/mixins/SaveLoad.vue';
 
     export default {
         name: "Participants",
@@ -62,6 +63,8 @@
             SimpleNumberInput,
             SimpleDropdown
         },
+
+        mixins: [SaveLoad],
 
         data () {
             return {
@@ -121,7 +124,6 @@
             if (this.model_page_name in this.$store.state.frontend_state) {
                 this.table_rows = this.$store.state.frontend_state[this.model_page_name]
             } else {
-                //arbitrarily add 1 participants
                 for (let i = 0; i< 1; i++) {
                     this.add_row()
                 }
@@ -133,15 +135,8 @@
             this.get_load_profiles(this.selected_load_file);
         },
 
-        beforeDestroy() {
-            this.save_page();
-            this.save_page_server()
-        },
-
         methods: {
-            add_row(participant_type="", retail_tariff_type="", load_profile="", solar_profile="",
-            solar_scaling=1, battery_type="No Battery")
-            {
+            add_row(participant_type="", retail_tariff_type="", load_profile="", solar_profile="", solar_scaling=1, battery_type="No Battery") {
                 let array_length = this.table_rows.length;
                 let participant_default = "participant_" + Number(array_length+1).toString();
                 let new_row = {
@@ -205,75 +200,6 @@
                 };
 
                 this.table_rows.push(new_row);
-            },
-
-            save_page() {
-                let payload = {
-                    model_page_name: this.model_page_name,
-                    data: this.table_rows
-                };
-                this.$store.commit('save_page', payload)
-            },
-
-            combine_table_data() {
-                let data = [];
-
-                for (let i = 0; i < this.table_rows.length; i++) {
-                    let row = this.table_rows[i].row_inputs;
-                    let row_data = {};
-
-                    for (let j = 0; j < row.length; j++) {
-                        row_data[row[j].name] = row[j].value
-                    }
-                    data.push({
-                        row_id: i,
-                        row_inputs: row_data
-                    })
-                }
-
-                return data
-            },
-
-            save_page_server() {
-                let data = [];
-
-                for(var i = 0; i < this.table_rows.length; i++) {
-                    let row = this.table_rows[i].row_inputs;
-                    let row_data = []
-
-                    for( var j = 0; j < row.length; j++) {
-                        row_data.push({
-                            "name": row[j].name,
-                            "value": row[j].value
-                        })
-                    }
-                    data.push({
-                        row_id: i,
-                        row_inputs: row_data
-                    })
-                }
-
-                let payload = {
-                    model_page_name: this.model_page_name,
-                    data: data,
-                };
-                this.$store.commit('save_server_page', payload)
-            },
-
-            load_config() {
-                console.log("Loading config (for now from default_config.csv)");
-                this.$socket.emit('load_config', this.model_page_name, this.selected_config_file)
-            },
-
-            save_config() {
-                let table_data = this.combine_table_data();
-
-                let payload = {
-                    model_page_name: this.model_page_name,
-                    data: table_data,
-                };
-                console.log(payload);
-                this.$socket.emit('save_config', this.model_page_name, this.selected_config_file, payload)
             },
 
             get_solar_files() {
