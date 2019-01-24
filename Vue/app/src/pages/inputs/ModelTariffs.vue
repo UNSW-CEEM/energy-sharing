@@ -62,7 +62,7 @@
                 view_name: this.$options.name,
                 model_page_name: "model_tariffs",
 
-                selected_config_file: 'default.csv',
+                selected_config_file: 'default_config.csv',
 
                 table_headers: [
                     {header_id: 0, name: "Tariff Type", additional_text:"Select"},
