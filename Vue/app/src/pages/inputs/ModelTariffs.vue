@@ -55,7 +55,7 @@
             SimpleDropdown
         },
 
-        mixings: [SaveLoad],
+        mixins: [SaveLoad],
 
         data () {
             return {
@@ -185,13 +185,18 @@
         list-style: none;
     }
 
-    h1{
+    .file-buttons-container {
         animation-name: fade-in;
-    animation-duration: 2s;
+        animation-duration: 2s;
     }
 
-    table{
+    h1 {
         animation-name: fade-in;
-    animation-duration: 2s;
+        animation-duration: 2s;
+    }
+
+    table {
+        animation-name: fade-in;
+        animation-duration: 2s;
     }
 </style>

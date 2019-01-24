@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="main-container">
         <h1>{{ view_name }}</h1>
         <table>
             <tr>
@@ -181,15 +181,19 @@
 </script>
 
 <style scoped>
+    .file-buttons-container {
+        animation-name: fade-in;
+        animation-duration: 2s;
+    }
 
-h1{
-    animation-name: fade-in;
-    animation-duration: 2s;
-}
+    h1{
+        animation-name: fade-in;
+        animation-duration: 2s;
+    }
 
-table{
-    animation-name: fade-in;
-    animation-duration: 2s;
-}
+    table{
+        animation-name: fade-in;
+        animation-duration: 2s;
+    }
 
 </style>
