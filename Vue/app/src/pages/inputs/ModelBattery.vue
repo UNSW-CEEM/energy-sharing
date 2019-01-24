@@ -25,7 +25,7 @@
     import SimpleDropdown from '@/components/SimpleDropdown.vue';
 
     export default {
-        name: "Central Battery",
+        name: "Central_Battery",
         components: {
             SimpleDropdown,
             SimpleNumberInput,
@@ -35,6 +35,7 @@
             return {
                 view_name: this.$options.name,
                 model_page_name: "central_battery",
+                heading_text: "Central Battery",
 
                 input_data: [
                     {

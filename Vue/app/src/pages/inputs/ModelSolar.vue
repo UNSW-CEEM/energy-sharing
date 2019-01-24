@@ -1,6 +1,6 @@
 <template>
      <div>
-        <h1>{{ view_name }}</h1>
+        <h1>{{ heading_text }}</h1>
         <span class="input-line"
             v-for="input in input_data"
             :key="input.id">{{ input.display_text }}
@@ -24,7 +24,7 @@
     import SimpleDropdown from '@/components/SimpleDropdown.vue';
 
     export default {
-        name: "Central Solar",
+        name: "Central_Solar",
         components: {
             SimpleDropdown,
             SimpleNumberInput,
@@ -34,6 +34,7 @@
             return {
                 view_name: this.$options.name,
                 model_page_name: "central_solar",
+                heading_text: "Central Solar",
 
                 input_data: [
                     {
