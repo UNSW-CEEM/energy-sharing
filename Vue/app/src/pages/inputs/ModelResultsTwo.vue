@@ -1,12 +1,12 @@
 <template>
-        <div class="main-chart-container">
-            <ChartBox
-                v-if="data_ready"
-                v-for="chart in chart_boxes"
-                :key="chart.id"
-                :chart_props="chart.chart_props"
-            />
-        </div>
+    <div class="main-chart-container">
+        <ChartBox
+            v-if="data_ready"
+            v-for="chart in chart_boxes"
+            :key="chart.id"
+            :chart_props="chart.chart_props"
+        />
+    </div>
 </template>
 
 <script>
@@ -160,14 +160,6 @@
                         chart.chart_props.chart_data = chart.chart_parsing_function(results_data);
                     }
                 }
-
-                // let chart_id = this.get_chart_id(response.key);
-                // console.log(chart_id);
-                // let results_data = response.data["total_participant_bill"];
-                // let chart = this.chart_boxes[chart_id];
-                //
-                // chart.chart_props.chart_data = chart.chart_parsing_function(results_data);
-
 
                 this.data_ready = true;
             }

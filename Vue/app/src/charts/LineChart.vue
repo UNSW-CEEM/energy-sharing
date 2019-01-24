@@ -1,8 +1,10 @@
 <script>
-    import { Line } from 'vue-chartjs'
+    import { Line, mixins } from 'vue-chartjs'
+    const { reactiveProp } = mixins;
 
     export default {
-        mixins: [ Line ],
+        extends: Line,
+        mixins: [ reactiveProp ],
         props: {
             chartData: {
                 type: Object,

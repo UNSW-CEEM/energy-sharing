@@ -1,12 +1,6 @@
 <template>
     <div class="chart-box" v-bind:style="position_styling">
         <h1 class="chart-heading">{{ chart_props.chart_heading }}</h1>
-        <LineChart
-            class="chart"
-            v-if="chart_props.chart_type==='LineChart'"
-            :chartData="chart_props.chart_data"
-            :options="chart_props.chart_options"
-        />
         <BarChart
             class="chart"
             v-if="chart_props.chart_type==='BarChart'"
