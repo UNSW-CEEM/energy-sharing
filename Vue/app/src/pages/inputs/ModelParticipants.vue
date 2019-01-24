@@ -12,11 +12,7 @@
                     :my_options="load_files_list" />
         </div>
 
-        <span class="load_file_dd">
-
-        </span>
-
-         <table>
+        <table>
             <tr>
                 <th
                     v-for="header in table_headers"
@@ -46,8 +42,12 @@
             </tr>
             <button @click="add_row()">Add Participant</button>
         </table>
-        <button @click="load_config()">Load from config file</button>
-        <button @click="save_config()">Save to config file</button>
+
+        <div class="file-buttons-container">
+            <button @click="load_config()">Load from config file</button>
+            <button @click="save_config()">Save to config file</button>
+        </div>
+
     </div>
 </template>
 
@@ -122,7 +122,7 @@
                 this.table_rows = this.$store.state.frontend_state[this.model_page_name]
             } else {
                 //arbitrarily add 1 participants
-                for(var i = 0; i< 1; i++){
+                for (let i = 0; i< 1; i++) {
                     this.add_row()
                 }
 
@@ -218,11 +218,11 @@
             combine_table_data() {
                 let data = [];
 
-                for(var i = 0; i < this.table_rows.length; i++) {
+                for (let i = 0; i < this.table_rows.length; i++) {
                     let row = this.table_rows[i].row_inputs;
                     let row_data = {};
 
-                    for( var j = 0; j < row.length; j++) {
+                    for (let j = 0; j < row.length; j++) {
                         row_data[row[j].name] = row[j].value
                     }
                     data.push({
@@ -262,7 +262,7 @@
 
             load_config() {
                 console.log("Loading config (for now from default_config.csv)");
-                this.$socket.emit('load_participants_config', this.selected_config_file)
+                this.$socket.emit('load_config', this.model_page_name, this.selected_config_file)
             },
 
             save_config() {
@@ -273,7 +273,7 @@
                     data: table_data,
                 };
                 console.log(payload);
-                this.$socket.emit('save_participants_config', this.selected_config_file, payload)
+                this.$socket.emit('save_config', this.model_page_name, this.selected_config_file, payload)
             },
 
             get_solar_files() {
@@ -310,7 +310,7 @@
                 this.my_options[response.key] = response.data;
             },
 
-            config_file_channel: function(response) {
+            participants_file_channel: function(response) {
                 this.is_connected = true;
                 this.table_rows = [];
                 for (let i = 0; i < response.length; i++) {
@@ -352,4 +352,9 @@
         justify-content: space-evenly;
         align-items: center;
     }
+
+    .file-buttons-container {
+
+    }
+
 </style>

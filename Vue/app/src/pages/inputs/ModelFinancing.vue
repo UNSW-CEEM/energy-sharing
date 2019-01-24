@@ -33,6 +33,12 @@
             </tr>
             <button @click="add_row()">Add Row</button>
         </table>
+
+         <div class="file-buttons-container">
+            <button @click="load_config()">Load from config file</button>
+            <button @click="save_config()">Save to config file</button>
+        </div>
+
     </div>
 </template>
 
@@ -52,6 +58,9 @@
             return {
                 view_name: this.$options.name,
                 model_page_name: "model_financing",
+                is_connected: false,
+
+                selected_config_file: 'default_config.csv',
 
                 table_headers: [
                     {id: 0, name: "Component", additional_text:"Name"},
@@ -66,7 +75,6 @@
                 table_rows: [],
 
                 my_options: {
-                    
                     who_pays: {
                         option_one: "Retailer",
                         option_two: "TNSP",
@@ -82,7 +90,9 @@
             if (this.model_page_name in this.$store.state.frontend_state) {
                 this.table_rows = this.$store.state.frontend_state[this.model_page_name]
             } else {
-                this.populate_rows()
+                for (let i = 0; i< 1; i++) {
+                    this.add_row()
+                }
             }
         },
 
@@ -92,7 +102,8 @@
         },
 
         methods: {
-            add_row() {
+            add_row(component="", capex="", capex_payer="", discount_rate="",
+                    amortization="", opex="") {
                 let array_length = this.table_rows.length;
                 let new_row = {
                     row_id: array_length,
@@ -101,21 +112,21 @@
                             id: 0,
                             name: "component",
                             tag: "my_number",
-                            value:"",
+                            value: component,
                             placeholder:"Name",
                         },
                         {
                             id: 1,
                             name: "capex",
                             tag: "my_number",
-                            value:"",
+                            value: capex,
                             placeholder:"$",
                         },
                         {
                             id: 2,
                             name: "capex_payer",
                             tag: "my_dropdown",
-                            value:"",
+                            value: capex_payer,
                             dropdown_key:"who_pays",
                             placeholder:"Select Payer",
                         },
@@ -123,21 +134,21 @@
                             id: 3,
                             name: "discount_rate",
                             tag: "my_number",
-                            value:"",
+                            value: discount_rate,
                             placeholder:"%",
                         },
                         {
                             id: 4,
                             name: "amortization",
                             tag: "my_number",
-                            value:"",
+                            value: amortization,
                             placeholder:"Years",
                         },
                         {
                             id: 5,
                             name: "opex",
                             tag: "my_number",
-                            value:"",
+                            value: opex,
                             placeholder:"$",
                         },
                        
@@ -145,64 +156,6 @@
                 };
 
                 this.table_rows.push(new_row);
-            },
-
-            populate_rows() {
-                var components = ["Central Solar", "Central Battery"]
-                for(var i = 0; i< components.length; i++){
-                    let array_length = this.table_rows.length;
-                    let new_row = {
-                        row_id: array_length,
-                        row_inputs: [
-                            {
-                                id: 0,
-                                name: "component",
-                                tag: "my_number",
-                                value:components[i],
-                                placeholder:"Name",
-                            },
-                            {
-                                id: 1,
-                                name: "capex",
-                                tag: "my_number",
-                                value: Number(Math.random() * 100000).toFixed(0),
-                                placeholder:"$",
-                            },
-                            {
-                                id: 2,
-                                name: "capex_payer",
-                                tag: "my_dropdown",
-                                value:"",
-                                dropdown_key:"who_pays",
-                                placeholder:"Select Payer",
-                            },
-                            {
-                                id: 3,
-                                name: "discount_rate",
-                                tag: "my_number",
-                                value:7,
-                                placeholder:"%",
-                            },
-                            {
-                                id: 4,
-                                name: "amortization",
-                                tag: "my_number",
-                                value:20,
-                                placeholder:"Years",
-                            },
-                            {
-                                id: 5,
-                                name: "opex",
-                                tag: "my_number",
-                                value:0,
-                                placeholder:"$",
-                            },
-                            
-                        ]
-                    };
-
-                    this.table_rows.push(new_row);
-                }
             },
 
             save_page() {
@@ -213,12 +166,31 @@
                 this.$store.commit('save_page', payload)
             },
 
+            combine_table_data() {
+                let data = [];
+
+                for (let i = 0; i < this.table_rows.length; i++) {
+                    let row = this.table_rows[i].row_inputs;
+                    let row_data = {};
+
+                    for (let j = 0; j < row.length; j++) {
+                        row_data[row[j].name] = row[j].value
+                    }
+                    data.push({
+                        row_id: i,
+                        row_inputs: row_data
+                    })
+                }
+
+                return data
+            },
+
             save_page_server() {
                 let data = [];
 
                 for(var i = 0; i < this.table_rows.length; i++) {
                     let row = this.table_rows[i].row_inputs;
-                    let row_data = []
+                    let row_data = [];
 
                     for( var j = 0; j < row.length; j++) {
                         row_data.push({
@@ -238,6 +210,38 @@
                 };
                 this.$store.commit('save_server_page', payload)
             },
+
+            load_config() {
+                this.$socket.emit('load_config', this.model_page_name, this.selected_config_file)
+            },
+
+            save_config() {
+                let table_data = this.combine_table_data();
+
+                let payload = {
+                    model_page_name: this.model_page_name,
+                    data: table_data,
+                };
+                this.$socket.emit('save_config', this.model_page_name, this.selected_config_file, payload)
+            },
+        },
+
+        sockets: {
+            financing_file_channel: function(response) {
+                this.is_connected = true;
+                this.table_rows = [];
+                for (let i = 0; i < response.length; i++) {
+                    let params = response[i]["row_inputs"];
+                    this.add_row(
+                        params["component"],
+                        params["capex"],
+                        params["capex_payer"],
+                        params["discount_rate"],
+                        params["amortization"],
+                        params["opex"],
+                    );
+                }
+            }
         }
     }
 </script>

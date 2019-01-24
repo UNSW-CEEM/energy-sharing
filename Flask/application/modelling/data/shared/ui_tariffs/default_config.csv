@@ -1,0 +1,7 @@
+participant_id,participant_type,retail_tariff_type,load_profile,solar_profile,solar_scaling,battery_type
+participant_1,,,,,1,No Battery
+participant_2,,,,,1,No Battery
+participant_3,,,,,1,No Battery
+participant_4,,,,,1,No Battery
+participant_5,,,,,1,No Battery
+participant_6,,,,,1,No Battery

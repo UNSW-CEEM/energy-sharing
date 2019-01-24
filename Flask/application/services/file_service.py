@@ -6,9 +6,12 @@ SHARED_SOLAR_LOCATION = os.path.realpath(os.path.join(
     'application', 'modelling', 'data', 'shared', 'solar'))
 SHARED_LOAD_LOCATION = os.path.realpath(os.path.join(
     'application', 'modelling', 'data', 'shared', 'load'))
-
 SHARED_PARTICIPANTS_CONFIG_LOCATION = os.path.realpath(os.path.join(
     'application', 'modelling', 'data', 'shared', 'ui_participants'))
+SHARED_TARIFFS_CONFIG_LOCATION = os.path.realpath(os.path.join(
+    'application', 'modelling', 'data', 'shared', 'ui_tariffs'))
+SHARED_FINANCING_CONFIG_LOCATION = os.path.realpath(os.path.join(
+    'application', 'modelling', 'data', 'shared', 'ui_financing'))
 
 
 class FileService:
@@ -33,6 +36,20 @@ class OSFileService(FileService):
         self.solar_path = SHARED_SOLAR_LOCATION
         self.load_path = SHARED_LOAD_LOCATION
         self.p_config_path = SHARED_PARTICIPANTS_CONFIG_LOCATION
+        self.t_config_path = SHARED_TARIFFS_CONFIG_LOCATION
+        self.f_config_path = SHARED_FINANCING_CONFIG_LOCATION
+
+        self.config_paths ={
+            "model_participants": self.p_config_path,
+            "model_tariffs": self.t_config_path,
+            "model_financing": self.f_config_path
+         }
+
+        self.result_channels = {
+            "model_participants": "participants_file_channel",
+            "model_tariffs": "tariffs_file_channel",
+            "model_financing": "financing_file_channel",
+        }
 
         self.solar_files = [f for f in os.listdir(self.solar_path) if os.path.isfile(os.path.join(self.solar_path, f))]
         self.load_files = [f for f in os.listdir(self.load_path) if os.path.isfile(os.path.join(self.load_path, f))]
@@ -69,16 +86,14 @@ class OSFileService(FileService):
 
         return load_profiles
 
-    def save_participants_config(self, filename, data):
-        print(data)
-        status = False
+    def save_config(self, page_name, file_name, data):
         table_data = data["data"]
         table_headers = []
 
         for each in table_data[0]["row_inputs"]:
             table_headers.append(each)
 
-        file_path = os.path.join(self.p_config_path, filename)
+        file_path = os.path.join(self.config_paths[page_name], file_name)
         self.clear_csv(file_path)
 
         with open(file_path, 'w') as file:
@@ -89,12 +104,10 @@ class OSFileService(FileService):
                 row = each["row_inputs"]
                 writer.writerow(row)
 
-        status = True
+            return True
 
-        return status
-
-    def load_participants_config(self, filename):
-        file_path = os.path.join(self.p_config_path, filename)
+    def load_config(self, page_name, filename):
+        file_path = os.path.join(self.config_paths[page_name], filename)
 
         results = []
 
@@ -105,7 +118,7 @@ class OSFileService(FileService):
                 for row in reader:
                     results.append({'row_id': counter, 'row_inputs': row})
 
-        return results
+        return self.result_channels[page_name], results
 
     @staticmethod
     def clear_csv(path):

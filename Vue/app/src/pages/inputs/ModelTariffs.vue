@@ -33,6 +33,12 @@
             </tr>
             <button @click="add_row()">Add Row</button>
         </table>
+
+        <div class="file-buttons-container">
+            <button @click="load_config()">Load from config file</button>
+            <button @click="save_config()">Save to config file</button>
+        </div>
+
     </div>
 </template>
 
@@ -53,6 +59,8 @@
                 view_name: this.$options.name,
                 model_page_name: "model_tariffs",
 
+                selected_config_file: 'default.csv',
+
                 table_headers: [
                     {header_id: 0, name: "Tariff Type", additional_text:"Select"},
                     {header_id: 1, name: "Tariff Name", additional_text:"Label"},
@@ -68,7 +76,6 @@
                         "TUOS",
                         "DUOS",
                         "NUOS",
-                        // "Peer to Peer",
                     ],
                 }
             }
@@ -82,7 +89,9 @@
             if (this.model_page_name in this.$store.state.frontend_state) {
                 this.table_rows = this.$store.state.frontend_state[this.model_page_name]
             } else {
-                this.populate_rows()
+                for (let i = 0; i< 1; i++) {
+                    this.add_row()
+                }
             }
         },
 
@@ -92,7 +101,9 @@
         },
 
         methods: {
-            add_row() {
+            add_row(tariff_type="", tariff_name="", fit_input="",
+                    peak_price="", shoulder_price="", off_peak_price="") {
+
                 let array_length = this.table_rows.length;
                 let new_row = {
                     row_id: array_length,
@@ -102,42 +113,42 @@
                             field_name:"Tariff Type",
                             tag:"my_dropdown",
                             dropdown_key: "tariff_type_options",
-                            value:"",
+                            value: tariff_type,
                             placeholder:"Select Tariff Type",
                         },
                         {
                             col_id: 1,
                             field_name:"tariff_name",
                             tag:"my_number",
-                            value:"",
+                            value: tariff_name,
                             placeholder:"Name",
                         },
                         {
                             col_id: 2,
                             field_name:"fit_input",
                             tag:"my_number",
-                            value:"",
+                            value: fit_input,
                             placeholder:"$"
                         },
                         {
                             col_id: 3,
                             field_name:"peak_price",
                             tag:"my_number",
-                            value:"",
+                            value: peak_price,
                             placeholder:"$",
                         },
                         {
                             col_id: 4,
                             field_name:"shoulder_price",
                             tag:"my_number",
-                            value:"",
+                            value: shoulder_price,
                             placeholder:"$",
                         },
                         {
                             col_id: 5,
                             field_name:"off_peak_price",
                             tag:"my_number",
-                            value:"",
+                            value: off_peak_price,
                             placeholder:"$",
                         },
                     ]
@@ -146,72 +157,31 @@
                 this.table_rows.push(new_row);
             },
 
-            populate_rows(){
-                
-                
-                for(var i = 0; i< this.my_options.tariff_type_options.length; i++){
-                    let array_length = this.table_rows.length;
-                    let new_row = {
-                        
-                        row_id: array_length,
-                        row_inputs: [
-                            {
-                                col_id: 0,
-                                field_name:"tariff_type",
-                                tag:"my_dropdown",
-                                dropdown_key: "tariff_type_options",
-                                value:this.my_options.tariff_type_options[i],
-                                placeholder:"Select Tariff Type",
-                            },
-                            {
-                                col_id: 1,
-                                field_name:"tariff_name",
-                                tag:"my_number",
-                                value:"LO3 "+this.my_options.tariff_type_options[i],
-                                placeholder:"Name",
-                            },
-                            {
-                                col_id: 2,
-                                field_name:"fit_input",
-                                tag:"my_number",
-                                value:Math.random().toFixed(2),
-                                placeholder:"$"
-                            },
-                            {
-                                col_id: 3,
-                                field_name:"peak_charge",
-                                tag:"my_number",
-                                value:Math.random().toFixed(2),
-                                placeholder:"$",
-                            },
-                            {
-                                col_id: 4,
-                                field_name:"shoulder_charge",
-                                tag:"my_number",
-                                value:Math.random().toFixed(2),
-                                placeholder:"$",
-                            },
-                            {
-                                col_id: 5,
-                                field_name:"offpeak_charge",
-                                tag:"my_number",
-                                value:Math.random().toFixed(2),
-                                placeholder:"$",
-                            },
-                        ]
-                    };
-
-                    this.table_rows.push(new_row);
-                }
-                
-            },
-
             save_page() {
                 let payload = {
                     model_page_name: this.model_page_name,
                     data: this.table_rows
                 };
                 this.$store.commit('save_page', payload)
+            },
+
+            combine_table_data() {
+                let data = [];
+
+                for (let i = 0; i < this.table_rows.length; i++) {
+                    let row = this.table_rows[i].row_inputs;
+                    let row_data = {};
+
+                    for (let j = 0; j < row.length; j++) {
+                        row_data[row[j].name] = row[j].value
+                    }
+                    data.push({
+                        row_id: i,
+                        row_inputs: row_data
+                    })
+                }
+
+                return data
             },
 
             save_page_server() {
@@ -240,6 +210,40 @@
                 };
                 this.$store.commit('save_server_page', payload)
             },
+
+            load_config() {
+                console.log("Loading config (for now from default_config.csv)");
+                this.$socket.emit('load_config', this.model_page_name, this.selected_config_file)
+            },
+
+            save_config() {
+                let table_data = this.combine_table_data();
+
+                let payload = {
+                    model_page_name: this.model_page_name,
+                    data: table_data,
+                };
+                console.log(payload);
+                this.$socket.emit('save_config', this.model_page_name, this.selected_config_file, payload)
+            },
+        },
+
+        sockets: {
+            tariffs_file_channel: function(response) {
+                this.is_connected = true;
+                this.table_rows = [];
+                for (let i = 0; i < response.length; i++) {
+                    let params = response[i]["row_inputs"];
+                    this.add_row(
+                        params["tariff_type"],
+                        params["tariff_name"],
+                        params["fit_input"],
+                        params["peak_price"],
+                        params["shoulder_price"],
+                        params["off_peak_price"],
+                    );
+                }
+            }
         }
     }
 </script>
