@@ -5,11 +5,14 @@
             <h4>Solar File:</h4>
             <SimpleDropdown
                     v-model="selected_solar_file"
-                    :my_options="solar_files_list" />
+                    :my_options="solar_files_list"
+                    :my_placeholder="'Select File'" />
             <h4>Load File:</h4>
             <SimpleDropdown
                     v-model="selected_load_file"
-                    :my_options="load_files_list" />
+                    :my_options="load_files_list"
+                    :my_placeholder="'Select File'"/>
+            <button @click="load_profiles()">Load Profiles</button>
         </div>
 
         <table>
@@ -73,8 +76,8 @@
                 is_connected: false,
 
                 // Constants for now
-                selected_solar_file: 'solar_profiles.csv',
-                selected_load_file: 'load_profiles.csv',
+                selected_solar_file: '',
+                selected_load_file: '',
 
                 // Constants for now
                 selected_config_file: 'default_config.csv',
@@ -131,8 +134,8 @@
             }
             this.get_solar_files();
             this.get_load_files();
-            this.get_solar_profiles(this.selected_solar_file);
-            this.get_load_profiles(this.selected_load_file);
+            // this.get_solar_profiles(this.selected_solar_file);
+            // this.get_load_profiles(this.selected_load_file);
         },
 
         methods: {
@@ -203,7 +206,6 @@
             },
 
             get_solar_files() {
-                console.log("Getting solar files");
                 this.$socket.emit('get_solar_files')
             },
 
@@ -211,18 +213,39 @@
                 this.$socket.emit('get_load_files')
             },
 
+            load_profiles() {
+                this.get_solar_profiles(this.selected_solar_file);
+                this.get_load_profiles(this.selected_load_file);
+            },
+
             get_solar_profiles (filename) {
+                this.awaiting_data = true;
                 this.$socket.emit('get_solar_profiles', filename)
             },
 
             get_load_profiles (filename) {
                 this.$socket.emit('get_load_profiles', filename)
-            }
+            },
+
+            save_config() {
+                let table_data = this.combine_table_data();
+
+                let payload = {
+                    model_page_name: this.model_page_name,
+                    data: table_data,
+                };
+
+                let additional_headers = {
+                    "selected_solar_file": this.selected_solar_file,
+                    "selected_load_file": this.selected_load_file
+                };
+
+                this.$socket.emit('save_config', this.model_page_name, this.selected_config_file, payload, additional_headers)
+            },
         },
 
         sockets: {
             filesChannel: function(response) {
-                console.log("received response: ", response);
                 this.is_connected = true;
                 if (response.key === 'solar_files_list') {
                     this.solar_files_list = response.data;
@@ -236,18 +259,25 @@
                 this.my_options[response.key] = response.data;
             },
 
-            participants_file_channel: function(response) {
+            participants_file_channel: function(response, solar_profiles, load_profiles) {
                 this.is_connected = true;
                 this.table_rows = [];
+
+                this.selected_solar_file = response[0]["row_inputs"]["selected_solar_file"];
+                this.get_solar_profiles(this.selected_solar_file);
+                this.selected_load_file = response[0]["row_inputs"]["selected_load_file"];
+                this.get_load_profiles(this.selected_load_file);
+
                 for (let i = 0; i < response.length; i++) {
-                    let params = response[i]["row_inputs"];
+                    let data = response[i]["row_inputs"];
+
                     this.add_row(
-                        params["participant_type"],
-                        params["retail_tariff_type"],
-                        params["load_profile"],
-                        params["solar_profile"],
-                        params["solar_scaling"],
-                        params["battery_type"],
+                        data["participant_type"],
+                        data["retail_tariff_type"],
+                        data["load_profile"],
+                        data["solar_profile"],
+                        data["solar_scaling"],
+                        data["battery_type"],
                     );
                 }
             }

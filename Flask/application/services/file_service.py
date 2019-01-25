@@ -86,12 +86,16 @@ class OSFileService(FileService):
 
         return load_profiles
 
-    def save_config(self, page_name, file_name, data):
+    def save_config(self, page_name, file_name, data, additional_headers):
         table_data = data["data"]
         table_headers = []
 
         for each in table_data[0]["row_inputs"]:
             table_headers.append(each)
+
+        if additional_headers:
+            for each in additional_headers:
+                table_headers.append(each)
 
         file_path = os.path.join(self.config_paths[page_name], file_name)
         self.clear_csv(file_path)
@@ -102,6 +106,10 @@ class OSFileService(FileService):
 
             for each in table_data:
                 row = each["row_inputs"]
+
+                if additional_headers:
+                    for key in additional_headers:
+                        row[key] = additional_headers[key]
                 writer.writerow(row)
 
             return True

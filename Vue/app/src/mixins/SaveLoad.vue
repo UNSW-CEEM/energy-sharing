@@ -74,11 +74,9 @@
                     model_page_name: this.model_page_name,
                     data: table_data,
                 };
-                console.log(payload);
+
                 this.$socket.emit('save_config', this.model_page_name, this.selected_config_file, payload)
             },
-
-
         },
     }
 </script>
