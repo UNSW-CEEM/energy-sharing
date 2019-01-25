@@ -47,7 +47,7 @@
         </table>
 
         <div class="file-buttons-container">
-            <button @click="load_config()">Load from config file</button>
+            <button @click="load_participants_config()">Load from config file</button>
             <button @click="save_config()">Save to config file</button>
         </div>
 
@@ -134,8 +134,6 @@
             }
             this.get_solar_files();
             this.get_load_files();
-            // this.get_solar_profiles(this.selected_solar_file);
-            // this.get_load_profiles(this.selected_load_file);
         },
 
         methods: {
@@ -219,7 +217,6 @@
             },
 
             get_solar_profiles (filename) {
-                this.awaiting_data = true;
                 this.$socket.emit('get_solar_profiles', filename)
             },
 
@@ -242,6 +239,10 @@
 
                 this.$socket.emit('save_config', this.model_page_name, this.selected_config_file, payload, additional_headers)
             },
+
+            load_participants_config() {
+                this.$socket.emit('load_participants_config', this.model_page_name, this.selected_config_file)
+            },
         },
 
         sockets: {
@@ -259,17 +260,15 @@
                 this.my_options[response.key] = response.data;
             },
 
-            participants_file_channel: function(response, solar_profiles, load_profiles) {
+            participants_file_channel: function(response) {
                 this.is_connected = true;
                 this.table_rows = [];
 
-                this.selected_solar_file = response[0]["row_inputs"]["selected_solar_file"];
-                this.get_solar_profiles(this.selected_solar_file);
-                this.selected_load_file = response[0]["row_inputs"]["selected_load_file"];
-                this.get_load_profiles(this.selected_load_file);
+                this.my_options["solar_profiles_list"] = response["solar_profiles_list"]
+                this.my_options["load_profiles_list"] = response["load_profiles_list"]
 
-                for (let i = 0; i < response.length; i++) {
-                    let data = response[i]["row_inputs"];
+                for (let i = 0; i < response["data"].length; i++) {
+                    let data = response["data"][i]["row_inputs"];
 
                     this.add_row(
                         data["participant_type"],

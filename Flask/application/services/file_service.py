@@ -70,23 +70,23 @@ class OSFileService(FileService):
     def list_load_files(self):
         return self.load_files
 
-    def list_solar_profiles(self, filename):
+    def list_solar_profiles(self, solar_filename):
 
-        solar_profiles = list(pd.read_csv(os.path.join(self.solar_path, filename)))
+        solar_profiles = list(pd.read_csv(os.path.join(self.solar_path, solar_filename)))
         if solar_profiles[0] == 'timestamp':
             solar_profiles.pop(0)
 
         return solar_profiles
 
-    def list_load_profiles(self, filename):
+    def list_load_profiles(self, load_filename):
 
-        load_profiles = list(pd.read_csv(os.path.join(self.load_path, filename)))
+        load_profiles = list(pd.read_csv(os.path.join(self.load_path, load_filename)))
         if load_profiles[0] == 'timestamp':
             load_profiles.pop(0)
 
         return load_profiles
 
-    def save_config(self, page_name, file_name, data, additional_headers):
+    def save_config(self, page_name, config_filename, data, additional_headers):
         table_data = data["data"]
         table_headers = []
 
@@ -97,7 +97,7 @@ class OSFileService(FileService):
             for each in additional_headers:
                 table_headers.append(each)
 
-        file_path = os.path.join(self.config_paths[page_name], file_name)
+        file_path = os.path.join(self.config_paths[page_name], config_filename)
         self.clear_csv(file_path)
 
         with open(file_path, 'w') as file:
@@ -114,8 +114,8 @@ class OSFileService(FileService):
 
             return True
 
-    def load_config(self, page_name, filename):
-        file_path = os.path.join(self.config_paths[page_name], filename)
+    def load_config(self, page_name, config_filename):
+        file_path = os.path.join(self.config_paths[page_name], config_filename)
 
         results = []
 
@@ -127,6 +127,23 @@ class OSFileService(FileService):
                     results.append({'row_id': counter, 'row_inputs': row})
 
         return self.result_channels[page_name], results
+
+    def load_participants_config(self, page_name, config_filename):
+        channel, data = self.load_config(page_name, config_filename)
+
+        solar_filename = data[0]["row_inputs"]["selected_solar_file"]
+        load_filename = data[0]["row_inputs"]["selected_load_file"]
+
+        solar_profiles_list = self.list_solar_profiles(solar_filename)
+        load_profiles_list = self.list_load_profiles(load_filename)
+
+        packaged_data = {
+            "data": data,
+            "solar_profiles_list": solar_profiles_list,
+            "load_profiles_list": load_profiles_list
+        }
+
+        return channel, packaged_data
 
     @staticmethod
     def clear_csv(path):

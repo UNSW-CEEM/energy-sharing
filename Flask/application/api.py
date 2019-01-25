@@ -136,6 +136,14 @@ def load_config(page_name, filename):
         status_callback("Configuration file loaded")
 
 
+@socketio.on('load_participants_config')
+def load_config(page_name, filename):
+    channel, data = file_service.load_participants_config(page_name, filename)
+    if channel and data:
+        emit(channel, data)
+        status_callback("Configuration file loaded")
+
+
 @socketio.on('run_model')
 def test_run_sim(params):
     status_callback("Running Test Model Interface")
