@@ -88,21 +88,6 @@
 
         },
 
-        created() {
-            if (this.model_page_name in this.$store.state.frontend_state) {
-                this.table_rows = this.$store.state.frontend_state[this.model_page_name]
-            } else {
-                for (let i = 0; i< 1; i++) {
-                    this.add_row()
-                }
-            }
-        },
-
-        beforeDestroy() {
-            this.save_page()
-            this.save_page_server()
-        },
-
         methods: {
             add_row(tariff_type="", tariff_name="", fit_input="", peak_price="", shoulder_price="", off_peak_price="") {
 

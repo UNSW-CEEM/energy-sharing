@@ -39,11 +39,11 @@
             save_page_server() {
                 let data = [];
 
-                for(var i = 0; i < this.table_rows.length; i++) {
+                for (let i = 0; i < this.table_rows.length; i++) {
                     let row = this.table_rows[i].row_inputs;
-                    let row_data = []
+                    let row_data = [];
 
-                    for( var j = 0; j < row.length; j++) {
+                    for (let j = 0; j < row.length; j++) {
                         row_data.push({
                             "name": row[j].name,
                             "value": row[j].value
@@ -77,6 +77,21 @@
 
                 this.$socket.emit('save_config', this.model_page_name, this.selected_config_file, payload)
             },
+        },
+
+        created() {
+            if (this.model_page_name in this.$store.state.frontend_state) {
+                this.table_rows = this.$store.state.frontend_state[this.model_page_name]
+            } else {
+                for (let i = 0; i< 1; i++) {
+                    this.add_row()
+                }
+            }
+        },
+
+        beforeDestroy() {
+            this.save_page()
+            this.save_page_server()
         },
     }
 </script>

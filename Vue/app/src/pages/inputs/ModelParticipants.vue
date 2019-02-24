@@ -47,8 +47,9 @@
         </table>
 
         <div class="file-buttons-container">
-            <button @click="load_participants_config()">Load from config file</button>
-            <button @click="save_config()">Save to config file</button>
+            <button @click="load_participants_config(selected_config_file)">Load from user file</button>
+            <button @click="save_config()">Save to user file</button>
+            <button @click="load_participants_config('default_config.csv')">Load from default file</button>
         </div>
 
     </div>
@@ -78,12 +79,12 @@
                 // Constants for now
                 selected_solar_file: '',
                 selected_load_file: '',
-
-                // Constants for now
-                selected_config_file: 'default_config.csv',
-
                 solar_files_list: [],
                 load_files_list: [],
+
+                // Constants for now
+                selected_config_file: 'user_config.csv',
+                // config_files_list: ['default_config.csv'],
 
                 table_headers: [
                     {id: 0, name: "Participant ID", additional_text:"ID"},
@@ -240,8 +241,10 @@
                 this.$socket.emit('save_config', this.model_page_name, this.selected_config_file, payload, additional_headers)
             },
 
-            load_participants_config() {
-                this.$socket.emit('load_participants_config', this.model_page_name, this.selected_config_file)
+            load_participants_config(file) {
+
+                // this.$socket.emit('load_participants_config', this.model_page_name, this.selected_config_file)
+                this.$socket.emit('load_participants_config', this.model_page_name, file)
             },
         },
 
@@ -311,6 +314,8 @@
     }
 
     .file-buttons-container {
+        /*display: flex;*/
+        /*justify-content: space-around;*/
         animation-name: fade-in;
         animation-duration: 2s;
     }
