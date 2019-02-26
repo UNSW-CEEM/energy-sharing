@@ -19,8 +19,15 @@ class ResultParsers:
             self.luomi_output_dir,
             ("df_total_participant_bill" + str(battery_capacity) + ".csv")
         )
+
+        retailer_revenue_path = os.path.join(
+            self.luomi_output_dir,
+            ("df_retailer_revenue" + str(battery_capacity) + "1.csv")
+        )
+
         energy_flows_data = []
         total_participant_bill = []
+        retailer_revenue_data = []
 
         with open(energy_flows_path) as fileOne:
             reader = csv.DictReader(fileOne)
@@ -32,17 +39,25 @@ class ResultParsers:
             for row in reader:
                 total_participant_bill.append(row)
 
+        with open(retailer_revenue_path) as fileThree:
+            reader = csv.DictReader(fileThree)
+            for row in reader:
+                retailer_revenue_data.append(row)
+
         tpb = self.parse_total_participants_bill(total_participant_bill)
         rev_participant = self.parse_revenue_participants(total_participant_bill)
+        revenue_retailer = self.parse_revenue_retailer(retailer_revenue_data)
 
         results = {
             "energy_flows": energy_flows_data,
             "total_participant_bill": tpb,
             "revenue_participant": rev_participant,
+            "revenue_retailer": revenue_retailer,
         }
 
         return results
 
+    # 1 TPB - Total Participants Bill
     @staticmethod
     def parse_total_participants_bill(tpb):
         # Takes in the TPB data and returns it in a more manageable structure.
@@ -61,6 +76,12 @@ class ResultParsers:
 
         return data_points
 
+    # 2 EnergyGenCon - Half hourly energy Generation/Consumption for each participant
+    @staticmethod
+    def parse_energy_gen_con(data):
+        pass
+
+    # 3 RevParticipant - Half hourly revenue for each participant
     @staticmethod
     def parse_revenue_participants(data):
         timestamps = []
@@ -82,3 +103,13 @@ class ResultParsers:
         # print("\n|\nData Points:", data_points)
 
         return {"timestamps": timestamps, "data_points": data_points}
+
+    # 4 RevRCC - Half-hourly revenue for retailer, central_battery, central_solar
+    @staticmethod
+    def parse_revenue_retailer(data):
+        return data
+
+    # 5 EnergyCC - half-hourly central battery charge, central solar generation
+    @staticmethod
+    def parse_energy_cc(data):
+        pass

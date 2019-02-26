@@ -13,6 +13,12 @@
                 v-if="chart.chart_type==='RevParticipant' && chart_data"
                 :chart_data="chart_data"
             />
+            <RevRCC
+                v-if="chart.chart_type==='RevRCC' && chart_data"
+                :chart_data="chart_data"
+            />
+            <EnergyCC/>
+            <EnergyGenCon/>
         </div>
     </div>
 </template>
@@ -21,10 +27,13 @@
 
     import TPB from "../../charts/_TPB";
     import RevParticipant from "../../charts/_RevParticipant";
+    import RevRCC from "../../charts/_RevRCC";
+    import EnergyCC from "../../charts/_EnergyCC";
+    import EnergyGenCon from "../../charts/_EnergyGenCon";
 
     export default {
         name: "ModelResults",
-        components: {RevParticipant, TPB},
+        components: {EnergyGenCon, EnergyCC, RevRCC, RevParticipant, TPB},
 
         data () {
             return  {
@@ -32,7 +41,7 @@
                 chart_boxes: [
                     {
                         id: 0,
-                        chart_type: 'TPB',
+                        chart_type: 'RevRCC',
                         position_styling: {
                             'grid-column-start': 1,
                             'grid-column-end': 3,
