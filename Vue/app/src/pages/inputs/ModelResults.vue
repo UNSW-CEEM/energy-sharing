@@ -23,7 +23,7 @@
     import RevParticipant from "../../charts/_RevParticipant";
 
     export default {
-        name: "ModelResultsThree",
+        name: "ModelResults",
         components: {RevParticipant, TPB},
 
         data () {

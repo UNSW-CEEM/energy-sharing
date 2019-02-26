@@ -243,7 +243,6 @@
             },
 
             load_participants_config(file) {
-
                 // this.$socket.emit('load_participants_config', this.model_page_name, this.selected_config_file)
                 this.$socket.emit('load_participants_config', this.model_page_name, file)
             },
@@ -268,8 +267,11 @@
                 this.is_connected = true;
                 this.table_rows = [];
 
-                this.my_options["solar_profiles_list"] = response["solar_profiles_list"]
-                this.my_options["load_profiles_list"] = response["load_profiles_list"]
+                this.selected_solar_file = response["data"][0]["row_inputs"]["selected_solar_file"];
+                this.selected_load_file = response["data"][0]["row_inputs"]["selected_load_file"];
+
+                this.my_options["solar_profiles_list"] = response["solar_profiles_list"];
+                this.my_options["load_profiles_list"] = response["load_profiles_list"];
 
                 for (let i = 0; i < response["data"].length; i++) {
                     let data = response["data"][i]["row_inputs"];
