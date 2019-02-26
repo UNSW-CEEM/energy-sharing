@@ -48,7 +48,7 @@
                         xAxes: [{
                             ticks: {
                                 fontColor: "white",
-                                fontSize: 10,
+                                fontSize: 12,
                                 stepSize: 1,
                                 beginAtZero: true
                             }

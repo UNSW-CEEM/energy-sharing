@@ -29,7 +29,7 @@
                         position: 'right',
                         labels: {
                             fontColor: "white",
-                            fontSize: 10,
+                            fontSize: 12,
                         }
                     },
                     title: {
@@ -50,31 +50,51 @@
                         xAxes: [{
                             ticks: {
                                 fontColor: "white",
-                                fontSize: 10,
+                                fontSize: 12,
                                 stepSize: 1,
                                 beginAtZero: true
                             }
                         }]
                     },
                 },
+
+                preset_colours: [
+                    'rgb(0, 0, 0, 1)',
+                    'rgb(50, 0, 0, 1)',
+                    'rgb(100, 0, 0, 1)',
+                    'rgb(150, 0, 0, 1)',
+                    'rgb(200, 0, 0, 1)',
+                    'rgb(250, 0, 0, 1)',
+                    'rgb(0, 50, 0, 1)',
+                    'rgb(0, 100, 0, 1)',
+                    'rgb(0, 150, 0, 1)',
+                    'rgb(0, 200, 0, 1)',
+                    'rgb(0, 250, 0, 1)',
+                    'rgb(0, 0, 50, 1)',
+                    'rgb(0, 0, 100, 1)',
+                    'rgb(0, 0, 150, 1)',
+                    'rgb(0, 0, 200, 1)',
+                    'rgb(0, 0, 250, 1)'
+                ]
             }
         },
 
         methods: {
             parse_data() {
                 let data = this.chart_data["revenue_participant"];
-                console.log(data);
-                console.log(data["timestamps"]);
 
                 let labels = data["timestamps"];
                 let datasets = [];
 
                 for (let key in data["data_points"]) {
+                    let index = datasets.length;
 
                     let this_set = {
                         label: key,
                         data: data["data_points"][key],
                         fill: false,
+                        borderColor: this.preset_colours[index],
+                        borderWidth: 4,
                     };
                     datasets.push(this_set)
                 }
