@@ -24,10 +24,17 @@
                 chart_options: {
                     maintainAspectRatio: false,
                     legend: {
+                        display: false,
                         labels: {
                             fontColor: "white",
                             fontSize: 10,
                         }
+                    },
+                    title: {
+                        fontSize: 20,
+                        text: "Total Participants Bill",
+                        display: true,
+                        fontColor: 'white',
                     },
                     scales: {
                         yAxes: [{

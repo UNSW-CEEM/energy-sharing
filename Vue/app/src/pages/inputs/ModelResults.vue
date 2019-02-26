@@ -1,158 +1,83 @@
 <template>
-    <div class="graphs">
-        <div class="graph-heading">
-            <h1>{{ view_name }}</h1>
-        </div>
-
-        <div class="graph">
-            <BarChart
-                v-if="chart_two_loaded"
-                :chartData="chart_two_data"
-                :options="chart_two_options"/>
+    <div class="main-chart-container">
+        <div class="sub-chart-container"
+             v-for="chart in chart_boxes"
+             :key="chart.id"
+             :style="chart.position_styling"
+        >
+            <TPB
+                v-if="chart.chart_type==='TPB' && chart_data"
+                :chart_data="chart_data"
+            />
+            <RevParticipant
+                v-if="chart.chart_type==='RevParticipant' && chart_data"
+                :chart_data="chart_data"
+            />
         </div>
     </div>
 </template>
 
 <script>
-    import LineChart from '@/charts/LineChart.vue';
-    import BarChart from '@/charts/BarChart.vue';
+
+    import TPB from "../../charts/_TPB";
+    import RevParticipant from "../../charts/_RevParticipant";
 
     export default {
-        name: "Results",
-
-        components: {
-            LineChart,
-            BarChart
-        },
+        name: "ModelResultsThree",
+        components: {RevParticipant, TPB},
 
         data () {
-            return {
-                view_name: this.$options.name,
-                results_received: false,
-
-                chart_one_loaded: false,
-                chart_one_data: null,
-                chart_one_options: null,
-
-                chart_two_loaded: false,
-                chart_two_data: null,
-                chart_two_options: {
-                    maintainAspectRatio: false,
-                    legend: {
-                        labels: {
-                            fontColor: "white",
-                            fontSize: 10,
+            return  {
+                chart_data: false,
+                chart_boxes: [
+                    {
+                        id: 0,
+                        chart_type: 'TPB',
+                        position_styling: {
+                            'grid-column-start': 1,
+                            'grid-column-end': 3,
+                            'grid-row-start': 1,
+                            'grid-row-end': 4,
                         }
                     },
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                fontColor: "white",
-                                fontSize: 18,
-                                stepSize: 1,
-                                beginAtZero: true
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                                fontColor: "white",
-                                fontSize: 10,
-                                stepSize: 1,
-                                beginAtZero: true
-                            }
-                        }]
-                    },
-                },
+                    {
+                        id: 1,
+                        chart_type: 'RevParticipant',
+                        position_styling: {
+                            'grid-column-start': 3,
+                            'grid-column-end': 5,
+                            'grid-row-start': 1,
+                            'grid-row-end': 4,
+                        }
+                    }
+                ],
             }
         },
 
-        
         sockets: {
-            sim_channel: function(response) {
-                this.results_received = true;
-                this.sim_result = response.data;
-                this.chart_one_data = this.parse_energy_flows(this.sim_result["energy_flows"]);
-                this.chart_two_data = this.parse_participants_bill(this.sim_result["total_participant_bill"]);
-                this.chart_one_loaded = true;
-                this.chart_two_loaded = true;
+            chart_results_channel: function (response) {
+                this.chart_data = response.data;
             }
-        },
-        methods: {
-            run_model() {
-                let params = this.$store.state.model_parameters;
-                this.$socket.emit('run_model', params)
-            },
-
-            parse_energy_flows(data) {
-                console.log(data)
-            },
-
-            parse_participants_bill(data) {
-                let labels = [];
-                let data_points = [];
-
-                for (let key in data) {
-                   labels.push(key);
-                   data_points.push(data[key])
-                }
-
-                let response = {
-                    
-                    labels: labels,
-                    datasets: [{
-                        label: "Total Participant Bill",
-                        backgroundColor:'#43B581',
-                        responsive:true,
-                        data: data_points,
-                        
-                    }]
-                };
-                console.log(labels, data_points);
-                return response
-            },
-        },
-
-        async mounted () {
-
         }
     }
 </script>
 
 <style scoped>
-    .graphs {
-        /* background: darkslategrey; */
+
+    .main-chart-container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        grid-column-gap: 20px;
+        grid-row-gap: 20px;
+    }
+
+    .sub-chart-container {
         display: flex;
-        flex-direction:column;
-        justify-content:flex-start;
-        align-items:center;
-        /*margin-top:2vh;*/
+        flex-direction: column;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
     }
 
-    .graph-heading {
-        /* background: slateblue; */
-        grid-column-start: 1;
-        grid-column-end: 3;
-    }
-
-    .graph{
-        width:70vw !important;
-    }
-
-    /* .left-graph {
-        background: aliceblue;
-        grid-column-start: 1;
-        grid-column-end: 2;
-        grid-row-start: 2;
-    } */
-
-    canvas{
-
-        width:100% !important;
-        max-height:50vh !important;
-
-    }
-
-    
-
-    
 </style>

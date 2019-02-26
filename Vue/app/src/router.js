@@ -71,7 +71,7 @@ export default new Router({
         {
             path: '/results',
             name: 'results',
-            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelResultsThree.vue')
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelResults.vue')
         },
         {
             path: '/tariffs',

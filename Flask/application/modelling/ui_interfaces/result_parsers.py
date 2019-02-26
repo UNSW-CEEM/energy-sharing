@@ -33,10 +33,12 @@ class ResultParsers:
                 total_participant_bill.append(row)
 
         tpb = self.parse_total_participants_bill(total_participant_bill)
+        rev_participant = self.parse_revenue_participants(total_participant_bill)
 
         results = {
             "energy_flows": energy_flows_data,
-            "total_participant_bill": tpb
+            "total_participant_bill": tpb,
+            "revenue_participant": rev_participant,
         }
 
         return results
@@ -58,3 +60,25 @@ class ResultParsers:
                         data_points[key] += float(value)
 
         return data_points
+
+    @staticmethod
+    def parse_revenue_participants(data):
+        timestamps = []
+        data_points = {}
+
+        for each in data:
+            # print(each)
+            for key, value in each.items():
+                if key == "":
+                    timestamps.append(value)
+                else:
+                    if key not in data_points:
+                        data_points[key] = []
+                        data_points[key].append(value)
+                    else:
+                        data_points[key].append(value)
+
+        # print("\n|\nTimestamps:", timestamps)
+        # print("\n|\nData Points:", data_points)
+
+        return {"timestamps": timestamps, "data_points": data_points}

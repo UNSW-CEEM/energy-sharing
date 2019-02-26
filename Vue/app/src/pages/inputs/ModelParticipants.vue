@@ -14,7 +14,6 @@
                     :onchange="get_load_profiles(selected_load_file)"
                     :my_options="load_files_list"
                     :my_placeholder="'Select File'"/>
-            <!--<button @click="load_profiles()">Load Profiles</button>-->
         </div>
 
         <table>

@@ -1,3 +1,6 @@
 participant_id,participant_type,retail_tariff_type,load_profile,solar_profile,solar_scaling,battery_type,selected_solar_file,selected_load_file
-participant_1,,,,,1,No Battery,,
-participant_2,,,,,1,No Battery,,
+participant_1,solar,Business TOU,profile_1,profile_1,1,No Battery,solar_profiles.csv,load_profiles.csv
+participant_2,solar,Business TOU,profile_2,profile_2,1,No Battery,solar_profiles.csv,load_profiles.csv
+participant_3,solar,Business TOU,profile_3,profile_3,1,No Battery,solar_profiles.csv,load_profiles.csv
+participant_4,solar,Business TOU,profile_4,profile_4,1,No Battery,solar_profiles.csv,load_profiles.csv
+participant_5,,,profile_5,profile_5,1,No Battery,solar_profiles.csv,load_profiles.csv
