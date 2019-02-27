@@ -65,13 +65,7 @@
     .topnav {
         grid-column-start: 1;
         grid-column-end: 11;
-        // background-color:blue;
         max-height:30px;
-        // background: #3bbced;
-        // padding: 20px;
-        /*min-width:100vw;*/
-        // margin-bottom: 1px solid black;
-        
     }
 
     .sidenav {
