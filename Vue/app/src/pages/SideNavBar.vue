@@ -99,7 +99,7 @@
         /* background-color:#63b8ee; */
         border-radius:1px;
         /* border:1px solid #3866a3; */
-        
+
         display:inline-block;
         cursor:pointer;
         color:grey;

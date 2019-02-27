@@ -33,7 +33,7 @@
                     },
                     title: {
                         fontSize: 20,
-                        text: "Participants Revenue",
+                        text: "Retailer Revenue",
                         display: true,
                         fontColor: 'white'
                     },
@@ -80,7 +80,7 @@
 
         methods: {
             parse_data() {
-                let data = this.chart_data["revenue_participant"];
+                let data = this.chart_data["revenue_retailer"];
 
                 let labels = data["timestamps"];
                 let datasets = [];

@@ -1,20 +1,63 @@
+<!--<template>-->
+    <!--<div class="main-chart-container">-->
+        <!--&lt;!&ndash;<div class="sub-chart-container"&ndash;&gt;-->
+             <!--&lt;!&ndash;v-for="chart in chart_boxes"&ndash;&gt;-->
+             <!--&lt;!&ndash;:key="chart.id"&ndash;&gt;-->
+             <!--&lt;!&ndash;:style="chart.position_styling"&ndash;&gt;-->
+        <!--&lt;!&ndash;&gt;</div>&ndash;&gt;-->
+        <!--<select v-model="selected_chart">-->
+            <!--<option v-for="chart in chart_boxes" :value="chart"> {{chart.chart_type}} </option>-->
+        <!--</select>-->
+        <!--<div class="sub-chart-container"-->
+             <!--v-if="selected_chart"-->
+             <!--:style="selected_chart.position_styling"-->
+        <!--&gt;-->
+            <!--<TPB-->
+                <!--v-if="selected_chart.chart_type==='TPB' && chart_data"-->
+                <!--:chart_data="chart_data"-->
+            <!--/>-->
+            <!--<RevParticipant-->
+                <!--v-if="selected_chart.chart_type==='RevParticipant' && chart_data"-->
+                <!--:chart_data="chart_data"-->
+            <!--/>-->
+            <!--<RevRCC-->
+                <!--v-if="selected_chart.chart_type==='RevRCC' && chart_data"-->
+                <!--:chart_data="chart_data"-->
+            <!--/>-->
+            <!--<EnergyCC/>-->
+            <!--<EnergyGenCon/>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</template>-->
+
 <template>
     <div class="main-chart-container">
+        <div class="chart-menu">
+            <router-link
+                class="my-route-button"
+                v-for="chart in chart_boxes"
+                v-bind:key="route.id"
+                :to="`${route.page}`"
+            > {{ chart.chart_type }} </router-link>
+        </div>
+
+        <select v-model="selected_chart">
+            <option v-for="chart in chart_boxes" :value="chart"> {{chart.chart_type}} </option>
+        </select>
         <div class="sub-chart-container"
-             v-for="chart in chart_boxes"
-             :key="chart.id"
-             :style="chart.position_styling"
+             v-if="selected_chart"
+             :style="selected_chart.position_styling"
         >
             <TPB
-                v-if="chart.chart_type==='TPB' && chart_data"
+                v-if="selected_chart.chart_type==='TPB' && chart_data"
                 :chart_data="chart_data"
             />
             <RevParticipant
-                v-if="chart.chart_type==='RevParticipant' && chart_data"
+                v-if="selected_chart.chart_type==='RevParticipant' && chart_data"
                 :chart_data="chart_data"
             />
             <RevRCC
-                v-if="chart.chart_type==='RevRCC' && chart_data"
+                v-if="selected_chart.chart_type==='RevRCC' && chart_data"
                 :chart_data="chart_data"
             />
             <EnergyCC/>
@@ -38,6 +81,10 @@
         data () {
             return  {
                 chart_data: false,
+                selected_chart: false,
+
+                routes: [],
+
                 chart_boxes: [
                     {
                         id: 0,

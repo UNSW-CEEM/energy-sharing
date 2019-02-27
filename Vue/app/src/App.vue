@@ -77,7 +77,6 @@
     .sidenav {
         grid-column-start: 1;
         grid-column-end: 3;
-        background: rgb(219, 219, 219);
         border-radius:5px;
         background-color:#2F3136;
     }

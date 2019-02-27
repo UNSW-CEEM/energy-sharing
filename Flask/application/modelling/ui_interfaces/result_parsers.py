@@ -22,7 +22,7 @@ class ResultParsers:
 
         retailer_revenue_path = os.path.join(
             self.luomi_output_dir,
-            ("df_retailer_revenue" + str(battery_capacity) + "1.csv")
+            ("df_retailer_revenue" + str(battery_capacity) + ".csv")
         )
 
         energy_flows_data = []
@@ -99,15 +99,26 @@ class ResultParsers:
                     else:
                         data_points[key].append(value)
 
-        # print("\n|\nTimestamps:", timestamps)
-        # print("\n|\nData Points:", data_points)
-
         return {"timestamps": timestamps, "data_points": data_points}
 
     # 4 RevRCC - Half-hourly revenue for retailer, central_battery, central_solar
     @staticmethod
     def parse_revenue_retailer(data):
-        return data
+        timestamps = []
+        data_points = {}
+
+        for each in data:
+            for key, value in each.items():
+                if key == "":
+                    timestamps.append(value)
+                else:
+                    if key not in data_points:
+                        data_points[key] = []
+                        data_points[key].append(value)
+                    else:
+                        data_points[key].append(value)
+
+        return {"timestamps": timestamps, "data_points": data_points}
 
     # 5 EnergyCC - half-hourly central battery charge, central solar generation
     @staticmethod
