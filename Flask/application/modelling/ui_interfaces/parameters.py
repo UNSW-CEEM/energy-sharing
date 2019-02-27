@@ -114,18 +114,21 @@ class Parameters:
 
     def create_luomi_objects(self):
         self.model_network = Luomi_Network(self.network_name)
+
         # Need to add participants into model
         participants_string = self.ui_participants.get_participants_as_string()
         self.model_network.add_participants_from_string(self.data_dir, participants_string)
+
         # Create a central battery from the ui_central_battery.
         self.model_central_battery = Luomi_Central_Battery(**self.ui_central_battery.get_params_dict())
         tariffs_dict = self.ui_tariffs.get_tariffs_dict()
+
         # print(tariffs_dict)
         self.model_tariffs = Luomi_Tariffs(**tariffs_dict)
 
         # TODO Remove these/come up with a new system later
         start = datetime.datetime(year=2017, month=2, day=26, hour=10)
-        end = datetime.datetime(year=2017, month=2, day=26, hour=14)
+        end = datetime.datetime(year=2017, month=2, day=26, hour=12)
 
         self.time_periods = util.generate_dates_in_range(start, end, 30)
 

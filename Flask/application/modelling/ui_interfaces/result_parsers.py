@@ -25,9 +25,21 @@ class ResultParsers:
             ("df_retailer_revenue" + str(battery_capacity) + ".csv")
         )
 
+        energy_gencon_path = os.path.join(
+            self.luomi_output_dir,
+            ("df_net_export" + str(battery_capacity) + ".csv")
+        )
+
+        energy_cc_path = os.path.join(
+            self.luomi_output_dir,
+            ("df_net_export" + str(battery_capacity) + ".csv")
+        )
+
         energy_flows_data = []
         total_participant_bill = []
         retailer_revenue_data = []
+        energy_gencon_data = []
+        energy_cc_data = []
 
         with open(energy_flows_path) as fileOne:
             reader = csv.DictReader(fileOne)
@@ -44,15 +56,29 @@ class ResultParsers:
             for row in reader:
                 retailer_revenue_data.append(row)
 
+        with open(energy_gencon_path) as fileFour:
+            reader = csv.DictReader(fileFour)
+            for row in reader:
+                energy_gencon_data.append(row)
+
+        with open(energy_cc_path) as fileFive:
+            reader = csv.DictReader(fileFive)
+            for row in reader:
+                energy_cc_data.append(row)
+
         tpb = self.parse_total_participants_bill(total_participant_bill)
         rev_participant = self.parse_revenue_participants(total_participant_bill)
         revenue_retailer = self.parse_revenue_retailer(retailer_revenue_data)
+        energy_gencon = self.parse_energy_gen_con(energy_gencon_data)
+        energy_cc = self.parse_energy_cc(energy_cc_data)
 
         results = {
             "energy_flows": energy_flows_data,
             "total_participant_bill": tpb,
             "revenue_participant": rev_participant,
             "revenue_retailer": revenue_retailer,
+            "energy_gencon": energy_gencon,
+            "energy_cc": energy_cc,
         }
 
         return results
@@ -77,9 +103,8 @@ class ResultParsers:
         return data_points
 
     # 2 EnergyGenCon - Half hourly energy Generation/Consumption for each participant
-    @staticmethod
-    def parse_energy_gen_con(data):
-        pass
+    def parse_energy_gen_con(self, data):
+        return self.general_parser(data)
 
     # 3 RevParticipant - Half hourly revenue for each participant
     @staticmethod
@@ -121,6 +146,24 @@ class ResultParsers:
         return {"timestamps": timestamps, "data_points": data_points}
 
     # 5 EnergyCC - half-hourly central battery charge, central solar generation
+    def parse_energy_cc(self, data):
+        return self.general_parser(data)
+
+    # This is useful for several different parsers. Call if appropriate.
     @staticmethod
-    def parse_energy_cc(data):
-        pass
+    def general_parser(data):
+        timestamps = []
+        data_points = {}
+
+        for each in data:
+            for key, value in each.items():
+                if key == "":
+                    timestamps.append(value)
+                else:
+                    if key not in data_points:
+                        data_points[key] = []
+                        data_points[key].append(value)
+                    else:
+                        data_points[key].append(value)
+
+        return {"timestamps": timestamps, "data_points": data_points}

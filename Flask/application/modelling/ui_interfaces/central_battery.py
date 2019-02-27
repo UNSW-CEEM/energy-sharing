@@ -23,7 +23,7 @@ class CentralBattery:
         for each in inputs:
             setters[each["name"]](each["value"])
 
-        # print(self.capacity, self.max_discharge, self.cycle_efficiency)
+        print(self.capacity, self.max_discharge, self.cycle_efficiency)
 
     def get_params_dict(self):
         params = {

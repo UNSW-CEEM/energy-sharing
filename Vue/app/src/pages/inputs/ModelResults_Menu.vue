@@ -23,8 +23,14 @@
                 v-if="selected_chart.chart_type==='RevRCC' && chart_data"
                 :chart_data="chart_data"
             />
-            <EnergyCC/>
-            <EnergyGenCon/>
+            <EnergyCC
+                v-if="selected_chart.chart_type==='EnergyCC' && chart_data"
+                :chart_data="chart_data"
+            />
+            <EnergyGenCon
+                v-if="selected_chart.chart_type==='EnergyGenCon' && chart_data"
+                :chart_data="chart_data"
+            />
         </div>
 
     </div>
@@ -65,12 +71,12 @@
                     {
                         id: 3,
                         link_text: "Energy - Central",
-                        chart_type: 'RevParticipant',
+                        chart_type: 'EnergyCC',
                     },
                     {
                         id: 4,
                         link_text: "Energy - Generated/Consumed",
-                        chart_type: 'RevRCC',
+                        chart_type: 'EnergyGenCon',
                     },
                 ],
             }
@@ -118,11 +124,12 @@
     }
 
     .chart-button {
-        width: 15%
+        width: 15%;
     }
 
     .selected_button {
-        background-color: blue;
+        background-color: #42464D;
+        color: white;
     }
 
     .sub-chart-container {
