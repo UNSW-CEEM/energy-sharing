@@ -57,7 +57,8 @@ class ResultParsers:
     @staticmethod
     def mike_parse_tpb(data):
         for each in data:
-            print(each, data[each])
+            # print(each, data[each])
+            pass
 
         return data
 

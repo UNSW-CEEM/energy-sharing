@@ -130,7 +130,7 @@ class Parameters:
 
         # TODO Remove these/come up with a new system later
         start = datetime.datetime(year=2017, month=2, day=26, hour=10)
-        end = datetime.datetime(year=2017, month=2, day=26, hour=12)
+        end = datetime.datetime(year=2017, month=2, day=27, hour=12)
 
         self.time_periods = util.generate_dates_in_range(start, end, 30)
 
