@@ -31,7 +31,7 @@ export default new Router({
         {
             path: '/data',
             name: 'data',
-            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelData.vue')
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelDataNew.vue')
         },
         {
             path: '/inputs',
