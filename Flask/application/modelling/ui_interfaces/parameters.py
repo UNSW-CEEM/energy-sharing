@@ -147,7 +147,7 @@ class Parameters:
 
     def run(self, status):
         if self.model_type == 'mike':
-            self.run_mike_model(status)
+            return self.run_mike_model(status)
         else:
             return self.run_luomi_model(status)
 
@@ -159,7 +159,7 @@ class Parameters:
         financial_sim.simulate(self.time_periods, self.model_network, self.model_tariffs, self.model_results, status)
         self.model_results.to_csv(self.luomi_output_dir, info_tag=bc)
 
-        parsed_results = self.ui_results_parser.temp_parser(bc)
+        parsed_results = self.ui_results_parser.luomi_temp_parser(bc)
 
         return parsed_results
 
@@ -167,4 +167,7 @@ class Parameters:
         status("Attempting Mike Model")
         if self.mike_model:
             self.mike_model.run()
+
+        parsed_results = self.ui_results_parser.mike_temp_parser()
         status("Mike Model Complete - See Folder")
+        return parsed_results

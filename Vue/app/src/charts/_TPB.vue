@@ -41,7 +41,6 @@
                             ticks: {
                                 fontColor: "white",
                                 fontSize: 18,
-                                stepSize: 1,
                                 beginAtZero: true
                             }
                         }],
@@ -49,11 +48,25 @@
                             ticks: {
                                 fontColor: "white",
                                 fontSize: 12,
-                                stepSize: 1,
                                 beginAtZero: true
                             }
                         }]
                     },
+
+                    // Straight from chart.js docs/examples
+                    tooltips: {
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                                if (label) {
+                                    label += ': $';
+                                }
+                                label += Math.round(tooltipItem.yLabel * 100) / 100;
+                                return label;
+                            }
+                        }
+                    }
                 },
             }
         },

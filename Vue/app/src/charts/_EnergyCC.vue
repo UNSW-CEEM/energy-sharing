@@ -41,7 +41,6 @@
                             ticks: {
                                 fontColor: "white",
                                 fontSize: 18,
-                                stepSize: 1,
                                 beginAtZero: true
                             }
                         }],
@@ -49,7 +48,6 @@
                             ticks: {
                                 fontColor: "white",
                                 fontSize: 12,
-                                stepSize: 1,
                                 beginAtZero: true
                             }
                         }]
@@ -73,7 +71,7 @@
                     'rgb(0, 0, 150, 1)',
                     'rgb(0, 0, 200, 1)',
                     'rgb(0, 0, 250, 1)'
-                ]
+                ],
             }
         },
 

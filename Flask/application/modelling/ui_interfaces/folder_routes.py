@@ -34,8 +34,8 @@ class FolderRoutes:
         self.mike_base_dir = os.path.join(self.data_dir, MIKE_DIR_NAME)
         self.mike_studies_dir = os.path.join(
             self.mike_base_dir, MIKE_STUDIES_DIR_NAME)
-        self.mike_input_dir = os.path.join(self.mike_studies_dir, MIKE_STUDY_NAME, MIKE_MODEL_INPUTS)
-        self.mike_output_dir = os.path.join(self.mike_studies_dir, MIKE_STUDY_NAME, MIKE_MODEL_OUTPUTS)
+        self.mike_input_dir = os.path.join(self.mike_studies_dir, MIKE_PROJECT_NAME, MIKE_MODEL_INPUTS)
+        self.mike_output_dir = os.path.join(self.mike_studies_dir, MIKE_PROJECT_NAME, MIKE_MODEL_OUTPUTS)
 
         # Dealing with the relative paths stuff in Mike's model
         self.mike_project_name = MIKE_PROJECT_NAME
