@@ -42,7 +42,6 @@
                             ticks: {
                                 fontColor: "white",
                                 fontSize: 18,
-                                stepSize: 1,
                                 beginAtZero: true
                             }
                         }],
@@ -50,7 +49,6 @@
                             ticks: {
                                 fontColor: "white",
                                 fontSize: 12,
-                                stepSize: 1,
                                 beginAtZero: true
                             }
                         }]

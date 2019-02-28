@@ -114,20 +114,23 @@ class Parameters:
 
     def create_luomi_objects(self):
         self.model_network = Luomi_Network(self.network_name)
+
         # Need to add participants into model
         participants_string = self.ui_participants.get_participants_as_string()
         self.model_network.add_participants_from_string(self.data_dir, participants_string)
+
         # Create a central battery from the ui_central_battery.
         self.model_central_battery = Luomi_Central_Battery(**self.ui_central_battery.get_params_dict())
         # Add the central battery to the network
         self.model_network.add_central_battery(self.model_central_battery)
         tariffs_dict = self.ui_tariffs.get_tariffs_dict()
+
         # print(tariffs_dict)
         self.model_tariffs = Luomi_Tariffs(**tariffs_dict)
 
         # TODO Remove these/come up with a new system later
         start = datetime.datetime(year=2017, month=2, day=26, hour=10)
-        end = datetime.datetime(year=2017, month=2, day=26, hour=14)
+        end = datetime.datetime(year=2017, month=2, day=26, hour=12)
 
         self.time_periods = util.generate_dates_in_range(start, end, 30)
 
@@ -146,7 +149,7 @@ class Parameters:
 
     def run(self, status):
         if self.model_type == 'mike':
-            self.run_mike_model(status)
+            return self.run_mike_model(status)
         else:
             return self.run_luomi_model(status)
 
@@ -158,7 +161,7 @@ class Parameters:
         financial_sim.simulate(self.time_periods, self.model_network, self.model_tariffs, self.model_results, status)
         self.model_results.to_csv(self.luomi_output_dir, info_tag=bc)
 
-        parsed_results = self.ui_results_parser.temp_parser(bc)
+        parsed_results = self.ui_results_parser.luomi_temp_parser(bc)
 
         return parsed_results
 
@@ -166,4 +169,7 @@ class Parameters:
         status("Attempting Mike Model")
         if self.mike_model:
             self.mike_model.run()
+
+        parsed_results = self.ui_results_parser.mike_temp_parser()
         status("Mike Model Complete - See Folder")
+        return parsed_results
