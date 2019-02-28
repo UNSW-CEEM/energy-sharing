@@ -54,11 +54,11 @@ class CentralBattery:
 
     def set_capacity(self, value):
         if value is not '':
-            self.capacity = value
+            self.capacity = float(value)
 
     def set_cycle_efficiency(self, value):
         if value is not '':
-            self.cycle_efficiency = value
+            self.cycle_efficiency = float(value)
 
     def set_dispatch_algorithm(self, value):
         if value is not '':
@@ -66,4 +66,4 @@ class CentralBattery:
 
     def set_max_discharge(self, value):
         if value is not '':
-            self.max_discharge = value
+            self.max_discharge = float(value)

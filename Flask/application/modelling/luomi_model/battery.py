@@ -26,6 +26,7 @@ class Battery:
     def get_num_cycles(self):
         return self.num_cycles
 
+
 class Central_Battery(Battery):
     def __init__(self, cap_kWh, cap_kW, cycle_eff, ui_battery_discharge_windows_path):
         Battery.__init__(self, cap_kWh, cap_kW, cycle_eff)
