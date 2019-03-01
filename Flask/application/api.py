@@ -7,7 +7,6 @@ from .modelling.ui_interfaces.parameters import Parameters as Ui_Parameters
 
 file_service = file_service.OSFileService()
 
-
 async_mode = None
 
 app = Flask(__name__)
@@ -31,7 +30,7 @@ def index():
 # http://flask.pocoo.org/docs/0.12/patterns/fileuploads/
 
 
-@app.route('/upload', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/upload/solar_data', methods=['GET', 'POST', 'OPTIONS'])
 @cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
 def upload_file():
     if request.method == 'POST':
@@ -42,22 +41,13 @@ def upload_file():
         # submit a empty part without filename
         if new_file.filename == '':
             print("No file selected.")
+
         if new_file and file_service.valid_file(new_file.filename):
-            # filename = secure_filename(file.filename)
-            file_service.save(new_file)
+            file_service.save(new_file, "solar_data")
             return "<h1>Upload Success: "+new_file.filename+"</h1>"
-            
-            # return redirect( url_for('uploaded_file',  filename=filename))
+
     else:
-        return '''
-        <!doctype html>
-        <title>Upload new File</title>
-        <h1>Upload new File</h1>
-        <form method=post enctype=multipart/form-data>
-        <p><input type=file name=file>
-            <input type=submit value=Upload>
-        </form>
-        '''
+        return ''''''
 
 
 @socketio.on('upload_test')

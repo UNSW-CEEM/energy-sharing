@@ -1,10 +1,10 @@
 
 <template>
     <div class="main-container">
-        <h1 id="example-title" class="example-title">Simple Example</h1>
-            <div class="upload">
+        <div class="solar-container">
+            <h1 id="solar-title" class="solar-title">Solar Files</h1>
             <ul>
-                <li v-for="(file, index) in files" :key="file.id">
+                <li v-for="(file, index) in solar_files" :key="file.id">
                     <span>{{file.name}}</span> -
                     <span>{{file.size | formatSize}}</span> -
                     <span v-if="file.error">{{file.error}}</span>
@@ -14,29 +14,31 @@
                     <span v-else></span>
                 </li>
             </ul>
-            <div class="example-btn">
+            <div>
                 <file-upload
-                    class="btn btn-primary"
-                    post-action="/upload/post"
-                    extensions="gif,jpg,jpeg,png,webp"
-                    accept="image/png,image/gif,image/jpeg,image/webp"
+                    class="file-upload-override"
+                    post-action="http://localhost:5000/upload/solar_data"
+                    extensions="gif,jpg,jpeg,png,webp, csv"
+                    accept="image/png,image/gif,image/jpeg,image/webp, text/csv"
                     :multiple="true"
                     :size="1024 * 1024 * 10"
-                    v-model="files"
+                    v-model="solar_files"
                     @input-filter="inputFilter"
                     @input-file="inputFile"
                     ref="upload">
-                    <i class="fa fa-plus"></i>
-                    Select files
+                    <button>Select files</button>
                 </file-upload>
-                <button type="button" class="btn btn-success" v-if="!$refs.upload || !$refs.upload.active" @click.prevent="$refs.upload.active = true">
-                    <!--<i class="fa fa-arrow-up" aria-hidden="true"></i>-->
+                <button v-if="!$refs.upload || !$refs.upload.active" @click.prevent="$refs.upload.active = true">
                     Start Upload
                 </button>
-                <button type="button" class="btn btn-danger"  v-else @click.prevent="$refs.upload.active = false">
-                    <!--<i class="fa fa-stop" aria-hidden="true"></i>-->
+                <button v-else @click.prevent="$refs.upload.active = false">
                     Stop Upload
                 </button>
+            </div>
+            <div class="solar-files">
+                <ul>
+                    <li v-for="item in files_lists.solar_files_list">{{ item }}</li>
+                </ul>
             </div>
         </div>
     </div>
@@ -64,7 +66,7 @@
                     solar_files_list: [],
                     load_files_list: [],
                 },
-                files: [],
+                solar_files: [],
             }
         },
 
@@ -77,6 +79,7 @@
         },
 
         beforeDestroy() {
+
         },
 
         methods: {
@@ -119,6 +122,7 @@
                 }
                 if (newFile && oldFile) {
                     // update
+                    this.get_solar_files()
                     console.log('update', newFile)
                 }
                 if (!newFile && oldFile) {
@@ -130,7 +134,7 @@
 
         sockets: {
             connect: function() {
-                console.log("This client connected");
+                // console.log("This client connected");
                 this.is_connected = true;
             },
 
@@ -139,7 +143,7 @@
             },
 
             filesChannel: function(response) {
-                console.log("received response: ", response);
+                // console.log("received response: ", response);
                 this.is_connected = true;
                 this.files_lists[response.key] = response.data;
             },
@@ -150,7 +154,13 @@
 <style scoped>
     .main-container {
         display: flex;
-        justify-content: flex-start;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: start;
+    }
+
+    .file-upload-override {
+        color: white;
     }
 
     .list-container {
@@ -173,15 +183,6 @@
         animation-name: fade-in;
         animation-duration: 2s;
     }
-
-    .upload {
-
-    }
-
-    /*.example-simple label.btn {*/
-        /*margin-bottom: 0;*/
-        /*margin-right: 1rem;*/
-    /*}*/
 
     span {
         animation-name: fade-in;

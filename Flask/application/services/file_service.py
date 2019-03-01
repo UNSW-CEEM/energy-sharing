@@ -2,6 +2,8 @@ import os
 import csv
 import pandas as pd
 
+from ..modelling.ui_interfaces.folder_routes import FolderRoutes
+
 SHARED_SOLAR_LOCATION = os.path.realpath(os.path.join(
     'application', 'modelling', 'data', 'shared', 'solar'))
 SHARED_LOAD_LOCATION = os.path.realpath(os.path.join(
@@ -21,7 +23,7 @@ class FileService:
         pass
     
     # Given a file, saves it (internally)
-    def save(self, file):
+    def save(self, file, save_type):
         pass
 
     # Given a filename, retrieves a standard python file object.
@@ -31,6 +33,10 @@ class FileService:
 
 class OSFileService(FileService):
     def __init__(self):
+        self.fr = FolderRoutes()
+        # Experimental Code
+        self.solar_data_save_path = self.fr.get_route("solar_profiles_dir")
+        self.load_data_save_path = self.fr.get_route("load_profiles_dir")
 
         # Solar Path/Load Path
         self.solar_path = SHARED_SOLAR_LOCATION
@@ -51,18 +57,30 @@ class OSFileService(FileService):
             "model_financing": "financing_file_channel",
         }
 
-        self.solar_files = [f for f in os.listdir(self.solar_path) if os.path.isfile(os.path.join(self.solar_path, f))]
-        self.load_files = [f for f in os.listdir(self.load_path) if os.path.isfile(os.path.join(self.load_path, f))]
+        self.solar_files = []
+        self.load_files = []
+        self.p_config_files = []
+        self.update_files_lists()
+
+    def update_files_lists(self):
+        self.solar_files = [f for f in os.listdir(self.solar_data_save_path) if
+                            os.path.isfile(os.path.join(self.solar_path, f))]
+        self.load_files = [f for f in os.listdir(self.load_data_save_path) if
+                           os.path.isfile(os.path.join(self.load_path, f))]
         self.p_config_files = [f for f in os.listdir(self.p_config_path)
                                if os.path.isfile(os.path.join(self.p_config_path, f))]
 
     def valid_file(self, filename):
         return True
 
-    def save(self, file):
-        print("FILE_SERVICE: Saving", file)
-        file.save(os.path.join('uploads', file.filename))
-        print("Successfully saved")
+    def save(self, file, save_type):
+        if save_type == "solar_data":
+            file.save(os.path.join(self.solar_data_save_path, file.filename))
+
+        self.update_files_lists()
+        # print("FILE_SERVICE: Saving", file)
+        # file.save(os.path.join('uploads', file.filename))
+        # print("Successfully saved")
 
     def list_solar_files(self):
         return self.solar_files
