@@ -4,27 +4,10 @@
             <h1>{{ view_name }}</h1>
         </div>
 
-        <div class="run-test-button" @click="run_test_model()">
-            <span>Run Test Model</span>
-        </div>
-
         <div class="run-button" @click="run_model()">
             <span v-if="!results_received">Run Model</span>
             <span v-if="results_received">Run Model</span>
         </div>
-        <!-- <div class="left-graph">
-            <LineChart
-                v-if="chart_one_loaded"
-                :chartdata="chart_one_data"
-                :options="chart_one_options"/>
-        </div> -->
-        <!-- <div class="graph">
-            <BarChart
-                
-                v-if="chart_two_loaded"
-                :chartData="chart_two_data"
-                :options="chart_two_options"/>
-        </div> -->
     </div>
 </template>
 
@@ -100,11 +83,6 @@
                 this.$router.push('results');
             },
 
-            run_test_model() {
-                let params = this.$store.state.model_parameters;
-                this.$socket.emit('run_model', params);
-            },
-
             parse_energy_flows(data) {
                 console.log(data)
             },
@@ -142,7 +120,6 @@
 
 <style scoped>
     .graphs {
-        /* background: darkslategrey; */
         display: flex;
         flex-direction:column;
         justify-content:space-between;
@@ -151,7 +128,6 @@
     }
 
     .graph-heading {
-        /* background: slateblue; */
         grid-column-start: 1;
         grid-column-end: 3;
     }
