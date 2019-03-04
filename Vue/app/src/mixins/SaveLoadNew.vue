@@ -40,12 +40,6 @@
 
             },
 
-            send_to_model() {
-                let params = this.$store.state.frontend_state;
-                console.log("Params in new model parser function: ", params);
-
-
-            }
         },
 
         created() {
