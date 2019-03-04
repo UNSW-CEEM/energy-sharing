@@ -1,7 +1,7 @@
 <template>
     <div class="main-container">
         <h1>{{ view_name }}</h1>
-        <table>
+        <table class="financing-table">
             <tr>
                 <th
                     v-for="header in table_headers"
@@ -100,8 +100,8 @@
         },
 
         beforeDestroy() {
-            this.save_page()
-            this.save_page_server()
+            this.save_page();
+            this.save_page_server();
         },
 
         methods: {
@@ -186,12 +186,12 @@
         animation-duration: 2s;
     }
 
-    h1{
+    view-title {
         animation-name: fade-in;
         animation-duration: 2s;
     }
 
-    table{
+    .financing-table{
         animation-name: fade-in;
         animation-duration: 2s;
     }

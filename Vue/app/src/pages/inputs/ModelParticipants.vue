@@ -1,14 +1,14 @@
 <template>
-    <div>
-        <h1>{{ view_name }}</h1>
-        <div class="files-dd-container">
-            <h4>Solar File:</h4>
+    <div class="main-container">
+        <h1 class="view-title">{{ view_name }}</h1>
+        <div class="files-select-container">
+            <h4 class="solar-title">Solar File:</h4>
             <SimpleDropdown
                     v-model="selected_solar_file"
                     :onchange="get_solar_profiles(selected_solar_file)"
                     :my_options="solar_files_list"
                     :my_placeholder="'Select File'" />
-            <h4>Load File:</h4>
+            <h4 class="load-title">Load File:</h4>
             <SimpleDropdown
                     v-model="selected_load_file"
                     :onchange="get_load_profiles(selected_load_file)"
@@ -16,24 +16,19 @@
                     :my_placeholder="'Select File'"/>
         </div>
 
-        <table>
+        <table class="participants-table">
             <tr>
-                <th
-                    v-for="header in table_headers"
-                    :key="header.header_id"
-                    :value="header.name">{{ header.name }}</th>
+                <th v-for="header in table_headers" :key="header.header_id" :value="header.name">
+                    {{ header.name }}
+                </th>
             </tr>
             <tr>
-                <td
-                    v-for="header in table_headers"
-                    :key="header.header_id">{{ header.additional_text }}</td>
+                <td v-for="header in table_headers" :key="header.header_id">
+                    {{ header.additional_text }}
+                </td>
             </tr>
-            <tr
-                v-for="row in table_rows"
-                :key="row.row_id">
-                <td v-for="input in row.row_inputs"
-                :key="input.col_id"
-                >
+            <tr v-for="row in table_rows" :key="row.row_id">
+                <td v-for="input in row.row_inputs" :key="input.col_id">
                     <SimpleNumberInput
                             v-if="input.tag==='my_number'"
                             v-model="input.value"
@@ -44,15 +39,15 @@
                                     :my_placeholder="input.placeholder"/>
                 </td>
             </tr>
-            <button @click="add_row()">Add Participant</button>
         </table>
+
+        <button @click="add_row()">Add Participant</button>
 
         <div class="file-buttons-container">
             <button @click="load_participants_config(selected_config_file)">Load from user file</button>
             <button @click="save_config()">Save to user file</button>
             <button @click="load_participants_config('default_config.csv')">Load from default file</button>
         </div>
-
     </div>
 </template>
 
@@ -75,7 +70,7 @@
             return {
                 view_name: this.$options.name,
                 model_page_name:"model_participants",
-                is_connected: false,
+                // is_connected: false,
 
                 // Constants for now
                 selected_solar_file: '',
@@ -213,10 +208,10 @@
                 this.$socket.emit('get_load_files')
             },
 
-            load_profiles() {
-                this.get_solar_profiles(this.selected_solar_file);
-                this.get_load_profiles(this.selected_load_file);
-            },
+            // load_profiles() {
+            //     this.get_solar_profiles(this.selected_solar_file);
+            //     this.get_load_profiles(this.selected_load_file);
+            // },
 
             get_solar_profiles (filename) {
                 this.$socket.emit('get_solar_profiles', filename)
@@ -243,14 +238,12 @@
             },
 
             load_participants_config(file) {
-                // this.$socket.emit('load_participants_config', this.model_page_name, this.selected_config_file)
                 this.$socket.emit('load_participants_config', this.model_page_name, file)
             },
         },
 
         sockets: {
             filesChannel: function(response) {
-                this.is_connected = true;
                 if (response.key === 'solar_files_list') {
                     this.solar_files_list = response.data;
                 } else {
@@ -259,12 +252,10 @@
             },
 
             profilesChannel: function(response) {
-                this.is_connected = true;
                 this.my_options[response.key] = response.data;
             },
 
             participants_file_channel: function(response) {
-                this.is_connected = true;
                 this.table_rows = [];
 
                 this.selected_solar_file = response["data"][0]["row_inputs"]["selected_solar_file"];
@@ -291,36 +282,34 @@
 </script>
 
 <style scoped>
-    h1 {
+    .main-container {
         animation-name: fade-in;
         animation-duration: 2s;
     }
 
-    table {
-        animation-name: fade-in;
-        animation-duration: 2s;
+    .view-title {
+
+    }
+
+    .participants-table {
+
     }
 
     button {
-        animation-name: fade-in;
-        animation-duration: 2s;
+
     }
 
-    .files-dd-container {
+    .files-select-container {
         display: flex;
         flex-direction: row;
         width:50%;
         justify-content: space-evenly;
         align-items: center;
-        animation-name: fade-in;
-        animation-duration: 2s;
+
     }
 
     .file-buttons-container {
-        /*display: flex;*/
-        /*justify-content: space-around;*/
-        animation-name: fade-in;
-        animation-duration: 2s;
+
     }
 
 </style>

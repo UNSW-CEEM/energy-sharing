@@ -4,11 +4,8 @@
         <span class="input-line"
             v-for="input in input_data"
             :key="input.id">
-            
-            
             {{ input.display_text }}
 
-            
             <SimpleNumberInput
                 v-if="input.tag==='my_number'"
                 v-model="input.value"
@@ -18,8 +15,6 @@
                 v-model="input.value"
                 :my_options="my_options[input.dropdown_key]"
                 :my_placeholder="input.placeholder"/>
-            
-        
         </span>
     </div>
 </template>
@@ -87,8 +82,7 @@
         },
 
         beforeDestroy() {
-            this.save_page()
-            this.save_page_server()
+            this.save_page();
         },
 
         methods: {
@@ -100,39 +94,39 @@
                 this.$store.commit('save_page', payload)
             },
 
-            save_page_server() {
-                let data = [];
-                for(let i = 0; i < this.input_data.length; i++) {
-                    data.push({
-                        "name": this.input_data[i].name,
-                        "value": this.input_data[i].value
-                    })
-                }
-                let payload = {
-                    model_page_name: this.model_page_name,
-                    data: data,
-                };
-                this.$store.commit('save_server_page', payload)
-            }
+            // save_page_server() {
+            //     let data = [];
+            //     for(let i = 0; i < this.input_data.length; i++) {
+            //         data.push({
+            //             "name": this.input_data[i].name,
+            //             "value": this.input_data[i].value
+            //         })
+            //     }
+            //     let payload = {
+            //         model_page_name: this.model_page_name,
+            //         data: data,
+            //     };
+            //     this.$store.commit('save_server_page', payload)
+            // }
         }
     }
 </script>
 
 <style scoped>
-.input-line{
-    display:flex;
-    flex-direction: row;
-    justify-content:space-between;
-    align-items:center;
-    width: 20vw;
-    animation-name: fade-in;
-    animation-duration: 2s;
-}
+    .input-line {
+        display:flex;
+        flex-direction: row;
+        justify-content:space-between;
+        align-items:center;
+        width: 20vw;
+        animation-name: fade-in;
+        animation-duration: 2s;
+    }
 
-h1{
-    animation-name: fade-in;
-    animation-duration: 2s;
-}
+    h1 {
+        animation-name: fade-in;
+        animation-duration: 2s;
+    }
 
 
 </style>

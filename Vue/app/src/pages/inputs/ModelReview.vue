@@ -6,7 +6,7 @@
 
         <div class="run-button" @click="run_model()">
             <span v-if="!results_received">Run Model</span>
-            <span v-if="results_received">Rerun Model</span>
+            <span v-if="results_received">Run Model</span>
         </div>
     </div>
 </template>
@@ -16,10 +16,6 @@
     export default {
         name: "Review",
 
-        components: {
-
-        },
-
         data () {
             return {
                 view_name: this.$options.name,
@@ -27,7 +23,7 @@
             }
         },
 
-        
+
         sockets: {
 
         },

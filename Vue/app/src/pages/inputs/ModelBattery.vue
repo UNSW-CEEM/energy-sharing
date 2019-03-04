@@ -1,7 +1,7 @@
 <!--FOCUS ON ME AND MY COMPONENTS-->
 <template>
     <div>
-        <h1>{{ view_name }}</h1>
+        <h1 class="view-title">{{ view_name }}</h1>
         <span class="input-line"
             v-for="input in input_data"
             :key="input.id">{{ input.display_text }}
@@ -122,23 +122,23 @@
 
 <style scoped>
 
-.input-line{
-    width:30vw;
-    display:flex;
-    flex-direction:row;
-    justify-content:space-between;
-    align-items:center;
-    margin: 1vh 0 1vh 0;
-}
+    .input-line {
+        width:30vw;
+        display:flex;
+        flex-direction:row;
+        justify-content:space-between;
+        align-items:center;
+        margin: 1vh 0 1vh 0;
+    }
 
-h1{
-    animation-name: fade-in;
-    animation-duration: 2s;
-}
+    .view-title {
+        animation-name: fade-in;
+        animation-duration: 2s;
+    }
 
 
-span{
-    animation-name: fade-in;
-    animation-duration: 2s;
-}
+    .input-line {
+        animation-name: fade-in;
+        animation-duration: 2s;
+    }
 </style>

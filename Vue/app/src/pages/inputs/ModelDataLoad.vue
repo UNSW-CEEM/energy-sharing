@@ -5,7 +5,7 @@
             <ul>
                 <li v-for="(file, index) in load_files" :key="file.id">
                     <span>{{file.name}}</span> -
-                    <span>{{file.size | formatSize}}</span> -
+                    <span>{{file.size}}</span> -
                     <span v-if="file.error">{{file.error}}</span>
                     <span v-else-if="file.success">success</span>
                     <span v-else-if="file.active">active</span>
@@ -25,7 +25,7 @@
                     @input-filter="inputFilter"
                     @input-file="inputFile"
                     ref="upload">
-                    <button>Select files</button>
+                    <button class="load-file-button">Select files</button>
                 </file-upload>
                 <button v-if="!$refs.upload || !$refs.upload.active" @click.prevent="$refs.upload.active = true">
                     Start Upload
@@ -34,8 +34,8 @@
                     Stop Upload
                 </button>
             </div>
-            <div class="load-files">
-                <ul>
+            <div class="load-files-list-container">
+                <ul class="load-files-list">
                     <li v-for="item in files_lists.load_files_list">{{ item }}</li>
                 </ul>
             </div>
@@ -77,19 +77,7 @@
             this.get_load_files();
         },
 
-        beforeDestroy() {
-
-        },
-
         methods: {
-
-            add_solar_source() {
-                console.log("Implement Me");
-            },
-
-            add_load_source() {
-                console.log("Implement Me");
-            },
 
             get_solar_files() {
                 console.log("Getting solar files")
@@ -132,14 +120,6 @@
         },
 
         sockets: {
-            connect: function() {
-                this.is_connected = true;
-            },
-
-            disconnect: function() {
-                this.is_connected = false;
-            },
-
             filesChannel: function(response) {
                 this.is_connected = true;
                 this.files_lists[response.key] = response.data;
@@ -156,29 +136,25 @@
         align-items: start;
     }
 
-    .load_upload {
-        color: white;
+    .load-title {
+        width: 100%;
+        animation-name: fade-in;
+        animation-duration: 2s;
     }
 
-    .list-container {
+    .load-file-button {
+
+    }
+
+    .load-files-list-container {
         display: flex;
         justify-content: space-between;
         animation-name: fade-in;
         animation-duration: 2s;
     }
 
-    .solar-files {
-        width: 50%;
-    }
-
-    .load-files {
-        width: 50%;
-    }
-
-    .page-heading {
+    .load-files-list {
         width: 100%;
-        animation-name: fade-in;
-        animation-duration: 2s;
     }
 
     span {

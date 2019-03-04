@@ -5,7 +5,7 @@
             <ul>
                 <li v-for="(file, index) in solar_files" :key="file.id">
                     <span>{{file.name}}</span> -
-                    <span>{{file.size | formatSize}}</span> -
+                    <span>{{file.size}}</span> -
                     <span v-if="file.error">{{file.error}}</span>
                     <span v-else-if="file.success">success</span>
                     <span v-else-if="file.active">active</span>
@@ -25,7 +25,7 @@
                     @input-filter="inputFilter"
                     @input-file="inputFile"
                     ref="upload">
-                    <button class="solar_file_button">Select files</button>
+                    <button class="solar-file-button">Select files</button>
                 </file-upload>
                 <button v-if="!$refs.upload || !$refs.upload.active" @click.prevent="$refs.upload.active = true">
                     Start Upload
@@ -77,22 +77,9 @@
             this.get_load_files();
         },
 
-        beforeDestroy() {
-
-        },
-
         methods: {
 
-            add_solar_source() {
-                console.log("Implement Me");
-            },
-
-            add_load_source() {
-                console.log("Implement Me");
-            },
-
             get_solar_files() {
-                console.log("Getting solar files")
                 this.$socket.emit('get_solar_files')
             },
 
@@ -132,17 +119,7 @@
         },
 
         sockets: {
-            connect: function() {
-                // console.log("This client connected");
-                this.is_connected = true;
-            },
-
-            disconnect: function() {
-                this.is_connected = false;
-            },
-
             filesChannel: function(response) {
-                // console.log("received response: ", response);
                 this.is_connected = true;
                 this.files_lists[response.key] = response.data;
             },
@@ -162,7 +139,7 @@
 
     }
 
-    .solar_file_button {
+    .solar-file-button {
 
     }
 
@@ -174,7 +151,7 @@
     }
 
     .solar-files-list {
-        width: 50%;
+        width: 100%;
     }
 
     span {
