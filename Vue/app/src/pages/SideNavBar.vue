@@ -26,14 +26,14 @@
                     },
                     {
                         id: 1,
-                        text: 'Solar Upload',
+                        text: 'Load Upload',
                         page: '/data_load',
                         storage_key: "load_data",
                         icon:"table"
                     },
                     {
                         id: 2,
-                        text: 'Load Upload',
+                        text: 'Solar Upload',
                         page: '/data_solar',
                         storage_key: "data_solar",
                         icon:"table"

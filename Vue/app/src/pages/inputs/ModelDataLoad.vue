@@ -5,7 +5,6 @@
 </template>
 
 <script>
-    import SolarUpload from '@/components/SolarUpload.vue';
     import LoadUpload from '@/components/LoadUpload.vue';
 
     export default {
@@ -18,7 +17,7 @@
             return {
                 view_name: this.$options.name,
                 model_page_name: "model_data",
-                solar_files: [],
+                load_files: [],
             }
         },
 

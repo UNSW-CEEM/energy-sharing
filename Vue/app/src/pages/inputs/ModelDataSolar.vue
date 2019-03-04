@@ -6,13 +6,11 @@
 
 <script>
     import SolarUpload from '@/components/SolarUpload.vue';
-    import LoadUpload from '@/components/LoadUpload.vue';
 
     export default {
         name: "Data",
         components: {
             SolarUpload,
-            LoadUpload
         },
 
         data () {
