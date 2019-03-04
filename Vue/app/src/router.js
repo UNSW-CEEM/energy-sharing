@@ -66,7 +66,7 @@ export default new Router({
         {
             path: '/participants',
             name: 'participants',
-            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelParticipantsRefactor.vue')
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelParticipants.vue')
         },
         {
             path: '/review',
