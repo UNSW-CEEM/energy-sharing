@@ -35,13 +35,25 @@
 
         methods: {
             run_model() {
-                this.parse_tables();
+                this.parse_simple_pages();
+                this.parse_all_table_pages();
 
                 this.$socket.emit('run_model', this.parsed_parameters);
                 this.$router.push('results');
             },
 
-            parse_tables() {
+            parse_simple_pages() {
+                let select_data = this.$store.state.frontend_state["model_selection"];
+                if (select_data ) { this.parsed_parameters["model_selection"] = select_data}
+
+                let battery_data = this.$store.state.frontend_state["model_battery"];
+                if (battery_data) { this.parsed_parameters["model_battery"] = battery_data }
+
+                let solar_data = this.$store.state.frontend_state["model_solar"];
+                if (solar_data) { this.parsed_parameters["model_solar"] = solar_data }
+            },
+
+            parse_all_table_pages() {
                 let f_data = this.$store.state.frontend_state["model_financing"];
                 if (f_data) { this.parse_table_page(f_data, "model_financing") }
 
