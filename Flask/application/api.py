@@ -102,13 +102,13 @@ def get_load_files():
 @socketio.on('get_solar_profiles')
 def get_solar_profiles(filename):
     data = file_service.list_solar_profiles(filename)
-    emit('profilesChannel', {"key": "solar_profiles_list", "data": data})
+    emit('profilesChannel', {"key": "solar_profiles_options", "data": data})
 
 
 @socketio.on('get_load_profiles')
 def get_solar_profiles(filename):
     data = file_service.list_load_profiles(filename)
-    emit('profilesChannel', {"key": "load_profiles_list", "data": data})
+    emit('profilesChannel', {"key": "load_profiles_options", "data": data})
 
 
 @socketio.on('save_config')

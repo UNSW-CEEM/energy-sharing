@@ -1,21 +1,16 @@
 <template>
     <div class="main-chart-container">
-        <div class="chart-menu">
-            <router-link
-                class="my-route-button"
-                v-for="chart in chart_boxes"
-                v-bind:key="route.id"
-                :to="`${route.page}`"
-            > {{ chart.chart_type }} </router-link>
+        <div class="chart-nav-container">
+            <button
+                    class="chart-button"
+                    v-for="chart in chart_boxes"
+                    v-model="selected_chart"
+                    v-on:click="select_chart(chart)"
+                    v-bind:class="{selected_button: is_selected(chart)}">{{ chart.link_text }}
+            </button>
         </div>
 
-        <select v-model="selected_chart">
-            <option v-for="chart in chart_boxes" :value="chart"> {{chart.chart_type}} </option>
-        </select>
-        <div class="sub-chart-container"
-             v-if="selected_chart"
-             :style="selected_chart.position_styling"
-        >
+        <div class="sub-chart-container" v-if="selected_chart">
             <TPB
                 v-if="selected_chart.chart_type==='TPB' && chart_data"
                 :chart_data="chart_data"
@@ -28,9 +23,16 @@
                 v-if="selected_chart.chart_type==='RevRCC' && chart_data"
                 :chart_data="chart_data"
             />
-            <EnergyCC/>
-            <EnergyGenCon/>
+            <EnergyCC
+                v-if="selected_chart.chart_type==='EnergyCC' && chart_data"
+                :chart_data="chart_data"
+            />
+            <EnergyGenCon
+                v-if="selected_chart.chart_type==='EnergyGenCon' && chart_data"
+                :chart_data="chart_data"
+            />
         </div>
+
     </div>
 </template>
 
@@ -50,36 +52,52 @@
             return  {
                 chart_data: false,
                 selected_chart: false,
-
-                routes: [],
-
                 chart_boxes: [
                     {
                         id: 0,
+                        link_text: "Revenue - RCC",
                         chart_type: 'RevRCC',
-                        position_styling: {
-                            'grid-column-start': 1,
-                            'grid-column-end': 3,
-                            'grid-row-start': 1,
-                            'grid-row-end': 4,
-                        }
                     },
                     {
                         id: 1,
+                        link_text: "Revenue - Participant",
                         chart_type: 'RevParticipant',
-                        position_styling: {
-                            'grid-column-start': 3,
-                            'grid-column-end': 5,
-                            'grid-row-start': 1,
-                            'grid-row-end': 4,
-                        }
-                    }
+                    },
+                    {
+                        id: 2,
+                        link_text: "Revenue - Total Participant",
+                        chart_type: 'TPB',
+                    },
+                    {
+                        id: 3,
+                        link_text: "Energy - Central",
+                        chart_type: 'EnergyCC',
+                    },
+                    {
+                        id: 4,
+                        link_text: "Energy - Generated/Consumed",
+                        chart_type: 'EnergyGenCon',
+                    },
                 ],
+            }
+        },
+
+        methods: {
+            select_chart(chart) {
+                this.selected_chart = chart;
+            },
+
+            is_selected(chart) {
+                if (this.selected_chart===chart) {
+                    return true;
+                }
+                return false;
             }
         },
 
         sockets: {
             chart_results_channel: function (response) {
+                this.select_chart(this.chart_boxes[0]);
                 this.chart_data = response.data;
             }
         }
@@ -89,19 +107,35 @@
 <style scoped>
 
     .main-chart-container {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        grid-template-rows: repeat(3, 1fr);
-        grid-column-gap: 20px;
-        grid-row-gap: 20px;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+    }
+
+    .chart-nav-container {
+        width: 100%;
+        height: 5%;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: row;
+        background-color:#2F3136;
+    }
+
+    .chart-button {
+        width: 15%;
+    }
+
+    .selected_button {
+        background-color: #42464D;
+        color: white;
     }
 
     .sub-chart-container {
         display: flex;
-        flex-direction: column;
-        justify-content: center;
         width: 100%;
-        height: 100%;
+        height: 95%;
     }
 
 </style>

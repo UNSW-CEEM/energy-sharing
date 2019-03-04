@@ -1,20 +1,24 @@
 <template>
-    <div class="graphs">
-        <div class="graph-heading">
-            <h1>{{ view_name }}</h1>
-        </div>
+    <div class="background">
+        <div class="main-container">
+            <div class="model-title">
+                <h1>{{ view_name }}</h1>
+            </div>
 
-        <div class="run-button" @click="run_model()">
-            <span v-if="!results_received">Run Model</span>
-            <span v-if="results_received">Run Model</span>
+            <div class="run-button" @click="run_model()">
+                <span v-if="!results_received">Run Model</span>
+                <span v-if="results_received">Run Model</span>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+    import SaveLoad from '@/mixins/SaveLoadNew.vue';
 
     export default {
         name: "Review",
+        mixins: [SaveLoad],
 
         data () {
             return {
@@ -23,16 +27,17 @@
             }
         },
 
-
         sockets: {
 
         },
+
         methods: {
             run_model() {
                 let params = this.$store.state.model_parameters;
                 this.$socket.emit('run_model', params);
-                // console.log(params);
                 this.$router.push('results');
+
+                this.send_to_model()
             },
         }
     }
@@ -40,16 +45,17 @@
 
 <style scoped>
 
-    .graphs {
+    .main-container {
         display: flex;
         flex-direction:column;
         justify-content:space-between;
-        align-items:center;
+        align-items: center;
+        animation-name: fade-in;
+        animation-duration: 2s;
     }
 
-    .graph-heading {
-        grid-column-start: 1;
-        grid-column-end: 3;
+    .model-title {
+
     }
 
     .run-button{

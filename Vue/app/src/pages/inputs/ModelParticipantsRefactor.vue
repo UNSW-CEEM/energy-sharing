@@ -1,19 +1,20 @@
 <template>
     <div class="main-container">
-        <h1 class="view-title">{{ view_name }}</h1>
+        <h1 class="view-title">{{ view_name + "_TEST"}}</h1>
         <div class="files-select-container">
-            <h4 class="solar-title">Solar File:</h4>
-            <SimpleDropdown
-                    v-model="input_data.selected_solar_file"
-                    :onchange="get_solar_profiles(input_data.selected_solar_file)"
-                    :my_options="input_data.solar_files_list"
-                    :my_placeholder="'Select File'" />
             <h4 class="load-title">Load File:</h4>
             <SimpleDropdown
                     v-model="input_data.selected_load_file"
-                    :onchange="get_load_profiles(input_data.selected_load_file)"
+                    v-on:input="get_load_profiles(input_data.selected_load_file)"
                     :my_options="input_data.load_files_list"
                     :my_placeholder="'Select File'"/>
+
+            <h4 class="solar-title">Solar File:</h4>
+            <SimpleDropdown
+                    v-model="input_data.selected_solar_file"
+                    v-on:input="get_solar_profiles(input_data.selected_solar_file)"
+                    :my_options="input_data.solar_files_list"
+                    :my_placeholder="'Select File'" />
         </div>
 
         <table class="participants-table">
@@ -80,8 +81,6 @@
 
                     solar_files_list: [],
                     load_files_list: [],
-                    solar_profiles_list: [],
-                    load_profiles_list: [],
 
                     table_rows: [],
 
@@ -104,6 +103,9 @@
                             "Tesla PowerWall",
                             "RedFlow",
                         ],
+
+                        solar_profiles_options: [],
+                        load_profiles_options: [],
                     },
 
                 },
@@ -117,9 +119,6 @@
                     {id: 5, name: "Solar Scaling", additional_text:"Input Number"},
                     {id: 6, name: "Battery", additional_text:"Select One"},
                 ],
-
-
-                // Constants for now
 
             }
         },
@@ -169,7 +168,7 @@
                             name: "load_profile",
                             tag: "my_dropdown",
                             value:load_profile,
-                            dropdown_key:"load_profiles_list",
+                            dropdown_key:"load_profiles_options",
                             placeholder:"Select One",
                         },
                         {
@@ -177,7 +176,7 @@
                             name: "solar_profile",
                             tag: "my_dropdown",
                             value:solar_profile,
-                            dropdown_key:"solar_profiles_list",
+                            dropdown_key:"solar_profiles_options",
                             placeholder:"Select One",
                         },
                         {
@@ -210,7 +209,6 @@
             },
 
             get_solar_profiles (filename) {
-                // console.log("Called");
                 this.$socket.emit('get_solar_profiles', filename)
             },
 
@@ -219,19 +217,7 @@
             },
 
             save_config() {
-                let table_data = this.combine_table_data();
-
-                let payload = {
-                    model_page_name: this.model_page_name,
-                    data: table_data,
-                };
-
-                let additional_headers = {
-                    "selected_solar_file": this.selected_solar_file,
-                    "selected_load_file": this.selected_load_file
-                };
-
-                this.$socket.emit('save_config', this.model_page_name, this.selected_config_file, payload, additional_headers)
+                console.log("Re-implement Me");
             },
 
             load_participants_config(file) {
@@ -241,7 +227,7 @@
 
         sockets: {
             filesChannel: function(response) {
-                if (response.key === 'solar_files_list') {
+                 if (response.key === 'solar_files_list') {
                     this.input_data.solar_files_list = response.data;
                 } else {
                     this.input_data.load_files_list = response.data;
@@ -249,24 +235,16 @@
             },
 
             profilesChannel: function(response) {
-                console.log(response);
-                // if (response.key === "solar_profiles_list") {
-                //     this.input_data.solar_profiles_list = response.data;
-                // } else {
-                //     console.log("Set the stupid profiles")
-                //     this.input_data.load_profiles_list = response.data;
-                // }
                 this.input_data.my_options[response.key] = response.data;
             },
 
             participants_file_channel: function(response) {
                 this.input_data.table_rows = [];
-
                 this.input_data.selected_solar_file = response["data"][0]["row_inputs"]["selected_solar_file"];
                 this.input_data.selected_load_file = response["data"][0]["row_inputs"]["selected_load_file"];
 
-                this.my_options["solar_profiles_list"] = response["solar_profiles_list"];
-                this.my_options["load_profiles_list"] = response["load_profiles_list"];
+                this.input_data.my_options["solar_profiles_options"] = response["solar_profiles_options"];
+                this.input_data.my_options["load_profiles_options"] = response["load_profiles_options"];
 
                 for (let i = 0; i < response["data"].length; i++) {
                     let data = response["data"][i]["row_inputs"];

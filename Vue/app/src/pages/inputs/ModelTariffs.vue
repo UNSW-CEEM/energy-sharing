@@ -9,22 +9,18 @@
                     :value="header.name">{{ header.name }}</th>
             </tr>
             <tr>
-                <td
-                    v-for="header in table_headers"
-                    :key="header.header_id">{{ header.additional_text }}</td>
+                <td v-for="header in table_headers" :key="header.header_id">
+                    {{ header.additional_text }}
+                </td>
             </tr>
-            <tr
-                v-for="row in table_rows"
-                :key="row.row_id">
-                <td v-for="input in row.row_inputs"
-                :key="input.col_id"
-                >
-                    <!-- If a simple input use this component.-->
+            <tr v-for="row in table_rows" :key="row.row_id">
+                <td v-for="input in row.row_inputs" :key="input.col_id">
+
                     <SimpleNumberInput
                             v-if="input.tag==='my_number'"
                             v-model="input.value"
                             :my_placeholder="input.placeholder"/>
-                    <!-- If a dropdown use this component.-->
+
                     <SimpleDropdown v-else-if="input.tag==='my_dropdown'"
                                     v-model="input.value"
                                     :my_options="my_options[input.dropdown_key]"
@@ -72,7 +68,9 @@
                     {header_id: 4, name: "Shoulder", additional_text:"$/kWh"},
                     {header_id: 5, name: "Off-Peak", additional_text:"$/kWh"},
                 ],
+
                 table_rows: [],
+
                 my_options:{
                      tariff_type_options: [
                         "Retail",

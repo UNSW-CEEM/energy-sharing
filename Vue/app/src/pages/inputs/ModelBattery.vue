@@ -1,28 +1,30 @@
-<!--FOCUS ON ME AND MY COMPONENTS-->
 <template>
-    <div>
-        <h1 class="view-title">{{ view_name }}</h1>
-        <span class="input-line"
-            v-for="input in input_data"
-            :key="input.id">{{ input.display_text }}
+    <div class="background">
+        <div class="main-container">
+            <h1 class="view-title">{{ view_name }}</h1>
+            <span class="input-line"
+                v-for="input in input_data"
+                :key="input.id">{{ input.display_text }}
 
-            <SimpleNumberInput
-                v-if="input.tag==='my_number'"
-                v-model="input.value"
-                :my_placeholder="input.placeholder"/>
+                <SimpleNumberInput
+                    v-if="input.tag==='my_number'"
+                    v-model="input.value"
+                    :my_placeholder="input.placeholder"/>
 
-            <SimpleDropdown v-else-if="input.tag==='my_dropdown'"
-                v-model="input.value"
-                :my_options="my_options[input.dropdown_key]"
-                :my_placeholder="input.placeholder"/>
-        
-        </span>
+                <SimpleDropdown v-else-if="input.tag==='my_dropdown'"
+                    v-model="input.value"
+                    :my_options="my_options[input.dropdown_key]"
+                    :my_placeholder="input.placeholder"/>
+
+            </span>
+        </div>
     </div>
 </template>
 
 <script>
     import SimpleNumberInput from '@/components/SimpleNumberInput.vue';
     import SimpleDropdown from '@/components/SimpleDropdown.vue';
+    import SaveLoad from '@/mixins/SaveLoadNew.vue';
 
     export default {
         name: "Central_Battery",
@@ -30,6 +32,8 @@
             SimpleDropdown,
             SimpleNumberInput,
         },
+
+        mixins: [SaveLoad],
 
         data () {
             return {
@@ -83,44 +87,25 @@
         },
 
         created() {
-            if (this.model_page_name in this.$store.state.frontend_state) {
-                this.input_data = this.$store.state.frontend_state[this.model_page_name]
-            }
+            this.load_page_simple();
         },
 
         beforeDestroy() {
-            this.save_page();
-            this.save_page_server();
+            this.save_page_simple();
         },
 
         methods: {
-            save_page() {
-                let payload = {
-                    model_page_name: this.model_page_name,
-                    data: this.input_data
-                };
-                this.$store.commit('save_page', payload)
-            },
 
-            save_page_server() {
-                let data = [];
-                for(var i = 0; i < this.input_data.length; i++) {
-                    data.push({
-                        "name": this.input_data[i].name,
-                        "value": this.input_data[i].value
-                    })
-                }
-                let payload = {
-                    model_page_name: this.model_page_name,
-                    data: data,
-                };
-                this.$store.commit('save_server_page', payload)
-            }
         },
     }
 </script>
 
 <style scoped>
+
+    .main-container {
+        animation-name: fade-in;
+        animation-duration: 2s;
+    }
 
     .input-line {
         width:30vw;
@@ -132,13 +117,10 @@
     }
 
     .view-title {
-        animation-name: fade-in;
-        animation-duration: 2s;
+
     }
 
-
     .input-line {
-        animation-name: fade-in;
-        animation-duration: 2s;
+
     }
 </style>

@@ -94,18 +94,20 @@ class OSFileService(FileService):
         return self.load_files
 
     def list_solar_profiles(self, solar_filename):
-
-        solar_profiles = list(pd.read_csv(os.path.join(self.solar_path, solar_filename)))
-        if solar_profiles[0] == 'timestamp':
-            solar_profiles.pop(0)
+        solar_profiles = ""
+        if solar_filename is not "":
+            solar_profiles = list(pd.read_csv(os.path.join(self.solar_path, solar_filename)))
+            if solar_profiles[0] == 'timestamp':
+                solar_profiles.pop(0)
 
         return solar_profiles
 
     def list_load_profiles(self, load_filename):
-
-        load_profiles = list(pd.read_csv(os.path.join(self.load_path, load_filename)))
-        if load_profiles[0] == 'timestamp':
-            load_profiles.pop(0)
+        load_profiles = ""
+        if load_filename is not "":
+            load_profiles = list(pd.read_csv(os.path.join(self.load_path, load_filename)))
+            if load_profiles[0] == 'timestamp':
+                load_profiles.pop(0)
 
         return load_profiles
 
@@ -157,13 +159,13 @@ class OSFileService(FileService):
         solar_filename = data[0]["row_inputs"]["selected_solar_file"]
         load_filename = data[0]["row_inputs"]["selected_load_file"]
 
-        solar_profiles_list = self.list_solar_profiles(solar_filename)
-        load_profiles_list = self.list_load_profiles(load_filename)
+        solar_profiles_options = self.list_solar_profiles(solar_filename)
+        load_profiles_options = self.list_load_profiles(load_filename)
 
         packaged_data = {
             "data": data,
-            "solar_profiles_list": solar_profiles_list,
-            "load_profiles_list": load_profiles_list
+            "solar_profiles_options": solar_profiles_options,
+            "load_profiles_options": load_profiles_options
         }
 
         return channel, packaged_data

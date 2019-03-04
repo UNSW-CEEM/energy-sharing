@@ -66,7 +66,7 @@ export default new Router({
         {
             path: '/participants',
             name: 'participants',
-            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelParticipants.vue')
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelParticipantsRefactor.vue')
         },
         {
             path: '/review',
@@ -76,7 +76,7 @@ export default new Router({
         {
             path: '/results',
             name: 'results',
-            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelResults_Menu.vue')
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelResults.vue')
         },
         {
             path: '/tariffs',
