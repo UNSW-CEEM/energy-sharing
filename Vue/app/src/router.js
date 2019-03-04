@@ -29,9 +29,14 @@ export default new Router({
             component: Contact
         },
         {
-            path: '/data',
-            name: 'data',
-            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelDataNew.vue')
+            path: '/data_load',
+            name: 'data_load',
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelDataLoad.vue')
+        },
+        {
+            path: '/data_solar',
+            name: 'data_solar',
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelDataSolar.vue')
         },
         {
             path: '/inputs',

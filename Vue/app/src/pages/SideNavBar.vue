@@ -26,50 +26,57 @@
                     },
                     {
                         id: 1,
-                        text: 'Data',
-                        page: '/data',
-                        storage_key: "data",
+                        text: 'Solar Upload',
+                        page: '/data_load',
+                        storage_key: "load_data",
                         icon:"table"
                     },
                     {
                         id: 2,
+                        text: 'Load Upload',
+                        page: '/data_solar',
+                        storage_key: "data_solar",
+                        icon:"table"
+                    },
+                    {
+                        id: 3,
                         text: 'Participants',
                         page: '/participants',
                         storage_key: "participants",
                         icon:"user"
                     },{
-                        id: 3,
+                        id: 4,
                         text: 'Tariffs',
                         page: '/tariffs',
                         storage_key: "tariffs",
                         icon:"exchange-alt"
                     },{
-                        id: 4,
+                        id: 5,
                         text: 'Central Solar',
                         page: '/central_solar',
                         storage_key: "central_solar",
                         icon:"solar-panel"
                     },{
-                        id: 5,
+                        id: 6,
                         text: 'Central Battery',
                         page: '/central_battery',
                         storage_key: "central_battery",
                         icon:"battery-full"
                     },{
-                        id: 6,
+                        id: 7,
                         text: 'Financing',
                         page: '/financing',
                         storage_key: "financing",
                         icon:"money-check-alt"
                     },{
-                        id: 7,
+                        id: 8,
                         text: 'Review',
                         page: 'review',
                         storage_key: "review",
                         icon:"search"
                     },
                     {
-                        id: 8,
+                        id: 9,
                         text: 'Results',
                         page: 'results',
                         storage_key: "review",
@@ -96,19 +103,14 @@
 
 
     .myButton {
-        /* background-color:#63b8ee; */
         border-radius:1px;
-        /* border:1px solid #3866a3; */
 
-        display:inline-block;
         cursor:pointer;
         color:grey;
         text-decoration:none;
         font-size:1.1em;
         padding:10px 10px;
-        /* width: 200px; */
         height: 10px;
-        /* width:100%; */
         
         display:flex;
         flex-direction:row;

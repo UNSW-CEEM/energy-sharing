@@ -77,15 +77,20 @@ class OSFileService(FileService):
         if save_type == "solar_data":
             file.save(os.path.join(self.solar_data_save_path, file.filename))
 
+        if save_type == "load_data":
+            file.save(os.path.join(self.load_data_save_path, file.filename))
+
         self.update_files_lists()
         # print("FILE_SERVICE: Saving", file)
         # file.save(os.path.join('uploads', file.filename))
         # print("Successfully saved")
 
     def list_solar_files(self):
+        self.update_files_lists()
         return self.solar_files
 
     def list_load_files(self):
+        self.update_files_lists()
         return self.load_files
 
     def list_solar_profiles(self, solar_filename):

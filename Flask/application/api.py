@@ -32,7 +32,7 @@ def index():
 
 @app.route('/upload/solar_data', methods=['GET', 'POST', 'OPTIONS'])
 @cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
-def upload_file():
+def upload_solar_file():
     if request.method == 'POST':
         # check if the post request has the file part
 
@@ -50,23 +50,24 @@ def upload_file():
         return ''''''
 
 
-@socketio.on('upload_test')
-def upload_test(data):
-    print("Received a file")
-    print(data)
+@app.route('/upload/load_data', methods=['GET', 'POST', 'OPTIONS'])
+@cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
+def upload_load_file():
+    if request.method == 'POST':
+        # check if the post request has the file part
 
+        new_file = request.files['file']
+        # if user does not select file, browser also
+        # submit a empty part without filename
+        if new_file.filename == '':
+            print("No file selected.")
 
-@socketio.on('message')
-def handle_message(message):
-    print('received message: ' + message)
+        if new_file and file_service.valid_file(new_file.filename):
+            file_service.save(new_file, "load_data")
+            return "<h1>Upload Success: "+new_file.filename+"</h1>"
 
-
-@socketio.on('pingServer')
-def handle_message(message):
-    response_message = "PONG! this is luke"
-    print('received message: ' + message)
-    emit('messageChannel', response_message)
-    print('Sent message', response_message)
+    else:
+        return ''''''
 
 
 @socketio.on('connect')

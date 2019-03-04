@@ -1,10 +1,9 @@
-
 <template>
     <div class="main-container">
-        <div class="solar-container">
-            <h1 id="solar-title" class="solar-title">Solar Files</h1>
+        <div class="load-container">
+            <h1 id="load-title" class="load-title">Load Files</h1>
             <ul>
-                <li v-for="(file, index) in solar_files" :key="file.id">
+                <li v-for="(file, index) in load_files" :key="file.id">
                     <span>{{file.name}}</span> -
                     <span>{{file.size | formatSize}}</span> -
                     <span v-if="file.error">{{file.error}}</span>
@@ -16,13 +15,13 @@
             </ul>
             <div>
                 <file-upload
-                    class="file-upload-override"
-                    post-action="http://localhost:5000/upload/solar_data"
+                    class="load_upload"
+                    post-action="http://localhost:5000/upload/load_data"
                     extensions="gif,jpg,jpeg,png,webp, csv"
                     accept="image/png,image/gif,image/jpeg,image/webp, text/csv"
                     :multiple="true"
                     :size="1024 * 1024 * 10"
-                    v-model="solar_files"
+                    v-model="load_files"
                     @input-filter="inputFilter"
                     @input-file="inputFile"
                     ref="upload">
@@ -35,9 +34,9 @@
                     Stop Upload
                 </button>
             </div>
-            <div class="solar-files">
+            <div class="load-files">
                 <ul>
-                    <li v-for="item in files_lists.solar_files_list">{{ item }}</li>
+                    <li v-for="item in files_lists.load_files_list">{{ item }}</li>
                 </ul>
             </div>
         </div>
@@ -59,14 +58,14 @@
         data () {
             return {
                 view_name: this.$options.name,
-                model_page_name: "model_data",
+                model_page_name: "LoadUpload",
                 is_connected: false,
 
                 files_lists: {
                     solar_files_list: [],
                     load_files_list: [],
                 },
-                solar_files: [],
+                load_files: [],
             }
         },
 
@@ -134,7 +133,6 @@
 
         sockets: {
             connect: function() {
-                // console.log("This client connected");
                 this.is_connected = true;
             },
 
@@ -143,7 +141,6 @@
             },
 
             filesChannel: function(response) {
-                // console.log("received response: ", response);
                 this.is_connected = true;
                 this.files_lists[response.key] = response.data;
             },
@@ -159,7 +156,7 @@
         align-items: start;
     }
 
-    .file-upload-override {
+    .load_upload {
         color: white;
     }
 
