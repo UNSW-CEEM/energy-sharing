@@ -4,40 +4,34 @@
             <h1>{{ view_name }}</h1>
             <table class="financing-table">
                 <tr>
-                    <th
-                        v-for="header in table_headers"
-                        :key="header.header_id"
-                        :value="header.name">{{ header.name }}</th>
+                    <th v-for="header in table_headers" :key="header.header_id" :value="header.name">
+                        {{ header.name }}
+                    </th>
                 </tr>
                 <tr>
-                    <td
-                        v-for="header in table_headers"
-                        :key="header.header_id">{{ header.additional_text }}</td>
+                    <td v-for="header in table_headers" :key="header.header_id">
+                        {{ header.additional_text }}
+                    </td>
                 </tr>
-                <tr
-                    v-for="row in table_rows"
-                    :key="row.row_id">
-                    <td v-for="input in row.row_inputs"
-                    :key="input.col_id"
-                    >
-                        <!-- If a simple input use this component.-->
+                <tr v-for="row in input_data.table_rows" :key="row.row_id">
+                    <td v-for="input in row.row_inputs" :key="input.col_id">
                         <SimpleNumberInput
                                 v-if="input.tag==='my_number'"
                                 v-model="input.value"
                                 :my_placeholder="input.placeholder"/>
-                        <!-- If a dropdown use this component.-->
                         <SimpleDropdown v-else-if="input.tag==='my_dropdown'"
                                         v-model="input.value"
-                                        :my_options="my_options[input.dropdown_key]"
+                                        :my_options="input_data.my_options[input.dropdown_key]"
                                         :my_placeholder="input.placeholder"/>
                     </td>
                 </tr>
-                <button @click="add_row()">Add Row</button>
             </table>
+            <button @click="add_row()">Add Row</button>
 
              <div class="file-buttons-container">
-                <button @click="load_config()">Load from config file</button>
-                <button @click="save_config()">Save to config file</button>
+                 <button @click="load_config(input_data.selected_config_file)">Load User Config</button>
+                 <button @click="save_config()">Save User Config</button>
+                 <button @click="load_config('default_config.csv')">Load Default</button>
             </div>
         </div>
     </div>
@@ -62,9 +56,22 @@
             return {
                 view_name: this.$options.name,
                 model_page_name: "model_financing",
-                is_connected: false,
 
-                selected_config_file: 'default_config.csv',
+                input_data: {
+                    selected_config_file: 'default_config.csv',
+
+                    table_rows: [],
+
+                    my_options: {
+                        who_pays: {
+                            option_one: "Retailer",
+                            option_two: "TNSP",
+                            option_three: "DNSP",
+                            option_four: "Scheme Operator",
+                            option_five: "Participants",
+                        }
+                    },
+                },
 
                 table_headers: [
                     {id: 0, name: "Component", additional_text:"Name"},
@@ -75,24 +82,12 @@
                     {id: 5, name: "OPEX", additional_text:"$"},
                     
                 ],
-
-                table_rows: [],
-
-                my_options: {
-                    who_pays: {
-                        option_one: "Retailer",
-                        option_two: "TNSP",
-                        option_three: "DNSP",
-                        option_four: "Scheme Operator",
-                        option_five: "Participants",
-                    }
-                },
             }
         },
 
         created() {
             if (this.model_page_name in this.$store.state.frontend_state) {
-                this.table_rows = this.$store.state.frontend_state[this.model_page_name]
+                this.input_data = this.$store.state.frontend_state[this.model_page_name]
             } else {
                 for (let i = 0; i< 1; i++) {
                     this.add_row()
@@ -101,13 +96,12 @@
         },
 
         beforeDestroy() {
-            this.save_page();
-            this.save_page_server();
+            this.save_page_simple();
         },
 
         methods: {
             add_row(component = "", capex = "", capex_payer = "", discount_rate = "", amortization = "", opex = "") {
-                let array_length = this.table_rows.length;
+                let array_length = this.input_data.table_rows.length;
                 let new_row = {
                     row_id: array_length,
                     row_inputs: [
@@ -158,13 +152,16 @@
                     ]
                 };
 
-                this.table_rows.push(new_row);
+                this.input_data.table_rows.push(new_row);
             },
+
+            load_config(filename) {
+                this.$socket.emit('load_config', this.model_page_name, filename)
+            }
         },
         sockets: {
             financing_file_channel: function(response) {
-                this.is_connected = true;
-                this.table_rows = [];
+                this.input_data.table_rows = [];
                 for (let i = 0; i < response.length; i++) {
                     let params = response[i]["row_inputs"];
                     this.add_row(

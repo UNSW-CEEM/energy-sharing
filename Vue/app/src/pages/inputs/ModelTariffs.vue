@@ -21,7 +21,7 @@
                             :my_placeholder="input.placeholder"/>
                         <SimpleDropdown v-else-if="input.tag==='my_dropdown'"
                             v-model="input.value"
-                            :my_options="my_options[input.dropdown_key]"
+                            :my_options="input_data.my_options[input.dropdown_key]"
                             :my_placeholder="input.placeholder"/>
                     </td>
                 </tr>
@@ -29,8 +29,8 @@
             <button @click="add_row()">Add Row</button>
 
             <div class="file-buttons-container">
-                <button @click="load_config(input_data.selected_config_file)">Load from config file</button>
-                <button @click="save_config()">Save to config file</button>
+                <button @click="load_config(input_data.selected_config_file)">Load User Config</button>
+                <button @click="save_config()">Save User Config</button>
                 <button @click="load_config('default_config.csv')">Load Default</button>
             </div>
 
@@ -73,8 +73,6 @@
                     }
                 },
 
-                selected_config_file: 'default_config.csv',
-
                 table_headers: [
                     {header_id: 0, name: "Tariff Type", additional_text:"Select"},
                     {header_id: 1, name: "Tariff Name", additional_text:"Label"},
@@ -83,17 +81,6 @@
                     {header_id: 4, name: "Shoulder", additional_text:"$/kWh"},
                     {header_id: 5, name: "Off-Peak", additional_text:"$/kWh"},
                 ],
-
-                table_rows: [],
-
-                my_options:{
-                     tariff_type_options: [
-                        "Retail",
-                        "TUOS",
-                        "DUOS",
-                        "NUOS",
-                    ],
-                }
             }
         },
 
@@ -166,13 +153,18 @@
             },
 
             load_config(filename) {
-                console.log("Loading from: ", filename);
                 this.$socket.emit('load_config', this.model_page_name, filename)
             },
 
             save_config() {
-                let payload = this.parse_table_page(this.input_data);
-                this.$socket.emit('save_config', this.model_page_name, this.selected_config_file, payload)
+                // this.save_page_simple();
+                // let created_data = this.create_config_file(this.model_page_name);
+                // let payload = {
+                //     model_page_name: this.model_page_name,
+                //     data: created_data,
+                // };
+                //
+                // this.$socket.emit('save_config', this.model_page_name, this.selected_config_file, payload)
             }
         },
 

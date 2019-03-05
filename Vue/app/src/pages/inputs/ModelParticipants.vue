@@ -46,8 +46,8 @@
             <button @click="add_row()">Add Participant</button>
 
             <div class="file-buttons-container">
-                <button @click="load_participants_config(input_data.selected_config_file)">Load from user file</button>
-                <button @click="save_config()">Save to user file</button>
+                <button @click="load_participants_config(input_data.selected_config_file)">Load User Config</button>
+                <button @click="save_config()">Save User Config</button>
                 <button @click="load_participants_config('default_config.csv')">Load from default file</button>
             </div>
         </div>

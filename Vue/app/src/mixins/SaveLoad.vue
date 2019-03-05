@@ -54,7 +54,6 @@
 
             parse_table_page(data) {
                 // console.log("Participants Params: ", data);
-
                 let parsed_data = [];
 
                 for (let i = 0; i < data.table_rows.length; i++) {
@@ -75,6 +74,27 @@
 
                 return parsed_data;
             },
+
+            // create_config_file(model_key) {
+            //     let data = this.$store.state.frontend_state[model_key];
+            //     console.log(data);
+            //     let parsed_data = [];
+            //
+            //     for (let i = 0; i < data.table_rows.length; i++) {
+            //         let row = this.table_rows[i].row_inputs;
+            //         let row_data = {};
+            //
+            //         for (let j = 0; j < row.length; j++) {
+            //             row_data[row[j].name] = row[j].value
+            //         }
+            //         data.push({
+            //             row_id: i,
+            //             row_inputs: row_data
+            //         })
+            //     }
+            //
+            //     return parsed_data
+            // },
         },
     }
 </script>
