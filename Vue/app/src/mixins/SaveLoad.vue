@@ -1,46 +1,64 @@
 <script>
     export default {
-        name: "SaveLoad",
+        name: "SaveLoadSimple",
 
         data () {
             return {
-
+                parsed_parameters: {},
             }
         },
 
         methods: {
-            save_page() {
+            save_page_simple() {
                 let payload = {
                     model_page_name: this.model_page_name,
-                    data: this.table_rows
+                    data: this.input_data
                 };
+
                 this.$store.commit('save_page', payload)
             },
 
-            combine_table_data() {
-                let data = [];
-
-                for (let i = 0; i < this.table_rows.length; i++) {
-                    let row = this.table_rows[i].row_inputs;
-                    let row_data = {};
-
-                    for (let j = 0; j < row.length; j++) {
-                        row_data[row[j].name] = row[j].value
-                    }
-                    data.push({
-                        row_id: i,
-                        row_inputs: row_data
-                    })
+            load_page_simple() {
+                if (this.model_page_name in this.$store.state.frontend_state) {
+                    this.input_data = this.$store.state.frontend_state[this.model_page_name]
                 }
-
-                return data
             },
 
-            save_page_server() {
-                let data = [];
+            parse_simple_pages() {
+                let select_data = this.$store.state.frontend_state["model_selection"];
+                if (select_data ) { this.parsed_parameters["model_selection"] = select_data}
 
-                for (let i = 0; i < this.table_rows.length; i++) {
-                    let row = this.table_rows[i].row_inputs;
+                let battery_data = this.$store.state.frontend_state["model_battery"];
+                if (battery_data) { this.parsed_parameters["model_battery"] = battery_data }
+
+                let solar_data = this.$store.state.frontend_state["model_solar"];
+                if (solar_data) { this.parsed_parameters["model_solar"] = solar_data }
+            },
+
+            parse_all_table_pages() {
+                let f_data = this.$store.state.frontend_state["model_financing"];
+                if (f_data) {
+                    this.parsed_parameters["model_financing"] = this.parse_table_page(f_data)
+                }
+
+                let p_data = this.$store.state.frontend_state["model_participants"];
+                if (p_data) {
+                    this.parsed_parameters["model_participants"] = this.parse_table_page(p_data)
+                }
+
+                let t_data = this.$store.state.frontend_state["model_tariffs"];
+                if (t_data) {
+                    this.parsed_parameters["model_tariffs"] = this.parse_table_page(t_data)
+                }
+            },
+
+            parse_table_page(data) {
+                // console.log("Participants Params: ", data);
+
+                let parsed_data = [];
+
+                for (let i = 0; i < data.table_rows.length; i++) {
+                    let row = data.table_rows[i].row_inputs;
                     let row_data = [];
 
                     for (let j = 0; j < row.length; j++) {
@@ -49,49 +67,14 @@
                             "value": row[j].value
                         })
                     }
-                    data.push({
+                    parsed_data.push({
                         row_id: i,
                         row_inputs: row_data
                     })
                 }
 
-                let payload = {
-                    model_page_name: this.model_page_name,
-                    data: data,
-                };
-                this.$store.commit('save_server_page', payload)
+                return parsed_data;
             },
-
-            load_config() {
-                console.log("Loading config (for now from default_config.csv)");
-                this.$socket.emit('load_config', this.model_page_name, this.selected_config_file)
-            },
-
-            save_config() {
-                let table_data = this.combine_table_data();
-
-                let payload = {
-                    model_page_name: this.model_page_name,
-                    data: table_data,
-                };
-
-                this.$socket.emit('save_config', this.model_page_name, this.selected_config_file, payload)
-            },
-        },
-
-        created() {
-            if (this.model_page_name in this.$store.state.frontend_state) {
-                this.table_rows = this.$store.state.frontend_state[this.model_page_name]
-            } else {
-                for (let i = 0; i< 1; i++) {
-                    this.add_row()
-                }
-            }
-        },
-
-        beforeDestroy() {
-            this.save_page();
-            this.save_page_server();
         },
     }
 </script>

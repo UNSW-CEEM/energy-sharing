@@ -1,53 +1,55 @@
 <template>
-    <div class="main-container">
-        <h1 class="view-title">{{ view_name + "_TEST"}}</h1>
-        <div class="files-select-container">
-            <h4 class="load-title">Load File:</h4>
-            <SimpleDropdown
-                    v-model="input_data.selected_load_file"
-                    v-on:input="get_load_profiles(input_data.selected_load_file)"
-                    :my_options="input_data.load_files_list"
-                    :my_placeholder="'Select File'"/>
+    <div class="background">
+        <div class="main-container">
+            <h1 class="view-title">{{ view_name}}</h1>
+            <div class="files-select-container">
+                <h4 class="load-title">Load File:</h4>
+                <SimpleDropdown
+                        v-model="input_data.selected_load_file"
+                        v-on:input="get_load_profiles(input_data.selected_load_file)"
+                        :my_options="input_data.load_files_list"
+                        :my_placeholder="'Select File'"/>
 
-            <h4 class="solar-title">Solar File:</h4>
-            <SimpleDropdown
-                    v-model="input_data.selected_solar_file"
-                    v-on:input="get_solar_profiles(input_data.selected_solar_file)"
-                    :my_options="input_data.solar_files_list"
-                    :my_placeholder="'Select File'" />
-        </div>
+                <h4 class="solar-title">Solar File:</h4>
+                <SimpleDropdown
+                        v-model="input_data.selected_solar_file"
+                        v-on:input="get_solar_profiles(input_data.selected_solar_file)"
+                        :my_options="input_data.solar_files_list"
+                        :my_placeholder="'Select File'" />
+            </div>
 
-        <table class="participants-table">
-            <tr>
-                <th v-for="header in table_headers" :key="header.header_id" :value="header.name">
-                    {{ header.name }}
-                </th>
-            </tr>
-            <tr>
-                <td v-for="header in table_headers" :key="header.header_id">
-                    {{ header.additional_text }}
-                </td>
-            </tr>
-            <tr v-for="row in input_data.table_rows" :key="row.row_id">
-                <td v-for="input in row.row_inputs" :key="input.col_id">
-                    <SimpleNumberInput
+            <table class="participants-table">
+                <tr>
+                    <th v-for="header in table_headers" :key="header.header_id" :value="header.name">
+                        {{ header.name }}
+                    </th>
+                </tr>
+                <tr>
+                    <td v-for="header in table_headers" :key="header.header_id">
+                        {{ header.additional_text }}
+                    </td>
+                </tr>
+                <tr v-for="row in input_data.table_rows" :key="row.row_id">
+                    <td v-for="input in row.row_inputs" :key="input.col_id">
+                        <SimpleNumberInput
                             v-if="input.tag==='my_number'"
                             v-model="input.value"
                             :my_placeholder="input.placeholder"/>
-                    <SimpleDropdown v-else-if="input.tag==='my_dropdown'"
-                                    v-model="input.value"
-                                    :my_options="input_data.my_options[input.dropdown_key]"
-                                    :my_placeholder="input.placeholder"/>
-                </td>
-            </tr>
-        </table>
+                        <SimpleDropdown v-else-if="input.tag==='my_dropdown'"
+                            v-model="input.value"
+                            :my_options="input_data.my_options[input.dropdown_key]"
+                            :my_placeholder="input.placeholder"/>
+                    </td>
+                </tr>
+            </table>
 
-        <button @click="add_row()">Add Participant</button>
+            <button @click="add_row()">Add Participant</button>
 
-        <div class="file-buttons-container">
-            <button @click="load_participants_config(input_data.selected_config_file)">Load from user file</button>
-            <button @click="save_config()">Save to user file</button>
-            <button @click="load_participants_config('default_config.csv')">Load from default file</button>
+            <div class="file-buttons-container">
+                <button @click="load_participants_config(input_data.selected_config_file)">Load from user file</button>
+                <button @click="save_config()">Save to user file</button>
+                <button @click="load_participants_config('default_config.csv')">Load from default file</button>
+            </div>
         </div>
     </div>
 </template>
@@ -55,7 +57,7 @@
 <script>
     import SimpleNumberInput from '@/components/SimpleNumberInput.vue';
     import SimpleDropdown from '@/components/SimpleDropdown.vue';
-    import SaveLoad from '@/mixins/SaveLoadNew.vue';
+    import SaveLoad from '@/mixins/SaveLoad.vue';
 
     export default {
         name: "Participants",
@@ -71,7 +73,6 @@
             return {
                 view_name: this.$options.name,
                 model_page_name:"model_participants",
-                // is_connected: false,
 
                 input_data: {
                     selected_solar_file: '',
@@ -131,6 +132,10 @@
             }
             this.get_solar_files();
             this.get_load_files();
+        },
+
+        beforeDestroy() {
+            this.save_page_simple();
         },
 
         methods: {
@@ -266,7 +271,7 @@
 <style scoped>
     .main-container {
         animation-name: fade-in;
-        animation-duration: 2s;
+        animation-duration: 1s;
     }
 
     .view-title {

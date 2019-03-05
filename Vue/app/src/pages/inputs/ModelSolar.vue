@@ -21,7 +21,7 @@
 <script>
     import SimpleNumberInput from '@/components/SimpleNumberInput.vue';
     import SimpleDropdown from '@/components/SimpleDropdown.vue';
-    import SaveLoad from '@/mixins/SaveLoadNew.vue';
+    import SaveLoad from '@/mixins/SaveLoad.vue';
 
     export default {
         name: "Central_Solar",
@@ -102,7 +102,7 @@
 
     .main-container {
         animation-name: fade-in;
-        animation-duration: 2s;
+        animation-duration: 1s;
     }
 
     .noBullets {

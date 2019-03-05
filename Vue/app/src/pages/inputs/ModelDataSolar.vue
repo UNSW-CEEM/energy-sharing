@@ -1,6 +1,6 @@
 <template>
-    <div class="main-container">
-        <div class="solar-container">
+    <div class="background">
+        <div class="main-container">
             <h1 id="solar-title" class="solar-title">Solar Files</h1>
             <ul>
                 <li v-for="(file, index) in solar_files" :key="file.id">
@@ -133,10 +133,12 @@
         flex-direction: row;
         justify-content: space-around;
         align-items: start;
+        animation-name: fade-in;
+        animation-duration: 1s;
     }
 
     .solar-title {
-
+        width: 100%;
     }
 
     .solar-file-button {
@@ -146,17 +148,10 @@
     .solar-files-list-container {
         display: flex;
         justify-content: space-between;
-        animation-name: fade-in;
-        animation-duration: 2s;
     }
 
     .solar-files-list {
         width: 100%;
-    }
-
-    span {
-        animation-name: fade-in;
-        animation-duration: 2s;
     }
 
 </style>

@@ -1,6 +1,6 @@
 <template>
-    <div class="main-container">
-        <div class="load-container">
+    <div class="background">
+        <div class="main-container">
             <h1 id="load-title" class="load-title">Load Files</h1>
             <ul>
                 <li v-for="(file, index) in load_files" :key="file.id">
@@ -80,7 +80,7 @@
         methods: {
 
             get_solar_files() {
-                console.log("Getting solar files")
+                console.log("Getting solar files");
                 this.$socket.emit('get_solar_files')
             },
 
@@ -134,12 +134,13 @@
         flex-direction: row;
         justify-content: space-around;
         align-items: start;
+        animation-name: fade-in;
+        animation-duration: 1s;
     }
 
     .load-title {
         width: 100%;
-        animation-name: fade-in;
-        animation-duration: 2s;
+
     }
 
     .load-file-button {
@@ -149,16 +150,9 @@
     .load-files-list-container {
         display: flex;
         justify-content: space-between;
-        animation-name: fade-in;
-        animation-duration: 2s;
     }
 
     .load-files-list {
         width: 100%;
-    }
-
-    span {
-        animation-name: fade-in;
-        animation-duration: 2s;
     }
 </style>

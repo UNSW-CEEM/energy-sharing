@@ -1,44 +1,45 @@
 <template>
-    <div class="main-container">
-        <h1>{{ view_name }}</h1>
-        <table class="financing-table">
-            <tr>
-                <th
-                    v-for="header in table_headers"
-                    :key="header.header_id"
-                    :value="header.name">{{ header.name }}</th>
-            </tr>
-            <tr>
-                <td
-                    v-for="header in table_headers"
-                    :key="header.header_id">{{ header.additional_text }}</td>
-            </tr>
-            <tr
-                v-for="row in table_rows"
-                :key="row.row_id">
-                <td v-for="input in row.row_inputs"
-                :key="input.col_id"
-                >
-                    <!-- If a simple input use this component.-->
-                    <SimpleNumberInput
-                            v-if="input.tag==='my_number'"
-                            v-model="input.value"
-                            :my_placeholder="input.placeholder"/>
-                    <!-- If a dropdown use this component.-->
-                    <SimpleDropdown v-else-if="input.tag==='my_dropdown'"
-                                    v-model="input.value"
-                                    :my_options="my_options[input.dropdown_key]"
-                                    :my_placeholder="input.placeholder"/>
-                </td>
-            </tr>
-            <button @click="add_row()">Add Row</button>
-        </table>
+    <div class="background">
+        <div class="main-container">
+            <h1>{{ view_name }}</h1>
+            <table class="financing-table">
+                <tr>
+                    <th
+                        v-for="header in table_headers"
+                        :key="header.header_id"
+                        :value="header.name">{{ header.name }}</th>
+                </tr>
+                <tr>
+                    <td
+                        v-for="header in table_headers"
+                        :key="header.header_id">{{ header.additional_text }}</td>
+                </tr>
+                <tr
+                    v-for="row in table_rows"
+                    :key="row.row_id">
+                    <td v-for="input in row.row_inputs"
+                    :key="input.col_id"
+                    >
+                        <!-- If a simple input use this component.-->
+                        <SimpleNumberInput
+                                v-if="input.tag==='my_number'"
+                                v-model="input.value"
+                                :my_placeholder="input.placeholder"/>
+                        <!-- If a dropdown use this component.-->
+                        <SimpleDropdown v-else-if="input.tag==='my_dropdown'"
+                                        v-model="input.value"
+                                        :my_options="my_options[input.dropdown_key]"
+                                        :my_placeholder="input.placeholder"/>
+                    </td>
+                </tr>
+                <button @click="add_row()">Add Row</button>
+            </table>
 
-         <div class="file-buttons-container">
-            <button @click="load_config()">Load from config file</button>
-            <button @click="save_config()">Save to config file</button>
+             <div class="file-buttons-container">
+                <button @click="load_config()">Load from config file</button>
+                <button @click="save_config()">Save to config file</button>
+            </div>
         </div>
-
     </div>
 </template>
 
@@ -181,19 +182,20 @@
 </script>
 
 <style scoped>
-    .file-buttons-container {
+    .main-container {
         animation-name: fade-in;
-        animation-duration: 2s;
+        animation-duration: 1s;
+    }
+    .file-buttons-container {
+
     }
 
     view-title {
-        animation-name: fade-in;
-        animation-duration: 2s;
+
     }
 
     .financing-table{
-        animation-name: fade-in;
-        animation-duration: 2s;
+
     }
 
 </style>

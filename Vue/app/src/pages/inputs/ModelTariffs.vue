@@ -1,40 +1,40 @@
 <template>
-    <div>
-        <h1>{{ view_name }}</h1>
-        <table>
-            <tr>
-                <th
-                    v-for="header in table_headers"
-                    :key="header.header_id"
-                    :value="header.name">{{ header.name }}</th>
-            </tr>
-            <tr>
-                <td v-for="header in table_headers" :key="header.header_id">
-                    {{ header.additional_text }}
-                </td>
-            </tr>
-            <tr v-for="row in table_rows" :key="row.row_id">
-                <td v-for="input in row.row_inputs" :key="input.col_id">
-
-                    <SimpleNumberInput
+    <div class="background">
+        <div class="main-container">
+            <h1 class="view-title">{{ view_name }}</h1>
+            <table class="tariffs-table">
+                <tr>
+                    <th v-for="header in table_headers" :key="header.header_id" :value="header.name">
+                        {{ header.name }}
+                    </th>
+                </tr>
+                <tr>
+                    <td v-for="header in table_headers" :key="header.header_id">
+                        {{ header.additional_text }}
+                    </td>
+                </tr>
+                <tr v-for="row in input_data.table_rows" :key="row.row_id">
+                    <td v-for="input in row.row_inputs" :key="input.col_id">
+                        <SimpleNumberInput
                             v-if="input.tag==='my_number'"
                             v-model="input.value"
                             :my_placeholder="input.placeholder"/>
-
-                    <SimpleDropdown v-else-if="input.tag==='my_dropdown'"
-                                    v-model="input.value"
-                                    :my_options="my_options[input.dropdown_key]"
-                                    :my_placeholder="input.placeholder"/>
-                </td>
-            </tr>
+                        <SimpleDropdown v-else-if="input.tag==='my_dropdown'"
+                            v-model="input.value"
+                            :my_options="my_options[input.dropdown_key]"
+                            :my_placeholder="input.placeholder"/>
+                    </td>
+                </tr>
+            </table>
             <button @click="add_row()">Add Row</button>
-        </table>
 
-        <div class="file-buttons-container">
-            <button @click="load_config()">Load from config file</button>
-            <button @click="save_config()">Save to config file</button>
+            <div class="file-buttons-container">
+                <button @click="load_config(input_data.selected_config_file)">Load from config file</button>
+                <button @click="save_config()">Save to config file</button>
+                <button @click="load_config('default_config.csv')">Load Default</button>
+            </div>
+
         </div>
-
     </div>
 </template>
 
@@ -57,6 +57,21 @@
             return {
                 view_name: this.$options.name,
                 model_page_name: "model_tariffs",
+
+                input_data: {
+                    selected_config_file: 'user_config.csv',
+
+                    table_rows: [],
+
+                    my_options: {
+                        tariff_type_options: [
+                            "Retail",
+                            "TUOS",
+                            "DUOS",
+                            "NUOS",
+                        ],
+                    }
+                },
 
                 selected_config_file: 'default_config.csv',
 
@@ -82,20 +97,28 @@
             }
         },
 
-        computed: {
+        beforeDestroy() {
+            this.save_page_simple();
+        },
 
+        created() {
+            if (this.model_page_name in this.$store.state.frontend_state) {
+                this.input_data = this.$store.state.frontend_state[this.model_page_name]
+            } else {
+                this.add_row()
+            }
         },
 
         methods: {
             add_row(tariff_type="", tariff_name="", fit_input="", peak_price="", shoulder_price="", off_peak_price="") {
 
-                let array_length = this.table_rows.length;
+                let array_length = this.input_data.table_rows.length;
                 let new_row = {
                     row_id: array_length,
                     row_inputs: [
                         {
                             col_id: 0,
-                            field_name:"Tariff Type",
+                            name:"tariff_type",
                             tag:"my_dropdown",
                             dropdown_key: "tariff_type_options",
                             value: tariff_type,
@@ -103,35 +126,35 @@
                         },
                         {
                             col_id: 1,
-                            field_name:"tariff_name",
+                            name:"tariff_name",
                             tag:"my_number",
                             value: tariff_name,
                             placeholder:"Name",
                         },
                         {
                             col_id: 2,
-                            field_name:"fit_input",
+                            name:"fit_input",
                             tag:"my_number",
                             value: fit_input,
                             placeholder:"$"
                         },
                         {
                             col_id: 3,
-                            field_name:"peak_price",
+                            name:"peak_price",
                             tag:"my_number",
                             value: peak_price,
                             placeholder:"$",
                         },
                         {
                             col_id: 4,
-                            field_name:"shoulder_price",
+                            name:"shoulder_price",
                             tag:"my_number",
                             value: shoulder_price,
                             placeholder:"$",
                         },
                         {
                             col_id: 5,
-                            field_name:"off_peak_price",
+                            name:"off_peak_price",
                             tag:"my_number",
                             value: off_peak_price,
                             placeholder:"$",
@@ -139,14 +162,25 @@
                     ]
                 };
 
-                this.table_rows.push(new_row);
+                this.input_data.table_rows.push(new_row);
             },
+
+            load_config(filename) {
+                console.log("Loading from: ", filename);
+                this.$socket.emit('load_config', this.model_page_name, filename)
+            },
+
+            save_config() {
+                let payload = this.parse_table_page(this.input_data);
+                this.$socket.emit('save_config', this.model_page_name, this.selected_config_file, payload)
+            }
         },
 
         sockets: {
             tariffs_file_channel: function(response) {
-                this.is_connected = true;
-                this.table_rows = [];
+                console.log("tariffs: ", response);
+
+                this.input_data.table_rows = [];
                 for (let i = 0; i < response.length; i++) {
                     let params = response[i]["row_inputs"];
                     this.add_row(
@@ -170,16 +204,16 @@
 
     .file-buttons-container {
         animation-name: fade-in;
-        animation-duration: 2s;
+        animation-duration: 1s;
     }
 
     h1 {
         animation-name: fade-in;
-        animation-duration: 2s;
+        animation-duration: 1s;
     }
 
     table {
         animation-name: fade-in;
-        animation-duration: 2s;
+        animation-duration: 1s;
     }
 </style>

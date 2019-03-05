@@ -14,7 +14,7 @@
 </template>
 
 <script>
-    import SaveLoad from '@/mixins/SaveLoadNew.vue';
+    import SaveLoad from '@/mixins/SaveLoad.vue';
 
     export default {
         name: "Review",
@@ -41,52 +41,6 @@
                 this.$socket.emit('run_model', this.parsed_parameters);
                 this.$router.push('results');
             },
-
-            parse_simple_pages() {
-                let select_data = this.$store.state.frontend_state["model_selection"];
-                if (select_data ) { this.parsed_parameters["model_selection"] = select_data}
-
-                let battery_data = this.$store.state.frontend_state["model_battery"];
-                if (battery_data) { this.parsed_parameters["model_battery"] = battery_data }
-
-                let solar_data = this.$store.state.frontend_state["model_solar"];
-                if (solar_data) { this.parsed_parameters["model_solar"] = solar_data }
-            },
-
-            parse_all_table_pages() {
-                let f_data = this.$store.state.frontend_state["model_financing"];
-                if (f_data) { this.parse_table_page(f_data, "model_financing") }
-
-                let p_data = this.$store.state.frontend_state["model_participants"];
-                if (p_data) { this.parse_table_page(p_data, "model_participants") }
-
-                let t_data = this.$store.state.frontend_state["model_tariffs"];
-                if (t_data) { this.parse_table_page(t_data, "model_tariffs") }
-            },
-
-            parse_table_page(data, model_page_name) {
-                // console.log("Participants Params: ", data);
-
-                let parsed_data = [];
-
-                for (let i = 0; i < data.table_rows.length; i++) {
-                    let row = data.table_rows[i].row_inputs;
-                    let row_data = [];
-
-                    for (let j = 0; j < row.length; j++) {
-                        row_data.push({
-                            "name": row[j].name,
-                            "value": row[j].value
-                        })
-                    }
-                    parsed_data.push({
-                        row_id: i,
-                        row_inputs: row_data
-                    })
-                }
-
-                this.parsed_parameters[model_page_name] = parsed_data;
-            },
         }
     }
 </script>
@@ -99,7 +53,7 @@
         justify-content:space-between;
         align-items: center;
         animation-name: fade-in;
-        animation-duration: 2s;
+        animation-duration: 1s;
     }
 
     .model-title {
