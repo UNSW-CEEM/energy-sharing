@@ -43,7 +43,8 @@
 
                 let p_data = this.$store.state.frontend_state["model_participants"];
                 if (p_data) {
-                    this.parsed_parameters["model_participants"] = this.parse_table_page(p_data)
+                    this.parsed_parameters["model_participants"] = this.parse_table_page(p_data);
+                    this.parsed_parameters["model_data_sources"] = this.parse_data_sources(p_data);
                 }
 
                 let t_data = this.$store.state.frontend_state["model_tariffs"];
@@ -74,6 +75,15 @@
 
                 return parsed_data;
             },
+
+            parse_data_sources(data) {
+                let parsed_data = {
+                    selected_solar_file: data["selected_solar_file"],
+                    selected_load_file: data["selected_load_file"]
+                };
+                console.log(parsed_data);
+                return parsed_data
+            }
 
             // create_config_file(model_key) {
             //     let data = this.$store.state.frontend_state[model_key];

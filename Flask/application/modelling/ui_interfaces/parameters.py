@@ -19,6 +19,8 @@ from ..mike_model.new_sim import NewSim
 
 import os
 import datetime
+import pandas as pd
+import pendulum
 
 
 class Parameters:
@@ -63,6 +65,7 @@ class Parameters:
             self.load_central_battery,
             self.load_tariffs,
             self.load_participants,
+            self.load_data_sources,
         ]
 
         for each in load_functions:
@@ -103,6 +106,12 @@ class Parameters:
         if key in ui_inputs:
             self.ui_participants.load(ui_inputs[key])
 
+    def load_data_sources(self, ui_inputs):
+        key = "model_data_sources"
+        if key in ui_inputs:
+            start, end = self.find_time_periods(ui_inputs[key])
+            self.time_periods = util.generate_dates_in_range(start, end, 30)
+
     def print(self):
         print("Model Type: ", self.model_type)
 
@@ -129,10 +138,10 @@ class Parameters:
         self.model_tariffs = Luomi_Tariffs(**tariffs_dict)
 
         # TODO Remove these/come up with a new system later
-        start = datetime.datetime(year=2017, month=2, day=26, hour=10)
-        end = datetime.datetime(year=2017, month=2, day=26, hour=12)
-
-        self.time_periods = util.generate_dates_in_range(start, end, 30)
+        # start = datetime.datetime(year=2017, month=2, day=26, hour=10)
+        # end = datetime.datetime(year=2017, month=2, day=26, hour=12)
+        #
+        # self.time_periods = util.generate_dates_in_range(start, end, 30)
 
         print("Made LUOMI Objects without error")
 
@@ -173,3 +182,30 @@ class Parameters:
         parsed_results = self.ui_results_parser.mike_temp_parser()
         status("Mike Model Complete - See Folder")
         return parsed_results
+
+    # Might move this later.
+    def find_time_periods(self, frontend_data):
+
+        s_path = self.folder_routes.solar_profiles_dir
+        l_path = self.folder_routes.load_profiles_dir
+
+        s_file_path = os.path.join(s_path, frontend_data["selected_solar_file"])
+        l_file_path = os.path.join(l_path, frontend_data["selected_load_file"])
+
+        s_df = pd.read_csv(s_file_path)
+        l_df = pd.read_csv(l_file_path)
+
+        s_start_string = str(s_df.head(1)["timestamp"].values[0])
+        s_start = pd.datetime.strptime(s_start_string, '%d/%m/%Y %H:%M')
+
+        l_start_string = str(l_df.head(1)["timestamp"].values[0])
+        l_start = pd.datetime.strptime(l_start_string, '%d/%m/%Y %H:%M')
+
+        s_end_string = str(s_df.tail(1)["timestamp"].values[0])
+        s_end = pd.datetime.strptime(s_end_string, '%d/%m/%Y %H:%M')
+
+        l_end_string = str(l_df.tail(1)["timestamp"].values[0])
+        l_end = pd.datetime.strptime(l_end_string, '%d/%m/%Y %H:%M')
+
+        return max(s_start, l_start), min(s_end, l_end)
+
