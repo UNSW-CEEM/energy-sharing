@@ -24,6 +24,7 @@
                             :my_options="input_data.my_options[input.dropdown_key]"
                             :my_placeholder="input.placeholder"/>
                     </td>
+                    <!--<td><button>Remove Row</button></td>-->
                 </tr>
             </table>
             <button @click="add_row()">Add Row</button>
