@@ -120,7 +120,6 @@
                     {id: 5, name: "Solar Scaling", additional_text:"Input Number"},
                     {id: 6, name: "Battery", additional_text:"Select One"},
                 ],
-
             }
         },
 

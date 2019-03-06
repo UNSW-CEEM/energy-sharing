@@ -29,8 +29,10 @@
             <button @click="add_row()">Add Row</button>
 
             <div class="file-buttons-container">
-                <button @click="load_config(input_data.selected_config_file)">Load User Config</button>
-                <button @click="save_config()">Save User Config</button>
+                <button @click="load_config(input_data.selected_config_file)" v-if="input_data.selected_config_file">
+                    Load User Config
+                </button>
+                <button @click="save_config('user_config.csv')">Save User Config</button>
                 <button @click="load_config('default_config.csv')">Load Default</button>
             </div>
 
@@ -59,7 +61,7 @@
                 model_page_name: "model_tariffs",
 
                 input_data: {
-                    selected_config_file: 'user_config.csv',
+                    selected_config_file: false,
 
                     table_rows: [],
 
@@ -156,7 +158,8 @@
                 this.$socket.emit('load_config', this.model_page_name, filename)
             },
 
-            save_config() {
+            save_config(filename) {
+                this.input_data.selected_config_file = filename
                 // this.save_page_simple();
                 // let created_data = this.create_config_file(this.model_page_name);
                 // let payload = {
