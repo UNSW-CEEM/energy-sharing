@@ -17,7 +17,7 @@ const model_parameters = {
 
 const frontend_state = {
     state: {
-        "selected_model": "luomi",
+        selected_model: "luomi",
     },
 
     mutations: {

@@ -2,20 +2,20 @@
     <div class="background">
         <div class="main-container">
             <h1>{{ view_name }}</h1>
-            <span class="input-line"
-                v-for="input in input_data"
-                :key="input.id">
-                {{ input.display_text }}
-
-                <SimpleNumberInput
-                    v-if="input.tag==='my_number'"
-                    v-model="input.value"
-                    :my_placeholder="input.placeholder"/>
-
-                <SimpleDropdown v-else-if="input.tag==='my_dropdown'"
-                    v-model="input.value"
-                    :my_options="my_options[input.dropdown_key]"
-                    :my_placeholder="input.placeholder"/>
+            <span class="input-line">
+                {{ input_data.model_dropdown.display_text }}
+                <SimpleDropdown
+                    v-model="input_data.model_dropdown.value"
+                    v-on:input="save_model_selection(input_data.model_dropdown.value)"
+                    :my_options="model_type_options"
+                    :my_placeholder="input_data.model_dropdown.placeholder"/>
+            </span>
+            <span class="input-line">
+                {{ input_data.network_dropdown.display_text }}
+                <SimpleDropdown
+                    v-model="input_data.network_dropdown.value"
+                    :my_options="input_data.selected_model_options"
+                    :my_placeholder="input_data.network_dropdown.placeholder"/>
             </span>
         </div>
     </div>
@@ -41,55 +41,41 @@
                 view_name: this.$options.name,
                 model_page_name: "model_selection",
 
-                input_data: [
-                    {
-                        id: 0,
+                input_data: {
+                    selected_model: "",
+                    selected_model_options: [],
+
+                    model_dropdown: {
                         name: "model_type",
-                        display_text: "Model ",
                         value: "",
-                        dropdown_key:"model_type",
+                        display_text: "Model",
                         placeholder: "select model",
-                        tag:"my_dropdown"
                     },
-                    {
-                        id: 1,
+
+                    network_dropdown: {
                         name: "network_type",
                         display_text: "Network Type ",
                         value: "",
                         dropdown_key:"network_type",
-                        placeholder: "please select a model",
-                        tag:"my_dropdown"
+                        placeholder: "select model",
                     },
-                ],
+                },
 
-                my_options: {
-
-                    network_options: {
-                        "": [],
-
-                        luomi_network_options: [
-                            "Embedded Network",
-                            "Peer to Peer Retail",
-                        ],
-
-                        mike: [
-                            "Apartment",
-                        ]
-                    },
-
-                    network_type:
-                    [
-                        "Apartment",
+                network_options: {
+                    luomi: [
                         "Embedded Network",
                         "Peer to Peer Retail",
                     ],
 
-                    model_type: [
-                        "mike",
-                        "luomi",
-                        
+                    mike: [
+                        "Apartment",
                     ]
-                }
+                },
+
+                model_type_options: [
+                    "mike",
+                    "luomi",
+                ],
             }
         },
 
@@ -102,9 +88,21 @@
         },
 
         methods: {
+            // frontend "global"ish variable. Set in the store. May be used for hiding financing page.
             save_model_selection(selection) {
-                console.log("This");
-            }
+                this.input_data.selected_model_options = this.network_options[selection];
+
+                if (this.input_data.network_dropdown.value === "") {
+                    this.input_data.network_dropdown.value = this.input_data.selected_model_options[0]
+                }
+
+                let payload = {
+                    model_page_name: "selected_model",
+                    data: selection
+                };
+
+                this.$store.commit('save_page', payload)
+            },
         }
     }
 </script>

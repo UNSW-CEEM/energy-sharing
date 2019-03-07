@@ -26,7 +26,7 @@
 
             parse_simple_pages() {
                 let select_data = this.$store.state.frontend_state["model_selection"];
-                if (select_data ) { this.parsed_parameters["model_selection"] = select_data}
+                if (select_data ) { this.parsed_parameters["model_selection"] = this.parse_selection_page(select_data)}
 
                 let battery_data = this.$store.state.frontend_state["model_battery"];
                 if (battery_data) { this.parsed_parameters["model_battery"] = battery_data }
@@ -82,7 +82,17 @@
                     selected_load_file: data["selected_load_file"]
                 };
                 console.log(parsed_data);
-                return parsed_data
+                return parsed_data;
+            },
+
+            // Custom saver for this page due to additional dropdown logic
+            parse_selection_page(data) {
+                let parsed_data = [];
+                parsed_data.push(data.model_dropdown);
+                parsed_data.push(data.network_dropdown);
+
+                console.log("Selection Page Data", parsed_data);
+                return parsed_data;
             }
 
             // create_config_file(model_key) {
