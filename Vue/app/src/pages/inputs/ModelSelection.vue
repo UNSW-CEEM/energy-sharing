@@ -57,12 +57,25 @@
                         display_text: "Network Type ",
                         value: "",
                         dropdown_key:"network_type",
-                        placeholder: "select network",
+                        placeholder: "please select a model",
                         tag:"my_dropdown"
                     },
                 ],
 
                 my_options: {
+
+                    network_options: {
+                        "": [],
+
+                        luomi_network_options: [
+                            "Embedded Network",
+                            "Peer to Peer Retail",
+                        ],
+
+                        mike: [
+                            "Apartment",
+                        ]
+                    },
 
                     network_type:
                     [
@@ -89,7 +102,9 @@
         },
 
         methods: {
-
+            save_model_selection(selection) {
+                console.log("This");
+            }
         }
     }
 </script>
