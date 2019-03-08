@@ -26,3 +26,5 @@ Made a getter for the 'interval' parameter of the timeseries object. Changes to 
 Reminder for luke by luke: when I have internet again, look up https://www.xkcd.com/1883/
 
 Made a getter for dst reverse shift. Might be scope here for writing a conversion function for timezones instead, or using pendulum...but...future problem. 
+
+Changed all references to .pv to the PVCollection object (from a pandas dataframe), which will be considered a collection of PV systems that can be queried for solar data. 

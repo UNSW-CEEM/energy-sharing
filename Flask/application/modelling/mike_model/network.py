@@ -98,55 +98,86 @@ class Network(Customer):
         if 'en' in scenario.arrangement:
             # rename single column in pv file if necessary
             # TODO Change PV allocation to allow individual distributed PV within EN
-            if len(self.pv.data.columns) == 1:
-                self.pv.data.columns = ['central']
+            if self.pv.get_num_systems() == 1:
+                system_name = self.pv.get_system_names()[0]
+                self.pv.rename_system(system_name, 'central')
+                
 
         elif 'cp_only' in scenario.arrangement:
             # no action required
             # rename single column in pv file if necessary
             if 'cp' not in self.pv.data.columns:
-                self.pv.data.columns = ['cp']
+                system_name = self.pv.get_system_names()[0]
+                self.pv.rename_system(system_name, 'cp')
 
         elif 'btm_i_u' in scenario.arrangement:
             # For btm_i, if only single pv column, split equally between all units (NOT CP)
             # If more than 1 column, leave as allocated
-            if len(self.pv.data.columns) == 1:
-                self.pv.data.columns = ['total']
+            if self.pv.get_num_systems() == 1:
+                # self.pv.data.columns = ['total']
+                system_name = self.pv.get_system_names()[0]
+                self.pv.rename_system(system_name, 'total')
                 for r in scenario.households:
-                    self.pv.data[r] = self.pv.data['total'] / len(scenario.households)
-                self.pv.data = self.pv.data.drop('total', axis=1)
+                    # self.pv.data[r] = self.pv.data['total'] / len(scenario.households)
+                    self.pv.copy_system('total', r)
+                    self.pv.scale_system(r, 1.0/ len(scenario.households) )
+                # self.pv.data = self.pv.data.drop('total', axis=1)
+                self.pv.delete_system('total')
 
         elif 'btm_i_c' in scenario.arrangement:
             # For btm_i_c, if only single pv column, split % to cp according tp cp_ratio and split remainder equally between all units
             # If more than 1 column, leave as allocated
-            if len(self.pv.data.columns) == 1:
-                self.pv.data.columns = ['total']
-                self.pv.data['cp'] = self.pv.data['total'] * (self.resident['cp'].load.sum() / self.total_building_load)
+            print("BTM_IC HOME")
+            if self.pv.get_num_systems() == 1:
+                # self.pv.data.columns = ['total']
+                system_name = self.pv.get_system_names()[0]
+                self.pv.rename_system(system_name, 'total')
+                
+                # self.pv.data['cp'] = self.pv.data['total'] * (self.resident['cp'].load.sum() / self.total_building_load)
+                self.pv.copy_system('total', 'cp')
+                self.pv.scale_system('cp', self.resident['cp'].load.sum() / self.total_building_load)
                 for r in scenario.households:
-                    self.pv.data[r] = (self.pv.data['total'] - self.pv.data['cp']) / len(scenario.households)
+                    # self.pv.data[r] = (self.pv.data['total'] - self.pv.data['cp']) / len(scenario.households)
+                    self.pv.copy_system('total', r)
+                    self.pv.subtract_system(r, 'cp')
+                    self.scale_system(r, 1.0/ len(scenario.households))
                 self.pv.data = self.pv.data.drop('total', axis=1)
+                # self.pv.delete_system('total')
 
         elif any(word in scenario.arrangement for word in ['btm_s_c', 'btm_p_c']):
             # For btm_s_c and btm_p_c, split pv between all residents INCLUDING CP according to INSTANTANEOUS load
-            if len(self.pv.data.columns) != 1:
-                self.pv.data['total'] = self.pv.data.sum(axis=1)
-                self.pv.data = self.pv.data.loc[:, ['total']]
-            self.pv.data.columns = ['total']
-            self.pv.data = self.network_load.div(self.network_load.sum(axis=1), axis=0) \
-                .fillna(1 / len(self.resident_list)) \
-                .multiply(self.pv.data.loc[:, 'total'], axis=0)
+            if self.pv.get_num_systems() != 1:
+                # self.pv.data['total'] = self.pv.data.sum(axis=1)
+                # self.pv.data = self.pv.data.loc[:, ['total']] # this is deleting every system other than total, right?
+                self.pv.aggregate_systems('total')
+            # self.pv.data.columns = ['total']
+            system_name = self.pv.get_system_names()[0]
+            self.rename_system(system_name, 'total')
+            # LUKE
+            # OK - so here we are going through every load timeperiod,
+            # Dividing by the total network load (to find fraction of network load used)
+            # If there's no data, filling in 1/ num_residents
+            # Then multiplying pv by that fraction. 
+            network_load_fractions = self.network_load.div(self.network_load.sum(axis=1), axis=0).fillna(1 / len(self.resident_list))
+            # self.pv.data =  network_load_fractions.multiply(self.pv.data.loc[:, 'total'], axis=0)
+            self.pv.multiply_by_timeseries('total', network_load_fractions)
 
         elif any(word in scenario.arrangement for word in ['btm_s_u', 'btm_p_u']):
             # For btm_s_u and btm_p_u, split pv between all residents EXCLUDING CP according to INSTANTANEOUS  load
-            if len(self.pv.data.columns) != 1:
-                self.pv.data['total'] = self.pv.data.sum(axis=1)
-                self.pv.data = self.pv.data.loc[:, ['total']]
-            self.pv.data.columns = ['total']
+            if self.pv.get_num_systems() != 1:
+                # self.pv.data['total'] = self.pv.data.sum(axis=1)
+                # self.pv.data = self.pv.data.loc[:, ['total']]
+                self.pv.aggregate_systems('total')
+            # self.pv.data.columns = ['total']
+            system_name = self.pv.get_system_names()[0]
+            self.rename_system(system_name, 'total')
+            # Get units only
             load_units_only = self.network_load.copy().drop('cp', axis=1)
-            self.pv.data = load_units_only.div(load_units_only.sum(axis=1), axis=0) \
-                .fillna(1 / len(self.households)) \
-                .multiply(self.pv.data.loc[:, 'total'], axis=0)
-            self.pv.data['cp'] = 0
+            load_fractions = load_units_only.div(load_units_only.sum(axis=1), axis=0).fillna(1 / len(self.households))
+            # self.pv.data =load_fractions.multiply(self.pv.data.loc[:, 'total'], axis=0)
+            self.pv.multiply_by_timeseries('total', load_fractions)
+            # self.pv.data['cp'] = 0
+            self.pv.scale_system('cp', 0)
 
         elif 'bau' not in scenario.arrangement:
             logging.info('*********** Exception!!! Invalid technical arrangement %s for scenario %s',
@@ -159,16 +190,21 @@ class Network(Customer):
         if not self.pv_exists:
             self.pv_customers = []
         else:
-            self.pv_customers = [c for c in self.pv.data.columns if self.pv.data[c].sum() > 0]
+            # self.pv_customers = [c for c in self.pv.data.columns if self.pv.data[c].sum() > 0]
+            self.pv_customers = [c for c in self.pv.get_system_names() if self.pv.get_system_sum(c) > 0]
         # Add blank columns for all residents with no pv and for central
-        blank_columns = [x for x in (self.resident_list + ['central']) if x not in self.pv.data.columns]
-        self.pv.data = pd.concat([self.pv.data, pd.DataFrame(columns=blank_columns)], sort=False).fillna(0)
+        blank_columns = [x for x in (self.resident_list + ['central']) if x not in self.pv.get_system_names()]
+        # self.pv.data = pd.concat([self.pv.data, pd.DataFrame(columns=blank_columns)], sort=False).fillna(0)
+        for system_name in blank_columns:
+            self.pv.add_zero_system(system_name)
 
         # Initialise all residents with their allocated PV generation
         # -----------------------------------------------------------
         for c in self.resident_list:
-            self.resident[c].initialise_customer_pv(np.array(self.pv.data[c]).astype(np.float64))
-        self.initialise_customer_pv(np.array(self.pv.data['central']).astype(np.float64))
+            # self.resident[c].initialise_customer_pv(np.array(self.pv.data[c]).astype(np.float64))
+            self.resident[c].initialise_customer_pv(np.array(self.pv.get_data(c)).astype(np.float64))
+        # self.initialise_customer_pv(np.array(self.pv.data['central']).astype(np.float64))
+        self.initialise_customer_pv(np.array(self.pv.get_data('central')).astype(np.float64))
 
         # # For diagnostics only
         # pvpath = os.path.join(study.output_path, 'pv')
