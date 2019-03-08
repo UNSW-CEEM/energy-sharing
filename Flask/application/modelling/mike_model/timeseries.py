@@ -11,12 +11,12 @@ class Timeseries:
                  ):
         self._date_times = load.index
         
-        self.interval = \
+        self._interval = \
             pd.to_timedelta(
                 pd.tseries.frequencies.to_offset(
                     pd.infer_freq(self._date_times)
                 )).total_seconds()
-        self.num_days = int(len(self._date_times) * self.interval / (24 * 60 * 60))
+        self.num_days = int(len(self._date_times) * self._interval / (24 * 60 * 60))
         # Set up weekdays and weekends
         self._days = {
             'day': self._date_times[self._date_times.weekday.isin([0, 1, 2, 3, 4])],
@@ -100,3 +100,7 @@ class Timeseries:
 
         times = self._days[weekday][(self._days[weekday].time >= start_time) & (self._days[weekday].time < end_time)]
         return [time for time in times]
+    
+    def get_interval(self):
+        """Returns a timedelta object representing the interval langth of the timeseries"""
+        return self._interval

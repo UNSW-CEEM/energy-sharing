@@ -407,8 +407,8 @@ class Battery:
             self.number_cycles = 0
             self.SOH = 100  # State of health
             # Max charge / discharge rate is accepted / delivered energy
-            self.max_timestep_delivered = self.discharge_rate_kW * self.ts.interval / 3600
-            self.max_timestep_accepted = self.charge_rate_kW * self.ts.interval / 3600
+            self.max_timestep_delivered = self.discharge_rate_kW * self.ts.get_interval() / 3600
+            self.max_timestep_accepted = self.charge_rate_kW * self.ts.get_interval() / 3600
             self.cumulative_losses = 0
             self.net_discharge = np.zeros(
                 self.ts.num_steps)  # this is +ve for discharge, -ve for charge. Used for SC and SS calcs
