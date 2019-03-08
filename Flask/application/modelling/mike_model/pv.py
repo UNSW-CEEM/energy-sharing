@@ -35,12 +35,15 @@ class PVCollection():
         self.data.columns = pd.Index(data=columns)
     
     def copy_system(self, existing_system_name, new_system_name):
+        """Create a new system with the same output as an existing system"""
         self.data[new_system_name] = self.data[existing_system_name]
     
     def scale_system(self,system_name, scaling_factor):
+        """Scale the output of a PV system by a scaling factor"""
         self.data[system_name] = self.data[system_name] * scaling_factor
     
     def delete_system(self,system_name):
+        """Delete a system from the PV collection"""
         self.data = self.data.drop(system_name, axis=1)
     
     def subtract_system(self,system_name, system_name_to_subtract):
@@ -54,16 +57,23 @@ class PVCollection():
         self.data = self.data.loc[:, [new_system_name]]
     
     def multiply_by_timeseries(self, system_name, timeseries):
-        print("Multiplying by timeseries and i want to convert away from pandas df")
+        print("input timeseries is a pandas df here -  and i want to convert away from pandas df - but couldnt call this code before. Refactor now!")
         self.data =  network_load_fractions.multiply(self.data.loc[:, system_name], axis=0)
     
-    def get_system_sum(self, system_name):
+    def get_system_sum(self, system_name):     
+        """Return the sum of all the energy produced by one pv system"""   
         return self.data[system_name].sum()
+    
+    def get_aggregate_sum(self):
+        """Return the total of all the energy from all systems, added up."""
+        # Yes, sum does need to be called twice - otherwise can get summed across rows first if 1d array only.
+        return self.data.sum().sum()
     
     def add_zero_system(self, system_name):
         """Adds a PV system with constant output of zero"""
         self.data = pd.concat([self.data, pd.DataFrame(columns=[system_name])], sort=False).fillna(0)
     
     def get_data(self, system_name):
+        """Return a timeseries array of all datapoints of energy produced by the system."""
         return [x for x in self.data[system_name]]
         

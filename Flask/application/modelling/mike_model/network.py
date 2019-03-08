@@ -493,10 +493,10 @@ class Network(Customer):
         elif 'btm_i' in scenario.arrangement:
             # For btm_i apportion pv AND central bat capex costs according to pv allocation
             for c in self.pv_customers:
-                self.resident[c].pv_capex_repayment = self.pv.data[
-                                                          c].sum() / self.pv.data.sum().sum() * scenario.pv_capex_repayment
-                self.resident[c].bat_capex_repayment += self.pv.data[
-                                                            c].sum() / self.pv.data.sum().sum() * central_bat_capex_repayment
+                # self.resident[c].pv_capex_repayment = self.pv.data[c].sum() / self.pv.data.sum().sum() * scenario.pv_capex_repayment
+                self.resident[c].pv_capex_repayment = self.pv.get_system_sum(c) / self.pv.get_aggregate_sum() * scenario.pv_capex_repayment
+                # self.resident[c].bat_capex_repayment += self.pv.data[c].sum() / self.pv.data.sum().sum() * central_bat_capex_repayment
+                self.resident[c].bat_capex_repayment += self.pv.get_system_sum(c) / self.pv.get_aggregate_sum() * central_bat_capex_repayment
 
         elif 'btm_s_c' in scenario.arrangement:
             # For btm_s_c, apportion capex costs equally between units and cp.
@@ -542,7 +542,8 @@ class Network(Customer):
             self.total_building_export = self.exports.sum()
             self.total_import = self.imports.sum()
 
-        self.pv_ratio = self.pv.data.sum().sum() / self.total_building_load * 100
+        # self.pv_ratio = self.pv.data.sum().sum() / self.total_building_load * 100
+        self.pv_ratio = self.pv.get_aggregate_sum() / self.total_building_load * 100
         self.cp_ratio = self.resident['cp'].load.sum() / self.total_building_load * 100
 
         # ----------------------------------------------------------------------
@@ -581,8 +582,9 @@ class Network(Customer):
                                                               self.resident[c].generation)
                 self.sum_of_coincidences += self.resident[c].coincidence
             # ... for central PV:
-            self.total_aggregated_coincidence = np.minimum(self.network_load.sum(axis=1),
-                                                           self.pv.data['central'] + self.total_discharge)
+
+            # self.total_aggregated_coincidence = np.minimum(self.network_load.sum(axis=1),self.pv.data['central'] + self.total_discharge)
+            self.total_aggregated_coincidence = np.minimum(self.network_load.sum(axis=1),pd.Series(self.pv.get_data('central')) + self.total_discharge)
 
             if 'en_pv' in scenario.arrangement:
                 self.self_consumption = np.sum(self.total_aggregated_coincidence) / self.pv.data.sum().sum() * 100
