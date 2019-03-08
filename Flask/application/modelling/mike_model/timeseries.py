@@ -18,7 +18,7 @@ class Timeseries:
                 )).total_seconds()
         self.num_days = int(len(self.date_times) * self.interval / (24 * 60 * 60))
         # Set up weekdays and weekends
-        self.days = {
+        self._days = {
             'day': self.date_times[self.date_times.weekday.isin([0, 1, 2, 3, 4])],
             'end': self.date_times[self.date_times.weekday.isin([5, 6])],
             'both': self.date_times}
@@ -85,7 +85,7 @@ class Timeseries:
             weekday = 'end'
         if weekday == 'weekday':
             weekday = 'day'
-        return [x for x in self.days[weekday].join(self.seasonal_time[season], how='inner')]
+        return [x for x in self._days[weekday].join(self.seasonal_time[season], how='inner')]
     
     def get_times_between(self, start_time, end_time, weekday):
         """
@@ -98,5 +98,5 @@ class Timeseries:
         if weekday == 'weekday':
             weekday = 'day'
 
-        times = self.days[weekday][(self.days[weekday].time >= start_time) & (self.days[weekday].time < end_time)]
+        times = self._days[weekday][(self._days[weekday].time >= start_time) & (self._days[weekday].time < end_time)]
         return [time for time in times]
