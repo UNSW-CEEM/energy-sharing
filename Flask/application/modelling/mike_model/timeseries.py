@@ -10,7 +10,6 @@ class Timeseries:
                  dst_region
                  ):
         self.date_times = load.index
-        print(self.date_times)
         
         self.interval = \
             pd.to_timedelta(
@@ -75,3 +74,15 @@ class Timeseries:
     
     def get_date_times(self):
         return [dt for dt in self.date_times]
+    
+    def get_seasonal_times(self, season, weekday='both'):
+        """
+            Takes a season key, either 'summer' or 'winter
+            Takes a weekday key, either 'both' or 'weekday' or 'weekend'
+            Returns the times in the timeseries that are in the given season, for weekdays, weekends, or both. 
+        """
+        if weekday == 'weekend':
+            weekday = 'end'
+        if weekday == 'weekday':
+            weekday = 'day'
+        return [x for x in self.days[weekday].join(self.seasonal_time[season], how='inner')]

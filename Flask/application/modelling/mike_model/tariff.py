@@ -57,10 +57,13 @@ class Tariff:
             # with dst applied to start and end times during summer
             # Assume that demand_end > demand_start
             # (ie period does not cross midnight but can be 00:00 to 23:59)
-            winter_days_affected = self.ts.days[scenario.tariff_lookup.loc[tariff_id, 'demand_week']].join(
-                self.ts.seasonal_time['winter'], 'inner')
-            summer_days_affected = self.ts.days[scenario.tariff_lookup.loc[tariff_id, 'demand_week']].join(
-                self.ts.seasonal_time['summer'], 'inner')
+            weekday_key = scenario.tariff_lookup.loc[tariff_id, 'demand_week']
+            winter_days_affected = self.ts.get_seasonal_times('winter', weekday_key)
+            winter_days_affected = pd.DatetimeIndex(data = winter_days_affected)
+
+            summer_days_affected = self.ts.get_seasonal_times('summer', weekday_key)
+            summer_days_affected = pd.DatetimeIndex(data = summer_days_affected)
+            
             if pd.Timestamp(scenario.tariff_lookup.loc[tariff_id, 'demand_start']).time() > \
                     pd.Timestamp(self.study.tariff_data.lookup.loc[tariff_id, 'demand_end']).time():
                 # winter period crosses midnight

@@ -76,11 +76,15 @@ class TariffData:
                 # NB times stored in csv in form 'h:mm'. Midnight saved as 23:59
                 for name, parameter in self.tou_rate_list.items():
                     if not pd.isnull(self.lookup.loc[tid, parameter[1]]):  # parameter[1] is rate_
-                        winter_days_affected = self.ts.days[self.lookup.loc[tid, parameter[3]]].join(
-                            self.ts.seasonal_time['winter'], 'inner')
-                        summer_days_affected = self.ts.days[self.lookup.loc[tid, parameter[3]]].join(
-                            self.ts.seasonal_time['summer'], 'inner')
-
+                        # Returns a pd.DatetimeIndex containing relevant winter days affected by tariff.
+                        # Here we are just trying to get 'what are all the days that are both weekends/weekdays, and also winter / summer seasonal?
+                        weekday_key = self.lookup.loc[tid, parameter[3]] #either 'day', 'end' or 'both' - needs a refactor. 
+                        winter_days_affected = self.ts.get_seasonal_times('winter', weekday_key)
+                        winter_days_affected = pd.DatetimeIndex(data=winter_days_affected) #convert array to pd.DatetimeIndex
+                        
+                        summer_days_affected = self.ts.get_seasonal_times('summer', weekday_key)
+                        summer_days_affected = pd.DatetimeIndex(data=summer_days_affected) #convert array to pd.DatetimeIndex
+                       
                         if pd.Timestamp(self.lookup.loc[tid, parameter[1]]).time() > pd.Timestamp(
                                 self.lookup.loc[tid, parameter[2]]).time():
                             # winter tariff period crosses midnight:

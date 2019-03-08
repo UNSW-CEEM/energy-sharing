@@ -608,7 +608,7 @@ class Network(Customer):
     def logTimeseriesDetailed(self, scenario):
         """Logs timeseries data for whole building to csv file."""
 
-        timedata = pd.DataFrame(index=self.ts.timeseries)
+        timedata = pd.DataFrame(index=pd.DatetimeIndex(data=self.ts.get_date_times()))
         timedata['network_load'] = self.network_load.sum(axis=1)
         timedata['pv_generation'] = self.pv.sum(axis=1)
         timedata['grid_import'] = self.imports
@@ -639,7 +639,7 @@ class Network(Customer):
     def logTimeseriesBrief(self, scenario):
         """Logs basic timeseries data for whole building to csv file."""
 
-        timedata = pd.DataFrame(index=self.ts.timeseries)
+        timedata = pd.DataFrame(index=pd.DatetimeIndex(data=self.ts.get_date_times()))
         timedata['network_load'] = self.network_load.sum(axis=1)
         # timedata['pv_generation'] = self.pv.sum(axis=1)
         timedata['grid_import'] = self.imports
