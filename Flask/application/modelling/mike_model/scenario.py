@@ -5,7 +5,7 @@ import numpy as np
 import logging
 
 from ..mike_model import en_utilities as util
-
+from ..mike_model.pv import PVCollectionFactory
 
 class Scenario:
     """Contains a single set of input parameters, but may contain multiple load profiles."""
@@ -102,7 +102,8 @@ class Scenario:
         # read PV profile for this scenario
         # ---------------------------------
         if not self.pv_exists:
-            self.pv = pd.DataFrame(index=self.ts.get_date_times(), columns=self.resident_list).fillna(0)
+            # self.pv = pd.DataFrame(index=self.ts.get_date_times(), columns=self.resident_list).fillna(0)
+            self.pv = PVCollectionFactory().empty_collection(self.ts.get_date_times(), self.resident_list)
         else:
             self.pvFile = os.path.join(study.pv_path, self.parameters['pv_filename'])
             if '.csv' not in self.pvFile:
@@ -114,9 +115,10 @@ class Scenario:
             else:
                 # Load pv generation data:
                 # -----------------------
-                self.pv = pd.read_csv(self.pvFile, parse_dates=['timestamp'], dayfirst=True)
-                self.pv.set_index('timestamp', inplace=True)
-                if not self.pv.index.equals(pd.DatetimeIndex(data=self.ts.get_date_times())):
+                # self.pv = pd.read_csv(self.pvFile, parse_dates=['timestamp'], dayfirst=True)
+                self.pv = PVCollectionFactory().from_file(self.pvFile)
+                self.pv.data.set_index('timestamp', inplace=True)
+                if not self.pv.data.index.equals(pd.DatetimeIndex(data=self.ts.get_date_times())):
                     logging.info('***************Exception!!! PV %s index does not align with load ', self.pvFile)
                     sys.exit("PV has bad timeseries")
                 # Scaleable PV has a 1kW generation input file scaled to array size:
@@ -124,10 +126,12 @@ class Scenario:
                                     self.parameters.fillna(False)['pv_scaleable']
                 if self.pv_scaleable:
                     self.pv_kW_peak = self.parameters['pv_kW_peak']
-                    self.pv = self.pv * self.pv_kW_peak
-            if self.pv.sum().sum() == 0:
+                    # self.pv = self.pv * self.pv_kW_peak
+                    self.pv.data.scale(self.pv_kW_peak)
+            if self.pv.data.sum().sum() == 0:
                 self.pv_exists = False
-                self.pv = pd.DataFrame(index=pd.DatetimeIndex(data=self.ts.get_date_times()), columns=self.resident_list).fillna(0)
+                # self.pv = pd.DataFrame(index=pd.DatetimeIndex(data=self.ts.get_date_times()), columns=self.resident_list).fillna(0)
+                self.pv = PVCollectionFactory().empty_collection(self.ts.get_date_times(),self.resident_list)
 
         # ---------------------------------------
         # Set up tariffs for this scenario
