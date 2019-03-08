@@ -116,7 +116,7 @@ class Scenario:
                 # -----------------------
                 self.pv = pd.read_csv(self.pvFile, parse_dates=['timestamp'], dayfirst=True)
                 self.pv.set_index('timestamp', inplace=True)
-                if not self.pv.index.equals(self.ts.get_date_times()):
+                if not self.pv.index.equals(pd.DatetimeIndex(data=self.ts.get_date_times())):
                     logging.info('***************Exception!!! PV %s index does not align with load ', self.pvFile)
                     sys.exit("PV has bad timeseries")
                 # Scaleable PV has a 1kW generation input file scaled to array size:
@@ -127,7 +127,7 @@ class Scenario:
                     self.pv = self.pv * self.pv_kW_peak
             if self.pv.sum().sum() == 0:
                 self.pv_exists = False
-                self.pv = pd.DataFrame(index=self.ts.get_date_times(), columns=self.resident_list).fillna(0)
+                self.pv = pd.DataFrame(index=pd.DatetimeIndex(data=self.ts.get_date_times()), columns=self.resident_list).fillna(0)
 
         # ---------------------------------------
         # Set up tariffs for this scenario
