@@ -86,3 +86,17 @@ class Timeseries:
         if weekday == 'weekday':
             weekday = 'day'
         return [x for x in self.days[weekday].join(self.seasonal_time[season], how='inner')]
+    
+    def get_times_between(self, start_time, end_time, weekday):
+        """
+            Takes a start_time and an end_time (time objects w/ tzinfo=None)
+            Plus an optional weekday tag  - 'weekend' 'weekday' 'both'
+            Returns all date_times in the timeseries that are between these two times. 
+        """
+        if weekday == 'weekend':
+            weekday = 'end'
+        if weekday == 'weekday':
+            weekday = 'day'
+
+        times = self.days[weekday][(self.days[weekday].time >= start_time) & (self.days[weekday].time < end_time)]
+        return [time for time in times]

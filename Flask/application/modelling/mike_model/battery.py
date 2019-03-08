@@ -110,7 +110,6 @@ class Battery:
             # Calculate discharge and grid-charge period(s):
             # ----------------------------------------------
             # If battery strategy is seasonal, add an hour to summer charge and discharge periods
-            
             if seasonal_strategy:
                 # If battery strategy is seasonal, add an hour to summer charge and discharge periods
                 # discharge_1
@@ -308,62 +307,71 @@ class Battery:
                     discharge_period1 = pd.DatetimeIndex([])
                 elif pd.Timestamp(discharge_start1) > pd.Timestamp(discharge_end1):
                     weekday_key = discharge_day1
-                    discharge_period1 = (
-                        self.ts.days[weekday_key][(self.ts.days[weekday_key].time >= pd.Timestamp(discharge_start1).time()) & (
-                                self.ts.days[weekday_key].time <= pd.Timestamp('23:59').time())].append(
-                            self.ts.days[weekday_key][(self.ts.days[weekday_key].time >= pd.Timestamp('0:00').time()) & (
-                                    self.ts.days[weekday_key].time < pd.Timestamp(discharge_end1).time())])).sort_values()
+                    start_time = pd.Timestamp(discharge_start1).time()
+                    end_time = pd.Timestamp(discharge_end1).time()
+
+                    before_midnight = pd.DatetimeIndex(data = self.ts.get_times_between(self, start_time, pd.Timestamp('23:59').time(), weekday_key))
+                    after_midnight = pd.DatetimeIndex(data = self.ts.get_times_between(self, pd.Timestamp('0:00').time(), end_time, weekday_key))
+                    discharge_period_1 = (before_midnight.append(after_midnight)).sort_values()
+                    
                 else:
                     weekday_key = discharge_day1
-                    discharge_period1 = \
-                        self.ts.days[weekday_key][(self.ts.days[weekday_key].time >= pd.Timestamp(discharge_start1).time())
-                                                & (self.ts.days[weekday_key].time < pd.Timestamp(discharge_end1).time())]
+                    start_time = pd.Timestamp(discharge_start1).time()
+                    end_time = pd.Timestamp(discharge_end1).time()
+                    discharge_period_1 = pd.DatetimeIndex(data=self.ts.get_times_between(start_time, end_time, weekday_key))
+                    
                 # discharge_2
                 if pd.isnull(discharge_start2):
                     discharge_period2 = pd.DatetimeIndex([])
                 elif pd.Timestamp(discharge_start2) > pd.Timestamp(discharge_end2):
                     weekday_key = discharge_day2
-                    discharge_period2 = (
-                        self.ts.days[weekday_key][
-                            (self.ts.days[weekday_key].time >= pd.Timestamp(discharge_start2).time()) & (
-                                    self.ts.days[weekday_key].time <= pd.Timestamp('23:59').time())].append(
-                            self.ts.days[weekday_key][(self.ts.days[weekday_key].time >= pd.Timestamp('0:00').time()) & (
-                                    self.ts.days[weekday_key].time < pd.Timestamp(discharge_end2).time())])).sort_values()
+                    start_time = pd.Timestamp(discharge_start2).time()
+                    end_time = pd.Timestamp(discharge_end2).time()
+
+                    before_midnight = pd.DatetimeIndex(data = self.ts.get_times_between(start_time, pd.Timestamp('23:59').time(), weekday_key))
+                    after_midnight = pd.DatetimeIndex(data = self.ts.get_times_between(pd.Timestamp('0:00').time(), end_time, weekday_key))
+                    discharge_period2 = (before_midnight.append(after_midnight)).sort_values()
+                    
                 else:
                     weekday_key = discharge_day2
-                    discharge_period2 = \
-                        self.ts.days[weekday_key][(self.ts.days[weekday_key].time >= pd.Timestamp(discharge_start2).time())
-                                                & (self.ts.days[weekday_key].time < pd.Timestamp(discharge_end2).time())]
+                    start_time = pd.Timestamp(discharge_start2).time()
+                    end_time = pd.Timestamp(discharge_end2).time()
+
+                    discharge_period2 = pd.DatetimeIndex(data=self.ts.get_times_between(start_time, end_time, weekday_key))
+                   
                 # charge_1
                 if pd.isnull(charge_start1):
                     charge_period1 = pd.DatetimeIndex([])
                 elif pd.Timestamp(charge_start1) > pd.Timestamp(charge_end1):
                     weekday_key = charge_day1
-                    charge_period1 = (
-                        self.ts.days[weekday_key][(self.ts.days[weekday_key].time >= pd.Timestamp(charge_start1).time()) & (
-                                self.ts.days[weekday_key].time <= pd.Timestamp('23:59').time())].append(
-                            self.ts.days[weekday_key][(self.ts.days[weekday_key].time >= pd.Timestamp('0:00').time()) & (
-                                    self.ts.days[weekday_key].time < pd.Timestamp(charge_end1).time())])).sort_values()
+                    start_time = pd.Timestamp(charge_start1).time()
+                    end_time = pd.Timestamp(charge_end1).time()
+                    before_midnight = pd.DatetimeIndex(data=self.ts.get_times_between(start_time, pd.Timestamp('23:59').time(), weekday_key))
+                    after_midnight = pd.DatetimeIndex(data=self.ts.get_times_between(pd.Timestamp('0:00').time(), end_time, weekday_key))
+                    charge_period1 = (before_midnight.append(after_midnight)).sort_values()
+                    
                 else:
                     weekday_key = charge_day1
-                    charge_period1 = \
-                        self.ts.days[weekday_key][(self.ts.days[weekday_key].time >= pd.Timestamp(charge_start1).time())
-                                             & (self.ts.days[weekday_key].time < pd.Timestamp(charge_end1).time())]
+                    start_time = pd.Timestamp(charge_start1).time()
+                    end_time = pd.Timestamp(charge_end1).time()
+                    charge_period1 = pd.DatetimeIndex(data=self.ts.get_times_between(start_time, end_time, weekday_key))
+                    
                 # charge_2
                 if pd.isnull(charge_start2):
                     charge_period2 = pd.DatetimeIndex([])
                 elif pd.Timestamp(charge_start2) > pd.Timestamp(charge_end2):
                     weekday_key = charge_day2
-                    charge_period2 = (
-                        self.ts.days[weekday_key][(self.ts.days[weekday_key].time >= pd.Timestamp(charge_start2).time()) & (
-                                self.ts.days[weekday_key].time <= pd.Timestamp('23:59').time())].append(
-                            self.ts.days[weekday_key][(self.ts.days[weekday_key].time >= pd.Timestamp('0:00').time()) & (
-                                    self.ts.days[weekday_key].time < pd.Timestamp(charge_end2).time())])).sort_values()
+                    start_time = pd.Timestamp(charge_start2).time()
+                    end_time = pd.Timestamp(charge_end2).time()
+                    before_midnight = pd.DatetimeIndex(data = self.ts.get_times_between(start_time, pd.Timestamp('23:59').time(), weekday_key))
+                    after_midnight = pd.DatetimeIndex(data = self.ts.get_times_between(pd.Timestamp(charge_end2).time(), end_time, weekday_key))
+                    charge_period2 = (before_midnight.append(after_midnight)).sort_values()
+                    
                 else:
                     weekday_key = charge_day2
-                    charge_period2 = \
-                        self.ts.days[weekday_key][(self.ts.days[weekday_key].time >= pd.Timestamp(charge_start2).time())
-                                             & (self.ts.days[weekday_key].time < pd.Timestamp(charge_end2).time())]
+                    start_time = pd.Timestamp(charge_start2).time()
+                    end_time = pd.Timestamp(charge_end2).time()
+                    charge_period2 = pd.DatetimeIndex(data = self.ts.get_times_between(start_time, end_time, weekday_key))
 
             # Combine multiple charge and discharge periods:
             # ---------------------------------------------
