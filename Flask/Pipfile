@@ -15,6 +15,7 @@ DateTime = "*"
 Cython = "*"
 gunicorn = "*"
 matplotlib = "*"
+lazy = "*"
 
 [dev-packages]
 

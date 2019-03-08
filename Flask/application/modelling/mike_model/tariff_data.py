@@ -24,9 +24,9 @@ class TariffData:
         self.lookup = pd.read_csv(tariff_lookup_path, index_col=[0])
         self.all_tariffs = [t for t in self.lookup.index if t in parameter_list]  # list of all tariff ids
         # set up dfs for static import and export tariffs
-        self.static_imports = pd.DataFrame(index=self.ts.date_times)
-        self.static_exports = pd.DataFrame(index=self.ts.date_times)
-        self.static_solar_imports = pd.DataFrame(index=self.ts.date_times)
+        self.static_imports = pd.DataFrame(index=self.ts.get_date_times())
+        self.static_exports = pd.DataFrame(index=self.ts.get_date_times())
+        self.static_solar_imports = pd.DataFrame(index=self.ts.get_date_times())
 
         self.tou_rate_list = {'name_1': ['rate_1', 'start_1', 'end_1', 'week_1'],
                               'name_2': ['rate_2', 'start_2', 'end_2', 'week_2'],

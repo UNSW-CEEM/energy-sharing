@@ -102,7 +102,7 @@ class Tariff:
                             self.study.tariff_data.lookup.loc[tariff_id, 'demand_end']) + self.ts.dst_reverse_shift).time())]
             self.demand_period = winter_period.join(summer_period, 'outer').sort_values()
 
-            s = pd.Series(0, index=self.ts.date_times)
+            s = pd.Series(0, index=self.ts.get_date_times())
             s[self.demand_period] = 1
             self.demand_period_array = np.array(s)
             self.assumed_pf = 1.0  ##   For kVA demand charges, What is good assumption for this????
