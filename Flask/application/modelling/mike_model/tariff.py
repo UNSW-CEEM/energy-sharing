@@ -84,25 +84,25 @@ class Tariff:
                         & (winter_days_affected.time < pd.Timestamp(
                             self.study.tariff_data.lookup.loc[tariff_id, 'demand_end']).time())]
 
-            if (pd.Timestamp(scenario.tariff_lookup.loc[tariff_id, 'demand_start']) + self.ts.dst_reverse_shift).time() > \
-                    (pd.Timestamp(self.study.tariff_data.lookup.loc[tariff_id, 'demand_end']) + self.ts.dst_reverse_shift).time():
+            if (pd.Timestamp(scenario.tariff_lookup.loc[tariff_id, 'demand_start']) + self.ts.get_dst_reverse_shift()).time() > \
+                    (pd.Timestamp(self.study.tariff_data.lookup.loc[tariff_id, 'demand_end']) + self.ts.get_dst_reverse_shift()).time():
                 # summer period crosses midnight
                 summer_period = \
                     summer_days_affected[
                         (summer_days_affected.time >= (pd.Timestamp(
-                            scenario.tariff_lookup.loc[tariff_id, 'demand_start']) + self.ts.dst_reverse_shift).time())
+                            scenario.tariff_lookup.loc[tariff_id, 'demand_start']) + self.ts.get_dst_reverse_shift()).time())
                         & (summer_days_affected.time < pd.Timestamp('23:59').time())].append(
                         summer_days_affected[
                             (summer_days_affected.time >= pd.Timestamp('0:00').time())
                             & (summer_days_affected.time < (pd.Timestamp(
-                                self.study.tariff_data.lookup.loc[tariff_id, 'demand_end']) + self.ts.dst_reverse_shift).time())])
+                                self.study.tariff_data.lookup.loc[tariff_id, 'demand_end']) + self.ts.get_dst_reverse_shift()).time())])
             else:
                 summer_period = \
                     summer_days_affected[
                         (summer_days_affected.time >= (pd.Timestamp(
-                            scenario.tariff_lookup.loc[tariff_id, 'demand_start']) + self.ts.dst_reverse_shift).time())
+                            scenario.tariff_lookup.loc[tariff_id, 'demand_start']) + self.ts.get_dst_reverse_shift()).time())
                         & (summer_days_affected.time < (pd.Timestamp(
-                            self.study.tariff_data.lookup.loc[tariff_id, 'demand_end']) + self.ts.dst_reverse_shift).time())]
+                            self.study.tariff_data.lookup.loc[tariff_id, 'demand_end']) + self.ts.get_dst_reverse_shift()).time())]
             self.demand_period = winter_period.join(summer_period, 'outer').sort_values()
 
             s = pd.Series(0, index=pd.DatetimeIndex(data=self.ts.get_date_times()))

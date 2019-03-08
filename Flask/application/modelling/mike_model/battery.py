@@ -134,11 +134,11 @@ class Battery:
                     summer_period = \
                         summer_days_affected[
                             (summer_days_affected.time >= (
-                                        pd.Timestamp(discharge_start1) + self.ts.dst_reverse_shift).time()) & (
+                                        pd.Timestamp(discharge_start1) + self.ts.get_dst_reverse_shift()).time()) & (
                                     summer_days_affected.time <= pd.Timestamp('23:59').time())].append(
                             summer_days_affected[(summer_days_affected.time >= pd.Timestamp('0:00').time()) & (
                                     summer_days_affected.time < (
-                                        pd.Timestamp(discharge_end1) + self.ts.dst_reverse_shift).time())]).sort_values()
+                                        pd.Timestamp(discharge_end1) + self.ts.get_dst_reverse_shift()).time())]).sort_values()
                 else:
                     # winter_period doesn't cross midnight
                     weekday_key = discharge_day1
@@ -154,9 +154,9 @@ class Battery:
                     
                     summer_period = \
                         summer_days_affected[(summer_days_affected.time >= (
-                                    pd.Timestamp(discharge_start1) + self.ts.dst_reverse_shift).time())
+                                    pd.Timestamp(discharge_start1) + self.ts.get_dst_reverse_shift()).time())
                                              & (summer_days_affected.time < (
-                                    pd.Timestamp(discharge_end1) + self.ts.dst_reverse_shift).time())]
+                                    pd.Timestamp(discharge_end1) + self.ts.get_dst_reverse_shift()).time())]
                 discharge_period1 = winter_period.join(summer_period, 'outer').sort_values()
 
                 # discharge_2
@@ -182,11 +182,11 @@ class Battery:
                     summer_period = \
                         summer_days_affected[
                             (summer_days_affected.time >= (
-                                        pd.Timestamp(discharge_start2) + self.ts.dst_reverse_shift).time()) & (
+                                        pd.Timestamp(discharge_start2) + self.ts.get_dst_reverse_shift()).time()) & (
                                     summer_days_affected.time <= pd.Timestamp('23:59').time())].append(
                             summer_days_affected[(summer_days_affected.time >= pd.Timestamp('0:00').time()) & (
                                     summer_days_affected.time < (
-                                        pd.Timestamp(discharge_end2) + self.ts.dst_reverse_shift).time())]).sort_values()
+                                        pd.Timestamp(discharge_end2) + self.ts.get_dst_reverse_shift()).time())]).sort_values()
                 else:
                     # winter_period doesn't cross midnight
                     weekday_key = discharge_day2
@@ -202,9 +202,9 @@ class Battery:
                     
                     summer_period = \
                         summer_days_affected[(summer_days_affected.time >= (
-                                    pd.Timestamp(discharge_start2) + self.ts.dst_reverse_shift).time())
+                                    pd.Timestamp(discharge_start2) + self.ts.get_dst_reverse_shift()).time())
                                              & (summer_days_affected.time < (
-                                    pd.Timestamp(discharge_end2) + self.ts.dst_reverse_shift).time())]
+                                    pd.Timestamp(discharge_end2) + self.ts.get_dst_reverse_shift()).time())]
                 discharge_period2 = winter_period.join(summer_period, 'outer').sort_values()
 
                 # charge_1
@@ -230,11 +230,11 @@ class Battery:
                     summer_period = \
                         summer_days_affected[
                             (summer_days_affected.time >= (
-                                        pd.Timestamp(charge_start1) + self.ts.dst_reverse_shift).time()) & (
+                                        pd.Timestamp(charge_start1) + self.ts.get_dst_reverse_shift()).time()) & (
                                     summer_days_affected.time <= pd.Timestamp('23:59').time())].append(
                             summer_days_affected[(summer_days_affected.time >= pd.Timestamp('0:00').time()) & (
                                     summer_days_affected.time < (
-                                        pd.Timestamp(charge_end1) + self.ts.dst_reverse_shift).time())]).sort_values()
+                                        pd.Timestamp(charge_end1) + self.ts.get_dst_reverse_shift()).time())]).sort_values()
                 else:
                     # winter_period doesn't cross midnight
                     weekday_key = charge_day1
@@ -250,8 +250,8 @@ class Battery:
 
                     summer_period = \
                         summer_days_affected[
-                            (summer_days_affected.time >= (pd.Timestamp(charge_start1) + self.ts.dst_reverse_shift).time())
-                            & (summer_days_affected.time < (pd.Timestamp(charge_end1) + self.ts.dst_reverse_shift).time())]
+                            (summer_days_affected.time >= (pd.Timestamp(charge_start1) + self.ts.get_dst_reverse_shift()).time())
+                            & (summer_days_affected.time < (pd.Timestamp(charge_end1) + self.ts.get_dst_reverse_shift()).time())]
                 charge_period1 = winter_period.join(summer_period, 'outer').sort_values()
 
                 # charge_2
@@ -277,11 +277,11 @@ class Battery:
                     summer_period = \
                         summer_days_affected[
                             (summer_days_affected.time >= (
-                                        pd.Timestamp(charge_start2) + self.ts.dst_reverse_shift).time()) & (
+                                        pd.Timestamp(charge_start2) + self.ts.get_dst_reverse_shift()).time()) & (
                                     summer_days_affected.time <= pd.Timestamp('23:59').time())].append(
                             summer_days_affected[(summer_days_affected.time >= pd.Timestamp('0:00').time()) & (
                                     summer_days_affected.time < (
-                                        pd.Timestamp(charge_end2) + self.ts.dst_reverse_shift).time())]).sort_values()
+                                        pd.Timestamp(charge_end2) + self.ts.get_dst_reverse_shift()).time())]).sort_values()
                 else:
                     # winter_period doesn't cross midnight
                     weekday_key = charge_day2
@@ -296,8 +296,8 @@ class Battery:
                     summer_days_affected = pd.DatetimeIndex(data=summer_days_affected)
                     summer_period = \
                         summer_days_affected[
-                            (summer_days_affected.time >= (pd.Timestamp(charge_start2) + self.ts.dst_reverse_shift).time())
-                            & (summer_days_affected.time < (pd.Timestamp(charge_end2) + self.ts.dst_reverse_shift).time())]
+                            (summer_days_affected.time >= (pd.Timestamp(charge_start2) + self.ts.get_dst_reverse_shift()).time())
+                            & (summer_days_affected.time < (pd.Timestamp(charge_end2) + self.ts.get_dst_reverse_shift()).time())]
                 charge_period2 = winter_period.join(summer_period, 'outer').sort_values()
 
             else:

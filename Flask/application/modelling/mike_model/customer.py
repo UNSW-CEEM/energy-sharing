@@ -89,7 +89,7 @@ class Customer:
     def calc_demand_charge(self):
         if self.tariff.is_demand:
             max_demand = np.multiply(self.imports, self.tariff.demand_period_array).max() * 2  # convert kWh to kW
-            self.demand_charge = max_demand * self.tariff.demand_tariff * self.ts.num_days
+            self.demand_charge = max_demand * self.tariff.demand_tariff * self.ts.get_num_days()
             # Use nominal pf to convert to kVA?
             if self.tariff.demand_type == 'kVA':
                 self.demand_charge = self.demand_charge / self.tariff.assumed_pf
@@ -204,7 +204,7 @@ class Customer:
         # - np.multiply(self.local_exports, self.tariff.local_export_tariff) could be added for LET / P2P
         # (These are all 1x17520 Arrays.)
 
-        self.energy_bill = self.cash_flows.sum() + self.tariff.fixed_charge * self.ts.num_days + self.demand_charge
+        self.energy_bill = self.cash_flows.sum() + self.tariff.fixed_charge * self.ts.get_num_days() + self.demand_charge
 
         if self.name == 'retailer':
             self.total_payment = self.energy_bill
