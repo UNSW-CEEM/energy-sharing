@@ -16,14 +16,14 @@ class Customer:
         self.en_capex_repayment = 0
         self.en_opex = 0
         self.bat_capex_repayment = 0
-        self.exports = np.zeros(self.ts.num_steps)
-        self.imports = np.zeros(self.ts.num_steps)
-        # self.local_exports = np.zeros(ts.num_steps)  # not used, available for local trading
-        self.solar_allocation = np.zeros(self.ts.num_steps)  # used for allocation of local generation
-        self.local_consumption = np.zeros(self.ts.num_steps)
-        self.flows = np.zeros(self.ts.num_steps)
-        self.cash_flows = np.zeros(self.ts.num_steps)
-        self.import_charge = np.zeros(self.ts.num_steps)
+        self.exports = np.zeros(self.ts.get_num_steps())
+        self.imports = np.zeros(self.ts.get_num_steps())
+        # self.local_exports = np.zeros(ts.get_num_steps())  # not used, available for local trading
+        self.solar_allocation = np.zeros(self.ts.get_num_steps())  # used for allocation of local generation
+        self.local_consumption = np.zeros(self.ts.get_num_steps())
+        self.flows = np.zeros(self.ts.get_num_steps())
+        self.cash_flows = np.zeros(self.ts.get_num_steps())
+        self.import_charge = np.zeros(self.ts.get_num_steps())
         self.local_solar_bill = 0
         self.total_payment = 0
 
@@ -43,7 +43,7 @@ class Customer:
         """Set customer load, energy flows and cashflows to zero."""
         self.load = customer_load
         # used for calculating self-consumption and self sufficiency
-        self.coincidence = np.zeros(self.ts.num_steps)
+        self.coincidence = np.zeros(self.ts.get_num_steps())
 
     def initialise_customer_tariff(self, customer_tariff_id, scenario):
         self.tariff_id = customer_tariff_id
@@ -117,7 +117,7 @@ class Customer:
             # ------------------------------------
             # calculate tariffs and costs stepwise
             # ------------------------------------
-            for step in np.arange(0, self.ts.num_steps):
+            for step in np.arange(0, self.ts.get_num_steps()):
                 # print(step)
                 # --------------------------------------------------------------
                 # Solar Block Daily Tariff : Calculate energy used at solar rate

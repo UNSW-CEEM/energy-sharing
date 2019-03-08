@@ -23,6 +23,7 @@ class Study:
                  override_output,
                  use_threading=False,
                  ):
+        
         # --------------------------------
         # Set up paths and files for Study
         # --------------------------------
@@ -262,7 +263,7 @@ class Study:
 
     def run_scenario(self, scenario_name):
         """ This is the main body of script."""
-
+        print("Running Scenario number", scenario_name)
         logging.info("Running Scenario number %i ", scenario_name)
         # Initialise scenario
         scenario = Scenario(scenario_name=scenario_name, study=self, timeseries=self.ts_ng)
@@ -294,7 +295,7 @@ class Study:
                 # If battery, reset then calculate energy flows stepwise:
                 # -------------------------------------------------------
                 eno.resetAllBatteries(scenario)
-                for step in np.arange(0, self.ts_ng.num_steps):
+                for step in np.arange(0, self.ts_ng.get_num_steps()):
                     eno.calcBuildingDynamicEnergyFlows(step)
 
             # Energy Flows for retailer (static)

@@ -46,13 +46,13 @@ class Network(Customer):
 
         # set eno load, cumulative load and generation to zero
         # ----------------------------------------------------
-        self.initialise_customer_load(np.zeros(self.ts.num_steps))
-        self.cum_resident_imports = np.zeros(self.ts.num_steps)
-        self.cum_resident_exports = np.zeros(self.ts.num_steps)
-        self.cum_local_imports = np.zeros(self.ts.num_steps)
-        self.total_aggregated_coincidence = np.zeros(self.ts.num_steps)
-        self.sum_of_coincidences = np.zeros(self.ts.num_steps)
-        self.total_discharge = np.zeros(self.ts.num_steps)
+        self.initialise_customer_load(np.zeros(self.ts.get_num_steps()))
+        self.cum_resident_imports = np.zeros(self.ts.get_num_steps())
+        self.cum_resident_exports = np.zeros(self.ts.get_num_steps())
+        self.cum_local_imports = np.zeros(self.ts.get_num_steps())
+        self.total_aggregated_coincidence = np.zeros(self.ts.get_num_steps())
+        self.sum_of_coincidences = np.zeros(self.ts.get_num_steps())
+        self.total_discharge = np.zeros(self.ts.get_num_steps())
 
         # initialise residents' loads
         # ---------------------------
@@ -201,8 +201,8 @@ class Network(Customer):
     #     # Quota is equal share of pv generation at this timestep
     #     # Applies to EN arrangements only
     #     # This is for instantaneous solar tariff.
-    #     self.solar_instantaneous_quota = np.zeros(ts.num_steps)
-    #     self.retailer.solar_instantaneous_quota = np.zeros(ts.num_steps)
+    #     self.solar_instantaneous_quota = np.zeros(ts.get_num_steps())
+    #     self.retailer.solar_instantaneous_quota = np.zeros(ts.get_num_steps())
     #     if 'en' in scenario.arrangement:
     #         for c in self.resident_list:
     #             if self.resident[c].tariff.is_solar_inst:
@@ -210,10 +210,10 @@ class Network(Customer):
     #                                                         (self.pv['central'] - self.resident['cp'].load) / len(
     #                                                         self.households), 0)
     #             else:
-    #                 self.resident[c].solar_instantaneous_quota = np.zeros(ts.num_steps)
+    #                 self.resident[c].solar_instantaneous_quota = np.zeros(ts.get_num_steps())
     #     else:
     #         for c in self.resident_list:
-    #             self.resident[c].solar_instantaneous_quota = np.zeros(ts.num_steps)
+    #             self.resident[c].solar_instantaneous_quota = np.zeros(ts.get_num_steps())
 
     def initialiseAllBatteries(self, scenario):
         """Initialise central and individual batteries as required."""
@@ -235,7 +235,7 @@ class Network(Customer):
         # --------------------
         # Individual Batteries
         # --------------------
-        self.cum_ind_bat_charge = np.zeros(self.ts.num_steps)
+        self.cum_ind_bat_charge = np.zeros(self.ts.get_num_steps())
         self.tot_ind_bat_capacity = 0
         self.any_resident_has_battery = False
         self.any_householder_has_battery = False
@@ -360,7 +360,7 @@ class Network(Customer):
             self.battery.reset(annual_load=np.array(self.network_load.sum(axis=1)))
         # Individual Batteries
         # --------------------
-        self.cum_ind_bat_charge = np.zeros(self.ts.num_steps)
+        self.cum_ind_bat_charge = np.zeros(self.ts.get_num_steps())
         # self.tot_ind_bat_capacity = 0
         # self.any_resident_has_battery = False
         if self.any_resident_has_battery:
@@ -560,7 +560,7 @@ class Network(Customer):
             self.central_battery_capacity = 0
             self.battery_cycles = 0
             self.battery_SOH = 0
-            self.total_discharge = np.zeros(self.ts.num_steps)
+            self.total_discharge = np.zeros(self.ts.get_num_steps())
 
         for c in self.battery_list:
             self.total_battery_losses += self.resident[c].battery.cumulative_losses

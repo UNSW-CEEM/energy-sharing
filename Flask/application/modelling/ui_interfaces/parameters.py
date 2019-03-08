@@ -214,7 +214,7 @@ def dummy_status_callback(message):
     # my_status = "Status: " + message
     print(message)
 
-# run with pipenv run python -m application.modelling.ui_interfaces.parameters
+# run with pipenv run python -m 
 if __name__ == "__main__":
 
     p = Parameters()
@@ -231,6 +231,7 @@ if __name__ == "__main__":
     for customer in results['total_participant_bill']:
         if results['total_participant_bill'][customer] != expected['total_participant_bill'][customer]:
             success = False
+            print(customer,"expected", expected['total_participant_bill'][customer],"got",results['total_participant_bill'][customer])
             break
         
     if success:

@@ -183,7 +183,7 @@ class Tariff:
             self.solar_import_tariff = (scenario.static_solar_imports[tariff_id]).values
             pass
         else:
-            self.solar_import_tariff = np.zeros(self.ts.num_steps)
+            self.solar_import_tariff = np.zeros(self.ts.get_num_steps())
             self.solar_rate_name = ''
         # -----------------------------
         # All volumetric import tariffs
@@ -193,4 +193,4 @@ class Tariff:
         if tariff_id not in scenario.dynamic_list:
             self.import_tariff = (scenario.static_imports[tariff_id]).values
         else:
-            self.import_tariff = np.zeros(self.ts.num_steps)
+            self.import_tariff = np.zeros(self.ts.get_num_steps())

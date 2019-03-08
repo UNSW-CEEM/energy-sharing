@@ -10,13 +10,13 @@ class Timeseries:
                  dst_region
                  ):
         self.timeseries = load.index
-        self.num_steps = len(self.timeseries)
+        
         self.interval = \
             pd.to_timedelta(
                 pd.tseries.frequencies.to_offset(
                     pd.infer_freq(self.timeseries)
                 )).total_seconds()
-        self.num_days = int(self.num_steps * self.interval / (24 * 60 * 60))
+        self.num_days = int(len(self.timeseries) * self.interval / (24 * 60 * 60))
         # Set up weekdays and weekends
         self.days = {
             'day': self.timeseries[self.timeseries.weekday.isin([0, 1, 2, 3, 4])],
@@ -68,3 +68,6 @@ class Timeseries:
         steps_today = self.step_ts.loc[self.step_ts.dt.date == today].index.tolist()
         steps_so_far_today = [s for s in steps_today if s <= this_step]
         return steps_so_far_today
+    
+    def get_num_steps(self):
+        return len(self.timeseries)
