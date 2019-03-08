@@ -20,7 +20,7 @@ class Timeseries:
 
         # Set up summer and winter periods for daylight savings:
         
-        self.seasonal_time = {
+        self._seasonal_time = {
             'winter': self._date_times[0:0],
             'summer': self._date_times[0:0]
         }
@@ -33,22 +33,22 @@ class Timeseries:
             dst_end = pd.Timestamp(dst_lookup.loc[year, end_label])
             tsy = self._date_times[self._date_times.year == year]
             if dst_start < dst_end:
-                self.seasonal_time['winter'] = \
-                    self.seasonal_time['winter'].join(tsy[(tsy >= pd.Timestamp('1/01/' + str(year) + ' 00:00:00'))
+                self._seasonal_time['winter'] = \
+                    self._seasonal_time['winter'].join(tsy[(tsy >= pd.Timestamp('1/01/' + str(year) + ' 00:00:00'))
                                                           & (tsy < dst_start)], 'outer').join(
                         tsy[(tsy >= dst_end)
                             & (tsy < pd.Timestamp('31/12/' + str(year) + ' 23:59:59'))], 'outer')
-                self.seasonal_time['summer'] = \
-                    self.seasonal_time['summer'].join(tsy[(tsy >= dst_start)
+                self._seasonal_time['summer'] = \
+                    self._seasonal_time['summer'].join(tsy[(tsy >= dst_start)
                                                           & (tsy < dst_end)], 'outer')
             else:
-                self.seasonal_time['summer'] = \
-                    self.seasonal_time['summer'].join(tsy[(tsy >= pd.Timestamp('1/01/' + str(year) + ' 00:00:00'))
+                self._seasonal_time['summer'] = \
+                    self._seasonal_time['summer'].join(tsy[(tsy >= pd.Timestamp('1/01/' + str(year) + ' 00:00:00'))
                                                           & (tsy < dst_end)], 'outer').join(
                         tsy[(tsy >= dst_start)
                             & (tsy < pd.Timestamp('31/12/' + str(year) + ' 23:59:59'))], 'outer')
-                self.seasonal_time['winter'] = \
-                    self.seasonal_time['winter'].join(tsy[(tsy >= dst_end)
+                self._seasonal_time['winter'] = \
+                    self._seasonal_time['winter'].join(tsy[(tsy >= dst_end)
                                                           & (tsy < dst_start)], 'outer')
         pass
 
@@ -76,7 +76,7 @@ class Timeseries:
             weekday = 'end'
         if weekday == 'weekday':
             weekday = 'day'
-        return [x for x in self._days[weekday].join(self.seasonal_time[season], how='inner')]
+        return [x for x in self._days[weekday].join(self._seasonal_time[season], how='inner')]
     
     def get_times_between(self, start_time, end_time, weekday):
         """
