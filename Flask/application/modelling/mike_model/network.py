@@ -42,7 +42,7 @@ class Network(Customer):
         # read load data
         # --------------
         self.load_name = load_name
-        self.network_load = scenario.dict_load_profiles[load_name]
+        self.network_load = scenario.dict_load_profiles.loads[load_name]
 
         # set eno load, cumulative load and generation to zero
         # ----------------------------------------------------

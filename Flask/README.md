@@ -27,4 +27,6 @@ Reminder for luke by luke: when I have internet again, look up https://www.xkcd.
 
 Made a getter for dst reverse shift. Might be scope here for writing a conversion function for timezones instead, or using pendulum...but...future problem. 
 
-Changed all references to .pv to the PVCollection object (from a pandas dataframe), which will be considered a collection of PV systems that can be queried for solar data. 
+Changed all references to .pv to the PVCollection object (from a pandas dataframe), which will be considered a collection of PV systems that can be queried for solar data. All access to data, and modifications of data, are carried out through function calls rather than by accessing internal parameters.
+
+Refactored the loads dicts and dataframes, so that they simply use a LoadCollection object (load.py). Removing any reliance on dataframes here. 
