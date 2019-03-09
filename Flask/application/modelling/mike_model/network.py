@@ -43,6 +43,7 @@ class Network(Customer):
         # --------------
         self.load_name = load_name
         self.network_load = scenario.load_profiles.profiles[load_name].to_df()
+        self.nl_profile = scenario.load_profiles.get_profile(load_name)
         # self.network_load = scenario.dict_load_profiles.get_profile(load_name)
 
         # set eno load, cumulative load and generation to zero
@@ -58,13 +59,13 @@ class Network(Customer):
         # initialise residents' loads
         # ---------------------------
         for c in self.resident_list:
-            self.resident[c].initialise_customer_load(
-                customer_load=np.array(self.network_load[c])
-                    .astype(np.float64))
+            # self.resident[c].initialise_customer_load(customer_load=np.array(self.network_load[c]).astype(np.float64))
+            self.resident[c].initialise_customer_load(customer_load=np.array(self.nl_profile.get_load_data(c)).astype(np.float64))
 
         # Calculate total site load
         # --------------------------
-        self.total_building_load = self.network_load.sum().sum()
+        # self.total_building_load = self.network_load.sum().sum()
+        self.total_building_load = self.nl_profile.get_aggregate_sum()
 
         # Initialise cash totals
         # ----------------------
@@ -159,7 +160,8 @@ class Network(Customer):
             # Dividing by the total network load (to find fraction of network load used)
             # If there's no data, filling in 1/ num_residents
             # Then multiplying pv by that fraction. 
-            network_load_fractions = self.network_load.div(self.network_load.sum(axis=1), axis=0).fillna(1 / len(self.resident_list))
+            
+            network_load_fractions = self.nl_profile.to_df().div(self.nl_profile.get_aggregate_data(), axis=0).fillna(1 / len(self.resident_list))
             # self.pv.data =  network_load_fractions.multiply(self.pv.data.loc[:, 'total'], axis=0)
             self.pv.multiply_by_timeseries('total', network_load_fractions)
 
@@ -173,7 +175,7 @@ class Network(Customer):
             system_name = self.pv.get_system_names()[0]
             self.rename_system(system_name, 'total')
             # Get units only
-            load_units_only = self.network_load.copy().drop('cp', axis=1)
+            load_units_only = self.nl_profile.to_df().copy().drop('cp', axis=1)
             load_fractions = load_units_only.div(load_units_only.sum(axis=1), axis=0).fillna(1 / len(self.households))
             # self.pv.data =load_fractions.multiply(self.pv.data.loc[:, 'total'], axis=0)
             self.pv.multiply_by_timeseries('total', load_fractions)
@@ -356,7 +358,8 @@ class Network(Customer):
         # Central Battery
         # ---------------
         if self.has_central_battery:
-            self.battery.reset(annual_load=np.array(self.network_load.sum(axis=1)))
+            # self.battery.reset(annual_load=np.array(self.network_load.sum(axis=1)))
+            self.battery.reset(annual_load=np.array(self.nl_profile.get_aggregate_data()))
         # Individual Batteries
         # --------------------
         self.cum_ind_bat_charge = np.zeros(self.ts.get_num_steps())
@@ -585,7 +588,8 @@ class Network(Customer):
             # ... for central PV:
 
             # self.total_aggregated_coincidence = np.minimum(self.network_load.sum(axis=1),self.pv.data['central'] + self.total_discharge)
-            self.total_aggregated_coincidence = np.minimum(self.network_load.sum(axis=1),pd.Series(self.pv.get_data('central')) + self.total_discharge)
+            # self.total_aggregated_coincidence = np.minimum(self.network_load.sum(axis=1),pd.Series(self.pv.get_data('central')) + self.total_discharge)
+            self.total_aggregated_coincidence = np.minimum(self.nl_profile.get_aggregate_data(),pd.Series(self.pv.get_data('central')) + self.total_discharge)
 
             if 'en_pv' in scenario.arrangement:
                 # self.self_consumption = np.sum(self.total_aggregated_coincidence) / self.pv.data.sum().sum() * 100
@@ -613,7 +617,8 @@ class Network(Customer):
         """Logs timeseries data for whole building to csv file."""
 
         timedata = pd.DataFrame(index=pd.DatetimeIndex(data=self.ts.get_date_times()))
-        timedata['network_load'] = self.network_load.sum(axis=1)
+        # timedata['network_load'] = self.network_load.sum(axis=1)
+        timedata['network_load'] = self.nl_profile.get_aggregate_data()
         # timedata['pv_generation'] = self.pv.data.sum(axis=1)
         timedata['pv_generation'] = self.pv.get_aggregate_data()
         timedata['grid_import'] = self.imports
@@ -645,7 +650,8 @@ class Network(Customer):
         """Logs basic timeseries data for whole building to csv file."""
 
         timedata = pd.DataFrame(index=pd.DatetimeIndex(data=self.ts.get_date_times()))
-        timedata['network_load'] = self.network_load.sum(axis=1)
+        # timedata['network_load'] = self.network_load.sum(axis=1)
+        timedata['network_load'] = self.network_load.get_aggregate_data()
         # timedata['pv_generation'] = self.pv.sum(axis=1)
         timedata['grid_import'] = self.imports
         # timedata['grid_export'] = self.exports
