@@ -70,8 +70,8 @@ class Scenario:
 
             # read all load profiles into dict of dfs
             # ---------------------------------------
-            # self.dict_load_profiles = {}
-            self.dict_load_profiles = LoadCollection()
+            # self.load_profiles = {}
+            self.load_profiles = LoadCollection()
             for load_name in self.load_list:
                 loadFile = os.path.join(load_path, load_name)
                 temp_load = pd.read_csv(loadFile,
@@ -80,12 +80,12 @@ class Scenario:
                 temp_load = temp_load.set_index('timestamp')
                 if not 'cp' in temp_load.columns:
                     temp_load['cp'] = 0
-                # self.dict_load_profiles[load_name] = temp_load.copy()
-                # self.dict_load_profiles.profiles[load_name] = temp_load.copy()
-                self.dict_load_profiles.add_profile_from_df(temp_load, load_name)
+                # self.load_profiles[load_name] = temp_load.copy()
+                # self.load_profiles.profiles[load_name] = temp_load.copy()
+                self.load_profiles.add_profile_from_df(temp_load, load_name)
             # use first load profile in list to establish list of residents:
             # --------------------------------------------------------------
-            templist = list(self.dict_load_profiles.profiles[self.load_list[0]].columns.values)  # list of potential child meters - residents + cp
+            templist = list(self.load_profiles.profiles[self.load_list[0]].columns.values)  # list of potential child meters - residents + cp
             self.resident_list = []
             for i in templist:
                 if type(i) == 'str':
@@ -95,8 +95,8 @@ class Scenario:
         else:
             # Loads are the same for every scenario and have been read already:
             # -----------------------------------------------------------------
-            self.dict_load_profiles = LoadCollection()
-            self.dict_load_profiles.profiles = study.dict_load_profiles.profiles.copy()
+            self.load_profiles = LoadCollection()
+            self.load_profiles.profiles = study.load_profiles.profiles.copy()
             self.resident_list = study.resident_list.copy()  # includes cp
             self.load_list = study.load_list.copy()
 
