@@ -587,10 +587,12 @@ class Network(Customer):
             self.total_aggregated_coincidence = np.minimum(self.network_load.sum(axis=1),pd.Series(self.pv.get_data('central')) + self.total_discharge)
 
             if 'en_pv' in scenario.arrangement:
-                self.self_consumption = np.sum(self.total_aggregated_coincidence) / self.pv.data.sum().sum() * 100
+                # self.self_consumption = np.sum(self.total_aggregated_coincidence) / self.pv.data.sum().sum() * 100
+                self.self_consumption = np.sum(self.total_aggregated_coincidence) / self.pv.get_aggregate_sum() * 100
                 self.self_sufficiency = np.sum(self.total_aggregated_coincidence) / self.total_building_load * 100
             else:
-                self.self_consumption = np.sum(self.sum_of_coincidences) / self.pv.data.sum().sum() * 100
+                # self.self_consumption = np.sum(self.sum_of_coincidences) / self.pv.data.sum().sum() * 100
+                self.self_consumption = np.sum(self.sum_of_coincidences) / self.pv.get_aggregate_sum() * 100
                 self.self_sufficiency = np.sum(self.sum_of_coincidences) / self.total_building_load * 100
         else:
             self.self_consumption = 100
@@ -599,7 +601,8 @@ class Network(Customer):
         # 2) OLD VERSIONS - for checking. Same for non battery scenarios and for SS
         # -------------------------------------------------------------------------
         if scenario.pv_exists:
-            self.self_consumption_OLD = 100 - (self.total_building_export / self.pv.data.sum().sum() * 100)
+            # self.self_consumption_OLD = 100 - (self.total_building_export / self.pv.data.sum().sum() * 100)
+            self.self_consumption_OLD = 100 - (self.total_building_export / self.pv.get_aggregate_sum() * 100)
             self.self_sufficiency_OLD = 100 - (self.total_import / self.total_building_load * 100)
         else:
             self.self_consumption_OLD = 100  # NB No PV implies 100% self consumption
@@ -610,7 +613,8 @@ class Network(Customer):
 
         timedata = pd.DataFrame(index=pd.DatetimeIndex(data=self.ts.get_date_times()))
         timedata['network_load'] = self.network_load.sum(axis=1)
-        timedata['pv_generation'] = self.pv.data.sum(axis=1)
+        # timedata['pv_generation'] = self.pv.data.sum(axis=1)
+        timedata['pv_generation'] = self.pv.get_aggregate_data()
         timedata['grid_import'] = self.imports
         timedata['grid_export'] = self.exports
         timedata['sum_of_customer_imports'] = self.cum_resident_imports

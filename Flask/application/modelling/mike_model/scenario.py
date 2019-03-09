@@ -116,9 +116,11 @@ class Scenario:
                 # Load pv generation data:
                 # -----------------------
                 # self.pv = pd.read_csv(self.pvFile, parse_dates=['timestamp'], dayfirst=True)
+                # self.pv.data.set_index('timestamp', inplace=True)
                 self.pv = PVCollectionFactory().from_file(self.pvFile)
-                self.pv.data.set_index('timestamp', inplace=True)
-                if not self.pv.data.index.equals(pd.DatetimeIndex(data=self.ts.get_date_times())):
+                
+                # if not self.pv.data.index.equals(pd.DatetimeIndex(data=self.ts.get_date_times())):
+                if not pd.DatetimeIndex(data=self.pv.get_date_times()).equals(pd.DatetimeIndex(data=self.ts.get_date_times())):
                     logging.info('***************Exception!!! PV %s index does not align with load ', self.pvFile)
                     sys.exit("PV has bad timeseries")
                 # Scaleable PV has a 1kW generation input file scaled to array size:
@@ -127,8 +129,8 @@ class Scenario:
                 if self.pv_scaleable:
                     self.pv_kW_peak = self.parameters['pv_kW_peak']
                     # self.pv = self.pv * self.pv_kW_peak
-                    self.pv.data.scale(self.pv_kW_peak)
-            if self.pv.data.sum().sum() == 0:
+                    self.pv.scale(self.pv_kW_peak)
+            if self.pv.get_aggregate_sum() == 0:
                 self.pv_exists = False
                 # self.pv = pd.DataFrame(index=pd.DatetimeIndex(data=self.ts.get_date_times()), columns=self.resident_list).fillna(0)
                 self.pv = PVCollectionFactory().empty_collection(self.ts.get_date_times(),self.resident_list)
