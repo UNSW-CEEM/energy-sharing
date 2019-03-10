@@ -2,7 +2,7 @@
     <div class="background">
         <div class="main-container">
             <h1 id="load-title" class="load-title">Load Files</h1>
-            <ul>
+            <ul class="load-list">
                 <li v-for="(file, index) in load_files" :key="file.id">
                     <span>{{file.name}}</span> -
                     <span>{{file.size}}</span> -
@@ -13,7 +13,7 @@
                     <span v-else></span>
                 </li>
             </ul>
-            <div>
+            <div class="load-button-container">
                 <file-upload
                     class="load_upload"
                     post-action="http://localhost:5000/upload/load_data"
@@ -131,7 +131,7 @@
 <style scoped>
     .main-container {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: space-around;
         align-items: start;
         animation-name: fade-in;
@@ -141,6 +141,12 @@
     .load-title {
         width: 100%;
 
+    }
+
+    .load-button-container {
+        background-color: white;
+        height: 100%;
+        width: 100%;
     }
 
     .load-file-button {

@@ -1,6 +1,6 @@
 <template>
     <div class="background">
-        <div class="main-container">
+        <div class="main-container" v-if="selected_model==='mike'">
             <h1>{{ view_name }}</h1>
             <table class="financing-table">
                 <tr>
@@ -29,10 +29,13 @@
             <button @click="add_row()">Add Row</button>
 
              <div class="file-buttons-container">
-                 <button @click="load_config(input_data.selected_config_file)">Load User Config</button>
-                 <button @click="save_config()">Save User Config</button>
+                 <!--<button @click="load_config(input_data.selected_config_file)">Load User Config</button>-->
+                 <!--<button @click="save_config()">Save User Config</button>-->
                  <button @click="load_config('default_config.csv')">Load Default</button>
             </div>
+        </div>
+        <div class="main-container" v-else>
+            <h1>No Financing for Luomi Model Currently</h1>
         </div>
     </div>
 </template>
@@ -56,6 +59,8 @@
             return {
                 view_name: this.$options.name,
                 model_page_name: "model_financing",
+
+                selected_model: false,
 
                 input_data: {
                     selected_config_file: 'default_config.csv',
@@ -93,6 +98,7 @@
                     this.add_row()
                 }
             }
+            this.selected_model = this.$store.state.frontend_state["selected_model"];
         },
 
         beforeDestroy() {
@@ -182,6 +188,8 @@
     .main-container {
         animation-name: fade-in;
         animation-duration: 1s;
+        width: 100%;
+        height: 100%;
     }
     .file-buttons-container {
 

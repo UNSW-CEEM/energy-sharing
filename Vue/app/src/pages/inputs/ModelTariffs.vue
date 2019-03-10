@@ -30,10 +30,10 @@
             <button @click="add_row()">Add Row</button>
 
             <div class="file-buttons-container">
-                <button @click="load_config(input_data.selected_config_file)" v-if="input_data.selected_config_file">
-                    Load User Config
-                </button>
-                <button @click="save_config('user_config.csv')">Save User Config</button>
+                <!--<button @click="load_config(input_data.selected_config_file)" v-if="input_data.selected_config_file">-->
+                    <!--Load User Config-->
+                <!--</button>-->
+                <!--<button @click="save_config('user_config.csv')">Save User Config</button>-->
                 <button @click="load_config('default_config.csv')">Load Default</button>
             </div>
 
