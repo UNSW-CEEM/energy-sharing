@@ -1,0 +1,14 @@
+Model Footer
+
+Progress bar
+    -> When a model is not running it shows progress through the inputs process.
+        -> Need to keep track of what input pages are complete.
+            -> Mark each page as complete or not.
+            -> Function to check if a page is complete.
+                -> this may require a backend function as well to check that the inputs are valid.
+
+        -> Get number completed from back end.
+            -> computed state should be enough. Only needs to be changed from the backend.
+
+    -> When a model is running it shows progress through the modelling.
+        -> More TBA.

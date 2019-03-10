@@ -1,0 +1,17 @@
+API Functionality required
+
+File Related:
+    uploadFile(file, uploadType) - HTTP/Websocket?
+        file - the file to be saved
+        uploadType - where to save the file. Load or Solar.
+        Should return whether successful or not.
+
+    getFiles() - HTTP/Websocket?
+        Returns a list of all files saved.
+        Or could pass a uploadType and get only files of that type back (Load or Solar)
+        Should return a list of file names or filename id's.
+
+Parameter Upload Related:
+
+Progress Bar Related
+
