@@ -42,28 +42,30 @@ class Network(Customer):
         # read load data
         # --------------
         self.load_name = load_name
-        self.network_load = scenario.dict_load_profiles[load_name]
+        self.network_load = scenario.load_profiles.profiles[load_name].to_df()
+        self.nl_profile = scenario.load_profiles.get_profile(load_name)
+        # self.network_load = scenario.dict_load_profiles.get_profile(load_name)
 
         # set eno load, cumulative load and generation to zero
         # ----------------------------------------------------
-        self.initialise_customer_load(np.zeros(self.ts.num_steps))
-        self.cum_resident_imports = np.zeros(self.ts.num_steps)
-        self.cum_resident_exports = np.zeros(self.ts.num_steps)
-        self.cum_local_imports = np.zeros(self.ts.num_steps)
-        self.total_aggregated_coincidence = np.zeros(self.ts.num_steps)
-        self.sum_of_coincidences = np.zeros(self.ts.num_steps)
-        self.total_discharge = np.zeros(self.ts.num_steps)
+        self.initialise_customer_load(np.zeros(self.ts.get_num_steps()))
+        self.cum_resident_imports = np.zeros(self.ts.get_num_steps())
+        self.cum_resident_exports = np.zeros(self.ts.get_num_steps())
+        self.cum_local_imports = np.zeros(self.ts.get_num_steps())
+        self.total_aggregated_coincidence = np.zeros(self.ts.get_num_steps())
+        self.sum_of_coincidences = np.zeros(self.ts.get_num_steps())
+        self.total_discharge = np.zeros(self.ts.get_num_steps())
 
         # initialise residents' loads
         # ---------------------------
         for c in self.resident_list:
-            self.resident[c].initialise_customer_load(
-                customer_load=np.array(self.network_load[c])
-                    .astype(np.float64))
+            # self.resident[c].initialise_customer_load(customer_load=np.array(self.network_load[c]).astype(np.float64))
+            self.resident[c].initialise_customer_load(customer_load=np.array(self.nl_profile.get_load_data(c)).astype(np.float64))
 
         # Calculate total site load
         # --------------------------
-        self.total_building_load = self.network_load.sum().sum()
+        # self.total_building_load = self.network_load.sum().sum()
+        self.total_building_load = self.nl_profile.get_aggregate_sum()
 
         # Initialise cash totals
         # ----------------------
@@ -98,55 +100,87 @@ class Network(Customer):
         if 'en' in scenario.arrangement:
             # rename single column in pv file if necessary
             # TODO Change PV allocation to allow individual distributed PV within EN
-            if len(self.pv.columns) == 1:
-                self.pv.columns = ['central']
+            if self.pv.get_num_systems() == 1:
+                system_name = self.pv.get_system_names()[0]
+                self.pv.rename_system(system_name, 'central')
+                
 
         elif 'cp_only' in scenario.arrangement:
             # no action required
             # rename single column in pv file if necessary
-            if 'cp' not in self.pv.columns:
-                self.pv.columns = ['cp']
+            if 'cp' not in self.pv.data.columns:
+                system_name = self.pv.get_system_names()[0]
+                self.pv.rename_system(system_name, 'cp')
 
         elif 'btm_i_u' in scenario.arrangement:
             # For btm_i, if only single pv column, split equally between all units (NOT CP)
             # If more than 1 column, leave as allocated
-            if len(self.pv.columns) == 1:
-                self.pv.columns = ['total']
+            if self.pv.get_num_systems() == 1:
+                # self.pv.data.columns = ['total']
+                system_name = self.pv.get_system_names()[0]
+                self.pv.rename_system(system_name, 'total')
                 for r in scenario.households:
-                    self.pv[r] = self.pv['total'] / len(scenario.households)
-                self.pv = self.pv.drop('total', axis=1)
+                    # self.pv.data[r] = self.pv.data['total'] / len(scenario.households)
+                    self.pv.copy_system('total', r)
+                    self.pv.scale_system(r, 1.0/ len(scenario.households) )
+                # self.pv.data = self.pv.data.drop('total', axis=1)
+                self.pv.delete_system('total')
 
         elif 'btm_i_c' in scenario.arrangement:
             # For btm_i_c, if only single pv column, split % to cp according tp cp_ratio and split remainder equally between all units
             # If more than 1 column, leave as allocated
-            if len(self.pv.columns) == 1:
-                self.pv.columns = ['total']
-                self.pv['cp'] = self.pv['total'] * (self.resident['cp'].load.sum() / self.total_building_load)
+            print("BTM_IC HOME")
+            if self.pv.get_num_systems() == 1:
+                # self.pv.data.columns = ['total']
+                system_name = self.pv.get_system_names()[0]
+                self.pv.rename_system(system_name, 'total')
+                
+                # self.pv.data['cp'] = self.pv.data['total'] * (self.resident['cp'].load.sum() / self.total_building_load)
+                self.pv.copy_system('total', 'cp')
+                self.pv.scale_system('cp', self.resident['cp'].load.sum() / self.total_building_load)
                 for r in scenario.households:
-                    self.pv[r] = (self.pv['total'] - self.pv['cp']) / len(scenario.households)
-                self.pv = self.pv.drop('total', axis=1)
+                    # self.pv.data[r] = (self.pv.data['total'] - self.pv.data['cp']) / len(scenario.households)
+                    self.pv.copy_system('total', r)
+                    self.pv.subtract_system(r, 'cp')
+                    self.scale_system(r, 1.0/ len(scenario.households))
+                self.pv.data = self.pv.data.drop('total', axis=1)
+                # self.pv.delete_system('total')
 
         elif any(word in scenario.arrangement for word in ['btm_s_c', 'btm_p_c']):
             # For btm_s_c and btm_p_c, split pv between all residents INCLUDING CP according to INSTANTANEOUS load
-            if len(self.pv.columns) != 1:
-                self.pv['total'] = self.pv.sum(axis=1)
-                self.pv = self.pv.loc[:, ['total']]
-            self.pv.columns = ['total']
-            self.pv = self.network_load.div(self.network_load.sum(axis=1), axis=0) \
-                .fillna(1 / len(self.resident_list)) \
-                .multiply(self.pv.loc[:, 'total'], axis=0)
+            if self.pv.get_num_systems() != 1:
+                # self.pv.data['total'] = self.pv.data.sum(axis=1)
+                # self.pv.data = self.pv.data.loc[:, ['total']] # this is deleting every system other than total, right?
+                self.pv.aggregate_systems('total')
+            # self.pv.data.columns = ['total']
+            system_name = self.pv.get_system_names()[0]
+            self.rename_system(system_name, 'total')
+            # LUKE
+            # OK - so here we are going through every load timeperiod,
+            # Dividing by the total network load (to find fraction of network load used)
+            # If there's no data, filling in 1/ num_residents
+            # Then multiplying pv by that fraction. 
+            
+            network_load_fractions = self.nl_profile.to_df().div(self.nl_profile.get_aggregate_data(), axis=0).fillna(1 / len(self.resident_list))
+            # self.pv.data =  network_load_fractions.multiply(self.pv.data.loc[:, 'total'], axis=0)
+            self.pv.multiply_by_timeseries('total', network_load_fractions)
 
         elif any(word in scenario.arrangement for word in ['btm_s_u', 'btm_p_u']):
             # For btm_s_u and btm_p_u, split pv between all residents EXCLUDING CP according to INSTANTANEOUS  load
-            if len(self.pv.columns) != 1:
-                self.pv['total'] = self.pv.sum(axis=1)
-                self.pv = self.pv.loc[:, ['total']]
-            self.pv.columns = ['total']
-            load_units_only = self.network_load.copy().drop('cp', axis=1)
-            self.pv = load_units_only.div(load_units_only.sum(axis=1), axis=0) \
-                .fillna(1 / len(self.households)) \
-                .multiply(self.pv.loc[:, 'total'], axis=0)
-            self.pv['cp'] = 0
+            if self.pv.get_num_systems() != 1:
+                # self.pv.data['total'] = self.pv.data.sum(axis=1)
+                # self.pv.data = self.pv.data.loc[:, ['total']]
+                self.pv.aggregate_systems('total')
+            # self.pv.data.columns = ['total']
+            system_name = self.pv.get_system_names()[0]
+            self.rename_system(system_name, 'total')
+            # Get units only
+            load_units_only = self.nl_profile.to_df().copy().drop('cp', axis=1)
+            load_fractions = load_units_only.div(load_units_only.sum(axis=1), axis=0).fillna(1 / len(self.households))
+            # self.pv.data =load_fractions.multiply(self.pv.data.loc[:, 'total'], axis=0)
+            self.pv.multiply_by_timeseries('total', load_fractions)
+            # self.pv.data['cp'] = 0
+            self.pv.scale_system('cp', 0)
 
         elif 'bau' not in scenario.arrangement:
             logging.info('*********** Exception!!! Invalid technical arrangement %s for scenario %s',
@@ -159,16 +193,21 @@ class Network(Customer):
         if not self.pv_exists:
             self.pv_customers = []
         else:
-            self.pv_customers = [c for c in self.pv.columns if self.pv[c].sum() > 0]
+            # self.pv_customers = [c for c in self.pv.data.columns if self.pv.data[c].sum() > 0]
+            self.pv_customers = [c for c in self.pv.get_system_names() if self.pv.get_system_sum(c) > 0]
         # Add blank columns for all residents with no pv and for central
-        blank_columns = [x for x in (self.resident_list + ['central']) if x not in self.pv.columns]
-        self.pv = pd.concat([self.pv, pd.DataFrame(columns=blank_columns)], sort=False).fillna(0)
+        blank_columns = [x for x in (self.resident_list + ['central']) if x not in self.pv.get_system_names()]
+        # self.pv.data = pd.concat([self.pv.data, pd.DataFrame(columns=blank_columns)], sort=False).fillna(0)
+        for system_name in blank_columns:
+            self.pv.add_zero_system(system_name)
 
         # Initialise all residents with their allocated PV generation
         # -----------------------------------------------------------
         for c in self.resident_list:
-            self.resident[c].initialise_customer_pv(np.array(self.pv[c]).astype(np.float64))
-        self.initialise_customer_pv(np.array(self.pv['central']).astype(np.float64))
+            # self.resident[c].initialise_customer_pv(np.array(self.pv.data[c]).astype(np.float64))
+            self.resident[c].initialise_customer_pv(np.array(self.pv.get_data(c)).astype(np.float64))
+        # self.initialise_customer_pv(np.array(self.pv.data['central']).astype(np.float64))
+        self.initialise_customer_pv(np.array(self.pv.get_data('central')).astype(np.float64))
 
         # # For diagnostics only
         # pvpath = os.path.join(study.output_path, 'pv')
@@ -176,45 +215,7 @@ class Network(Customer):
         # pvFile = os.path.join(pvpath, self.name + '_pv_' + str(scenario.name) +'_' + scenario.arrangement + '.csv')
         # um.df_to_csv(self.pv, pvFile)
 
-    # def initialiseDailySolarBlockQuotas(self, scenario):
-    #     # REMOVED - IMPLEMENTATION NEEDS CORRECTION
-    #     """For Solar Block Daily tariff, share allocation of central PV generation amongst all residents."""
-    #     # Intended for `en` arrangement
-    #     # Check that all residents have same solar_cp_allocation basis , otherwise raise an exception:
-    #     allocation_list = list(set((self.resident[c].tariff.solar_cp_allocation for c in self.resident_list)))
-    #     if len(allocation_list) > 1:
-    #         sys.exit("Inconsistent cp allocation of local generation")
-    #     else:
-    #         solar_cp_allocation = allocation_list[0]
-    #     # Calc daily quotas for cp and households based on proportion of annual PV generation:
-    #     self.resident['cp'].daily_local_quota = self.pv.loc[
-    #                                                 self.resident['cp'].tariff.solar_period, 'central'].sum() * solar_cp_allocation / 365
-    #     for c in self.households:
-    #         self.resident[c].daily_local_quota = self.pv.loc[self.resident[c].tariff.solar_period, 'central'].sum() * (
-    #                     1 - solar_cp_allocation) / (365 * len(self.households))
-
-    # def initialiseSolarInstQuotas(self, scenario):
-    #     """Calculate local quotas for solar instantaneous tariffs in an EN."""
-    #     # CURRENTLY NOT IMPLEMENTED
-    #     # -------------------------
-    #     # (NB PV allocation is fixed and PV has already been initialised.)
-    #     # Quota is equal share of pv generation at this timestep
-    #     # Applies to EN arrangements only
-    #     # This is for instantaneous solar tariff.
-    #     self.solar_instantaneous_quota = np.zeros(ts.num_steps)
-    #     self.retailer.solar_instantaneous_quota = np.zeros(ts.num_steps)
-    #     if 'en' in scenario.arrangement:
-    #         for c in self.resident_list:
-    #             if self.resident[c].tariff.is_solar_inst:
-    #                 self.resident[c].solar_instantaneous_quota = np.where((self.pv['central'] > self.resident['cp'].load),\
-    #                                                         (self.pv['central'] - self.resident['cp'].load) / len(
-    #                                                         self.households), 0)
-    #             else:
-    #                 self.resident[c].solar_instantaneous_quota = np.zeros(ts.num_steps)
-    #     else:
-    #         for c in self.resident_list:
-    #             self.resident[c].solar_instantaneous_quota = np.zeros(ts.num_steps)
-
+    
     def initialiseAllBatteries(self, scenario):
         """Initialise central and individual batteries as required."""
         # -------------------------------
@@ -235,7 +236,7 @@ class Network(Customer):
         # --------------------
         # Individual Batteries
         # --------------------
-        self.cum_ind_bat_charge = np.zeros(self.ts.num_steps)
+        self.cum_ind_bat_charge = np.zeros(self.ts.get_num_steps())
         self.tot_ind_bat_capacity = 0
         self.any_resident_has_battery = False
         self.any_householder_has_battery = False
@@ -357,10 +358,11 @@ class Network(Customer):
         # Central Battery
         # ---------------
         if self.has_central_battery:
-            self.battery.reset(annual_load=np.array(self.network_load.sum(axis=1)))
+            # self.battery.reset(annual_load=np.array(self.network_load.sum(axis=1)))
+            self.battery.reset(annual_load=np.array(self.nl_profile.get_aggregate_data()))
         # Individual Batteries
         # --------------------
-        self.cum_ind_bat_charge = np.zeros(self.ts.num_steps)
+        self.cum_ind_bat_charge = np.zeros(self.ts.get_num_steps())
         # self.tot_ind_bat_capacity = 0
         # self.any_resident_has_battery = False
         if self.any_resident_has_battery:
@@ -495,10 +497,10 @@ class Network(Customer):
         elif 'btm_i' in scenario.arrangement:
             # For btm_i apportion pv AND central bat capex costs according to pv allocation
             for c in self.pv_customers:
-                self.resident[c].pv_capex_repayment = self.pv[
-                                                          c].sum() / self.pv.sum().sum() * scenario.pv_capex_repayment
-                self.resident[c].bat_capex_repayment += self.pv[
-                                                            c].sum() / self.pv.sum().sum() * central_bat_capex_repayment
+                # self.resident[c].pv_capex_repayment = self.pv.data[c].sum() / self.pv.data.sum().sum() * scenario.pv_capex_repayment
+                self.resident[c].pv_capex_repayment = self.pv.get_system_sum(c) / self.pv.get_aggregate_sum() * scenario.pv_capex_repayment
+                # self.resident[c].bat_capex_repayment += self.pv.data[c].sum() / self.pv.data.sum().sum() * central_bat_capex_repayment
+                self.resident[c].bat_capex_repayment += self.pv.get_system_sum(c) / self.pv.get_aggregate_sum() * central_bat_capex_repayment
 
         elif 'btm_s_c' in scenario.arrangement:
             # For btm_s_c, apportion capex costs equally between units and cp.
@@ -544,7 +546,8 @@ class Network(Customer):
             self.total_building_export = self.exports.sum()
             self.total_import = self.imports.sum()
 
-        self.pv_ratio = self.pv.sum().sum() / self.total_building_load * 100
+        # self.pv_ratio = self.pv.data.sum().sum() / self.total_building_load * 100
+        self.pv_ratio = self.pv.get_aggregate_sum() / self.total_building_load * 100
         self.cp_ratio = self.resident['cp'].load.sum() / self.total_building_load * 100
 
         # ----------------------------------------------------------------------
@@ -560,7 +563,7 @@ class Network(Customer):
             self.central_battery_capacity = 0
             self.battery_cycles = 0
             self.battery_SOH = 0
-            self.total_discharge = np.zeros(self.ts.num_steps)
+            self.total_discharge = np.zeros(self.ts.get_num_steps())
 
         for c in self.battery_list:
             self.total_battery_losses += self.resident[c].battery.cumulative_losses
@@ -583,14 +586,18 @@ class Network(Customer):
                                                               self.resident[c].generation)
                 self.sum_of_coincidences += self.resident[c].coincidence
             # ... for central PV:
-            self.total_aggregated_coincidence = np.minimum(self.network_load.sum(axis=1),
-                                                           self.pv['central'] + self.total_discharge)
+
+            # self.total_aggregated_coincidence = np.minimum(self.network_load.sum(axis=1),self.pv.data['central'] + self.total_discharge)
+            # self.total_aggregated_coincidence = np.minimum(self.network_load.sum(axis=1),pd.Series(self.pv.get_data('central')) + self.total_discharge)
+            self.total_aggregated_coincidence = np.minimum(self.nl_profile.get_aggregate_data(),pd.Series(self.pv.get_data('central')) + self.total_discharge)
 
             if 'en_pv' in scenario.arrangement:
-                self.self_consumption = np.sum(self.total_aggregated_coincidence) / self.pv.sum().sum() * 100
+                # self.self_consumption = np.sum(self.total_aggregated_coincidence) / self.pv.data.sum().sum() * 100
+                self.self_consumption = np.sum(self.total_aggregated_coincidence) / self.pv.get_aggregate_sum() * 100
                 self.self_sufficiency = np.sum(self.total_aggregated_coincidence) / self.total_building_load * 100
             else:
-                self.self_consumption = np.sum(self.sum_of_coincidences) / self.pv.sum().sum() * 100
+                # self.self_consumption = np.sum(self.sum_of_coincidences) / self.pv.data.sum().sum() * 100
+                self.self_consumption = np.sum(self.sum_of_coincidences) / self.pv.get_aggregate_sum() * 100
                 self.self_sufficiency = np.sum(self.sum_of_coincidences) / self.total_building_load * 100
         else:
             self.self_consumption = 100
@@ -599,7 +606,8 @@ class Network(Customer):
         # 2) OLD VERSIONS - for checking. Same for non battery scenarios and for SS
         # -------------------------------------------------------------------------
         if scenario.pv_exists:
-            self.self_consumption_OLD = 100 - (self.total_building_export / self.pv.sum().sum() * 100)
+            # self.self_consumption_OLD = 100 - (self.total_building_export / self.pv.data.sum().sum() * 100)
+            self.self_consumption_OLD = 100 - (self.total_building_export / self.pv.get_aggregate_sum() * 100)
             self.self_sufficiency_OLD = 100 - (self.total_import / self.total_building_load * 100)
         else:
             self.self_consumption_OLD = 100  # NB No PV implies 100% self consumption
@@ -608,9 +616,11 @@ class Network(Customer):
     def logTimeseriesDetailed(self, scenario):
         """Logs timeseries data for whole building to csv file."""
 
-        timedata = pd.DataFrame(index=self.ts.timeseries)
-        timedata['network_load'] = self.network_load.sum(axis=1)
-        timedata['pv_generation'] = self.pv.sum(axis=1)
+        timedata = pd.DataFrame(index=pd.DatetimeIndex(data=self.ts.get_date_times()))
+        # timedata['network_load'] = self.network_load.sum(axis=1)
+        timedata['network_load'] = self.nl_profile.get_aggregate_data()
+        # timedata['pv_generation'] = self.pv.data.sum(axis=1)
+        timedata['pv_generation'] = self.pv.get_aggregate_data()
         timedata['grid_import'] = self.imports
         timedata['grid_export'] = self.exports
         timedata['sum_of_customer_imports'] = self.cum_resident_imports
@@ -639,8 +649,9 @@ class Network(Customer):
     def logTimeseriesBrief(self, scenario):
         """Logs basic timeseries data for whole building to csv file."""
 
-        timedata = pd.DataFrame(index=self.ts.timeseries)
-        timedata['network_load'] = self.network_load.sum(axis=1)
+        timedata = pd.DataFrame(index=pd.DatetimeIndex(data=self.ts.get_date_times()))
+        # timedata['network_load'] = self.network_load.sum(axis=1)
+        timedata['network_load'] = self.network_load.get_aggregate_data()
         # timedata['pv_generation'] = self.pv.sum(axis=1)
         timedata['grid_import'] = self.imports
         # timedata['grid_export'] = self.exports

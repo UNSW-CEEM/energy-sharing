@@ -57,10 +57,13 @@ class Tariff:
             # with dst applied to start and end times during summer
             # Assume that demand_end > demand_start
             # (ie period does not cross midnight but can be 00:00 to 23:59)
-            winter_days_affected = self.ts.days[scenario.tariff_lookup.loc[tariff_id, 'demand_week']].join(
-                self.ts.seasonal_time['winter'], 'inner')
-            summer_days_affected = self.ts.days[scenario.tariff_lookup.loc[tariff_id, 'demand_week']].join(
-                self.ts.seasonal_time['summer'], 'inner')
+            weekday_key = scenario.tariff_lookup.loc[tariff_id, 'demand_week']
+            winter_days_affected = self.ts.get_seasonal_times('winter', weekday_key)
+            winter_days_affected = pd.DatetimeIndex(data = winter_days_affected)
+
+            summer_days_affected = self.ts.get_seasonal_times('summer', weekday_key)
+            summer_days_affected = pd.DatetimeIndex(data = summer_days_affected)
+            
             if pd.Timestamp(scenario.tariff_lookup.loc[tariff_id, 'demand_start']).time() > \
                     pd.Timestamp(self.study.tariff_data.lookup.loc[tariff_id, 'demand_end']).time():
                 # winter period crosses midnight
@@ -81,28 +84,28 @@ class Tariff:
                         & (winter_days_affected.time < pd.Timestamp(
                             self.study.tariff_data.lookup.loc[tariff_id, 'demand_end']).time())]
 
-            if (pd.Timestamp(scenario.tariff_lookup.loc[tariff_id, 'demand_start']) + self.ts.dst_reverse_shift).time() > \
-                    (pd.Timestamp(self.study.tariff_data.lookup.loc[tariff_id, 'demand_end']) + self.ts.dst_reverse_shift).time():
+            if (pd.Timestamp(scenario.tariff_lookup.loc[tariff_id, 'demand_start']) + self.ts.get_dst_reverse_shift()).time() > \
+                    (pd.Timestamp(self.study.tariff_data.lookup.loc[tariff_id, 'demand_end']) + self.ts.get_dst_reverse_shift()).time():
                 # summer period crosses midnight
                 summer_period = \
                     summer_days_affected[
                         (summer_days_affected.time >= (pd.Timestamp(
-                            scenario.tariff_lookup.loc[tariff_id, 'demand_start']) + self.ts.dst_reverse_shift).time())
+                            scenario.tariff_lookup.loc[tariff_id, 'demand_start']) + self.ts.get_dst_reverse_shift()).time())
                         & (summer_days_affected.time < pd.Timestamp('23:59').time())].append(
                         summer_days_affected[
                             (summer_days_affected.time >= pd.Timestamp('0:00').time())
                             & (summer_days_affected.time < (pd.Timestamp(
-                                self.study.tariff_data.lookup.loc[tariff_id, 'demand_end']) + self.ts.dst_reverse_shift).time())])
+                                self.study.tariff_data.lookup.loc[tariff_id, 'demand_end']) + self.ts.get_dst_reverse_shift()).time())])
             else:
                 summer_period = \
                     summer_days_affected[
                         (summer_days_affected.time >= (pd.Timestamp(
-                            scenario.tariff_lookup.loc[tariff_id, 'demand_start']) + self.ts.dst_reverse_shift).time())
+                            scenario.tariff_lookup.loc[tariff_id, 'demand_start']) + self.ts.get_dst_reverse_shift()).time())
                         & (summer_days_affected.time < (pd.Timestamp(
-                            self.study.tariff_data.lookup.loc[tariff_id, 'demand_end']) + self.ts.dst_reverse_shift).time())]
+                            self.study.tariff_data.lookup.loc[tariff_id, 'demand_end']) + self.ts.get_dst_reverse_shift()).time())]
             self.demand_period = winter_period.join(summer_period, 'outer').sort_values()
 
-            s = pd.Series(0, index=self.ts.timeseries)
+            s = pd.Series(0, index=pd.DatetimeIndex(data=self.ts.get_date_times()))
             s[self.demand_period] = 1
             self.demand_period_array = np.array(s)
             self.assumed_pf = 1.0  ##   For kVA demand charges, What is good assumption for this????
@@ -121,69 +124,12 @@ class Tariff:
         # SOLAR BLOCK TARIFF IMPLEMENTATION INCORRECT - REMOVED
         # # NB solar block tariff period is NOT adjusted for DST
         if tariff_id in scenario.solar_list:
-            #     for name, parameter in study.tariff_data.tou_rate_list.items():
-            #         if not pd.isnull(study.tariff_data.lookup.loc[tariff_id, name]):
-            #             if any(s in study.tariff_data.lookup.loc[tariff_id, name] for s in ['solar','Solar']):
-            #                 self.solar_rate_name = study.tariff_data.lookup.loc[tariff_id, name]
-            #                 winter_days_affected = ts.days[scenario.tariff_lookup.loc[tariff_id, parameter[3]]].join(  # [3] is week_
-            #                     ts.seasonal_time['winter'], 'inner')
-            #                 summer_days_affected = ts.days[scenario.tariff_lookup.loc[tariff_id, parameter[3]]].join(  # [3] is week_
-            #                     ts.seasonal_time['summer'], 'inner')
-            #
-            #                 if pd.Timestamp(scenario.tariff_lookup.loc[tariff_id, parameter[1]]).time() > \
-            #                         pd.Timestamp(scenario.tariff_lookup.loc[tariff_id, parameter[2]]).time():
-            #                     # winter tariff period crosses midnight:
-            #                     winter_period = \
-            #                         winter_days_affected[
-            #                             (winter_days_affected.time >= pd.Timestamp(
-            #                                 scenario.tariff_lookup.loc[tariff_id, parameter[1]]).time())  # [1] is start
-            #                             & (winter_days_affected.time < pd.Timestamp('23:59').time())].append(
-            #                         winter_days_affected[
-            #                                 (winter_days_affected.time >= pd.Timestamp('0:00').time())
-            #                             & (winter_days_affected.time < pd.Timestamp(
-            #                                 scenario.tariff_lookup.loc[tariff_id, parameter[2]]).time())])  # [2] is end_
-            #                 else:
-            #                     # winter tariff period doesn't cross midnight:
-            #                     winter_period = \
-            #                         winter_days_affected[
-            #                             (winter_days_affected.time >= pd.Timestamp(
-            #                                 scenario.tariff_lookup.loc[tariff_id, parameter[1]]).time())  # [1] is start
-            #                             & (winter_days_affected.time < pd.Timestamp(
-            #                                 scenario.tariff_lookup.loc[tariff_id, parameter[2]]).time())]  # [2] is end_
-            #
-            #                 if (pd.Timestamp(scenario.tariff_lookup.loc[tariff_id, parameter[1]]) ).time() > \
-            #                         (pd.Timestamp(scenario.tariff_lookup.loc[tariff_id, parameter[2]]) ).time():
-            #                     # summer tariff period crosses midnight:
-            #                     summer_period = \
-            #                         summer_days_affected[
-            #                             (summer_days_affected.time >= (pd.Timestamp(
-            #                                 scenario.tariff_lookup.loc[
-            #                                     tariff_id, parameter[1]])).time())  # [1] is start
-            #                             & (summer_days_affected.time < pd.Timestamp('23:59').time())].append(  # [2] is end_
-            #                         summer_days_affected[
-            #                             (summer_days_affected.time >= pd.Timestamp('0:00').time())  # [1] is start
-            #                             & (summer_days_affected.time < (pd.Timestamp(
-            #                                 scenario.tariff_lookup.loc[
-            #                                     tariff_id, parameter[2]]) ).time())])  # [2] is end_
-            #                 else:
-            #                     # summer tariff period doesn't cross midnight:
-            #                     summer_period = \
-            #                     summer_days_affected[
-            #                         (summer_days_affected.time >= (pd.Timestamp(
-            #                             scenario.tariff_lookup.loc[tariff_id, parameter[1]]) ).time())  # [1] is start
-            #                         & (summer_days_affected.time < (pd.Timestamp(
-            #                             scenario.tariff_lookup.loc[tariff_id, parameter[2]])).time())]  # [2] is end_
-            #
-            #                 # solar_period, solar_rate and solar_cp_allocation are for solar block tariffs:
-            #                 # ie fixed quotas with dynamic load-dependent calculation
-            #                 self.solar_period = winter_period.join(summer_period, 'outer').sort_values()
-            #                 self.solar_rate = scenario.tariff_lookup.loc[tariff_id, parameter[0]]  # rate_
-            #                 self.solar_cp_allocation = scenario.tariff_lookup['solar_cp_allocation'].fillna(0).loc[tariff_id] # % of total solar generation allocated to cp
+            
             # Solar import tariff is static TOU tariff for instantaneous solar quota
             self.solar_import_tariff = (scenario.static_solar_imports[tariff_id]).values
             pass
         else:
-            self.solar_import_tariff = np.zeros(self.ts.num_steps)
+            self.solar_import_tariff = np.zeros(self.ts.get_num_steps())
             self.solar_rate_name = ''
         # -----------------------------
         # All volumetric import tariffs
@@ -193,4 +139,4 @@ class Tariff:
         if tariff_id not in scenario.dynamic_list:
             self.import_tariff = (scenario.static_imports[tariff_id]).values
         else:
-            self.import_tariff = np.zeros(self.ts.num_steps)
+            self.import_tariff = np.zeros(self.ts.get_num_steps())

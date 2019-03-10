@@ -5,7 +5,9 @@ import numpy as np
 import logging
 
 from ..mike_model import en_utilities as util
+from ..mike_model.pv import PVCollectionFactory
 
+from ..mike_model.load import LoadCollection
 
 class Scenario:
     """Contains a single set of input parameters, but may contain multiple load profiles."""
@@ -68,7 +70,8 @@ class Scenario:
 
             # read all load profiles into dict of dfs
             # ---------------------------------------
-            self.dict_load_profiles = {}
+            # self.load_profiles = {}
+            self.load_profiles = LoadCollection()
             for load_name in self.load_list:
                 loadFile = os.path.join(load_path, load_name)
                 temp_load = pd.read_csv(loadFile,
@@ -77,11 +80,12 @@ class Scenario:
                 temp_load = temp_load.set_index('timestamp')
                 if not 'cp' in temp_load.columns:
                     temp_load['cp'] = 0
-                self.dict_load_profiles[load_name] = temp_load.copy()
+                # self.load_profiles[load_name] = temp_load.copy()
+                # self.load_profiles.profiles[load_name] = temp_load.copy()
+                self.load_profiles.add_profile_from_df(temp_load, load_name)
             # use first load profile in list to establish list of residents:
             # --------------------------------------------------------------
-            templist = list(self.dict_load_profiles[
-                                self.load_list[0]].columns.values)  # list of potential child meters - residents + cp
+            templist = list(self.load_profiles.profiles[self.load_list[0]].columns.values)  # list of potential child meters - residents + cp
             self.resident_list = []
             for i in templist:
                 if type(i) == 'str':
@@ -91,7 +95,8 @@ class Scenario:
         else:
             # Loads are the same for every scenario and have been read already:
             # -----------------------------------------------------------------
-            self.dict_load_profiles = study.dict_load_profiles.copy()
+            self.load_profiles = LoadCollection()
+            self.load_profiles.profiles = study.load_profiles.profiles.copy()
             self.resident_list = study.resident_list.copy()  # includes cp
             self.load_list = study.load_list.copy()
 
@@ -102,7 +107,8 @@ class Scenario:
         # read PV profile for this scenario
         # ---------------------------------
         if not self.pv_exists:
-            self.pv = pd.DataFrame(index=self.ts.timeseries, columns=self.resident_list).fillna(0)
+            # self.pv = pd.DataFrame(index=self.ts.get_date_times(), columns=self.resident_list).fillna(0)
+            self.pv = PVCollectionFactory().empty_collection(self.ts.get_date_times(), self.resident_list)
         else:
             self.pvFile = os.path.join(study.pv_path, self.parameters['pv_filename'])
             if '.csv' not in self.pvFile:
@@ -114,9 +120,12 @@ class Scenario:
             else:
                 # Load pv generation data:
                 # -----------------------
-                self.pv = pd.read_csv(self.pvFile, parse_dates=['timestamp'], dayfirst=True)
-                self.pv.set_index('timestamp', inplace=True)
-                if not self.pv.index.equals(self.ts.timeseries):
+                # self.pv = pd.read_csv(self.pvFile, parse_dates=['timestamp'], dayfirst=True)
+                # self.pv.data.set_index('timestamp', inplace=True)
+                self.pv = PVCollectionFactory().from_file(self.pvFile)
+                
+                # if not self.pv.data.index.equals(pd.DatetimeIndex(data=self.ts.get_date_times())):
+                if not pd.DatetimeIndex(data=self.pv.get_date_times()).equals(pd.DatetimeIndex(data=self.ts.get_date_times())):
                     logging.info('***************Exception!!! PV %s index does not align with load ', self.pvFile)
                     sys.exit("PV has bad timeseries")
                 # Scaleable PV has a 1kW generation input file scaled to array size:
@@ -124,10 +133,12 @@ class Scenario:
                                     self.parameters.fillna(False)['pv_scaleable']
                 if self.pv_scaleable:
                     self.pv_kW_peak = self.parameters['pv_kW_peak']
-                    self.pv = self.pv * self.pv_kW_peak
-            if self.pv.sum().sum() == 0:
+                    # self.pv = self.pv * self.pv_kW_peak
+                    self.pv.scale(self.pv_kW_peak)
+            if self.pv.get_aggregate_sum() == 0:
                 self.pv_exists = False
-                self.pv = pd.DataFrame(index=self.ts.timeseries, columns=self.resident_list).fillna(0)
+                # self.pv = pd.DataFrame(index=pd.DatetimeIndex(data=self.ts.get_date_times()), columns=self.resident_list).fillna(0)
+                self.pv = PVCollectionFactory().empty_collection(self.ts.get_date_times(),self.resident_list)
 
         # ---------------------------------------
         # Set up tariffs for this scenario

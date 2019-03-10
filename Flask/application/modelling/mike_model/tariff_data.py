@@ -24,9 +24,11 @@ class TariffData:
         self.lookup = pd.read_csv(tariff_lookup_path, index_col=[0])
         self.all_tariffs = [t for t in self.lookup.index if t in parameter_list]  # list of all tariff ids
         # set up dfs for static import and export tariffs
-        self.static_imports = pd.DataFrame(index=self.ts.timeseries)
-        self.static_exports = pd.DataFrame(index=self.ts.timeseries)
-        self.static_solar_imports = pd.DataFrame(index=self.ts.timeseries)
+        self.static_imports = pd.DataFrame(
+            index=pd.DatetimeIndex(data=self.ts.get_date_times())
+            )
+        self.static_exports = pd.DataFrame(index=pd.DatetimeIndex(data=self.ts.get_date_times()))
+        self.static_solar_imports = pd.DataFrame(index=pd.DatetimeIndex(data=self.ts.get_date_times()))
 
         self.tou_rate_list = {'name_1': ['rate_1', 'start_1', 'end_1', 'week_1'],
                               'name_2': ['rate_2', 'start_2', 'end_2', 'week_2'],
@@ -74,11 +76,15 @@ class TariffData:
                 # NB times stored in csv in form 'h:mm'. Midnight saved as 23:59
                 for name, parameter in self.tou_rate_list.items():
                     if not pd.isnull(self.lookup.loc[tid, parameter[1]]):  # parameter[1] is rate_
-                        winter_days_affected = self.ts.days[self.lookup.loc[tid, parameter[3]]].join(
-                            self.ts.seasonal_time['winter'], 'inner')
-                        summer_days_affected = self.ts.days[self.lookup.loc[tid, parameter[3]]].join(
-                            self.ts.seasonal_time['summer'], 'inner')
-
+                        # Returns a pd.DatetimeIndex containing relevant winter days affected by tariff.
+                        # Here we are just trying to get 'what are all the days that are both weekends/weekdays, and also winter / summer seasonal?
+                        weekday_key = self.lookup.loc[tid, parameter[3]] #either 'day', 'end' or 'both' - needs a refactor. 
+                        winter_days_affected = self.ts.get_seasonal_times('winter', weekday_key)
+                        winter_days_affected = pd.DatetimeIndex(data=winter_days_affected) #convert array to pd.DatetimeIndex
+                        
+                        summer_days_affected = self.ts.get_seasonal_times('summer', weekday_key)
+                        summer_days_affected = pd.DatetimeIndex(data=summer_days_affected) #convert array to pd.DatetimeIndex
+                       
                         if pd.Timestamp(self.lookup.loc[tid, parameter[1]]).time() > pd.Timestamp(
                                 self.lookup.loc[tid, parameter[2]]).time():
                             # winter tariff period crosses midnight:
@@ -100,28 +106,28 @@ class TariffData:
                                     & (winter_days_affected.time < pd.Timestamp(
                                         self.lookup.loc[tid, parameter[2]]).time())]  # end_
 
-                        if (pd.Timestamp(self.lookup.loc[tid, parameter[1]]) + self.ts.dst_reverse_shift).time() > (
+                        if (pd.Timestamp(self.lookup.loc[tid, parameter[1]]) + self.ts.get_dst_reverse_shift()).time() > (
                                 pd.Timestamp(
-                                        self.lookup.loc[tid, parameter[2]]) + self.ts.dst_reverse_shift).time():
+                                        self.lookup.loc[tid, parameter[2]]) + self.ts.get_dst_reverse_shift()).time():
                             # summer tariff period crosses midnight:
                             summer_period = \
                                 (summer_days_affected[
                                     (summer_days_affected.time >= (pd.Timestamp(
                                         self.lookup.loc[
-                                            tid, parameter[1]]) + self.ts.dst_reverse_shift).time())  # [1] is start_)
+                                            tid, parameter[1]]) + self.ts.get_dst_reverse_shift()).time())  # [1] is start_)
                                     & (summer_days_affected.time <= pd.Timestamp('23:59').time())]).append(
                                     summer_days_affected[
                                         (summer_days_affected.time >= pd.Timestamp('0:00').time())
                                         & (summer_days_affected.time < (pd.Timestamp(
                                             self.lookup.loc[
-                                                tid, parameter[2]]) + self.ts.dst_reverse_shift).time())])  # [2] is end_
+                                                tid, parameter[2]]) + self.ts.get_dst_reverse_shift()).time())])  # [2] is end_
                         else:
                             summer_period = \
                                 summer_days_affected[
                                     (summer_days_affected.time >= (pd.Timestamp(
-                                        self.lookup.loc[tid, parameter[1]]) + self.ts.dst_reverse_shift).time())  # start_)
+                                        self.lookup.loc[tid, parameter[1]]) + self.ts.get_dst_reverse_shift()).time())  # start_)
                                     & (summer_days_affected.time < (pd.Timestamp(
-                                        self.lookup.loc[tid, parameter[2]]) + self.ts.dst_reverse_shift).time())]  # end_
+                                        self.lookup.loc[tid, parameter[2]]) + self.ts.get_dst_reverse_shift()).time())]  # end_
                         period = winter_period.join(summer_period, 'outer').sort_values()
                         if not any(s in self.lookup.loc[tid, name] for s in ['solar', 'Solar']):
                             # Store solar rate and period separately

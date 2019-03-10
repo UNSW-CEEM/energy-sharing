@@ -21,6 +21,7 @@ import os
 import datetime
 import pandas as pd
 import pendulum
+import json
 
 
 class Parameters:
@@ -209,3 +210,31 @@ class Parameters:
 
         return max(s_start, l_start), min(s_end, l_end)
 
+def dummy_status_callback(message):
+    # my_status = "Status: " + message
+    print(message)
+
+# run with pipenv run python -m 
+if __name__ == "__main__":
+
+    p = Parameters()
+    p.load_defaults()
+    p.model_type = 'mike'
+    p.create_objects()
+    results = p.run(dummy_status_callback)
+    
+
+    # Make sure the outputs haven't changed
+    expected_str = '{"total_participant_bill": {"cust_total$_W01": "1621.2177776059468", "cust_total$_W02": "1244.0590245491867", "cust_total$_W03": "1539.6694190048577", "cust_total$_W04": "1277.1697100222532", "cust_total$_W05": "1853.411473722031", "cust_total$_W06": "2396.2379833677064", "cust_total$_W07": "1313.16320065428", "cust_total$_W08": "1283.4072823120578", "cust_total$_W09": "1499.2408409905686", "cust_total$_W10": "982.6049788473111", "cust_total$_W11": "1085.8358211744755", "cust_total$_W12": "1295.751001512609", "cust_total$_W13": "1838.2146786638402", "cust_total$_W14": "1601.2267053592711", "cust_total$_W15": "2702.1448412286354", "cust_total$_W16": "1448.966625086649", "cust_total$_W17": "953.3447564128355", "cust_total$_W18": "438.4070266636045", "cust_total$_W19": "951.4354996833379", "cust_total$_W20": "1409.3640737357866", "cust_total$_W21": "2306.4447092180576", "cust_total$_W22": "1029.9172118963688", "cust_total$_W23": "964.3471644411289", "cust_total$_W24": "777.2908544895467", "cust_total$_W25": "918.9360406439156", "cust_total$_W26_A": "1364.9269853278454", "cust_total$_W27": "1528.00265447888", "cust_total$_W28": "1585.6029413094134", "cust_total$_W29": "1853.581098165551", "cust_total$_W30_A": "1364.9269853278454", "cust_total$_W31_A": "1364.9269853278454", "cust_total$_W32_A": "1364.9269853278454", "cust_total$_W33_A": "1364.9269853278454", "cust_total$_W34_A": "1364.9269853278454", "cust_total$_W35_A": "1364.9269853278454", "cust_total$_W36_A": "1364.9269853278454", "cust_total$_W37_A": "1364.9269853278454", "cust_total$_W38_A": "1364.9269853278454", "cust_total$_W39_A": "1364.9269853278454", "cust_total$_W40_A": "1364.9269853278454", "cust_total$_W41_A": "1364.9269853278454", "cust_total$_W42_A": "1364.9269853278454", "cust_total$_W43_A": "1364.9269853278454", "cust_total$_W44_A": "1364.9269853278454", "cust_total$_W45_A": "1364.9269853278454", "cust_total$_W46_A": "1364.9269853278454", "cust_total$_W47_A": "1364.9269853278454", "cust_total$_W48_A": "1364.9269853278454", "cust_total$_W49_A": "1364.9269853278454", "cust_total$_W50_A": "1364.9269853278454", "cust_total$_W51_A": "1364.9269853278454", "cust_total$_W52_A": "1364.9269853278454", "cust_total$_W53_A": "1364.9269853278454", "cust_total$_W54_A": "1364.9269853278454", "cust_total$_W55_A": "1364.9269853278454", "cust_total$_W56_A": "1364.9269853278454", "cust_total$_W57_A": "1364.9269853278454", "cust_total$_W58_A": "1364.9269853278454", "cust_total$_W59_A": "1364.9269853278454", "cust_total$_W60_A": "1364.9269853278454", "cust_total$_W61_A": "1364.9269853278454", "cust_total$_W62_A": "1364.9269853278454", "cust_total$_W63_A": "1364.9269853278454", "cust_total$_W64_A": "1364.9269853278454", "cust_total$_W65_A": "1364.9269853278454", "cust_total$_W66_A": "1364.9269853278454", "cust_total$_W67_A": "1364.9269853278454", "cust_total$_W68_A": "1364.9269853278454", "cust_total$_W69_A": "1364.9269853278454", "cust_total$_W70_A": "1364.9269853278454", "cust_total$_W71_A": "1364.9269853278454", "cust_total$_W72_A": "1364.9269853278454", "cust_total$_cp": "0.0"}, "revenue_participant": false, "revenue_retailer": false, "energy_gencon": false, "energy_cc": false}'
+    expected = json.loads(expected_str)
+    success = True
+    for customer in results['total_participant_bill']:
+        if results['total_participant_bill'][customer] != expected['total_participant_bill'][customer]:
+            success = False
+            print(customer,"expected", expected['total_participant_bill'][customer],"got",results['total_participant_bill'][customer])
+            break
+        
+    if success:
+        print("!!!!!!!!!!!!!!!!! Test Passed !!!!!!!!!!!!!!!!!!")
+    else:
+        print("<<<<<<<<<<<<<<<<<<< Test Failed >>>>>>>>>>>>>>>>>>>>>")

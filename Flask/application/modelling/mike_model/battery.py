@@ -110,7 +110,6 @@ class Battery:
             # Calculate discharge and grid-charge period(s):
             # ----------------------------------------------
             # If battery strategy is seasonal, add an hour to summer charge and discharge periods
-
             if seasonal_strategy:
                 # If battery strategy is seasonal, add an hour to summer charge and discharge periods
                 # discharge_1
@@ -119,8 +118,9 @@ class Battery:
                     winter_period = pd.DatetimeIndex([])
                 elif pd.Timestamp(discharge_start1) > pd.Timestamp(discharge_end1):
                     # winter period crosses midnight
-                    winter_days_affected = self.ts.days[discharge_day1].join(
-                        self.ts.seasonal_time['winter'], 'inner')
+                    weekday_key = discharge_day1
+                    winter_days_affected = self.ts.get_seasonal_times('winter', weekday_key)
+                    winter_days_affected = pd.DatetimeIndex(data = winter_days_affected)
                     winter_period = \
                         winter_days_affected[
                             (winter_days_affected.time >= pd.Timestamp(discharge_start1).time()) & (
@@ -128,31 +128,35 @@ class Battery:
                             winter_days_affected[(winter_days_affected.time >= pd.Timestamp('0:00').time()) & (
                                     winter_days_affected.time < pd.Timestamp(discharge_end1).time())]).sort_values()
                     # summer period crosses midnight
-                    summer_days_affected = self.ts.days[discharge_day1].join(
-                        self.ts.seasonal_time['summer'], 'inner')
+                    summer_days_affected = self.ts.get_seasonal_times('summer', weekday_key)
+                    summer_days_affected = pd.DatetimeIndex(data = summer_days_affected)
+                   
                     summer_period = \
                         summer_days_affected[
                             (summer_days_affected.time >= (
-                                        pd.Timestamp(discharge_start1) + self.ts.dst_reverse_shift).time()) & (
+                                        pd.Timestamp(discharge_start1) + self.ts.get_dst_reverse_shift()).time()) & (
                                     summer_days_affected.time <= pd.Timestamp('23:59').time())].append(
                             summer_days_affected[(summer_days_affected.time >= pd.Timestamp('0:00').time()) & (
                                     summer_days_affected.time < (
-                                        pd.Timestamp(discharge_end1) + self.ts.dst_reverse_shift).time())]).sort_values()
+                                        pd.Timestamp(discharge_end1) + self.ts.get_dst_reverse_shift()).time())]).sort_values()
                 else:
                     # winter_period doesn't cross midnight
-                    winter_days_affected = self.ts.days[discharge_day1].join(
-                        self.ts.seasonal_time['winter'], 'inner')
+                    weekday_key = discharge_day1
+                    winter_days_affected = self.ts.get_seasonal_times('winter', weekday_key)
+                    winter_days_affected = pd.DatetimeIndex(data = winter_days_affected)
+                    
                     winter_period = \
                         winter_days_affected[(winter_days_affected.time >= pd.Timestamp(discharge_start1).time())
                                              & (winter_days_affected.time < pd.Timestamp(discharge_end1).time())]
                     # summer_period doesn't cross midnight
-                    summer_days_affected = self.ts.days[discharge_day1].join(
-                        self.ts.seasonal_time['summer'], 'inner')
+                    summer_days_affected = self.ts.get_seasonal_times('summer', weekday_key)
+                    summer_days_affected = pd.DatetimeIndex(data=summer_days_affected)
+                    
                     summer_period = \
                         summer_days_affected[(summer_days_affected.time >= (
-                                    pd.Timestamp(discharge_start1) + self.ts.dst_reverse_shift).time())
+                                    pd.Timestamp(discharge_start1) + self.ts.get_dst_reverse_shift()).time())
                                              & (summer_days_affected.time < (
-                                    pd.Timestamp(discharge_end1) + self.ts.dst_reverse_shift).time())]
+                                    pd.Timestamp(discharge_end1) + self.ts.get_dst_reverse_shift()).time())]
                 discharge_period1 = winter_period.join(summer_period, 'outer').sort_values()
 
                 # discharge_2
@@ -161,8 +165,10 @@ class Battery:
                     winter_period = pd.DatetimeIndex([])
                 elif pd.Timestamp(discharge_start2) > pd.Timestamp(discharge_end2):
                     # winter period crosses midnight
-                    winter_days_affected = self.ts.days[discharge_day2].join(
-                        self.ts.seasonal_time['winter'], 'inner')
+                    weekday_key = discharge_day2
+                    winter_days_affected = self.ts.get_seasonal_times('winter', weekday_key)
+                    winter_days_affected = pd.DatetimeIndex(data = winter_days_affected)
+                    
                     winter_period = \
                         winter_days_affected[
                             (winter_days_affected.time >= pd.Timestamp(discharge_start2).time()) & (
@@ -170,31 +176,35 @@ class Battery:
                             winter_days_affected[(winter_days_affected.time >= pd.Timestamp('0:00').time()) & (
                                     winter_days_affected.time < pd.Timestamp(discharge_end2).time())]).sort_values()
                     # summer period crosses midnight
-                    summer_days_affected = self.ts.days[discharge_day2].join(
-                        self.ts.seasonal_time['summer'], 'inner')
+                    summer_days_affected = self.ts.get_seasonal_times('summer', weekday_key)
+                    summer_days_affected = pd.DatetimeIndex(data=summer_days_affected)
+                    
                     summer_period = \
                         summer_days_affected[
                             (summer_days_affected.time >= (
-                                        pd.Timestamp(discharge_start2) + self.ts.dst_reverse_shift).time()) & (
+                                        pd.Timestamp(discharge_start2) + self.ts.get_dst_reverse_shift()).time()) & (
                                     summer_days_affected.time <= pd.Timestamp('23:59').time())].append(
                             summer_days_affected[(summer_days_affected.time >= pd.Timestamp('0:00').time()) & (
                                     summer_days_affected.time < (
-                                        pd.Timestamp(discharge_end2) + self.ts.dst_reverse_shift).time())]).sort_values()
+                                        pd.Timestamp(discharge_end2) + self.ts.get_dst_reverse_shift()).time())]).sort_values()
                 else:
                     # winter_period doesn't cross midnight
-                    winter_days_affected = self.ts.days[discharge_day2].join(
-                        self.ts.seasonal_time['winter'], 'inner')
+                    weekday_key = discharge_day2
+                    winter_days_affected = self.ts.get_seasonal_times('winter', weekday_key)
+                    winter_days_affected = pd.DatetimeIndex(data = winter_days_affected)
+                    
                     winter_period = \
                         winter_days_affected[(winter_days_affected.time >= pd.Timestamp(discharge_start2).time())
                                              & (winter_days_affected.time < pd.Timestamp(discharge_end2).time())]
                     # summer_period doesn't cross midnight
-                    summer_days_affected = self.ts.days[discharge_day2].join(
-                        self.ts.seasonal_time['summer'], 'inner')
+                    summer_days_affected = self.ts.get_seasonal_times('summer', weekday_key)
+                    summer_days_affected = pd.DatetimeIndex(data=summer_days_affected)
+                    
                     summer_period = \
                         summer_days_affected[(summer_days_affected.time >= (
-                                    pd.Timestamp(discharge_start2) + self.ts.dst_reverse_shift).time())
+                                    pd.Timestamp(discharge_start2) + self.ts.get_dst_reverse_shift()).time())
                                              & (summer_days_affected.time < (
-                                    pd.Timestamp(discharge_end2) + self.ts.dst_reverse_shift).time())]
+                                    pd.Timestamp(discharge_end2) + self.ts.get_dst_reverse_shift()).time())]
                 discharge_period2 = winter_period.join(summer_period, 'outer').sort_values()
 
                 # charge_1
@@ -203,8 +213,10 @@ class Battery:
                     winter_period = pd.DatetimeIndex([])
                 elif pd.Timestamp(charge_start1) > pd.Timestamp(charge_end1):
                     # winter period crosses midnight
-                    winter_days_affected = self.ts.days[charge_day1].join(
-                        self.ts.seasonal_time['winter'], 'inner')
+                    weekday_key = charge_day1
+                    winter_days_affected = self.ts.get_seasonal_times('winter', weekday_key)
+                    winter_days_affected = pd.DatetimeIndex(data = winter_days_affected)
+                    
                     winter_period = \
                         winter_days_affected[
                             (winter_days_affected.time >= pd.Timestamp(charge_start1).time()) & (
@@ -212,30 +224,34 @@ class Battery:
                             winter_days_affected[(winter_days_affected.time >= pd.Timestamp('0:00').time()) & (
                                     winter_days_affected.time < pd.Timestamp(charge_end1).time())]).sort_values()
                     # summer period crosses midnight
-                    summer_days_affected = self.ts.days[charge_day1].join(
-                        self.ts.seasonal_time['summer'], 'inner')
+                    summer_days_affected = self.ts.get_seasonal_times('summer', weekday_key)
+                    summer_days_affected = pd.DatetimeIndex(data=summer_days_affected)
+                    
                     summer_period = \
                         summer_days_affected[
                             (summer_days_affected.time >= (
-                                        pd.Timestamp(charge_start1) + self.ts.dst_reverse_shift).time()) & (
+                                        pd.Timestamp(charge_start1) + self.ts.get_dst_reverse_shift()).time()) & (
                                     summer_days_affected.time <= pd.Timestamp('23:59').time())].append(
                             summer_days_affected[(summer_days_affected.time >= pd.Timestamp('0:00').time()) & (
                                     summer_days_affected.time < (
-                                        pd.Timestamp(charge_end1) + self.ts.dst_reverse_shift).time())]).sort_values()
+                                        pd.Timestamp(charge_end1) + self.ts.get_dst_reverse_shift()).time())]).sort_values()
                 else:
                     # winter_period doesn't cross midnight
-                    winter_days_affected = self.ts.days[charge_day1].join(
-                        self.ts.seasonal_time['winter'], 'inner')
+                    weekday_key = charge_day1
+                    winter_days_affected = self.ts.get_seasonal_times('winter', weekday_key)
+                    winter_days_affected = pd.DatetimeIndex(data = winter_days_affected)
+                    
                     winter_period = \
                         winter_days_affected[(winter_days_affected.time >= pd.Timestamp(charge_start1).time())
                                              & (winter_days_affected.time < pd.Timestamp(charge_end1).time())]
                     # summer_period doesn't cross midnight
-                    summer_days_affected = self.ts.days[charge_day1].join(
-                        self.ts.seasonal_time['summer'], 'inner')
+                    summer_days_affected = self.ts.get_seasonal_times('summer', weekday_key)
+                    summer_days_affected = pd.DatetimeIndex(data=summer_days_affected)
+
                     summer_period = \
                         summer_days_affected[
-                            (summer_days_affected.time >= (pd.Timestamp(charge_start1) + self.ts.dst_reverse_shift).time())
-                            & (summer_days_affected.time < (pd.Timestamp(charge_end1) + self.ts.dst_reverse_shift).time())]
+                            (summer_days_affected.time >= (pd.Timestamp(charge_start1) + self.ts.get_dst_reverse_shift()).time())
+                            & (summer_days_affected.time < (pd.Timestamp(charge_end1) + self.ts.get_dst_reverse_shift()).time())]
                 charge_period1 = winter_period.join(summer_period, 'outer').sort_values()
 
                 # charge_2
@@ -244,8 +260,10 @@ class Battery:
                     winter_period = pd.DatetimeIndex([])
                 elif pd.Timestamp(charge_start2) > pd.Timestamp(charge_end2):
                     # winter period crosses midnight
-                    winter_days_affected = self.ts.days[charge_day2].join(
-                        self.ts.seasonal_time['winter'], 'inner')
+                    weekday_key = charge_day2
+                    winter_days_affected = self.ts.get_seasonal_times('winter', weekday_key)
+                    winter_days_affected = pd.DatetimeIndex(data = winter_days_affected)
+                    
                     winter_period = \
                         winter_days_affected[
                             (winter_days_affected.time >= pd.Timestamp(charge_start2).time()) & (
@@ -253,30 +271,33 @@ class Battery:
                             winter_days_affected[(winter_days_affected.time >= pd.Timestamp('0:00').time()) & (
                                     winter_days_affected.time < pd.Timestamp(charge_end2).time())]).sort_values()
                     # summer period crosses midnight
-                    summer_days_affected = self.ts.days[charge_day2].join(
-                        self.ts.seasonal_time['summer'], 'inner')
+                    summer_days_affected = self.ts.get_seasonal_times('summer', weekday_key)
+                    summer_days_affected = pd.DatetimeIndex(data=summer_days_affected)
+                    
                     summer_period = \
                         summer_days_affected[
                             (summer_days_affected.time >= (
-                                        pd.Timestamp(charge_start2) + self.ts.dst_reverse_shift).time()) & (
+                                        pd.Timestamp(charge_start2) + self.ts.get_dst_reverse_shift()).time()) & (
                                     summer_days_affected.time <= pd.Timestamp('23:59').time())].append(
                             summer_days_affected[(summer_days_affected.time >= pd.Timestamp('0:00').time()) & (
                                     summer_days_affected.time < (
-                                        pd.Timestamp(charge_end2) + self.ts.dst_reverse_shift).time())]).sort_values()
+                                        pd.Timestamp(charge_end2) + self.ts.get_dst_reverse_shift()).time())]).sort_values()
                 else:
                     # winter_period doesn't cross midnight
-                    winter_days_affected = self.ts.days[charge_day2].join(
-                        self.ts.seasonal_time['winter'], 'inner')
+                    weekday_key = charge_day2
+                    winter_days_affected = self.ts.get_seasonal_times('winter', weekday_key)
+                    winter_days_affected = pd.DatetimeIndex(data = winter_days_affected)
+                    
                     winter_period = \
                         winter_days_affected[(winter_days_affected.time >= pd.Timestamp(charge_start2).time())
                                              & (winter_days_affected.time < pd.Timestamp(charge_end2).time())]
                     # summer_period doesn't cross midnight
-                    summer_days_affected = self.ts.days[charge_day2].join(
-                        self.ts.seasonal_time['summer'], 'inner')
+                    summer_days_affected = self.ts.get_seasonal_times('summer', weekday_key)
+                    summer_days_affected = pd.DatetimeIndex(data=summer_days_affected)
                     summer_period = \
                         summer_days_affected[
-                            (summer_days_affected.time >= (pd.Timestamp(charge_start2) + self.ts.dst_reverse_shift).time())
-                            & (summer_days_affected.time < (pd.Timestamp(charge_end2) + self.ts.dst_reverse_shift).time())]
+                            (summer_days_affected.time >= (pd.Timestamp(charge_start2) + self.ts.get_dst_reverse_shift()).time())
+                            & (summer_days_affected.time < (pd.Timestamp(charge_end2) + self.ts.get_dst_reverse_shift()).time())]
                 charge_period2 = winter_period.join(summer_period, 'outer').sort_values()
 
             else:
@@ -285,66 +306,83 @@ class Battery:
                 if pd.isnull(discharge_start1):
                     discharge_period1 = pd.DatetimeIndex([])
                 elif pd.Timestamp(discharge_start1) > pd.Timestamp(discharge_end1):
-                    discharge_period1 = (
-                        self.ts.days[discharge_day1][(self.ts.days[discharge_day1].time >= pd.Timestamp(discharge_start1).time()) & (
-                                self.ts.days[discharge_day1].time <= pd.Timestamp('23:59').time())].append(
-                            self.ts.days[discharge_day1][(self.ts.days[discharge_day1].time >= pd.Timestamp('0:00').time()) & (
-                                    self.ts.days[discharge_day1].time < pd.Timestamp(discharge_end1).time())])).sort_values()
+                    weekday_key = discharge_day1
+                    start_time = pd.Timestamp(discharge_start1).time()
+                    end_time = pd.Timestamp(discharge_end1).time()
+
+                    before_midnight = pd.DatetimeIndex(data = self.ts.get_times_between(self, start_time, pd.Timestamp('23:59').time(), weekday_key))
+                    after_midnight = pd.DatetimeIndex(data = self.ts.get_times_between(self, pd.Timestamp('0:00').time(), end_time, weekday_key))
+                    discharge_period_1 = (before_midnight.append(after_midnight)).sort_values()
+                    
                 else:
-                    discharge_period1 = \
-                        self.ts.days[discharge_day1][(self.ts.days[discharge_day1].time >= pd.Timestamp(discharge_start1).time())
-                                                & (self.ts.days[discharge_day1].time < pd.Timestamp(discharge_end1).time())]
+                    weekday_key = discharge_day1
+                    start_time = pd.Timestamp(discharge_start1).time()
+                    end_time = pd.Timestamp(discharge_end1).time()
+                    discharge_period_1 = pd.DatetimeIndex(data=self.ts.get_times_between(start_time, end_time, weekday_key))
+                    
                 # discharge_2
                 if pd.isnull(discharge_start2):
                     discharge_period2 = pd.DatetimeIndex([])
                 elif pd.Timestamp(discharge_start2) > pd.Timestamp(discharge_end2):
-                    discharge_period2 = (
-                        self.ts.days[discharge_day2][
-                            (self.ts.days[discharge_day2].time >= pd.Timestamp(discharge_start2).time()) & (
-                                    self.ts.days[discharge_day2].time <= pd.Timestamp('23:59').time())].append(
-                            self.ts.days[discharge_day2][(self.ts.days[discharge_day2].time >= pd.Timestamp('0:00').time()) & (
-                                    self.ts.days[discharge_day2].time < pd.Timestamp(discharge_end2).time())])).sort_values()
+                    weekday_key = discharge_day2
+                    start_time = pd.Timestamp(discharge_start2).time()
+                    end_time = pd.Timestamp(discharge_end2).time()
+
+                    before_midnight = pd.DatetimeIndex(data = self.ts.get_times_between(start_time, pd.Timestamp('23:59').time(), weekday_key))
+                    after_midnight = pd.DatetimeIndex(data = self.ts.get_times_between(pd.Timestamp('0:00').time(), end_time, weekday_key))
+                    discharge_period2 = (before_midnight.append(after_midnight)).sort_values()
+                    
                 else:
-                    discharge_period2 = \
-                        self.ts.days[discharge_day2][(self.ts.days[discharge_day2].time >= pd.Timestamp(discharge_start2).time())
-                                                & (self.ts.days[discharge_day2].time < pd.Timestamp(discharge_end2).time())]
+                    weekday_key = discharge_day2
+                    start_time = pd.Timestamp(discharge_start2).time()
+                    end_time = pd.Timestamp(discharge_end2).time()
+
+                    discharge_period2 = pd.DatetimeIndex(data=self.ts.get_times_between(start_time, end_time, weekday_key))
+                   
                 # charge_1
                 if pd.isnull(charge_start1):
                     charge_period1 = pd.DatetimeIndex([])
                 elif pd.Timestamp(charge_start1) > pd.Timestamp(charge_end1):
-                    charge_period1 = (
-                        self.ts.days[charge_day1][(self.ts.days[charge_day1].time >= pd.Timestamp(charge_start1).time()) & (
-                                self.ts.days[charge_day1].time <= pd.Timestamp('23:59').time())].append(
-                            self.ts.days[charge_day1][(self.ts.days[charge_day1].time >= pd.Timestamp('0:00').time()) & (
-                                    self.ts.days[charge_day1].time < pd.Timestamp(charge_end1).time())])).sort_values()
+                    weekday_key = charge_day1
+                    start_time = pd.Timestamp(charge_start1).time()
+                    end_time = pd.Timestamp(charge_end1).time()
+                    before_midnight = pd.DatetimeIndex(data=self.ts.get_times_between(start_time, pd.Timestamp('23:59').time(), weekday_key))
+                    after_midnight = pd.DatetimeIndex(data=self.ts.get_times_between(pd.Timestamp('0:00').time(), end_time, weekday_key))
+                    charge_period1 = (before_midnight.append(after_midnight)).sort_values()
+                    
                 else:
-                    charge_period1 = \
-                        self.ts.days[charge_day1][(self.ts.days[charge_day1].time >= pd.Timestamp(charge_start1).time())
-                                             & (self.ts.days[charge_day1].time < pd.Timestamp(charge_end1).time())]
+                    weekday_key = charge_day1
+                    start_time = pd.Timestamp(charge_start1).time()
+                    end_time = pd.Timestamp(charge_end1).time()
+                    charge_period1 = pd.DatetimeIndex(data=self.ts.get_times_between(start_time, end_time, weekday_key))
+                    
                 # charge_2
                 if pd.isnull(charge_start2):
                     charge_period2 = pd.DatetimeIndex([])
                 elif pd.Timestamp(charge_start2) > pd.Timestamp(charge_end2):
-                    charge_period2 = (
-                        self.ts.days[charge_day2][(self.ts.days[charge_day2].time >= pd.Timestamp(charge_start2).time()) & (
-                                self.ts.days[charge_day2].time <= pd.Timestamp('23:59').time())].append(
-                            self.ts.days[charge_day2][(self.ts.days[charge_day2].time >= pd.Timestamp('0:00').time()) & (
-                                    self.ts.days[charge_day2].time < pd.Timestamp(charge_end2).time())])).sort_values()
+                    weekday_key = charge_day2
+                    start_time = pd.Timestamp(charge_start2).time()
+                    end_time = pd.Timestamp(charge_end2).time()
+                    before_midnight = pd.DatetimeIndex(data = self.ts.get_times_between(start_time, pd.Timestamp('23:59').time(), weekday_key))
+                    after_midnight = pd.DatetimeIndex(data = self.ts.get_times_between(pd.Timestamp(charge_end2).time(), end_time, weekday_key))
+                    charge_period2 = (before_midnight.append(after_midnight)).sort_values()
+                    
                 else:
-                    charge_period2 = \
-                        self.ts.days[charge_day2][(self.ts.days[charge_day2].time >= pd.Timestamp(charge_start2).time())
-                                             & (self.ts.days[charge_day2].time < pd.Timestamp(charge_end2).time())]
+                    weekday_key = charge_day2
+                    start_time = pd.Timestamp(charge_start2).time()
+                    end_time = pd.Timestamp(charge_end2).time()
+                    charge_period2 = pd.DatetimeIndex(data = self.ts.get_times_between(start_time, end_time, weekday_key))
 
             # Combine multiple charge and discharge periods:
             # ---------------------------------------------
             self.discharge_period = discharge_period1.join(discharge_period2, how='outer')
             if len(self.discharge_period) == 0:
-                self.discharge_period = self.ts.timeseries  # if no discharge period set, discharge any time
+                self.discharge_period = pd.DatetimeIndex(data=self.ts.get_date_times())  # if no discharge period set, discharge any time
             self.charge_period = charge_period1.join(charge_period2, how='outer')
 
             # discharge period as array for calculating peak demand
             # -----------------------------------------------------
-            s = pd.Series(0, index=self.ts.timeseries)
+            s = pd.Series(0, index=pd.DatetimeIndex(self.ts.get_date_times()))
             s[self.discharge_period] = 1
             self.discharge_period_array = np.array(s)
 
@@ -369,8 +407,8 @@ class Battery:
             self.number_cycles = 0
             self.SOH = 100  # State of health
             # Max charge / discharge rate is accepted / delivered energy
-            self.max_timestep_delivered = self.discharge_rate_kW * self.ts.interval / 3600
-            self.max_timestep_accepted = self.charge_rate_kW * self.ts.interval / 3600
+            self.max_timestep_delivered = self.discharge_rate_kW * self.ts.get_interval() / 3600
+            self.max_timestep_accepted = self.charge_rate_kW * self.ts.get_interval() / 3600
             self.cumulative_losses = 0
             self.net_discharge = np.zeros(
                 self.ts.num_steps)  # this is +ve for discharge, -ve for charge. Used for SC and SS calcs
@@ -444,12 +482,12 @@ class Battery:
                     self.charge(available_kWh)
             # 3) Discharge if needed to meet load, within discharge period
             # ------------------------------------------------------------
-            if available_kWh < -self.peak_demand_threshold and self.ts.timeseries[step] in self.discharge_period:
+            if available_kWh < -self.peak_demand_threshold and self.ts.get_date_times()[step] in self.discharge_period:
                 available_kWh += \
                     self.discharge(-available_kWh)
             # 4) Charge from grid in additional charge period:
             # ------------------------------------------------
-            if available_kWh <= 0 and self.ts.timeseries[step] in self.charge_period:
+            if available_kWh <= 0 and self.ts.get_date_times()[step] in self.charge_period:
                 available_kWh -= (self.max_timestep_accepted -
                                   self.charge(self.max_timestep_accepted))
 
@@ -457,7 +495,7 @@ class Battery:
             # B) Strategy to reduce peak demand (apply PV to charge first)
             # -----------------------------------------------------------
             # Within discharge period:
-            if self.ts.timeseries[step] in self.discharge_period:
+            if self.ts.get_date_times()[step] in self.discharge_period:
                 # 1) Apply PV to load
                 # -------------------
                 available_kWh = generation - load
@@ -478,7 +516,7 @@ class Battery:
                 # 2) use excess PV to meet load
                 available_kWh = generation - load
                 # If in grid-charging period, charge from grid
-                if available_kWh <= 0 and self.ts.timeseries[step] in self.charge_period:
+                if available_kWh <= 0 and self.ts.get_date_times()[step] in self.charge_period:
                     available_kWh -= (self.max_timestep_accepted -
                                       self.charge(self.max_timestep_accepted))
 

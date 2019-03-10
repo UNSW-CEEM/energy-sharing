@@ -10,6 +10,7 @@ from ..mike_model.network import Network
 from ..mike_model.scenario import Scenario
 from ..mike_model.tariff_data import TariffData
 from ..mike_model.timeseries import Timeseries
+from ..mike_model.load import LoadCollection
 
 
 class Study:
@@ -23,6 +24,7 @@ class Study:
                  override_output,
                  use_threading=False,
                  ):
+        
         # --------------------------------
         # Set up paths and files for Study
         # --------------------------------
@@ -167,17 +169,19 @@ class Study:
         # ---------------------------------------------
         # If same loads throughout Study, get them now:
         # ---------------------------------------------
-        self.dict_load_profiles = {}
+        # self.load_profiles = {}
+        self.load_profiles = LoadCollection()
         if not self.different_loads:
-            for load_name in self.load_list:
-                load_file = os.path.join(self.load_path, load_name)
+            for profile_name in self.load_list:
+                load_file = os.path.join(self.load_path, profile_name)
                 temp_load = pd.read_csv(load_file,
                                         parse_dates=['timestamp'],
                                         dayfirst=True)
                 temp_load = temp_load.set_index('timestamp')
                 if 'cp' not in temp_load.columns:
                     temp_load['cp'] = 0
-                self.dict_load_profiles[load_name] = temp_load
+                # self.load_profiles.profiles[profile_name] = temp_load
+                self.load_profiles.add_profile_from_df(temp_load, profile_name)
 
         # Otherwise, get the first load anyway:#@
         # -------------------------------------
@@ -186,7 +190,9 @@ class Study:
             temp_load = pd.read_csv(load_file,
                                     parse_dates=['timestamp'],
                                     dayfirst=True)
-            self.dict_load_profiles[self.load_list[0]] = temp_load.set_index('timestamp')
+            # self.load_profiles.profiles[self.load_list[0]] = temp_load.set_index('timestamp')
+            profile_name = self.load_list[0]
+            self.load_profiles.add_profile_from_df(temp_load.set_index('timestamp'),profile_name)
 
         # -----------------------------------------------------------------
         # Use first load profile to initialise timeseries and resident_list
@@ -196,7 +202,8 @@ class Study:
         # TODO More globals. ts_ng = timeseries not global
         # global ts  # (assume timeseries are all the same for all load profiles)
         self.ts_ng = Timeseries(
-            load=self.dict_load_profiles[self.load_list[0]],
+            # load=self.load_profiles.profiles[self.load_list[0]],
+            load=self.load_profiles.get_profile(self.load_list[0]).to_df(),
             dst_lookup=self.dst_lookup,
             dst_region=dst_region)
 
@@ -205,7 +212,11 @@ class Study:
         # This is used for initialisation (and when different_loads = FALSE),
         # but RESIDENT_LIST CAN VARY for each scenario:
         # list of potential child meters - residents + cp
-        temp_list = list(self.dict_load_profiles[self.load_list[0]].columns.values)
+        # temp_list = list(self.load_profiles.profiles[self.load_list[0]].columns.values)
+        
+        profile_name = self.load_list[0]
+        temp_list = self.load_profiles.get_profile(profile_name).get_participant_names()
+        
         self.resident_list = []
 
         for i in temp_list:
@@ -262,7 +273,7 @@ class Study:
 
     def run_scenario(self, scenario_name):
         """ This is the main body of script."""
-
+        print("Running Scenario number", scenario_name)
         logging.info("Running Scenario number %i ", scenario_name)
         # Initialise scenario
         scenario = Scenario(scenario_name=scenario_name, study=self, timeseries=self.ts_ng)
@@ -294,7 +305,7 @@ class Study:
                 # If battery, reset then calculate energy flows stepwise:
                 # -------------------------------------------------------
                 eno.resetAllBatteries(scenario)
-                for step in np.arange(0, self.ts_ng.num_steps):
+                for step in np.arange(0, self.ts_ng.get_num_steps()):
                     eno.calcBuildingDynamicEnergyFlows(step)
 
             # Energy Flows for retailer (static)
