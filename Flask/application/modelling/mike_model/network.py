@@ -42,7 +42,7 @@ class Network(Customer):
         # read load data
         # --------------
         self.load_name = load_name
-        self.network_load = scenario.load_profiles.profiles[load_name].to_df()
+        # self.network_load = scenario.load_profiles.profiles[load_name].to_df()
         self.nl_profile = scenario.load_profiles.get_profile(load_name)
         # self.network_load = scenario.dict_load_profiles.get_profile(load_name)
 
