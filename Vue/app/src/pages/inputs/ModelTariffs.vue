@@ -2,6 +2,7 @@
     <div class="background">
         <div class="main-container">
             <h1 class="view-title">{{ view_name }}</h1>
+            <p>Beta Note: 'Luomi' model requires one of each tariff completed. (DUOS, NUOS, TUOS and Retail)</p>
             <table class="tariffs-table">
                 <tr>
                     <th v-for="header in table_headers" :key="header.header_id" :value="header.name">
