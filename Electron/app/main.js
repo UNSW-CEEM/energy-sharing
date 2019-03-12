@@ -7,7 +7,8 @@ app.on('ready', function () {
     win = new BrowserWindow({width: 1000, height: 600});
 
     // Specify entry point to default entry point of vue.js
-    win.loadURL('http://localhost:8080');
+    // win.loadURL('http://localhost:8080'); //this one for the hot-loading dev server run via npm run serve in the vue directory
+    win.loadURL('http://localhost:5000'); //this one for production, post-build, from the python directory.
 
     // Remove window once app is closed
     win.on('closed', function () {
