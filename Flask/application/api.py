@@ -26,15 +26,15 @@ mp = Ui_Parameters()
 client_bp = Blueprint('client_app', __name__,
                       url_prefix='',
                       static_url_path='',
-                      static_folder='../dist/',
-                      template_folder='../dist/',
+                      static_folder='dist/',
+                      template_folder='dist/',
                       )
 app.register_blueprint(client_bp)
 
 
 @app.route('/')
 def index():
-    dist_dir = '../dist'
+    dist_dir = 'dist'
     entry = os.path.join(dist_dir, 'index.html')
     return send_file(entry)
     # return render_template('index.html', async_mode=socketio.async_mode)

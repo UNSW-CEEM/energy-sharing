@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --dest ../../Flask/dist",
+    "build": "vue-cli-service build --dest ../../Flask/application/dist",
     "test:unit": "vue-cli-service test:unit",
     "postinstall": "npm run build",
     "start": "node server.js"

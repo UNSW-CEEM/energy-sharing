@@ -17,6 +17,8 @@ gunicorn = "*"
 matplotlib = "*"
 lazy = "*"
 pyinstaller = "*"
+tornado = "*"
+pendulum-locales = "*"
 
 [dev-packages]
 

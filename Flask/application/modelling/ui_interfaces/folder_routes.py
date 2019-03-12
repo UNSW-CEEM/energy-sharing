@@ -1,6 +1,10 @@
 import os
-
+import sys
 # Not necessarily happy with these names/system. But can easily be changed later
+
+
+# BASE_DIR_NAME = os.path.join( "application", "modelling", "data")
+
 BASE_DIR_NAME = os.path.join("application", "modelling", "data")
 DATA_DIR = os.path.realpath(BASE_DIR_NAME)
 
