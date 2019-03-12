@@ -30,3 +30,19 @@ Made a getter for dst reverse shift. Might be scope here for writing a conversio
 Changed all references to .pv to the PVCollection object (from a pandas dataframe), which will be considered a collection of PV systems that can be queried for solar data. All access to data, and modifications of data, are carried out through function calls rather than by accessing internal parameters.
 
 Refactored the loads dicts and dataframes, so that they simply use a LoadCollection object (load.py). Removing any reliance on dataframes here. 
+
+
+
+Next steps:
+
+So it seems like the next step re. Mike integration is linking a participant to a feed from a solar file. 
+I think we need a PV collection object that can take multiple PV feeds, that can have specific names.
+So you go 'this file + this column' and it takes the data, throws it in a PV collection object. 
+Then this is accessed in the model.
+
+Then we can, in the UI, create a participant, link them to a file + col name, the backend can take both, the PV and load data can be added, etc. 
+
+The date ranges can be queried from the LoadCollection and PVCollection objects too. Nice. 
+
+Integrate with Mike's, then Luomi. 
+

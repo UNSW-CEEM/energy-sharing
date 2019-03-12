@@ -165,7 +165,7 @@ class Parameters:
 
     def run_luomi_model(self, status):
         bc = self.ui_central_battery.get_capacity()
-
+        print("RUN_LUOMI_TIME_PERIODS", self.time_periods)
         self.model_results = Results(self.time_periods, [p.get_id() for p in self.model_network.get_participants()])
         energy_sim.simulate(self.time_periods, self.model_network, self.model_tariffs, self.model_results, status)
         financial_sim.simulate(self.time_periods, self.model_network, self.model_tariffs, self.model_results, status)
