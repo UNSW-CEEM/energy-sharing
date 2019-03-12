@@ -76,6 +76,11 @@ class Parameters:
         self.ui_tariffs.load_defaults()
         self.ui_participants.load_defaults()
 
+        # This is temporary.
+        start = datetime.datetime(year=2017, month=2, day=26, hour=10)
+        end = datetime.datetime(year=2017, month=2, day=26, hour=12)
+        self.time_periods = util.generate_dates_in_range(start, end, 30)
+
     def load_model_selection(self, ui_inputs):
         key = "model_selection"
         if key in ui_inputs:
