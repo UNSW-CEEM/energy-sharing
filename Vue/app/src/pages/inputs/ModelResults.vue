@@ -23,16 +23,15 @@
                 v-if="selected_chart.chart_type==='RevRCC' && chart_data"
                 :chart_data="chart_data"
             />
-            <EnergyCC
-                v-if="selected_chart.chart_type==='EnergyCC' && chart_data"
-                :chart_data="chart_data"
-            />
+            <!--<EnergyCC-->
+                <!--v-if="selected_chart.chart_type==='EnergyCC' && chart_data"-->
+                <!--:chart_data="chart_data"-->
+            <!--/>-->
             <EnergyGenCon
                 v-if="selected_chart.chart_type==='EnergyGenCon' && chart_data"
                 :chart_data="chart_data"
             />
         </div>
-
     </div>
 </template>
 
@@ -68,13 +67,13 @@
                         link_text: "Revenue - Total Participant",
                         chart_type: 'TPB',
                     },
+                    // {
+                    //     id: 3,
+                    //     link_text: "Energy - Central",
+                    //     chart_type: 'EnergyCC',
+                    // },
                     {
                         id: 3,
-                        link_text: "Energy - Central",
-                        chart_type: 'EnergyCC',
-                    },
-                    {
-                        id: 4,
                         link_text: "Energy - Generated/Consumed",
                         chart_type: 'EnergyGenCon',
                     },
