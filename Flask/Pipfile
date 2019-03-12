@@ -16,6 +16,7 @@ Cython = "*"
 gunicorn = "*"
 matplotlib = "*"
 lazy = "*"
+pyinstaller = "*"
 
 [dev-packages]
 

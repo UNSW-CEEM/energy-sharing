@@ -1,15 +1,16 @@
 from threading import Lock
-from flask import Flask, render_template, request
+from flask import Flask, Blueprint,render_template, request, send_file
 from flask_cors import CORS, cross_origin
 from flask_socketio import SocketIO, emit
 from .services import file_service
 from .modelling.ui_interfaces.parameters import Parameters as Ui_Parameters
+import os
 
 file_service = file_service.OSFileService()
 
 async_mode = None
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='dist')
 app.config['SECRET_KEY'] = 'pleasedonthackme'
 
 cors = CORS(app, resources={r'/*': {"origins": '*'}})
@@ -22,9 +23,21 @@ thread_lock = Lock()
 mp = Ui_Parameters()
 
 
+client_bp = Blueprint('client_app', __name__,
+                      url_prefix='',
+                      static_url_path='',
+                      static_folder='../dist/',
+                      template_folder='../dist/',
+                      )
+app.register_blueprint(client_bp)
+
+
 @app.route('/')
 def index():
-    return render_template('index.html', async_mode=socketio.async_mode)
+    dist_dir = '../dist'
+    entry = os.path.join(dist_dir, 'index.html')
+    return send_file(entry)
+    # return render_template('index.html', async_mode=socketio.async_mode)
 
 # File upload endpoint, based on code here:
 # http://flask.pocoo.org/docs/0.12/patterns/fileuploads/
