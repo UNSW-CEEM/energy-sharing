@@ -95,7 +95,7 @@
             if (this.model_page_name in this.$store.state.frontend_state) {
                 this.input_data = this.$store.state.frontend_state[this.model_page_name]
             } else {
-                this.add_row()
+                this.load_config('default_config.csv')
             }
         },
 
