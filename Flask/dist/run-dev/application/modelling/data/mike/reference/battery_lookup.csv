@@ -1,0 +1,10 @@
+battery_id,capacity_kWh,max_charge_kW,efficiency_cycle,maxDOD,maxSOC,max_cycles,battery_cost,battery_life_years,battery_inv_cost,life_bat_inv,notes,
+pw_26,26,9.848,0.89,1,0.9,7300,26000,,,,,C:\PYTHONprojects\notebooks\en_notes\en1_storage_design.md
+pw_52,52,19.697,0.89,1,0.9,7300,52000,,,,,
+pw_78,78,29.545,0.89,1,0.9,7300,78000,,,,,
+pw_104,104,39.394,0.89,1,0.9,7300,104000,,,,,
+pw_scale,1,0.378787879,0.89,1,0.9,7300,,,,,,
+powerwall2_1,13.2,5,0.89,1,0.9,7300,12500,,,,,
+powerwall2_2,26.4,10,0.89,1,0.9,7300,24000,,,,,
+powerwall2_3,39.6,15,0.89,1,0.9,7300,34500,,,,,
+powerwall2_4,52.8,20,0.89,1,0.9,7300,45000,,,,,

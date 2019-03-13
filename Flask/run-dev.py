@@ -20,9 +20,11 @@ else:
 print('Running mode:', running_mode)
 print('  Appliction path  :', application_path)
 
+APPLICATION_PATH = application_path
 
 
 # BASE_DIR_NAME = os.path.join(os.getcwd(),"application", "modelling", "data")
 print("Current directory:",os.getcwd() )
 from application import app
+app.config.base_path = application_path
 app.run(debug=True)

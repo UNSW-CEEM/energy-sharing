@@ -1,2 +1,3 @@
 Electron/app/node_modules
 Flask/Pipfile
+Flask/dist
