@@ -54,6 +54,8 @@
         align-items: center;
         animation-name: fade-in;
         animation-duration: 1s;
+        width: 100%;
+        height: 100%
     }
 
     .model-title {
