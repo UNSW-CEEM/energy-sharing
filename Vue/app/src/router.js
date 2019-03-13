@@ -38,11 +38,11 @@ export default new Router({
             name: 'central_services',
             component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelServices.vue')
         },
-        {
-            path: '/central_solar',
-            name: 'central_solar',
-            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelSolar.vue')
-        },
+        // {
+        //     path: '/central_solar',
+        //     name: 'central_solar',
+        //     component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelSolar.vue')
+        // },
         {
             path: '/financing',
             name: 'financing',

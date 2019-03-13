@@ -140,7 +140,7 @@
 
         methods: {
             add_row(participant_id="", participant_type="", retail_tariff_type="", load_profile="", solar_profile="", solar_scaling=1, battery_type="No Battery") {
-                let array_length = this.input_data.table_rows.length
+                let array_length = this.input_data.table_rows.length;
                 // let participant_default = "participant_" + Number(array_length+1).toString();
                 let new_row = {
                     row_id: array_length,

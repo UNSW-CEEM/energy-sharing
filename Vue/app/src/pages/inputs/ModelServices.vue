@@ -47,7 +47,7 @@
         data () {
             return {
                 view_name: this.$options.name,
-                model_page_name: "model_battery",
+                model_page_name: "central_services",
                 // heading_text: "Central Services",
 
                 input_data: [

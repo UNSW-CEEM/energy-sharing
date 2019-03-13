@@ -66,7 +66,6 @@ class Parameters:
             self.load_tariffs,
             self.load_participants,
             self.load_data_sources,
-            self.load_central_solar,
         ]
 
         for each in load_functions:
@@ -98,7 +97,7 @@ class Parameters:
             self.network_name = ui_inputs[key]
 
     def load_central_battery(self, ui_inputs):
-        key = "model_battery"
+        key = "central_services"
         if key in ui_inputs:
             self.ui_central_battery.load(ui_inputs[key])
 
@@ -118,11 +117,11 @@ class Parameters:
             start, end = self.find_time_periods(ui_inputs[key])
             self.time_periods = util.generate_dates_in_range(start, end, 30)
 
-    def load_central_solar(self, ui_inputs):
-        key = "model_solar"
-        if key in ui_inputs:
-            print("Called load_central_solar")
-            # self.ui_participants.add_participant(ui_inputs[key])
+    # def load_central_solar(self, ui_inputs):
+    #     key = "model_solar"
+    #     if key in ui_inputs:
+    #         print("Called load_central_solar")
+    #         # self.ui_participants.add_participant(ui_inputs[key])
 
     def print(self):
         print("Model Type: ", self.model_type)
