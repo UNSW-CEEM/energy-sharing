@@ -17,7 +17,7 @@ const model_parameters = {
 
 const frontend_state = {
     state: {
-
+        selected_model: false,
     },
 
     mutations: {
@@ -27,22 +27,9 @@ const frontend_state = {
     }
 };
 
-const chart_data = {
-    state: {
-
-    },
-
-    mutations: {
-        save_page(state, payload) {
-            state[payload.chart_name] = payload.data;
-        }
-    }
-};
-
 export const store = new Vuex.Store({
     strict: true,
     modules: {
-        chart_data: chart_data,
         frontend_state: frontend_state,
         model_parameters: model_parameters,
     },

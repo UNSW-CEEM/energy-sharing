@@ -1,0 +1,85 @@
+ GridFS mongo blob storage system
+
+ Flask-Uploads maybe for handling uploads.
+
+ Design Document.
+
+ Main Page
+    -> Header Bar
+        -> Title (dynamic?, navigation based? or just show the app name)
+        -> Contact, date, future feature -> connection to server/cloud
+        -> Home can probably be removed
+    -> Side Bar
+        -> Links to all "input pages" of the model. To be shown in main content area.
+    -> Main Content
+        -> Relies on;
+            -> File loader
+            -> Dropdown Input
+            -> Text input
+            -> "Table"
+            -> "Row"
+
+        -> "Load" all the inputs from the server to the frontend. Maybe the store. This should definitely be done and set in one place so the back end makes the most sense
+        and the state can be pushed to the frontend from the sever.
+            -> Get inputs functionality.
+
+        -> "Save" all the set parameters back to the server/model.
+            ->>> Some sort of API/send JSON method.
+                -> Validation
+                -> Saving/submitting
+                -> Allow partial saves or not?
+                -> Front end state for the saves or not? Backend state for the saves? Should be both? Front end saved state should be pulled from the backend as well?
+
+        -> Basic Review Page
+            ->>> Will need an API for sending the data to the front end for visualisation.
+                -> What visualisation is desired?
+
+        -> More complex dashboard style data review can come later.
+
+    -> Footer
+        -> Progress bar? web-sockets. Need to build something into the model, or perhaps it is part of the existing modelling software. Emit it to the footer.
+            -> Involves a listener and not much else.
+        -> Submission progress indicator? Something that shows 1/7 of input pages completed or something like that.
+
+MVP
+    -> Whole app, single bundled executable?
+    -> Electron, needs to have basic functionality. Load up the right page, exit and crash gracefully.
+    -> Vue, need our side bar, main, and footer progress bar content to work well. Basic "review" features for now.
+    -> Flask, initially use system files and quick and dirty python objects to store data.
+
+Bundled/Electron
+    -> Look further into bundling methods.
+
+Vue
+    -> Will we have "users/logins". If we are going to cloud hosted servers we may need these. How do we handle this.
+    We will need a user server and potentially a backend API/Wrapper to validate and authenticate APi requests from a user
+    server. Unsure of how to best do this at the moment. This strikes me as a very "2.0" feature.
+
+    -> Reviewing the data. We surely need an export results feature. Metrics/reviews etc. Need to ask what we will need.
+    Leave very open ended for now. Extendable graphing classes for "2.0" style features.
+
+    -> Styling etc... whatever for a while.
+
+Flask
+    -> ultra MVP is just python object.
+    -> MVP and preferable is abstracted to GridFS. Proper DB storage systems can be added later. Keep this in mind when
+    designing systems.
+
+
+Features
+
+    -> Progress bar
+        -> During input stage use to show progress through input pages. a/X, b/X etc.
+        -> Once submission complete show full green and ready to simulate/model.
+        -> While simulation is occuring show progress.
+            -> Every x% emit a progress counter from the backend.
+        -> When simulation is complete just show a nice green full bar probably.
+
+    -> Sidebar
+        -> Navigation, indicate selected "route"/page. Also indicate which are completed.
+
+    -> Main / Content Pages
+        -> Show which input fields are complete? Which remain to be set.
+        -> Aforementioned dropdown, text, file, table, row systems.
+
+
