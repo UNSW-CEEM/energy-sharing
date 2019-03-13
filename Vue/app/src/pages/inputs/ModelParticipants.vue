@@ -226,6 +226,7 @@
             },
 
             load_participants_config(file) {
+                this.input_data.table_rows = [];
                 this.$socket.emit('load_participants_config', this.model_page_name, file)
             },
 
@@ -254,7 +255,6 @@
 
                 for (let i = 0; i < response["data"].length; i++) {
                     let data = response["data"][i]["row_inputs"];
-
                     this.add_row(
                         data["participant_id"],
                         data["participant_type"],

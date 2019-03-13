@@ -20,7 +20,6 @@ from ..mike_model.new_sim import NewSim
 import os
 import datetime
 import pandas as pd
-import pendulum
 
 
 class Parameters:
@@ -213,4 +212,3 @@ class Parameters:
         l_end = pd.datetime.strptime(l_end_string, '%d/%m/%Y %H:%M')
 
         return max(s_start, l_start), min(s_end, l_end)
-
