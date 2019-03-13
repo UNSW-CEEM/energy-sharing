@@ -78,7 +78,6 @@
                     selected_solar_file: '',
                     selected_load_file: '',
                     selected_config_file: 'user_config.csv',
-                    // config_files_list: ['default_config.csv'],
 
                     solar_files_list: [],
                     load_files_list: [],

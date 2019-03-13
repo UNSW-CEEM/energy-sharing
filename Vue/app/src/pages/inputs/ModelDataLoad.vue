@@ -2,6 +2,11 @@
     <div class="background">
         <div class="main-container">
             <h1 id="load-title" class="load-title">Load Files</h1>
+            <div class="load-files-list-container">
+                <ul class="load-files-list">
+                    <li v-for="item in files_lists.load_files_list">{{ item }}</li>
+                </ul>
+            </div>
             <ul class="load-list">
                 <li v-for="(file, index) in load_files" :key="file.id">
                     <span>{{file.name}}</span> -
@@ -25,7 +30,7 @@
                     @input-filter="inputFilter"
                     @input-file="inputFile"
                     ref="upload">
-                    <button class="load-file-button">Select files</button>
+                    <button class="load-file-button">Select File</button>
                 </file-upload>
                 <button v-if="!$refs.upload || !$refs.upload.active" @click.prevent="$refs.upload.active = true">
                     Start Upload
@@ -33,11 +38,6 @@
                 <button v-else @click.prevent="$refs.upload.active = false">
                     Stop Upload
                 </button>
-            </div>
-            <div class="load-files-list-container">
-                <ul class="load-files-list">
-                    <li v-for="item in files_lists.load_files_list">{{ item }}</li>
-                </ul>
             </div>
         </div>
     </div>
@@ -129,24 +129,31 @@
 </script>
 
 <style scoped>
+    .background {
+
+    }
+
     .main-container {
         display: flex;
         flex-direction: column;
-        justify-content: space-around;
-        align-items: start;
+        justify-content: space-between;
+        align-items: center;
         animation-name: fade-in;
         animation-duration: 1s;
+        width: 100%;
+        height:100%
     }
 
     .load-title {
         width: 100%;
-
+        height: 10%;
+        /*background-color: pink;*/
     }
 
     .load-button-container {
-        background-color: white;
-        height: 100%;
-        width: 100%;
+        /*background-color: lightgray;*/
+        height: 30%;
+        width: 30%;
     }
 
     .load-file-button {
@@ -156,9 +163,11 @@
     .load-files-list-container {
         display: flex;
         justify-content: space-between;
+        /*background-color: lightblue;*/
     }
 
     .load-files-list {
         width: 100%;
+        /*background-color: lightpink;*/
     }
 </style>
