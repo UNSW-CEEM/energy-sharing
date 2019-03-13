@@ -1,7 +1,7 @@
 <template>
     <div class="background">
         <div class="main-container">
-            <h1 class="view-title">{{ view_name }}</h1>
+            <h1 class="view-title">Central Battery</h1>
             <span class="input-line"
                 v-for="input in input_data"
                 :key="input.id">{{ input.display_text }}
@@ -17,6 +17,15 @@
                     :my_placeholder="input.placeholder"/>
 
             </span>
+            <h1>Central Solar</h1>
+            <span class="input-line">
+                {{ solar_sharing_algorithm.display_text }}
+                <SimpleDropdown
+                    v-model="solar_sharing_algorithm.value"
+                    :my_options="my_options[solar_sharing_algorithm.dropdown_key]"
+                    :my_placeholder="solar_sharing_algorithm.placeholder"
+                />
+            </span>
         </div>
     </div>
 </template>
@@ -27,7 +36,7 @@
     import SaveLoad from '@/mixins/SaveLoad.vue';
 
     export default {
-        name: "Central_Battery",
+        name: "central_services",
         components: {
             SimpleDropdown,
             SimpleNumberInput,
@@ -39,7 +48,7 @@
             return {
                 view_name: this.$options.name,
                 model_page_name: "model_battery",
-                heading_text: "Central Battery",
+                // heading_text: "Central Services",
 
                 input_data: [
                     {
@@ -77,11 +86,26 @@
                     },
                 ],
 
+                solar_sharing_algorithm: {
+                    id: 4,
+                    name: "sharing_algorithm",
+                    display_text: "Central Solar Sharing Algorithm",
+                    value: "",
+                    dropdown_key: "solar_sharing_algorithm",
+                    placeholder: "Select One",
+                    tag: "my_dropdown"
+                },
+
                 my_options: {
                     dispatch_algorithm: [
                         "ToU Arbitrage",
                         "NEM Sync"
-                    ]
+                    ],
+
+                    solar_sharing_algorithm: [
+                            "Fractional Allocation",
+                            "Quota Allocation",
+                    ],
                 }
             }
         },
