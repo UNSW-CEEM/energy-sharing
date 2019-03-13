@@ -41,7 +41,7 @@
         data () {
             return {
                 view_name: this.$options.name,
-                model_page_name: "central_solar",
+                model_page_name: "model_solar",
                 heading_text: "Central Solar",
 
                 input_data: {

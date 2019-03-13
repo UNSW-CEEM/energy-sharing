@@ -37,6 +37,19 @@ class Participants:
         # After parsing the participants create the input files, solar_data, and load_data.
         self.create_data_files()
 
+    # def add_participant(self, participant):
+    #     # print(participant["input_rows"])
+    #     parameters = {}
+    #     for each in participant["input_rows"]:
+    #         print(each["name"])
+    #         if each["name"] == "central_solar_data":
+    #             print(each["name"])
+    #         else:
+    #             parameters[each["name"]] = (each["value"])
+    #
+    #     p = Participant(**parameters)
+    #     self.participants.append(p)
+
     def load_defaults(self):
         # Reset the list of participants
         self.participants = []

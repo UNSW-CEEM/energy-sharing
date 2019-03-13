@@ -38,7 +38,7 @@
         data () {
             return {
                 view_name: this.$options.name,
-                model_page_name: "central_battery",
+                model_page_name: "model_battery",
                 heading_text: "Central Battery",
 
                 input_data: [

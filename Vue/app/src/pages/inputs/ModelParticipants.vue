@@ -102,6 +102,7 @@
                             "No Battery",
                             "Tesla PowerWall",
                             "RedFlow",
+                            "Central Battery"
                         ],
 
                         solar_profiles_options: [],
@@ -137,9 +138,9 @@
         },
 
         methods: {
-            add_row(participant_type="", retail_tariff_type="", load_profile="", solar_profile="", solar_scaling=1, battery_type="No Battery") {
-                let array_length = this.input_data.table_rows.length;
-                let participant_default = "participant_" + Number(array_length+1).toString();
+            add_row(participant_id="", participant_type="", retail_tariff_type="", load_profile="", solar_profile="", solar_scaling=1, battery_type="No Battery") {
+                let array_length = this.input_data.table_rows.length
+                // let participant_default = "participant_" + Number(array_length+1).toString();
                 let new_row = {
                     row_id: array_length,
                     row_inputs: [
@@ -147,8 +148,8 @@
                             id: 0,
                             name: "participant_id",
                             tag: "my_number",
-                            value:participant_default,
-                            placeholder:participant_default,
+                            value:participant_id,
+                            placeholder:participant_id,
                         },
                         {
                             id: 1,
@@ -253,6 +254,7 @@
                     let data = response["data"][i]["row_inputs"];
 
                     this.add_row(
+                        data["participant_id"],
                         data["participant_type"],
                         data["retail_tariff_type"],
                         data["load_profile"],
