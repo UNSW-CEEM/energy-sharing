@@ -2,6 +2,7 @@
     <div class="background">
         <div class="main-container">
             <h1 class="view-title">{{ view_name}}</h1>
+            <h5>central_solar Battery dropdown must be set to Central Battery</h5>
             <div class="files-select-container">
                 <h4 class="load-title">Load File:</h4>
                 <SimpleDropdown
@@ -125,7 +126,7 @@
 
         created() {
             if (this.model_page_name in this.$store.state.frontend_state) {
-                this.input_data = this.$store.state.frontend_state[this.model_page_name]
+                this.input_data = this.$store.state.frontend_state[this.model_page_name];
             } else {
                 this.add_row()
             }
@@ -227,6 +228,7 @@
             load_participants_config(file) {
                 this.$socket.emit('load_participants_config', this.model_page_name, file)
             },
+
         },
 
         sockets: {
