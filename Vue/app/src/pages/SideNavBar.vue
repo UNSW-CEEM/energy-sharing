@@ -52,31 +52,25 @@
                         icon:"exchange-alt"
                     },{
                         id: 5,
-                        text: 'Central Solar',
-                        page: '/central_solar',
-                        storage_key: "central_solar",
-                        icon:"solar-panel"
-                    },{
-                        id: 6,
-                        text: 'Central Battery',
-                        page: '/central_battery',
-                        storage_key: "central_battery",
+                        text: 'Central Services',
+                        page: '/central_services',
+                        storage_key: "central_services",
                         icon:"battery-full"
                     },{
-                        id: 7,
+                        id: 6,
                         text: 'Financing',
                         page: '/financing',
                         storage_key: "financing",
                         icon:"money-check-alt"
                     },{
-                        id: 8,
+                        id: 7,
                         text: 'Review',
                         page: 'review',
                         storage_key: "review",
                         icon:"search"
                     },
                     {
-                        id: 9,
+                        id: 8,
                         text: 'Results',
                         page: 'results',
                         storage_key: "review",
@@ -123,7 +117,7 @@
 
     .myButton span {
         display:flex;
-        width:80%;
+        width:85%;
         justify-content:flex-start;
         align-items: center;
     }
