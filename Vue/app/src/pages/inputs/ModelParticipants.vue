@@ -226,8 +226,8 @@
             },
 
             load_participants_config(file) {
-                this.input_data.table_rows = [];
                 this.$socket.emit('load_participants_config', this.model_page_name, file)
+                this.input_data.table_rows = [];
             },
 
         },
@@ -268,6 +268,7 @@
             }
         }
     }
+
 </script>
 
 <style scoped>

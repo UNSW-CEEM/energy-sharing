@@ -61,7 +61,7 @@ class Parameters:
         load_functions = [
             self.load_model_selection,
             self.load_network_name,
-            self.load_central_battery,
+            self.load_central_services,
             self.load_tariffs,
             self.load_participants,
             self.load_data_sources,
@@ -95,9 +95,10 @@ class Parameters:
         if key in ui_inputs:
             self.network_name = ui_inputs[key]
 
-    def load_central_battery(self, ui_inputs):
+    def load_central_services(self, ui_inputs):
         key = "central_services"
         if key in ui_inputs:
+            print(ui_inputs[key])
             self.ui_central_battery.load(ui_inputs[key])
 
     def load_tariffs(self, ui_inputs):

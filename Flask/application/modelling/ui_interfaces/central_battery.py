@@ -6,6 +6,7 @@ DEFAULT_BATTERY_NAME = 'battery_discharge.csv'
 class CentralBattery:
     def __init__(self, folder_routes):
         self.luomi_data_dir = folder_routes.get_route("luomi_defaults_dir")
+        # self.luomi_data_dir = folder_routes.luomi_defaults_dir
 
         self.capacity = 1
         self.max_discharge = 1
