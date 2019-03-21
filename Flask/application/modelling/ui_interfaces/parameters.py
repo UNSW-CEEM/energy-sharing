@@ -20,11 +20,8 @@ from ..mike_model.new_sim import NewSim
 import os
 import datetime
 import pandas as pd
-<<<<<<< HEAD
 import pendulum
 import json
-=======
->>>>>>> 6b430dab803fe929ed541c14554b9e13a0390023
 
 
 class Parameters:
@@ -218,7 +215,6 @@ class Parameters:
         l_end = pd.datetime.strptime(l_end_string, '%d/%m/%Y %H:%M')
 
         return max(s_start, l_start), min(s_end, l_end)
-<<<<<<< HEAD
 
 def dummy_status_callback(message):
     # my_status = "Status: " + message
@@ -248,5 +244,3 @@ if __name__ == "__main__":
         print("!!!!!!!!!!!!!!!!! Test Passed !!!!!!!!!!!!!!!!!!")
     else:
         print("<<<<<<<<<<<<<<<<<<< Test Failed >>>>>>>>>>>>>>>>>>>>>")
-=======
->>>>>>> 6b430dab803fe929ed541c14554b9e13a0390023
