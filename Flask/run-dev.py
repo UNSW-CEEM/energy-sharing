@@ -15,8 +15,6 @@ else:
         application_path = os.getcwd()
         running_mode = 'Interactive'
 
-
-
 print('Running mode:', running_mode)
 print('  Appliction path  :', application_path)
 
