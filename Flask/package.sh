@@ -1,1 +1,1 @@
-pyinstaller run-dev-final.spec --additional-hooks-dir hooks
+pyinstaller deploy.spec --additional-hooks-dir hooks

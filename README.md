@@ -20,7 +20,7 @@ This will create a folder 'dist' in the Flask section, with an executable called
 
 ## Electron
 
-Electron packaging can be done manually with instructions 
+Electron packaging can be done manually with instructions from the official electron documentation.
 
 We have used the (Electron Packager | https://github.com/electron-userland/electron-packager) tool as it greatly simplifies the process.
 
