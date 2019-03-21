@@ -2,6 +2,7 @@
     <div class="background">
         <div class="main-container">
             <h1 class="view-title">{{ view_name }}</h1>
+            <p>Beta Note: 'Luomi' model requires one of each tariff completed. (DUOS, NUOS, TUOS and Retail)</p>
             <table class="tariffs-table">
                 <tr>
                     <th v-for="header in table_headers" :key="header.header_id" :value="header.name">
@@ -95,7 +96,7 @@
             if (this.model_page_name in this.$store.state.frontend_state) {
                 this.input_data = this.$store.state.frontend_state[this.model_page_name]
             } else {
-                this.add_row()
+                this.load_config('default_config.csv')
             }
         },
 

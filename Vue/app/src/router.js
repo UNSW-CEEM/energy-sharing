@@ -34,15 +34,15 @@ export default new Router({
             component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelSelection.vue')
         },
         {
-            path: '/central_battery',
-            name: 'central_battery',
-            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelBattery.vue')
+            path: '/central_services',
+            name: 'central_services',
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelServices.vue')
         },
-        {
-            path: '/central_solar',
-            name: 'central_solar',
-            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelSolar.vue')
-        },
+        // {
+        //     path: '/central_solar',
+        //     name: 'central_solar',
+        //     component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelSolar.vue')
+        // },
         {
             path: '/financing',
             name: 'financing',

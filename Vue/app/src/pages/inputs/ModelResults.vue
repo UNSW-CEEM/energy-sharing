@@ -3,36 +3,35 @@
         <div class="chart-nav-container">
             <button
                     class="chart-button"
-                    v-for="chart in chart_boxes"
-                    v-model="selected_chart"
+                    v-for="chart in input_data.chart_boxes"
+                    v-model="input_data.selected_chart"
                     v-on:click="select_chart(chart)"
                     v-bind:class="{selected_button: is_selected(chart)}">{{ chart.link_text }}
             </button>
         </div>
 
-        <div class="sub-chart-container" v-if="selected_chart">
+        <div class="sub-chart-container" v-if="input_data.selected_chart">
             <TPB
-                v-if="selected_chart.chart_type==='TPB' && chart_data"
-                :chart_data="chart_data"
+                v-if="input_data.selected_chart.chart_type==='TPB' && input_data.chart_data"
+                :chart_data="input_data.chart_data"
             />
             <RevParticipant
-                v-if="selected_chart.chart_type==='RevParticipant' && chart_data"
-                :chart_data="chart_data"
+                v-if="input_data.selected_chart.chart_type==='RevParticipant' && input_data.chart_data"
+                :chart_data="input_data.chart_data"
             />
             <RevRCC
-                v-if="selected_chart.chart_type==='RevRCC' && chart_data"
-                :chart_data="chart_data"
+                v-if="input_data.selected_chart.chart_type==='RevRCC' && input_data.chart_data"
+                :chart_data="input_data.chart_data"
             />
-            <EnergyCC
-                v-if="selected_chart.chart_type==='EnergyCC' && chart_data"
-                :chart_data="chart_data"
-            />
+            <!--<EnergyCC-->
+                <!--v-if="selected_chart.chart_type==='EnergyCC' && chart_data"-->
+                <!--:chart_data="chart_data"-->
+            <!--/>-->
             <EnergyGenCon
-                v-if="selected_chart.chart_type==='EnergyGenCon' && chart_data"
-                :chart_data="chart_data"
+                v-if="input_data.selected_chart.chart_type==='EnergyGenCon' && input_data.chart_data"
+                :chart_data="input_data.chart_data"
             />
         </div>
-
     </div>
 </template>
 
@@ -44,51 +43,66 @@
     import EnergyCC from "../../charts/_EnergyCC";
     import EnergyGenCon from "../../charts/_EnergyGenCon";
 
+    import SaveLoad from '@/mixins/SaveLoad.vue';
+
     export default {
         name: "ModelResults",
         components: {EnergyGenCon, EnergyCC, RevRCC, RevParticipant, TPB},
 
+        mixins: [SaveLoad],
+
         data () {
             return  {
-                chart_data: false,
-                selected_chart: false,
-                chart_boxes: [
-                    {
-                        id: 0,
-                        link_text: "Revenue - RCC",
-                        chart_type: 'RevRCC',
-                    },
-                    {
-                        id: 1,
-                        link_text: "Revenue - Participant",
-                        chart_type: 'RevParticipant',
-                    },
-                    {
-                        id: 2,
-                        link_text: "Revenue - Total Participant",
-                        chart_type: 'TPB',
-                    },
-                    {
-                        id: 3,
-                        link_text: "Energy - Central",
-                        chart_type: 'EnergyCC',
-                    },
-                    {
-                        id: 4,
-                        link_text: "Energy - Generated/Consumed",
-                        chart_type: 'EnergyGenCon',
-                    },
-                ],
+                model_page_name: "model_results",
+                input_data: {
+                    chart_data: false,
+                    selected_chart: false,
+                    chart_boxes: [
+                        {
+                            id: 0,
+                            link_text: "Revenue - RCC",
+                            chart_type: 'RevRCC',
+                        },
+                        {
+                            id: 1,
+                            link_text: "Revenue - Participant",
+                            chart_type: 'RevParticipant',
+                        },
+                        {
+                            id: 2,
+                            link_text: "Revenue - Total Participant",
+                            chart_type: 'TPB',
+                        },
+                        // {
+                        //     id: 3,
+                        //     link_text: "Energy - Central",
+                        //     chart_type: 'EnergyCC',
+                        // },
+                        {
+                            id: 3,
+                            link_text: "Energy - Generated/Consumed",
+                            chart_type: 'EnergyGenCon',
+                        },
+                    ],
+                },
             }
+        },
+
+        created() {
+            this.load_page_simple();
+        },
+
+        beforeDestroy() {
+            this.save_page_simple();
         },
 
         methods: {
             select_chart(chart) {
-                this.selected_chart = chart;
+                this.input_data.selected_chart = chart;
             },
 
             is_selected(chart) {
-                if (this.selected_chart===chart) {
+                if (this.input_data.selected_chart===chart) {
                     return true;
                 }
                 return false;
@@ -97,8 +111,8 @@
 
         sockets: {
             chart_results_channel: function (response) {
-                this.select_chart(this.chart_boxes[0]);
-                this.chart_data = response.data;
+                this.select_chart(this.input_data.chart_boxes[0]);
+                this.input_data.chart_data = response.data;
             }
         }
     }

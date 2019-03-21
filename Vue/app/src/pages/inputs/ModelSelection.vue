@@ -67,13 +67,13 @@
                         "Peer to Peer Retail",
                     ],
 
-                    mike: [
-                        "Apartment",
-                    ]
+                    // mike: [
+                    //     "Apartment",
+                    // ]
                 },
 
                 model_type_options: [
-                    "mike",
+                    // "mike",
                     "luomi",
                 ],
             }

@@ -20,8 +20,11 @@ from ..mike_model.new_sim import NewSim
 import os
 import datetime
 import pandas as pd
+<<<<<<< HEAD
 import pendulum
 import json
+=======
+>>>>>>> 6b430dab803fe929ed541c14554b9e13a0390023
 
 
 class Parameters:
@@ -63,7 +66,7 @@ class Parameters:
         load_functions = [
             self.load_model_selection,
             self.load_network_name,
-            self.load_central_battery,
+            self.load_central_services,
             self.load_tariffs,
             self.load_participants,
             self.load_data_sources,
@@ -76,6 +79,11 @@ class Parameters:
         # Populate default participants from the CSV.
         self.ui_tariffs.load_defaults()
         self.ui_participants.load_defaults()
+
+        # This is temporary.
+        start = datetime.datetime(year=2017, month=2, day=26, hour=10)
+        end = datetime.datetime(year=2017, month=2, day=26, hour=12)
+        self.time_periods = util.generate_dates_in_range(start, end, 30)
 
     def load_model_selection(self, ui_inputs):
         key = "model_selection"
@@ -92,9 +100,10 @@ class Parameters:
         if key in ui_inputs:
             self.network_name = ui_inputs[key]
 
-    def load_central_battery(self, ui_inputs):
-        key = "central_battery"
+    def load_central_services(self, ui_inputs):
+        key = "central_services"
         if key in ui_inputs:
+            print(ui_inputs[key])
             self.ui_central_battery.load(ui_inputs[key])
 
     def load_tariffs(self, ui_inputs):
@@ -112,6 +121,12 @@ class Parameters:
         if key in ui_inputs:
             start, end = self.find_time_periods(ui_inputs[key])
             self.time_periods = util.generate_dates_in_range(start, end, 30)
+
+    # def load_central_solar(self, ui_inputs):
+    #     key = "model_solar"
+    #     if key in ui_inputs:
+    #         print("Called load_central_solar")
+    #         # self.ui_participants.add_participant(ui_inputs[key])
 
     def print(self):
         print("Model Type: ", self.model_type)
@@ -137,12 +152,6 @@ class Parameters:
 
         # print(tariffs_dict)
         self.model_tariffs = Luomi_Tariffs(**tariffs_dict)
-
-        # TODO Remove these/come up with a new system later
-        # start = datetime.datetime(year=2017, month=2, day=26, hour=10)
-        # end = datetime.datetime(year=2017, month=2, day=26, hour=12)
-        #
-        # self.time_periods = util.generate_dates_in_range(start, end, 30)
 
         print("Made LUOMI Objects without error")
 
@@ -209,6 +218,7 @@ class Parameters:
         l_end = pd.datetime.strptime(l_end_string, '%d/%m/%Y %H:%M')
 
         return max(s_start, l_start), min(s_end, l_end)
+<<<<<<< HEAD
 
 def dummy_status_callback(message):
     # my_status = "Status: " + message
@@ -238,3 +248,5 @@ if __name__ == "__main__":
         print("!!!!!!!!!!!!!!!!! Test Passed !!!!!!!!!!!!!!!!!!")
     else:
         print("<<<<<<<<<<<<<<<<<<< Test Failed >>>>>>>>>>>>>>>>>>>>>")
+=======
+>>>>>>> 6b430dab803fe929ed541c14554b9e13a0390023

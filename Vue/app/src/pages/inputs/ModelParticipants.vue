@@ -2,6 +2,7 @@
     <div class="background">
         <div class="main-container">
             <h1 class="view-title">{{ view_name}}</h1>
+            <h5>central_solar Battery dropdown must be set to Central Battery</h5>
             <div class="files-select-container">
                 <h4 class="load-title">Load File:</h4>
                 <SimpleDropdown
@@ -78,7 +79,6 @@
                     selected_solar_file: '',
                     selected_load_file: '',
                     selected_config_file: 'user_config.csv',
-                    // config_files_list: ['default_config.csv'],
 
                     solar_files_list: [],
                     load_files_list: [],
@@ -103,6 +103,7 @@
                             "No Battery",
                             "Tesla PowerWall",
                             "RedFlow",
+                            "Central Battery"
                         ],
 
                         solar_profiles_options: [],
@@ -125,7 +126,7 @@
 
         created() {
             if (this.model_page_name in this.$store.state.frontend_state) {
-                this.input_data = this.$store.state.frontend_state[this.model_page_name]
+                this.input_data = this.$store.state.frontend_state[this.model_page_name];
             } else {
                 this.add_row()
             }
@@ -138,9 +139,9 @@
         },
 
         methods: {
-            add_row(participant_type="", retail_tariff_type="", load_profile="", solar_profile="", solar_scaling=1, battery_type="No Battery") {
+            add_row(participant_id="", participant_type="", retail_tariff_type="", load_profile="", solar_profile="", solar_scaling=1, battery_type="No Battery") {
                 let array_length = this.input_data.table_rows.length;
-                let participant_default = "participant_" + Number(array_length+1).toString();
+                // let participant_default = "participant_" + Number(array_length+1).toString();
                 let new_row = {
                     row_id: array_length,
                     row_inputs: [
@@ -148,8 +149,8 @@
                             id: 0,
                             name: "participant_id",
                             tag: "my_number",
-                            value:participant_default,
-                            placeholder:participant_default,
+                            value:participant_id,
+                            placeholder:participant_id,
                         },
                         {
                             id: 1,
@@ -226,7 +227,9 @@
 
             load_participants_config(file) {
                 this.$socket.emit('load_participants_config', this.model_page_name, file)
+                this.input_data.table_rows = [];
             },
+
         },
 
         sockets: {
@@ -252,8 +255,8 @@
 
                 for (let i = 0; i < response["data"].length; i++) {
                     let data = response["data"][i]["row_inputs"];
-
                     this.add_row(
+                        data["participant_id"],
                         data["participant_type"],
                         data["retail_tariff_type"],
                         data["load_profile"],
@@ -265,6 +268,7 @@
             }
         }
     }
+
 </script>
 
 <style scoped>

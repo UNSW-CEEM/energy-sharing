@@ -28,11 +28,11 @@
                 let select_data = this.$store.state.frontend_state["model_selection"];
                 if (select_data ) { this.parsed_parameters["model_selection"] = this.parse_selection_page(select_data)}
 
-                let battery_data = this.$store.state.frontend_state["model_battery"];
-                if (battery_data) { this.parsed_parameters["model_battery"] = battery_data }
+                let central_services = this.$store.state.frontend_state["central_services"];
+                if (central_services) { this.parsed_parameters["central_services"] = central_services }
 
-                let solar_data = this.$store.state.frontend_state["model_solar"];
-                if (solar_data) { this.parsed_parameters["model_solar"] = solar_data }
+                // let solar_data = this.$store.state.frontend_state["model_solar"];
+                // if (solar_data) { this.parsed_parameters["model_solar"] = solar_data }
             },
 
             parse_all_table_pages() {
