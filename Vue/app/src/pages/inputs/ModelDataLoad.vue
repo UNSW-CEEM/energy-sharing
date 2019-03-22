@@ -1,45 +1,62 @@
 <template>
     <div class="background">
+        <h1>Load Data</h1>
         <div class="main-container">
-            <h1 id="load-title" class="load-title">Load Files</h1>
-            <div class="load-files-list-container">
-                <ul class="load-files-list">
-                    <li v-for="item in files_lists.load_files_list">{{ item }}</li>
-                </ul>
+            
+            <div class="import-container">
+                <div class="container-heading">
+                    Data Import
+                </div>
+                
+                <div class="load-list">
+                    <div v-for="(file, index) in load_files" :key="file.id">
+                        <span>{{file.name}}</span> -
+                        <span>{{file.size}}</span> -
+                        <span v-if="file.error">{{file.error}}</span>
+                        <span v-else-if="file.success">success</span>
+                        <span v-else-if="file.active">active</span>
+                        <span v-else-if="file.active">active</span>
+                        <span v-else></span>
+                    </div>
+                </div>
+
+                <div class="load-button-container">
+                    <file-upload
+                        class="load_upload"
+                        post-action="http://localhost:5000/upload/load_data"
+                        extensions="gif,jpg,jpeg,png,webp, csv"
+                        accept="image/png,image/gif,image/jpeg,image/webp, text/csv"
+                        :multiple="true"
+                        :size="1024 * 1024 * 10"
+                        v-model="load_files"
+                        @input-filter="inputFilter"
+                        @input-file="inputFile"
+                        ref="upload">
+                        <button class="load-file-button">Select File</button>
+                    </file-upload>
+                    <button v-if="!$refs.upload || !$refs.upload.active" @click.prevent="$refs.upload.active = true">
+                        Start Import
+                    </button>
+                    <button v-else @click.prevent="$refs.upload.active = false">
+                        Stop Import
+                    </button>
+                </div>
             </div>
-            <ul class="load-list">
-                <li v-for="(file, index) in load_files" :key="file.id">
-                    <span>{{file.name}}</span> -
-                    <span>{{file.size}}</span> -
-                    <span v-if="file.error">{{file.error}}</span>
-                    <span v-else-if="file.success">success</span>
-                    <span v-else-if="file.active">active</span>
-                    <span v-else-if="file.active">active</span>
-                    <span v-else></span>
-                </li>
-            </ul>
-            <div class="load-button-container">
-                <file-upload
-                    class="load_upload"
-                    post-action="http://localhost:5000/upload/load_data"
-                    extensions="gif,jpg,jpeg,png,webp, csv"
-                    accept="image/png,image/gif,image/jpeg,image/webp, text/csv"
-                    :multiple="true"
-                    :size="1024 * 1024 * 10"
-                    v-model="load_files"
-                    @input-filter="inputFilter"
-                    @input-file="inputFile"
-                    ref="upload">
-                    <button class="load-file-button">Select File</button>
-                </file-upload>
-                <button v-if="!$refs.upload || !$refs.upload.active" @click.prevent="$refs.upload.active = true">
-                    Start Upload
-                </button>
-                <button v-else @click.prevent="$refs.upload.active = false">
-                    Stop Upload
-                </button>
+            <div class="separator">
+                <font-awesome-icon class="fa-icon" icon="chevron-right" />  
             </div>
+            <div class="available-container">
+                <div class="container-heading">
+                    Available Load Files
+                </div>
+                
+                <div class="load-files-list-container">
+                    <div class="load-files-list-item" v-for="item in files_lists.load_files_list">{{ item }}</div>
+                </div>
+            </div>
+            
         </div>
+        
     </div>
 </template>
 
@@ -135,13 +152,14 @@
 
     .main-container {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         justify-content: space-between;
         align-items: center;
         animation-name: fade-in;
         animation-duration: 1s;
-        width: 100%;
-        height:100%
+        
+        height:100%;
+        max-width:70vw;
     }
 
     .load-title {
@@ -151,23 +169,82 @@
     }
 
     .load-button-container {
-        /*background-color: lightgray;*/
-        height: 30%;
-        width: 30%;
+        background-color: grey;
+
+        display:flex;
+        flex-direction:row;
+        justify-content:space-around;
+        align-items:center;
+        height: 5vh;
+        width: 30vw;
     }
 
     .load-file-button {
 
     }
 
-    .load-files-list-container {
-        display: flex;
-        justify-content: space-between;
-        /*background-color: lightblue;*/
+    
+
+
+    .import-container{
+        display:flex;
+        flex-direction: column;
+        justify-content:space-between;
+        align-items:center;
+        width:30vw;
+        height:40vh;
+        margin: 2vh 0 0 0;
+
+        border:1px solid grey;
+        border-radius:4px;
+        /* padding: 0 1vw 1vh 1vw;       */
     }
 
-    .load-files-list {
+    .load-list{
+        height: 30vh;
+        width:100%;
+        overflow:auto;
+        display:flex;
+        flex-direction:column;
+        justify-content:flex-start;
+        align-items:flex-start;
+        padding-left: 1vw;
+    }
+
+    .container-heading{
+        width:100%;
+        border-bottom:1px solid grey;
+        background-color:grey;
+        font-size:1.2em;
+        /* font-weight:bold; */
+    }
+
+    .separator{
+        margin: 0 2vw 0 2vw;
+        font-size: 2em;
+    }
+
+    .available-container{
+        justify-content: space-around;
+        display:flex;
+        flex-direction: column;
+        justify-content:space-between;
+        align-items:center;
+        width:30vw;
+        height:40vh;
+        margin: 2vh 0 0 0;
+
+        border:1px solid grey;
+        border-radius:4px;
+    }
+
+    .load-files-list-container {
+        display: flex;
+        flex-direction:column;
+        justify-content: flex-start;
+        align-items:flex-start;
         width: 100%;
-        /*background-color: lightpink;*/
+        height:100%;
+        overflow:auto;
     }
 </style>

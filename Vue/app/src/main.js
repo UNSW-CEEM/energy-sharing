@@ -21,7 +21,7 @@ import VModal from 'vue-js-modal'
 Vue.use(VModal);
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faCoffee, faStroopwafel, faNetworkWired, faPlaneDeparture, faTable, faUser, faExchangeAlt, faSolarPanel, faBatteryFull, faMoneyCheckAlt, faSearch, faPoll } from '@fortawesome/free-solid-svg-icons'
+import { faCoffee, faStroopwafel, faNetworkWired, faPlaneDeparture, faChevronRight, faTable, faUser, faExchangeAlt, faSolarPanel, faBatteryFull, faMoneyCheckAlt, faSearch, faPoll } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add(faCoffee);
@@ -36,6 +36,7 @@ library.add(faBatteryFull);
 library.add(faMoneyCheckAlt);
 library.add(faSearch);
 library.add(faPoll);
+library.add(faChevronRight);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
