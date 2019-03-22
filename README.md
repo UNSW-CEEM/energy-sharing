@@ -18,6 +18,8 @@ Run the script found in package.sh, ie.
 
 This will create a folder 'dist' in the Flask section, with an executable called 'run-dev'. Run it and we're up, up and away!
 
+Copy the generated relevant files into the 'app/model' folder in Electron.
+
 ## Electron
 
 Electron packaging can be done manually with instructions from the official electron documentation.
