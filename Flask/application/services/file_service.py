@@ -1,6 +1,7 @@
 import os
 import csv
 import pandas as pd
+import pendulum
 
 import application.folder_routes as folder_routes
 from application.folder_routes import FolderRoutes
@@ -93,6 +94,43 @@ class OSFileService(FileService):
     def list_load_files(self):
         self.update_files_lists()
         return self.load_files
+
+    def list_solar_start_end(self):
+        self.update_files_lists()
+        output = {}
+        for solar_filename in self.solar_files:
+            path = os.path.join(self.solar_path, solar_filename)
+            with open(path) as f:
+                reader = csv.DictReader(f)
+                for idx, line in enumerate(reader):
+                    if idx == 0:
+                        start_date = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm')).isoformat()
+                end_date = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm')).isoformat()
+            output[solar_filename] = {
+                'start_date': start_date,
+                'end_date':end_date
+            }
+        return output
+    
+    def list_load_start_end(self):
+        self.update_files_lists()
+        output = {}
+        for load_filename in self.load_files:
+            path = os.path.join(self.load_path, load_filename)
+            with open(path) as f:
+                reader = csv.DictReader(f)
+                for idx, line in enumerate(reader):
+                    if idx == 0:
+                        start_date = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm')).isoformat()
+                end_date = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm')).isoformat()
+            output[load_filename] = {
+                'start_date': start_date,
+                'end_date':end_date
+            }
+        return output
+                    
+                    
+
 
     def list_solar_profiles(self, solar_filename):
         solar_profiles = ""

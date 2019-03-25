@@ -17,6 +17,21 @@
                         v-on:input="get_solar_profiles(input_data.selected_solar_file)"
                         :my_options="input_data.solar_files_list"
                         :my_placeholder="'Select File'" />
+                
+            </div>
+            <div class="dates"  >
+                <DateRange v-if="input_data.selected_solar_file && input_data.selected_load_file"
+                    :load_start_date="input_data.load_dates[input_data.selected_load_file]['start_date']"
+                    :load_end_date="input_data.load_dates[input_data.selected_load_file]['end_date']"
+                    :solar_start_date="input_data.solar_dates[input_data.selected_solar_file]['start_date']"
+                    :solar_end_date="input_data.solar_dates[input_data.selected_solar_file]['end_date']"
+                    :solar_filename="input_data.selected_solar_file"
+                    :load_filename="input_data.selected_load_file"
+                    ></DateRange>
+                <!-- <span v-if="input_data.selected_solar_file">Solar Start Date:{{input_data.solar_dates[input_data.selected_solar_file]['start_date']}}</span>
+                <span v-if="input_data.selected_solar_file">Solar End Date:{{input_data.solar_dates[input_data.selected_solar_file]['end_date']}}</span>
+                <span v-if="input_data.selected_load_file">Load Start Date:{{input_data.load_dates[input_data.selected_load_file]['start_date']}}</span>
+                <span v-if="input_data.selected_load_file">Load End Date:{{input_data.load_dates[input_data.selected_load_file]['end_date']}}</span> -->
             </div>
 
             <table class="participants-table">
@@ -58,6 +73,7 @@
 <script>
     import SimpleNumberInput from '@/components/SimpleNumberInput.vue';
     import SimpleDropdown from '@/components/SimpleDropdown.vue';
+    import DateRange from '@/components/DateRange.vue';
     import SaveLoad from '@/mixins/SaveLoad.vue';
 
     export default {
@@ -65,7 +81,8 @@
 
         components: {
             SimpleNumberInput,
-            SimpleDropdown
+            SimpleDropdown,
+            DateRange
         },
 
         mixins: [SaveLoad],
@@ -76,12 +93,16 @@
                 model_page_name:"model_participants",
 
                 input_data: {
+                    
                     selected_solar_file: '',
                     selected_load_file: '',
                     selected_config_file: 'user_config.csv',
 
                     solar_files_list: [],
                     load_files_list: [],
+                    
+                    solar_dates:{},
+                    load_dates:{},
 
                     table_rows: [],
 
@@ -207,10 +228,12 @@
 
             get_solar_files() {
                 this.$socket.emit('get_solar_files')
+                this.$socket.emit('get_solar_dates')
             },
 
             get_load_files() {
                 this.$socket.emit('get_load_files')
+                this.$socket.emit('get_load_dates')
             },
 
             get_solar_profiles (filename) {
@@ -236,8 +259,14 @@
             filesChannel: function(response) {
                  if (response.key === 'solar_files_list') {
                     this.input_data.solar_files_list = response.data;
-                } else {
+                } else if(response.key == 'load_files_list') {
                     this.input_data.load_files_list = response.data;
+                }else if(response.key=='solar_dates'){
+                    console.log('Solar Dates:', response.data);
+                    this.input_data.solar_dates = response.data;
+                }else if( response.key== 'load_dates'){
+                    console.log('Load Dates:', response.data)
+                    this.input_data.load_dates = response.data;
                 }
             },
 

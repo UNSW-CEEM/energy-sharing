@@ -107,24 +107,31 @@ def get_solar_files():
     data = file_service.list_solar_files()
     emit('filesChannel', {"key": "solar_files_list", "data": data})
 
+@socketio.on('get_solar_dates')
+def get_solar_dates():
+    dates = file_service.list_solar_start_end()
+    emit('filesChannel', {"key": "solar_dates", "data": dates})
+
+
+@socketio.on('get_load_dates')
+def get_load_dates():
+    dates = file_service.list_load_start_end()
+    emit('filesChannel', {"key": "load_dates", "data": dates})
 
 @socketio.on('get_load_files')
 def get_load_files():
     data = file_service.list_load_files()
     emit('filesChannel', {"key": "load_files_list", "data": data})
 
-
 @socketio.on('get_solar_profiles')
 def get_solar_profiles(filename):
     data = file_service.list_solar_profiles(filename)
     emit('profilesChannel', {"key": "solar_profiles_options", "data": data})
 
-
 @socketio.on('get_load_profiles')
 def get_solar_profiles(filename):
     data = file_service.list_load_profiles(filename)
     emit('profilesChannel', {"key": "load_profiles_options", "data": data})
-
 
 @socketio.on('save_config')
 def save_config(page_name, filename, data, additional_headers=None):
@@ -132,7 +139,6 @@ def save_config(page_name, filename, data, additional_headers=None):
     result = file_service.save_config(page_name, filename, data, additional_headers)
     if result:
         status_callback("Saving configuration file successful")
-
 
 @socketio.on('load_config')
 def load_config(page_name, filename):

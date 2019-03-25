@@ -138,6 +138,7 @@
 
         sockets: {
             filesChannel: function(response) {
+                console.log('filesChannel Response', response)
                 this.is_connected = true;
                 this.files_lists[response.key] = response.data;
             },
