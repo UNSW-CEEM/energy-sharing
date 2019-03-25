@@ -8,7 +8,7 @@
                     Data Import
                 </div>
                 
-                <div class="load-list">
+                <div class="file-list">
                     <div v-for="(file, index) in load_files" :key="file.id">
                         <span>{{file.name}}</span> -
                         <span>{{file.size}}</span> -
@@ -200,7 +200,7 @@
         /* padding: 0 1vw 1vh 1vw;       */
     }
 
-    .load-list{
+    .file-list{
         height: 30vh;
         width:100%;
         overflow:auto;
@@ -246,5 +246,9 @@
         width: 100%;
         height:100%;
         overflow:auto;
+    }
+
+    .load-files-list-item{
+        padding-left:1vw;
     }
 </style>

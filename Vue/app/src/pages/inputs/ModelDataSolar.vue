@@ -149,6 +149,8 @@
         animation-duration: 1s;
     }
 
+
+
     .solar-title {
         width: 100%;
     }
@@ -167,6 +169,12 @@
         overflow:auto;
         /* background-color:blue; */
         /* padding-left:1vw; */
+    }
+
+    .background{
+        display:flex;
+        flex-direction:column;
+        justify-content:flex-start;
     }
 
     .solar-files-list-item {
@@ -239,6 +247,18 @@
 
     .file-list .item{
         padding-left: 1vw;
+    }
+
+    .main-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        animation-name: fade-in;
+        animation-duration: 1s;
+        
+        height:100%;
+        max-width:70vw;
     }
 
 
