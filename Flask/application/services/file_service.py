@@ -149,6 +149,36 @@ class OSFileService(FileService):
                 load_profiles.pop(0)
 
         return load_profiles
+    
+    def get_solar_timeseries(self, solar_filename):
+        self.update_files_lists()
+        output = {}
+        path = os.path.join(self.solar_path, solar_filename)
+        with open(path) as f:
+            reader = csv.DictReader(f)
+            for line in reader:
+                time = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm')).timestamp()
+                for label in line:
+                    if not label =='timestamp':
+                        output[label] = [] if not label in output else output[label]
+                        dp = float(line[label])
+                        output[label].append([time, dp])
+        return output
+    
+    def get_load_timeseries(self, load_filename):
+        self.update_files_lists()
+        output = {}
+        path = os.path.join(self.load_path, load_filename)
+        with open(path) as f:
+            reader = csv.DictReader(f)
+            for line in reader:
+                time = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm')).timestamp()
+                for label in line:
+                    if not label =='timestamp':
+                        output[label] = [] if not label in output else output[label]
+                        dp = float(line[label])
+                        output[label].append([time, dp])
+        return output
 
     def save_config(self, page_name, config_filename, data, additional_headers):
         # print("Page Name: ", page_name,

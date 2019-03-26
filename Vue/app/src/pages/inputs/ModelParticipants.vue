@@ -5,9 +5,9 @@
             <h5>central_solar Battery dropdown must be set to Central Battery</h5>
 
             <div class="config-button" v-on:click="show()">Configure Data Sources </div>
-               
+            
 
-
+            <!-- MODAL - File Config -->
             <modal height="80%"  width="80%" name="data-files">
                 <div class="modal-container">
                     <div class="modal-header">
@@ -46,6 +46,12 @@
                     <div class="close-button" v-on:click="hide">Done</div>
                 </div>
             </modal>
+            
+            <!-- MODAL - Participant Load & Solar Data -->
+            <modal name="participant-chart" height="80%"  width="80%">
+                <Chart class="mychart" :options="chartOptions"></Chart>
+            </modal>
+            
 
             <table class="participants-table">
                 <tr>
@@ -69,6 +75,8 @@
                             :my_options="input_data.my_options[input.dropdown_key]"
                             :my_placeholder="input.placeholder"/>
                     </td>
+                    
+                    <td><div class="show-data-button" v-on:click="show_chart(row.row_id)">Show Data</div></td>
                 </tr>
             </table>
 
@@ -88,22 +96,93 @@
     import SimpleDropdown from '@/components/SimpleDropdown.vue';
     import DateRange from '@/components/DateRange.vue';
     import SaveLoad from '@/mixins/SaveLoad.vue';
-
+    import {Chart} from 'highcharts-vue'
     export default {
         name: "Participants",
 
         components: {
             SimpleNumberInput,
             SimpleDropdown,
-            DateRange
+            DateRange,
+            Chart,
         },
 
         mixins: [SaveLoad],
+
+
+        computed:{
+            chartOptions () {
+
+                var solar_data = [];
+                var load_data = [];
+                console.log('Chart load timeseries', this.chart.load_timeseries)
+                
+                console.log('CHART',this.chart.solar_participant_id, this.chart.load_participant_id);
+                if(this.chart.solar_participant_id != null){
+                    solar_data = this.chart.solar_timeseries[this.chart.solar_participant_id]
+                    console.log('Chart solar data', solar_data)
+                }
+
+                if(this.chart.load_participant_id != null){
+                    load_data = this.chart.load_timeseries[this.chart.load_participant_id]
+                    console.log('Chart load data', load_data);
+                }
+
+                
+                
+
+                return {
+                    chart: {
+                    zoomType: 'x'
+                    },
+                    title: {
+                    text: 'Solar and Load'
+                    },
+                    width: null,
+
+                    subtitle: {
+                    text: document.ontouchstart === undefined
+                        ? 'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+                    },
+                    yAxis: {
+                    title: {
+                        text: 'kWh'
+                    }
+                    },
+                    legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle'
+                    },
+                    xAxis: {
+                    type: 'datetime'
+                    },
+                    series: [
+                        {
+                            name: 'PV',
+                            data:solar_data,
+                        },
+                        {
+                            name: 'Load',
+                            data: load_data,
+                        },
+
+                    ]
+                }
+            },
+        },
+
 
         data () {
             return {
                 view_name: this.$options.name,
                 model_page_name:"model_participants",
+                chart:{
+                    solar_participant_id: null,
+                    load_participant_id: null,
+                    solar_timeseries:{},
+                    load_timeseries:{},
+                },
 
                 input_data: {
                     
@@ -173,6 +252,7 @@
         },
 
         methods: {
+           
             add_row(participant_id="", participant_type="", retail_tariff_type="", load_profile="", solar_profile="", solar_scaling=1, battery_type="No Battery") {
                 let array_length = this.input_data.table_rows.length;
                 // let participant_default = "participant_" + Number(array_length+1).toString();
@@ -251,10 +331,14 @@
 
             get_solar_profiles (filename) {
                 this.$socket.emit('get_solar_profiles', filename)
+                this.$socket.emit('get_solar_timeseries', filename);
+                console.log('Getting solar profiles')
             },
 
             get_load_profiles (filename) {
-                this.$socket.emit('get_load_profiles', filename)
+                this.$socket.emit('get_load_profiles', filename);
+                this.$socket.emit('get_load_timeseries', filename);
+                console.log('Getting load profiles')
             },
 
             save_config() {
@@ -271,6 +355,35 @@
             },
             hide(){
                 this.$modal.hide('data-files');
+            },
+
+            show_chart(id){
+                
+                console.log('Show Data:', id);
+                var inputs = this.input_data.table_rows[id].row_inputs;
+                var solar_participant_id = null;
+                var load_participant_id = null;
+                // Go through all table values, find the corresponding selected solar and load profile names.
+                
+                for(var i = 0; i< inputs.length; i++){
+                    console.log(inputs[i].name)
+                    if(inputs[i].name == "load_profile"){
+                        
+                        load_participant_id = inputs[i].value;
+                    }
+                    if(inputs[i].name == "solar_profile"){
+                        
+                        solar_participant_id = inputs[i].value;
+                    }
+                }
+                console.log('Selected load and solar profiles:', solar_participant_id, load_participant_id)
+                this.chart.solar_participant_id = solar_participant_id;
+                this.chart.load_participant_id = load_participant_id;
+                this.$modal.show('participant-chart');
+            },
+
+            hide_chart(){
+                this.$modal.hide('participant-chart');
             }
 
         },
@@ -287,10 +400,19 @@
                 }else if( response.key== 'load_dates'){
                     console.log('Load Dates:', response.data)
                     this.input_data.load_dates = response.data;
+                }else if(response.key == 'solar_timeseries'){
+                    this.chart.solar_timeseries = response.data;
+                    console.log('solar timeseries', response.data)
+                }else if(response.key == 'load_timeseries'){
+                    console.log('load timeseries', response.data);
+                    this.chart.load_timeseries = response.data;
+                }else{
+                    console.log('Unknown incoming key:', response.data);
                 }
             },
 
             profilesChannel: function(response) {
+                console.log('profiles',response)
                 this.input_data.my_options[response.key] = response.data;
             },
 

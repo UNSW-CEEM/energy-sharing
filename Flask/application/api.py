@@ -112,7 +112,6 @@ def get_solar_dates():
     dates = file_service.list_solar_start_end()
     emit('filesChannel', {"key": "solar_dates", "data": dates})
 
-
 @socketio.on('get_load_dates')
 def get_load_dates():
     dates = file_service.list_load_start_end()
@@ -132,6 +131,18 @@ def get_solar_profiles(filename):
 def get_solar_profiles(filename):
     data = file_service.list_load_profiles(filename)
     emit('profilesChannel', {"key": "load_profiles_options", "data": data})
+
+@socketio.on('get_solar_timeseries')
+def get_solar_timeseries(filename):
+    data = file_service.get_solar_timeseries(filename)
+    # print("Retrieving solar timeseries", data)
+    emit('filesChannel', {"key": "solar_timeseries", "data": data})
+
+@socketio.on('get_load_timeseries')
+def get_load_timeseries(filename):
+    data = file_service.get_load_timeseries(filename)
+    # print("Retrieving load timeseries", data)
+    emit('filesChannel', {"key": "load_timeseries", "data": data})
 
 @socketio.on('save_config')
 def save_config(page_name, filename, data, additional_headers=None):
