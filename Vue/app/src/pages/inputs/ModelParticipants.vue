@@ -119,7 +119,7 @@
                     {id: 3, name: "Load Data", additional_text:"Select One"},
                     {id: 4, name: "Solar Data", additional_text:"Select One"},
                     {id: 5, name: "Solar Scaling", additional_text:"Input Number"},
-                    {id: 6, name: "Battery", additional_text:"Select One"},
+                    // {id: 6, name: "Battery", additional_text:"Select One"},
                 ],
             }
         },
@@ -191,14 +191,14 @@
                             value:solar_scaling,
                             placeholder:"Input Number",
                         },
-                        {
-                            id: 6,
-                            name: "battery_type",
-                            tag: "my_dropdown",
-                            value:battery_type,
-                            dropdown_key:"battery_options",
-                            placeholder:"Select Battery",
-                        },
+                        // {
+                        //     id: 6,
+                        //     name: "battery_type",
+                        //     tag: "my_dropdown",
+                        //     value:battery_type,
+                        //     dropdown_key:"battery_options",
+                        //     placeholder:"Select Battery",
+                        // },
                     ]
                 };
 
