@@ -3,36 +3,49 @@
         <div class="main-container">
             <h1 class="view-title">{{ view_name}}</h1>
             <h5>central_solar Battery dropdown must be set to Central Battery</h5>
-            <div class="files-select-container">
-                <h4 class="load-title">Load File:</h4>
-                <SimpleDropdown
-                        v-model="input_data.selected_load_file"
-                        v-on:input="get_load_profiles(input_data.selected_load_file)"
-                        :my_options="input_data.load_files_list"
-                        :my_placeholder="'Select File'"/>
 
-                <h4 class="solar-title">Solar File:</h4>
-                <SimpleDropdown
-                        v-model="input_data.selected_solar_file"
-                        v-on:input="get_solar_profiles(input_data.selected_solar_file)"
-                        :my_options="input_data.solar_files_list"
-                        :my_placeholder="'Select File'" />
-                
-            </div>
-            <div class="dates"  >
-                <DateRange v-if="input_data.selected_solar_file && input_data.selected_load_file"
-                    :load_start_date="input_data.load_dates[input_data.selected_load_file]['start_date']"
-                    :load_end_date="input_data.load_dates[input_data.selected_load_file]['end_date']"
-                    :solar_start_date="input_data.solar_dates[input_data.selected_solar_file]['start_date']"
-                    :solar_end_date="input_data.solar_dates[input_data.selected_solar_file]['end_date']"
-                    :solar_filename="input_data.selected_solar_file"
-                    :load_filename="input_data.selected_load_file"
-                    ></DateRange>
-                <!-- <span v-if="input_data.selected_solar_file">Solar Start Date:{{input_data.solar_dates[input_data.selected_solar_file]['start_date']}}</span>
-                <span v-if="input_data.selected_solar_file">Solar End Date:{{input_data.solar_dates[input_data.selected_solar_file]['end_date']}}</span>
-                <span v-if="input_data.selected_load_file">Load Start Date:{{input_data.load_dates[input_data.selected_load_file]['start_date']}}</span>
-                <span v-if="input_data.selected_load_file">Load End Date:{{input_data.load_dates[input_data.selected_load_file]['end_date']}}</span> -->
-            </div>
+            <div class="config-button" v-on:click="show()">Configure Data Sources </div>
+               
+
+
+            <modal height="80%"  width="80%" name="data-files">
+                <div class="modal-container">
+                    <div class="modal-header">
+                        Select Solar and Load Files
+                    </div>
+                    <div class="files-select-container">
+                        <h4 class="load-title">Load File:</h4>
+                        <SimpleDropdown
+                                v-model="input_data.selected_load_file"
+                                v-on:input="get_load_profiles(input_data.selected_load_file)"
+                                :my_options="input_data.load_files_list"
+                                :my_placeholder="'Select File'"/>
+
+                        <h4 class="solar-title">Solar File:</h4>
+                        <SimpleDropdown
+                                v-model="input_data.selected_solar_file"
+                                v-on:input="get_solar_profiles(input_data.selected_solar_file)"
+                                :my_options="input_data.solar_files_list"
+                                :my_placeholder="'Select File'" />
+                        
+                    </div>
+                    <div class="dates"  >
+                        <DateRange v-if="input_data.selected_solar_file && input_data.selected_load_file"
+                            :load_start_date="input_data.load_dates[input_data.selected_load_file]['start_date']"
+                            :load_end_date="input_data.load_dates[input_data.selected_load_file]['end_date']"
+                            :solar_start_date="input_data.solar_dates[input_data.selected_solar_file]['start_date']"
+                            :solar_end_date="input_data.solar_dates[input_data.selected_solar_file]['end_date']"
+                            :solar_filename="input_data.selected_solar_file"
+                            :load_filename="input_data.selected_load_file"
+                            ></DateRange>
+                        <!-- <span v-if="input_data.selected_solar_file">Solar Start Date:{{input_data.solar_dates[input_data.selected_solar_file]['start_date']}}</span>
+                        <span v-if="input_data.selected_solar_file">Solar End Date:{{input_data.solar_dates[input_data.selected_solar_file]['end_date']}}</span>
+                        <span v-if="input_data.selected_load_file">Load Start Date:{{input_data.load_dates[input_data.selected_load_file]['start_date']}}</span>
+                        <span v-if="input_data.selected_load_file">Load End Date:{{input_data.load_dates[input_data.selected_load_file]['end_date']}}</span> -->
+                    </div>
+                    <div class="close-button" v-on:click="hide">Done</div>
+                </div>
+            </modal>
 
             <table class="participants-table">
                 <tr>
@@ -252,6 +265,13 @@
                 this.$socket.emit('load_participants_config', this.model_page_name, file)
                 this.input_data.table_rows = [];
             },
+            show(){
+                //modal is a plugin found here: https://www.npmjs.com/package/vue-js-modal
+                this.$modal.show('data-files');
+            },
+            hide(){
+                this.$modal.hide('data-files');
+            }
 
         },
 
@@ -329,6 +349,47 @@
 
     .file-buttons-container {
 
+    }
+
+    .config-button{
+        background-color:grey;
+        padding: 1vh 1vw 1vh 1vw;
+        border-radius:4px;
+        cursor:pointer;
+        width: 10vw;
+        margin: 1vh 0 1vh 0;
+    }
+
+    .modal-container{
+        background-color:#36393F;
+        height:80vh;
+        width:100%;
+        display:flex;
+        flex-direction:column;
+        justify-content:flex-start;
+        align-items:center;
+    }
+
+    .modal-header{
+        background-color:grey;
+        width:100%;
+        padding: 1vh 0 1vh 0;
+        text-align:center;
+    }
+
+    .dates{
+        width:90%;
+        background-color:grey;
+        padding: 2vh 1vw 2vh 1vw;
+        border-radius:4px;
+    }
+
+    .close-button{
+        background-color:grey;
+        cursor:pointer;
+        margin: 2vh 0 2vh 0;
+        padding: 1vh 1vw 1vh 1vw;
+        border-radius:4px;
     }
 
 </style>
