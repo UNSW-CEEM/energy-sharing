@@ -1,11 +1,19 @@
 <template>
     <div class="background">
+        <h1 class="view-title">{{ view_name}}</h1>
         <div class="main-container">
-            <h1 class="view-title">{{ view_name}}</h1>
-            <h5>central_solar Battery dropdown must be set to Central Battery</h5>
-
-            <div class="config-button" v-on:click="show()">Configure Data Sources </div>
             
+            <h5>central_solar Battery dropdown must be set to Central Battery</h5>
+            <div class="config-info">
+                <div class="config-heading">Input Data</div>
+                <div class="config-content">
+                    <div class="config-selected">
+                        <span>Selected Load File: {{input_data.selected_load_file}}</span>
+                        <span>Selected Solar File: {{input_data.selected_solar_file}}</span>
+                    </div>
+                    <div class="config-button" v-on:click="show()">Configure Data Sources </div>
+                </div>
+            </div>
 
             <!-- MODAL - File Config -->
             <modal height="80%"  width="80%" name="data-files">
@@ -48,44 +56,47 @@
             </modal>
             
             <!-- MODAL - Participant Load & Solar Data -->
-            <modal name="participant-chart" height="80%"  width="80%">
+            <modal name="participant-chart" height="60%"  width="80%">
                 <Chart class="mychart" :options="chartOptions"></Chart>
             </modal>
             
+            <div class="participants-table">
+                <div class="participants-table-heading">Manage Participants</div>
+                <table >
+                    <tr>
+                        <th v-for="header in table_headers" :key="header.header_id" :value="header.name">
+                            {{ header.name }}
+                        </th>
+                    </tr>
+                    <tr>
+                        <td v-for="header in table_headers" :key="header.header_id">
+                            {{ header.additional_text }}
+                        </td>
+                    </tr>
+                    <tr v-for="row in input_data.table_rows" :key="row.row_id">
+                        <td v-for="input in row.row_inputs" :key="input.col_id">
+                            <SimpleNumberInput
+                                v-if="input.tag==='my_number'"
+                                v-model="input.value"
+                                :my_placeholder="input.placeholder"/>
+                            <SimpleDropdown v-else-if="input.tag==='my_dropdown'"
+                                v-model="input.value"
+                                :my_options="input_data.my_options[input.dropdown_key]"
+                                :my_placeholder="input.placeholder"/>
+                        </td>
+                        
+                        <td><div class="show-data-button" v-on:click="show_chart(row.row_id)">Show Data</div></td>
+                    </tr>
+                </table>
 
-            <table class="participants-table">
-                <tr>
-                    <th v-for="header in table_headers" :key="header.header_id" :value="header.name">
-                        {{ header.name }}
-                    </th>
-                </tr>
-                <tr>
-                    <td v-for="header in table_headers" :key="header.header_id">
-                        {{ header.additional_text }}
-                    </td>
-                </tr>
-                <tr v-for="row in input_data.table_rows" :key="row.row_id">
-                    <td v-for="input in row.row_inputs" :key="input.col_id">
-                        <SimpleNumberInput
-                            v-if="input.tag==='my_number'"
-                            v-model="input.value"
-                            :my_placeholder="input.placeholder"/>
-                        <SimpleDropdown v-else-if="input.tag==='my_dropdown'"
-                            v-model="input.value"
-                            :my_options="input_data.my_options[input.dropdown_key]"
-                            :my_placeholder="input.placeholder"/>
-                    </td>
-                    
-                    <td><div class="show-data-button" v-on:click="show_chart(row.row_id)">Show Data</div></td>
-                </tr>
-            </table>
 
-            <button @click="add_row()">Add Participant</button>
+                <div class="add-participant-button" @click="add_row()">Add Participant</div>
 
-            <div class="file-buttons-container">
-                <!--<button @click="load_participants_config(input_data.selected_config_file)">Load User Config</button>-->
-                <!--<button @click="save_config()">Save User Config</button>-->
-                <button @click="load_participants_config('default_config.csv')">Load from default file</button>
+                <div class="file-buttons-container">
+                    <!--<button @click="load_participants_config(input_data.selected_config_file)">Load User Config</button>-->
+                    <!--<button @click="save_config()">Save User Config</button>-->
+                    <button @click="load_participants_config('default_config.csv')">Load from default file</button>
+                </div>
             </div>
         </div>
     </div>
@@ -109,70 +120,6 @@
 
         mixins: [SaveLoad],
 
-
-        computed:{
-            chartOptions () {
-
-                var solar_data = [];
-                var load_data = [];
-                console.log('Chart load timeseries', this.chart.load_timeseries)
-                
-                console.log('CHART',this.chart.solar_participant_id, this.chart.load_participant_id);
-                if(this.chart.solar_participant_id != null){
-                    solar_data = this.chart.solar_timeseries[this.chart.solar_participant_id]
-                    console.log('Chart solar data', solar_data)
-                }
-
-                if(this.chart.load_participant_id != null){
-                    load_data = this.chart.load_timeseries[this.chart.load_participant_id]
-                    console.log('Chart load data', load_data);
-                }
-
-                
-                
-
-                return {
-                    chart: {
-                    zoomType: 'x'
-                    },
-                    title: {
-                    text: 'Solar and Load'
-                    },
-                    width: null,
-
-                    subtitle: {
-                    text: document.ontouchstart === undefined
-                        ? 'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
-                    },
-                    yAxis: {
-                    title: {
-                        text: 'kWh'
-                    }
-                    },
-                    legend: {
-                    layout: 'vertical',
-                    align: 'right',
-                    verticalAlign: 'middle'
-                    },
-                    xAxis: {
-                    type: 'datetime'
-                    },
-                    series: [
-                        {
-                            name: 'PV',
-                            data:solar_data,
-                        },
-                        {
-                            name: 'Load',
-                            data: load_data,
-                        },
-
-                    ]
-                }
-            },
-        },
-
-
         data () {
             return {
                 view_name: this.$options.name,
@@ -180,6 +127,7 @@
                 chart:{
                     solar_participant_id: null,
                     load_participant_id: null,
+                    solar_scaling_factor:1,
                     solar_timeseries:{},
                     load_timeseries:{},
                 },
@@ -235,6 +183,72 @@
                     {id: 6, name: "Battery", additional_text:"Select One"},
                 ],
             }
+        },
+
+        computed:{
+            chartOptions () {
+
+                var solar_data = [];
+                var load_data = [];
+                // console.log('Chart load timeseries', this.chart.load_timeseries)
+                console.log('Solar scaling Factor', this.chart.solar_scaling_factor)
+                
+                console.log('CHART',this.chart.solar_participant_id, this.chart.load_participant_id);
+                if(this.chart.solar_participant_id != null){
+                    solar_data = this.chart.solar_timeseries[this.chart.solar_participant_id]
+                    for(var i = 0; i<solar_data.length; i++){
+                        solar_data[i][1] = solar_data[i][1] * this.chart.solar_scaling_factor;
+                    }
+                    // console.log('Chart solar data', solar_data)
+                }
+
+                if(this.chart.load_participant_id != null){
+                    load_data = this.chart.load_timeseries[this.chart.load_participant_id]
+                    // console.log('Chart load data', load_data);
+                }
+
+                
+                
+
+                return {
+                    chart: {
+                    zoomType: 'x'
+                    },
+                    title: {
+                    text: 'Solar and Load'
+                    },
+                    width: null,
+
+                    subtitle: {
+                    text: document.ontouchstart === undefined
+                        ? 'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+                    },
+                    yAxis: {
+                    title: {
+                        text: 'kWh'
+                    }
+                    },
+                    legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle'
+                    },
+                    xAxis: {
+                    type: 'datetime'
+                    },
+                    series: [
+                        {
+                            name: 'PV',
+                            data:solar_data,
+                        },
+                        {
+                            name: 'Load',
+                            data: load_data,
+                        },
+
+                    ]
+                }
+            },
         },
 
         created() {
@@ -363,6 +377,7 @@
                 var inputs = this.input_data.table_rows[id].row_inputs;
                 var solar_participant_id = null;
                 var load_participant_id = null;
+                var solar_scaling_factor = 1;
                 // Go through all table values, find the corresponding selected solar and load profile names.
                 
                 for(var i = 0; i< inputs.length; i++){
@@ -375,10 +390,15 @@
                         
                         solar_participant_id = inputs[i].value;
                     }
+                    if(inputs[i].name == "solar_scaling"){
+                        
+                        solar_scaling_factor = inputs[i].value;
+                    }
                 }
                 console.log('Selected load and solar profiles:', solar_participant_id, load_participant_id)
                 this.chart.solar_participant_id = solar_participant_id;
                 this.chart.load_participant_id = load_participant_id;
+                this.chart.solar_scaling_factor = solar_scaling_factor;
                 this.$modal.show('participant-chart');
             },
 
@@ -421,6 +441,9 @@
                 this.input_data.selected_solar_file = response["data"][0]["row_inputs"]["selected_solar_file"];
                 this.input_data.selected_load_file = response["data"][0]["row_inputs"]["selected_load_file"];
 
+                this.get_solar_profiles(this.input_data.selected_solar_file);
+                this.get_load_profiles(this.import_data.selected_load_file);
+
                 this.input_data.my_options["solar_profiles_options"] = response["solar_profiles_options"];
                 this.input_data.my_options["load_profiles_options"] = response["load_profiles_options"];
 
@@ -436,6 +459,7 @@
                         data["battery_type"],
                     );
                 }
+
             }
         }
     }
@@ -446,17 +470,39 @@
     .main-container {
         animation-name: fade-in;
         animation-duration: 1s;
-    }
-
-    .view-title {
-
+        display:flex;
+        flex-direction:column;
+        justify-content:flex-start;
+        align-items: center;
+        overflow:auto;
     }
 
     .participants-table {
-
+        border: 1px solid grey;
+        border-radius:4px;
+        margin: 2vh 1vw 4vh 1vw;
+        /* padding: 0vh 0 1.5vw 0; */
     }
 
-    button {
+    .participants-table-heading{
+        background-color:grey;
+    }
+
+    .participants-table table{
+        margin: 1vh 0 1vh 0;
+    }
+
+    .add-participant-button{
+        background-color:grey;
+        padding: 1vh 1vw 1vh 1vw;
+        border-radius:4px;
+        width: 10vw;
+        margin: 1vh 1vw 1vh 1vw;
+        font-size: 0.8em;
+        cursor:pointer;
+    }
+    
+    .button {
 
     }
 
@@ -513,5 +559,44 @@
         padding: 1vh 1vw 1vh 1vw;
         border-radius:4px;
     }
+
+    .config-heading{
+        background-color:grey;
+    }
+
+    .config-content{
+        display:flex;
+        flex-direction:row;
+        padding: 1vh 1vw 1vh 1vw;
+        justify-content: space-around
+    }
+
+    .config-info{
+        display:flex;
+        flex-direction:column;
+        justify-content:flex-start;
+
+        width: 50%;
+
+        border: 1px solid grey;
+        
+        border-radius:4px;
+    }
+
+    .config-selected{
+        display:flex;
+        flex-direction:column;
+        justify-content: space-around;
+
+    }
+
+    .show-data-button{
+        font-size: 0.7em;
+        background-color:grey;
+        border-radius:4px;
+        cursor: pointer;
+    }
+
+    
 
 </style>

@@ -157,7 +157,7 @@ class OSFileService(FileService):
         with open(path) as f:
             reader = csv.DictReader(f)
             for line in reader:
-                time = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm')).timestamp()
+                time = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm')).timestamp() * 1000.0
                 for label in line:
                     if not label =='timestamp':
                         output[label] = [] if not label in output else output[label]
@@ -172,7 +172,7 @@ class OSFileService(FileService):
         with open(path) as f:
             reader = csv.DictReader(f)
             for line in reader:
-                time = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm')).timestamp()
+                time = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm')).timestamp() * 1000.0
                 for label in line:
                     if not label =='timestamp':
                         output[label] = [] if not label in output else output[label]
