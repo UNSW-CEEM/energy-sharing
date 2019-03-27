@@ -46,3 +46,17 @@ The date ranges can be queried from the LoadCollection and PVCollection objects 
 
 Integrate with Mike's, then Luomi. 
 
+
+
+
+
+LUOMI DUOS/TUOS/NUOS Tariffs:
+
+Controlled Load 1
+Controlled Load 2
+LV Small Business Anytime
+LV TOU <100MWh
+LV Business TOU_Interval meter
+Small Business - Opt in Demand
+
+LUOMI Retail Tariffs
