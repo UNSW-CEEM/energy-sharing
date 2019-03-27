@@ -9,6 +9,9 @@
         },
 
         methods: {
+            get_params(){
+                return this.parsed_parameters;
+            },
             save_page_simple() {
                 let payload = {
                     model_page_name: this.model_page_name,
