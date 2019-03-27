@@ -151,7 +151,8 @@ class ResultParsers:
                     if key not in data_points:
                         data_points[key] = 0
                     else:
-                        data_points[key] += float(value)
+                        if value != "":
+                            data_points[key] += float(value)
 
         return data_points
 

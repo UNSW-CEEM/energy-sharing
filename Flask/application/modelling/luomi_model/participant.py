@@ -45,8 +45,9 @@ class CSV_Participant(Participant):
         # print solar_data
         
     def calc_net_export(self, date_time, interval_min):
-        solar_data = float(self.solar_data.loc[date_time])
-        load_data = float(self.load_data.loc[date_time])
+        
+        solar_data = float(self.solar_data.loc[date_time]) if date_time in self.solar_data.index else 0
+        load_data = float(self.load_data.loc[date_time]) if date_time in self.load_data.index else 0
         net_export = solar_data - load_data
         return net_export
 

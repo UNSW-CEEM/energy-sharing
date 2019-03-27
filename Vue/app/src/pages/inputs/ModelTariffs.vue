@@ -101,7 +101,7 @@
         },
 
         methods: {
-            add_row(tariff_type="", tariff_name="", fit_input="", peak_price="", shoulder_price="", off_peak_price="") {
+            add_row(tariff_type="", tariff_name="", fit_input="", peak_charge="", shoulder_charge="", offpeak_charge="") {
 
                 let array_length = this.input_data.table_rows.length;
                 let new_row = {
@@ -131,23 +131,23 @@
                         },
                         {
                             col_id: 3,
-                            name:"peak_price",
+                            name:"peak_charge",
                             tag:"my_number",
-                            value: peak_price,
+                            value: peak_charge,
                             placeholder:"$",
                         },
                         {
                             col_id: 4,
-                            name:"shoulder_price",
+                            name:"shoulder_charge",
                             tag:"my_number",
-                            value: shoulder_price,
+                            value: shoulder_charge,
                             placeholder:"$",
                         },
                         {
                             col_id: 5,
-                            name:"off_peak_price",
+                            name:"offpeak_charge",
                             tag:"my_number",
-                            value: off_peak_price,
+                            value: offpeak_charge,
                             placeholder:"$",
                         },
                     ]
@@ -184,9 +184,9 @@
                         params["tariff_type"],
                         params["tariff_name"],
                         params["fit_input"],
-                        params["peak_price"],
-                        params["shoulder_price"],
-                        params["off_peak_price"],
+                        params["peak_charge"],
+                        params["shoulder_charge"],
+                        params["offpeak_charge"],
                     );
                 }
             }

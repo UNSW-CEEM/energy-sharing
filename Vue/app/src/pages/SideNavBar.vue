@@ -56,13 +56,15 @@
                         page: '/central_services',
                         storage_key: "central_services",
                         icon:"battery-full"
-                    },{
-                        id: 6,
-                        text: 'Financing',
-                        page: '/financing',
-                        storage_key: "financing",
-                        icon:"money-check-alt"
-                    },{
+                    },
+                    // {
+                    //     id: 6,
+                    //     text: 'Financing',
+                    //     page: '/financing',
+                    //     storage_key: "financing",
+                    //     icon:"money-check-alt"
+                    // },
+                    {
                         id: 7,
                         text: 'Review',
                         page: 'review',

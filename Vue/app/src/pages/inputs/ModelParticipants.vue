@@ -195,9 +195,16 @@
                 
                 console.log('CHART',this.chart.solar_participant_id, this.chart.load_participant_id);
                 if(this.chart.solar_participant_id != null){
-                    solar_data = this.chart.solar_timeseries[this.chart.solar_participant_id]
-                    for(var i = 0; i<solar_data.length; i++){
-                        solar_data[i][1] = solar_data[i][1] * this.chart.solar_scaling_factor;
+                    // solar_data = this.chart.solar_timeseries[this.chart.solar_participant_id].slice()
+
+                    for(var i = 0; i<this.chart.solar_timeseries[this.chart.solar_participant_id].length; i++){
+                        solar_data.push(
+                                [
+                                    this.chart.solar_timeseries[this.chart.solar_participant_id][i][0],
+                                    this.chart.solar_timeseries[this.chart.solar_participant_id][i][1] * this.chart.solar_scaling_factor,
+                                ]
+                            )
+                        // solar_data[i][1] = solar_data[i][1] * this.chart.solar_scaling_factor;
                     }
                     // console.log('Chart solar data', solar_data)
                 }
@@ -206,6 +213,8 @@
                     load_data = this.chart.load_timeseries[this.chart.load_participant_id]
                     // console.log('Chart load data', load_data);
                 }
+
+                
 
                 
                 

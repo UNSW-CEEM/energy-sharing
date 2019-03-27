@@ -97,6 +97,9 @@ class Tariffs:
     def get_retail_solar_tariff(self,date_time, retail_tariff_type, solar_capacity):
         """Solar FiT component from retail tariff data."""
         # Get solar threshold from retail data sheet
+        # print("Index:", self.retail_tariff_data)
+        # print("File Path", self.retail_tariff_data_path)
+        # print("Scheme Name", self.scheme_name)
         solar_capacity_threshold = self.retail_tariff_data.loc[retail_tariff_type,'solar_cap_1']
         # If below or equal to the threshold, return the relevant solar rate in $/kWh. 
         if solar_capacity <= solar_capacity_threshold:
@@ -114,6 +117,9 @@ class Tariffs:
     # Things the network is paid (fixed DUOS charges, variable DUOS charges, local solar DUOS charges, central battery DUOS charges)
     # Apply to amounts consumer each time period then sum for total network income
     def get_duos_on_grid_import_fixed(self,fixed_period_minutes, duos_tariff_type):
+        print("===============================")
+        print(self.duos_tariff_data )
+        print("===============================")
         fixed_tariff = self.duos_tariff_data.loc[duos_tariff_type,'daily_charge'] * (float(fixed_period_minutes)/float(60*24))
         return fixed_tariff
 
@@ -242,6 +248,9 @@ class Tariffs:
 
     # Network use of service charges (TUOS + DUOS + green schemes and friends) - will presumably be zero for local solar and battery import
     def get_nuos_on_grid_import_fixed(self,fixed_period_minutes, nuos_tariff_type):
+        print("!!!!!!!!!!!!!!!!!!!!!!!")
+        print(self.nuos_tariff_data)
+        print("!!!!!!!!!!!!!!!!!!!!!!!")
         fixed_tariff = self.nuos_tariff_data.loc[nuos_tariff_type,'daily_charge'] * (float(fixed_period_minutes)/float(60*24))
         return fixed_tariff
 

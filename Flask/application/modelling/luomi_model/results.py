@@ -6,8 +6,8 @@ class Results:
     def __init__(self, time_periods, participant_ids):
         # Make empty df to store energy calcs
 
-        print(type(participant_ids))
-        print(time_periods)
+        # print(type(participant_ids))
+        # print(time_periods)
         self.energy_output = {
             "df_net_export" : pd.DataFrame(0,index = time_periods, columns=[p for p in participant_ids]),
             "df_network_energy_flows" : pd.DataFrame(0,index = time_periods, columns=['net_participant_export', 'central_battery_export', 'unallocated_local_solar', 'unallocated_central_battery_load','gross_participant_grid_import','gross_participant_local_solar_import','gross_participant_central_battery_import']),
