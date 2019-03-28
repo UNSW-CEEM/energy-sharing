@@ -170,6 +170,7 @@ def load_config(page_name, filename):
 @socketio.on('run_model')
 def test_run_sim(params):
     status_callback("Running Test Model Interface")
+    print([key for key in params])
     # Recreate the defaults between the requests while testing
     mp.load_defaults()
 

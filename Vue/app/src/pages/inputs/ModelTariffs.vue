@@ -2,7 +2,83 @@
     <div class="background">
         <div class="main-container">
             <h1 class="view-title">{{ view_name }}</h1>
-            <p>Beta Note: 'Luomi' model requires one of each tariff completed. (DUOS, NUOS, TUOS and Retail)</p>
+            <!-- <p>Beta Note: 'Luomi' model requires one of each tariff completed. (DUOS, NUOS, TUOS and Retail)</p> -->
+            
+            <div class="container">
+                <div class="container-header">
+                    Retail Tariffs
+                </div>
+                <div class="container-content">
+                    <Chart class="mychart" :options="retailChartOptions"></Chart>
+                    <div class="slider">
+                        <vue-slider v-model="input_data.tariffs.tou_times" :process="colorizer" :min="1" :max="24" :interval="1"></vue-slider>
+                    </div>
+
+                    <div class="tariffs">
+                        <div class="input">
+                            Off-Peak Tariff <input v-model="input_data.tariffs.retail.off_peak_tariff"/>
+                        </div>
+                        <div class="input">
+                            Shoulder Tariff <input v-model="input_data.tariffs.retail.shoulder_tariff"/>
+                        </div>
+                        <div class="input">
+                            Peak Tariff <input v-model="input_data.tariffs.retail.peak_tariff"/>
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="container-header">
+                    Network Tariffs
+                </div>
+                <div class="container-content">
+                    <Chart class="mychart" :options="networkChartOptions"></Chart>
+                    <div class="slider">
+                        <vue-slider v-model="input_data.tariffs.tou_times" :process="colorizer" :min="1" :max="24" :interval="1"></vue-slider>
+                    </div>
+
+                    <div class="tariffs">
+                        <div class="tariff-label">TUOS</div>
+                        <div class="input">
+                            Off-Peak Tariff <input v-model="input_data.tariffs.tuos.off_peak_tariff"/>
+                        </div>
+                        <div class="input">
+                            Shoulder Tariff <input v-model="input_data.tariffs.tuos.shoulder_tariff"/>
+                        </div>
+                        <div class="input">
+                            Peak Tariff <input v-model="input_data.tariffs.tuos.peak_tariff"/>
+                        </div>
+                    </div>
+                    <div class="tariffs">
+                        <div class="tariff-label">DUOS</div>
+                        <div class="input">
+                            Off-Peak Tariff <input v-model="input_data.tariffs.duos.off_peak_tariff"/>
+                        </div>
+                        <div class="input">
+                            Shoulder Tariff <input v-model="input_data.tariffs.duos.shoulder_tariff"/>
+                        </div>
+                        <div class="input">
+                            Peak Tariff <input v-model="input_data.tariffs.duos.peak_tariff"/>
+                        </div>
+                    </div>
+                    <div class="tariffs">
+                        <div class="tariff-label">NUOS</div>
+                        <div class="input">
+                            Off-Peak Tariff <input v-model="input_data.tariffs.nuos.off_peak_tariff"/>
+                        </div>
+                        <div class="input">
+                            Shoulder Tariff <input v-model="input_data.tariffs.nuos.shoulder_tariff"/>
+                        </div>
+                        <div class="input">
+                            Peak Tariff <input v-model="input_data.tariffs.nuos.peak_tariff"/>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
             <table class="tariffs-table">
                 <tr>
                     <th v-for="header in table_headers" :key="header.header_id" :value="header.name">
@@ -46,23 +122,69 @@
     import SimpleNumberInput from '@/components/SimpleNumberInput.vue';
     import SimpleDropdown from '@/components/SimpleDropdown.vue';
     import SaveLoad from '@/mixins/SaveLoad.vue';
+    import {Chart} from 'highcharts-vue'
+    import VueSlider from 'vue-slider-component'
+    import 'vue-slider-component/theme/antd.css'
+
 
     export default {
         name: "Tariffs",
 
         components: {
             SimpleNumberInput,
-            SimpleDropdown
+            SimpleDropdown,
+            Chart,
+            VueSlider
         },
 
         mixins: [SaveLoad],
 
         data () {
             return {
+
+                
+                
+                
+                colorizer: dotsPos => [
+                    [dotsPos[0], dotsPos[1], { backgroundColor: 'pink' }],
+                    [dotsPos[1], dotsPos[2], { backgroundColor: 'blue' }],
+                    [dotsPos[2], dotsPos[3], { backgroundColor: 'pink' }],
+                ],
+
                 view_name: this.$options.name,
                 model_page_name: "model_tariffs",
 
                 input_data: {
+
+
+                    tariffs:{
+                        retail:{
+                            peak_tariff: 0.3,
+                            shoulder_tariff: 0.2,
+                            off_peak_tariff:0.1,
+                        },
+
+                        tuos:{
+                            peak_tariff: 0.2,
+                            shoulder_tariff: 0.1,
+                            off_peak_tariff:0.1,
+                        },
+
+                        duos:{
+                            peak_tariff: 0.4,
+                            shoulder_tariff: 0.3,
+                            off_peak_tariff:0.1,
+                        },
+
+                        nuos:{
+                            peak_tariff: 0.5,
+                            shoulder_tariff: 0.1,
+                            off_peak_tariff:0.1,
+                        },
+
+                        tou_times: [7, 11, 15,18],
+                    },
+
                     selected_config_file: false,
 
                     table_rows: [],
@@ -86,6 +208,188 @@
                     {header_id: 5, name: "Off-Peak", additional_text:"$/kWh"},
                 ],
             }
+        },
+
+        watch:{
+            tariffs(){
+                this.input_data.tariffs = tariffs;
+            }
+        },
+
+        mounted(){
+            // console.log('CHILDREN',this.$children[0])
+            //This is required to make the chart responsive - otherwise we hit the bug that it doesn't fit div size until window resize.
+            // this.$children[0].chart.setSize();
+        },
+
+        computed:{
+
+            shoulder_1_times(){
+                return {
+                    start: this.input_data.tariffs.tou_times[0],
+                    end: this.input_data.tariffs.tou_times[1]
+                }
+            },
+            peak_times(){
+                return {
+                    start:this.input_data.tariffs.tou_times[1],
+                    end:this.input_data.tariffs.tou_times[2]
+                }
+            },
+            shoulder_2_times(){
+                return {
+                    start: this.input_data.tariffs.tou_times[2],
+                    end: this.input_data.tariffs.tou_times[3]
+                }
+            },
+
+            retailChartOptions () {
+                var data = [];
+
+                for(var hour = 0; hour < 24; hour++){
+                    var tariff = Number(this.input_data.tariffs.retail.off_peak_tariff);
+                    // If it's in the shoulder 1 range, set tariff appropriately. 
+                    if(hour >= this.shoulder_1_times.start && hour < this.shoulder_1_times.end){
+                        tariff = Number(this.input_data.tariffs.retail.shoulder_tariff);
+                    }
+                    // If it's in the shoulder 2 range, set tariff appropriately. 
+                    if(hour >= this.shoulder_2_times.start && hour < this.shoulder_2_times.end){
+                        tariff = Number(this.input_data.tariffs.retail.shoulder_tariff);
+                    }
+                    if(hour >= this.peak_times.start && hour < this.peak_times.end){
+                        tariff = Number(this.input_data.tariffs.retail.peak_tariff);
+                    }
+                    data.push(tariff);
+                }
+
+                return {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Retail Time of Use Tariff'
+                    },
+                    subtitle: {
+                        text: 'Drag Slider to Adjust Times'
+                    },
+                    xAxis: {
+                        labels:{
+                            step:1,
+                        },
+                        crosshair: true
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: '$/kWh'
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                            '<td style="padding:0"><b>{point.y:.1f} $/kWh</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: [{
+                        name: 'Network Tariff',
+                        // data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+                        data: data,
+
+                    }]
+                }
+            },
+            networkChartOptions () {
+                var tuos = [];
+                var duos = [];
+                var nuos = [];
+
+                for(var hour = 0; hour < 24; hour++){
+                    var tuos_tariff = Number(this.input_data.tariffs.tuos.off_peak_tariff);
+                    var duos_tariff = Number(this.input_data.tariffs.duos.off_peak_tariff);
+                    var nuos_tariff = Number(this.input_data.tariffs.nuos.off_peak_tariff);
+                    
+                    // If it's in the shoulder 1 range, set tariff appropriately. 
+                    if(hour >= this.shoulder_1_times.start && hour < this.shoulder_1_times.end){
+                        tuos_tariff = Number(this.input_data.tariffs.tuos.shoulder_tariff);
+                        duos_tariff = Number(this.input_data.tariffs.duos.shoulder_tariff);
+                        nuos_tariff = Number(this.input_data.tariffs.nuos.shoulder_tariff);
+                    }
+                    // If it's in the shoulder 2 range, set tariff appropriately. 
+                    if(hour >= this.shoulder_2_times.start && hour < this.shoulder_2_times.end){
+                        tuos_tariff = Number(this.input_data.tariffs.tuos.shoulder_tariff);
+                        duos_tariff = Number(this.input_data.tariffs.duos.shoulder_tariff);
+                        nuos_tariff = Number(this.input_data.tariffs.nuos.shoulder_tariff);
+                    }
+                    if(hour >= this.peak_times.start && hour < this.peak_times.end){
+                        tuos_tariff = Number(this.input_data.tariffs.tuos.peak_tariff);
+                        duos_tariff = Number(this.input_data.tariffs.duos.peak_tariff);
+                        nuos_tariff = Number(this.input_data.tariffs.nuos.peak_tariff);
+                    }
+                    tuos.push(tuos_tariff);
+                    duos.push(duos_tariff);
+                    nuos.push(nuos_tariff);
+                }
+
+                return {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Network Time of Use Tariff'
+                    },
+                    subtitle: {
+                        text: 'Drag Slider to Adjust Times'
+                    },
+                    xAxis: {
+                        labels:{
+                            step:1,
+                        },
+                        crosshair: true
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: '$/kWh'
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                            '<td style="padding:0"><b>{point.y:.1f} $/kWh</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: [
+                        {
+                        name: 'TUOS',
+                        data: tuos,
+                        },
+                        {
+                        name: 'DUOS',
+                        data: duos,
+                        },
+                        {
+                        name: 'NUOS',
+                        data: nuos,
+                        },
+                    ]
+                }
+            },
         },
 
         beforeDestroy() {
@@ -213,4 +517,60 @@
         animation-name: fade-in;
         animation-duration: 1s;
     }
+
+    .main-container{
+        /* overflow:auto; */
+    }
+
+    .background{
+        overflow:auto;
+    }
+
+    .slider{
+        padding-left:90px;
+        padding-right: 20px;
+        margin: 1.5vh 0 1.5vh 0;
+    }
+
+    .mychart{
+        width:100%;
+        margin: 0 auto;
+    }
+
+    .tariffs{
+        display:flex;
+        flex-direction:row;
+        justify-content:space-around;
+        align-items:center;
+        margin: 1.5vh 0 1.5vh 0;
+        font-size:0.8em;
+    }
+
+    .tariffs .input{
+        margin: 1vw 0 1vw 0;
+    }
+
+    .tariff-label{
+        font-weight: bold;
+        padding-right:2vw;
+        
+    }
+
+    .container{
+        border: 1px solid grey;
+        border-radius:4px;
+        display:flex;
+        flex-direction:column;
+        justify-content: flex-start;
+        align-items:center;
+        margin: 3vh 0 3vh 0;
+        /* background-color:grey; */
+    }
+
+    .container-header{
+        background-color:grey;
+        width:100%;
+    }
+
+    
 </style>

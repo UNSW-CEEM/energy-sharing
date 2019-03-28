@@ -68,5 +68,6 @@ export default new Router({
             name: 'tariffs',
             component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelTariffs.vue')
         },
+       
     ]
 })

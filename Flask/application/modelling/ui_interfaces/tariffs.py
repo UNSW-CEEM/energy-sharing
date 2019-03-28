@@ -195,7 +195,7 @@ class DuosTariff:
                 demand_units='',
                 tou_weekday_only_flag=''):
 
-        print("========== ==== = = = Creating DUOS Triff - tariff_name:", tariff_name, "offer_name", offer_name, "tariff_type", tariff_type)
+        # print("========== ==== = = = Creating DUOS Triff - tariff_name:", tariff_name, "offer_name", offer_name, "tariff_type", tariff_type)
         if offer_name == '':
             offer_name = tariff_name
 

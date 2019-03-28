@@ -42,6 +42,8 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
 
+
+Vue.prototype.resize = window.resize;
 new Vue({
     store,
     router,

@@ -97,6 +97,7 @@
                     <!--<button @click="save_config()">Save User Config</button>-->
                     <button @click="load_participants_config('default_config.csv')">Load from default file</button>
                 </div>
+                
             </div>
         </div>
     </div>

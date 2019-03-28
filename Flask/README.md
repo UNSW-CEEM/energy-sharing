@@ -52,6 +52,15 @@ Integrate with Mike's, then Luomi.
 
 LUOMI DUOS/TUOS/NUOS Tariffs:
 
+Retail:
+
+Business Anytime (Block)
+Business TOU (TOU)
+Controlled Load 1
+Controlled Load 2
+flat_charge
+
+
 Controlled Load 1
 Controlled Load 2
 LV Small Business Anytime
@@ -59,4 +68,19 @@ LV TOU <100MWh
 LV Business TOU_Interval meter
 Small Business - Opt in Demand
 
+
+This boils down to 
+
+Flat
+TOU
+TOU + Demand Charge
+
+Which at the end of the day, is more like
+
+TOU
+TOU + Demand Charge
+Plus some extra things (daily charges etc)
+
 LUOMI Retail Tariffs
+
+

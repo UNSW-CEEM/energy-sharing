@@ -28,11 +28,17 @@
             },
 
             parse_simple_pages() {
+                console.log("Parsing Simple Pages")
                 let select_data = this.$store.state.frontend_state["model_selection"];
                 if (select_data ) { this.parsed_parameters["model_selection"] = this.parse_selection_page(select_data)}
 
                 let central_services = this.$store.state.frontend_state["central_services"];
                 if (central_services) { this.parsed_parameters["central_services"] = central_services }
+
+                let tariffs_page = this.$store.state.frontend_state["model_tariffs"]
+                if(tariffs_page){
+                    this.parsed_parameters["tariffs"] = tariffs_page.tariffs;
+                }
 
                 // let solar_data = this.$store.state.frontend_state["model_solar"];
                 // if (solar_data) { this.parsed_parameters["model_solar"] = solar_data }
@@ -52,6 +58,7 @@
 
                 let t_data = this.$store.state.frontend_state["model_tariffs"];
                 if (t_data) {
+                    console.log("MODEL TARIFFS", t_data)
                     this.parsed_parameters["model_tariffs"] = this.parse_table_page(t_data)
                 }
             },

@@ -117,9 +117,7 @@ class Tariffs:
     # Things the network is paid (fixed DUOS charges, variable DUOS charges, local solar DUOS charges, central battery DUOS charges)
     # Apply to amounts consumer each time period then sum for total network income
     def get_duos_on_grid_import_fixed(self,fixed_period_minutes, duos_tariff_type):
-        print("===============================")
-        print(self.duos_tariff_data )
-        print("===============================")
+
         fixed_tariff = self.duos_tariff_data.loc[duos_tariff_type,'daily_charge'] * (float(fixed_period_minutes)/float(60*24))
         return fixed_tariff
 
@@ -248,9 +246,9 @@ class Tariffs:
 
     # Network use of service charges (TUOS + DUOS + green schemes and friends) - will presumably be zero for local solar and battery import
     def get_nuos_on_grid_import_fixed(self,fixed_period_minutes, nuos_tariff_type):
-        print("!!!!!!!!!!!!!!!!!!!!!!!")
-        print(self.nuos_tariff_data)
-        print("!!!!!!!!!!!!!!!!!!!!!!!")
+        # print("!!!!!!!!!!!!!!!!!!!!!!!")
+        # print(self.nuos_tariff_data)
+        # print("!!!!!!!!!!!!!!!!!!!!!!!")
         fixed_tariff = self.nuos_tariff_data.loc[nuos_tariff_type,'daily_charge'] * (float(fixed_period_minutes)/float(60*24))
         return fixed_tariff
 
