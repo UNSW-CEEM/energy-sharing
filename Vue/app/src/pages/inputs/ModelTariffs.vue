@@ -158,28 +158,67 @@
 
 
                     tariffs:{
+                        local_solar:{
+                            energy:0, //Not UI Implemented
+                            retail:0, //Not UI Implemented
+                            duos:0, //Not UI Implemented
+                            tuos:0, //Not UI Implemented
+                        },
+                        central_battery:{
+                            local_solar_import_energy:0,//Not UI Implemented
+                            local_solar_import_retail:0,//Not UI Implemented
+                            local_solar_import_duos:0,//Not UI Implemented
+                            local_solar_import_tuos:0,//Not UI Implemented
+                            local_solar_import_nuos:0,//Not UI Implemented
+                            energy:0, //Not UI Implemented
+                            retail:0, //Not UI Implemented
+                            duos:0, //Not UI Implemented
+                            nuos:0, //Not UI Implemented
+                            profit:0, //Not UI Implemented
+                            tuos:0,//Not UI Implemented
+
+                        },
+                        feed_in_tariff:{
+                            energy:0, //Not UI Implemented
+                            
+                        },
                         retail:{
                             peak_tariff: 0.3,
                             shoulder_tariff: 0.2,
                             off_peak_tariff:0.1,
+                            block_1_tariff:0, //Not UI Implemented
+                            block_2_tariff:0, //NOT UI Implemented
+                            block_1_volume:0, //Not UI Implemented
+                            block_2_volume:0, //Not UI Implemented
+                            daily_charge:0, //Not UI Implemented
+                            tou_weekday_only:false, //Not UI Implemented and needs backend check. Leave false for now.
                         },
 
                         tuos:{
                             peak_tariff: 0.2,
                             shoulder_tariff: 0.1,
                             off_peak_tariff:0.1,
+                            daily_charge:0, // Not UI Implemented
+                            demand_charge: 0, // Not UI Implemented
+                            tou_weekday_only:false, //Not UI Implemented and needs backend check. Leave false for now.
                         },
 
                         duos:{
                             peak_tariff: 0.4,
                             shoulder_tariff: 0.3,
                             off_peak_tariff:0.1,
+                            daily_charge:0, // Not UI Implemented
+                            demand_charge:0, // Not UI Implemented
+                            tou_weekday_only:false, // Not UI Implemented and needs backend check. Leave false for now.
                         },
 
                         nuos:{
                             peak_tariff: 0.5,
                             shoulder_tariff: 0.1,
                             off_peak_tariff:0.1,
+                            demand_charge:0, // Not UI Implemented
+                            daily_charge:0, //Not UI Implemented
+                            tou_weekday_only:false, // Not UI Implemented and needs backend check. Leave false for now.
                         },
 
                         tou_times: [7, 11, 15,18],

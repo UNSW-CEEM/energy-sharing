@@ -104,9 +104,10 @@ class Parameters:
             self.ui_central_battery.load(ui_inputs[key])
 
     def load_tariffs(self, ui_inputs):
-        key = "model_tariffs"
-        if key in ui_inputs:
-            self.ui_tariffs.load(ui_inputs[key])
+        # key = "model_tariffs"
+        # if key in ui_inputs:
+        #     self.ui_tariffs.load(ui_inputs[key])
+        self.ui_tariffs = ui_inputs['tariffs'] #This just grabs the new tariffs object from the ui inputs
 
     def load_participants(self, ui_inputs):
         key = "model_participants"
@@ -145,10 +146,12 @@ class Parameters:
         self.model_central_battery = Luomi_Central_Battery(**self.ui_central_battery.get_params_dict())
         # Add the central battery to the network
         self.model_network.add_central_battery(self.model_central_battery)
-        tariffs_dict = self.ui_tariffs.get_tariffs_dict()
+        
+        # tariffs_dict = self.ui_tariffs.get_tariffs_dict()
+        
+        # self.model_tariffs = Luomi_Tariffs(**tariffs_dict)
 
-        # print(tariffs_dict)
-        self.model_tariffs = Luomi_Tariffs(**tariffs_dict)
+        self.model_tariffs = Luomi_Tariffs(self.ui_tariffs)
 
         print("Made LUOMI Objects without error")
 
