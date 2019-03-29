@@ -180,9 +180,10 @@ def simulate(time_periods, mynetwork, my_tariffs, results, status_callback=None)
             # The TOU tariffs will be applied by using if statements to determine whether peak/shoulder/off-peak
             # if network_tariff_type == 'LV TOU <100MWh' or network_tariff_type == 'LV Business TOU_Interval meter' or network_tariff_type == 'Small Business - Opt in Demand':
             if 'TOU' in network_tariff_type:
-                print("Time of Use Land")
                 peak_charge, shoulder_charge, offpeak_charge, peak_start_time, peak_end_time, peak_start_time_2, peak_end_time_2, shoulder_start_time, shoulder_end_time, shoulder_start_time_2, shoulder_end_time_2, tou_weekday_only_flag, demand_charge = my_tariffs.get_duos_on_grid_import_variable(time,network_tariff_type)
 
+                # Assume it's off-peak time
+                variable_tariff = offpeak_charge
                 # If the TOU periods apply all days and not just weekdays then the flag will be zero
                 if tou_weekday_only_flag == 0 :
                     # Check for whether it's a peak time
@@ -199,9 +200,9 @@ def simulate(time_periods, mynetwork, my_tariffs, results, status_callback=None)
                     elif (time.hour > shoulder_start_time and time.hour <= shoulder_end_time) or (time.hour > shoulder_start_time_2 and time.hour <= shoulder_end_time_2) :
                         variable_tariff = shoulder_charge
 
-                # Else assume it's off-peak time
-                else:
-                    variable_tariff = offpeak_charge
+                
+                
+                    
                 # Apply the tariff 
                 results.set_participant_duos_payments(time, p.get_id(),variable_tariff * external_grid_import )
             

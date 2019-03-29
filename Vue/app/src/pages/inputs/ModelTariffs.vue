@@ -12,17 +12,34 @@
                     <Chart class="mychart" :options="retailChartOptions"></Chart>
                     <div class="slider">
                         <vue-slider v-model="input_data.tariffs.tou_times" :process="colorizer" :min="1" :max="24" :interval="1"></vue-slider>
+                        <!-- <div class="key">
+                            <div class="offpeak">Off-Peak</div>
+                            <div class="shoulder">Shoulder</div>
+                            <div class="peak">Peak</div>
+                        </div> -->
                     </div>
 
                     <div class="tariffs">
                         <div class="input">
-                            Off-Peak Tariff <input v-model="input_data.tariffs.retail.off_peak_tariff"/>
+                            Off-Peak Tariff <input v-model="input_data.tariffs.retail.off_peak_tariff"/> <span class="units">($/kWh)</span>
                         </div>
                         <div class="input">
-                            Shoulder Tariff <input v-model="input_data.tariffs.retail.shoulder_tariff"/>
+                            Shoulder Tariff <input v-model="input_data.tariffs.retail.shoulder_tariff"/> <span class="units">($/kWh)</span>
                         </div>
                         <div class="input">
-                            Peak Tariff <input v-model="input_data.tariffs.retail.peak_tariff"/>
+                            Peak Tariff <input v-model="input_data.tariffs.retail.peak_tariff"/> <span class="units">($/kWh)</span>
+                        </div>
+                    </div>
+
+                    <div class="tariffs">
+                        <div class="input">
+                            Daily Charge <input v-model="input_data.tariffs.retail.daily_charge"/> <span class="units">($)</span>
+                        </div>
+                       
+                    </div>
+                    <div class="tariffs">
+                        <div class="input">
+                            Solar Feed-In Tariff <input v-model="input_data.tariffs.feed_in_tariff.energy"/> <span class="units">($/kWh)</span>
                         </div>
                     </div>
                 
@@ -42,77 +59,126 @@
                     <div class="tariffs">
                         <div class="tariff-label">TUOS</div>
                         <div class="input">
-                            Off-Peak Tariff <input v-model="input_data.tariffs.tuos.off_peak_tariff"/>
+                            Off-Peak Tariff <input v-model="input_data.tariffs.tuos.off_peak_tariff"/> <span class="units">($/kWh)</span>
                         </div>
                         <div class="input">
-                            Shoulder Tariff <input v-model="input_data.tariffs.tuos.shoulder_tariff"/>
+                            Shoulder Tariff <input v-model="input_data.tariffs.tuos.shoulder_tariff"/> <span class="units">($/kWh)</span>
                         </div>
                         <div class="input">
-                            Peak Tariff <input v-model="input_data.tariffs.tuos.peak_tariff"/>
+                            Peak Tariff <input v-model="input_data.tariffs.tuos.peak_tariff"/> <span class="units">($/kWh)</span>
+                        </div>
+                        <div class="input">
+                            Daily Charge <input v-model="input_data.tariffs.tuos.daily_charge"/> <span class="units">($)</span>
                         </div>
                     </div>
                     <div class="tariffs">
                         <div class="tariff-label">DUOS</div>
                         <div class="input">
-                            Off-Peak Tariff <input v-model="input_data.tariffs.duos.off_peak_tariff"/>
+                            Off-Peak Tariff <input v-model="input_data.tariffs.duos.off_peak_tariff"/> <span class="units">($/kWh)</span>
                         </div>
                         <div class="input">
-                            Shoulder Tariff <input v-model="input_data.tariffs.duos.shoulder_tariff"/>
+                            Shoulder Tariff <input v-model="input_data.tariffs.duos.shoulder_tariff"/> <span class="units">($/kWh)</span>
                         </div>
                         <div class="input">
-                            Peak Tariff <input v-model="input_data.tariffs.duos.peak_tariff"/>
+                            Peak Tariff <input v-model="input_data.tariffs.duos.peak_tariff"/> <span class="units">($/kWh)</span>
                         </div>
+                        <div class="input">
+                            Daily Charge <input v-model="input_data.tariffs.duos.daily_charge"/> <span class="units">($)</span>
+                        </div>
+                        
                     </div>
                     <div class="tariffs">
                         <div class="tariff-label">NUOS</div>
                         <div class="input">
-                            Off-Peak Tariff <input v-model="input_data.tariffs.nuos.off_peak_tariff"/>
+                            Off-Peak Tariff <input v-model="input_data.tariffs.nuos.off_peak_tariff"/> <span class="units">($/kWh)</span>
                         </div>
                         <div class="input">
-                            Shoulder Tariff <input v-model="input_data.tariffs.nuos.shoulder_tariff"/>
+                            Shoulder Tariff <input v-model="input_data.tariffs.nuos.shoulder_tariff"/> <span class="units">($/kWh)</span>
                         </div>
                         <div class="input">
-                            Peak Tariff <input v-model="input_data.tariffs.nuos.peak_tariff"/>
+                            Peak Tariff <input v-model="input_data.tariffs.nuos.peak_tariff"/> <span class="units">($/kWh)</span>
+                        </div>
+                        <div class="input">
+                            Daily Charge <input v-model="input_data.tariffs.nuos.daily_charge"/> <span class="units">($)</span>
                         </div>
                     </div>
 
                 </div>
             </div>
 
-            <table class="tariffs-table">
-                <tr>
-                    <th v-for="header in table_headers" :key="header.header_id" :value="header.name">
-                        {{ header.name }}
-                    </th>
-                </tr>
-                <tr>
-                    <td v-for="header in table_headers" :key="header.header_id">
-                        {{ header.additional_text }}
-                    </td>
-                </tr>
-                <tr v-for="row in input_data.table_rows" :key="row.row_id">
-                    <td v-for="input in row.row_inputs" :key="input.col_id">
-                        <SimpleNumberInput
-                            v-if="input.tag==='my_number'"
-                            v-model="input.value"
-                            :my_placeholder="input.placeholder"/>
-                        <SimpleDropdown v-else-if="input.tag==='my_dropdown'"
-                            v-model="input.value"
-                            :my_options="input_data.my_options[input.dropdown_key]"
-                            :my_placeholder="input.placeholder"/>
-                    </td>
-                    <!--<td><button>Remove Row</button></td>-->
-                </tr>
-            </table>
-            <button @click="add_row()">Add Row</button>
-
-            <div class="file-buttons-container">
-                <!--<button @click="load_config(input_data.selected_config_file)" v-if="input_data.selected_config_file">-->
-                    <!--Load User Config-->
-                <!--</button>-->
-                <!--<button @click="save_config('user_config.csv')">Save User Config</button>-->
-                <button @click="load_config('default_config.csv')">Load Default</button>
+            <div class="container">
+                <div class="container-header">
+                    Local Solar
+                </div>
+                <div class="container-content">
+                    <div class="tariffs">
+                        <div class="input">
+                            Energy <input v-model="input_data.tariffs.local_solar.energy"/> <span class="units">($/kWh)</span>
+                        </div>
+                        <div class="input">
+                            Retail <input v-model="input_data.tariffs.local_solar.retail"/> <span class="units">($/kWh)</span>
+                        </div>
+                        <div class="input">
+                            DUOS <input v-model="input_data.tariffs.local_solar.duos"/> <span class="units">($/kWh)</span>
+                        </div>
+                        <div class="input">
+                            TUOS <input v-model="input_data.tariffs.local_solar.tuos"/> <span class="units">($/kWh)</span>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <div class="container">
+                <div class="container-header">
+                    Central Battery
+                </div>
+
+                <div class="tariffs">
+                    
+                    <div class="input">
+                        Energy <input v-model="input_data.tariffs.central_battery.energy"/> <span class="units">($/kWh)</span>
+                    </div>
+                    <div class="input">
+                        Retail <input v-model="input_data.tariffs.central_battery.retail"/> <span class="units">($/kWh)</span>
+                    </div>
+                    <div class="input">
+                        DUOS <input v-model="input_data.tariffs.central_battery.duos"/> <span class="units">($/kWh)</span>
+                    </div>
+                    <div class="input">
+                        TUOS <input v-model="input_data.tariffs.central_battery.tuos"/> <span class="units">($/kWh)</span>
+                    </div>
+                    <div class="input">
+                        TUOS <input v-model="input_data.tariffs.central_battery.nuos"/> <span class="units">($/kWh)</span>
+                    </div>
+                    <div class="input">
+                        Profit <input v-model="input_data.tariffs.central_battery.profit"/> <span class="units">($/kWh)</span>
+                    </div>
+                </div>
+                
+                <div class="container-content">
+                    <div class="tariffs">
+                        <div class="tariff-label">Local Solar Import</div>
+                        <div class="input">
+                            Energy <input v-model="input_data.tariffs.central_battery.local_solar_import_energy"/> <span class="units">($/kWh)</span>
+                        </div>
+                        <div class="input">
+                            Retail <input v-model="input_data.tariffs.central_battery.local_solar_import_retail"/> <span class="units">($/kWh)</span>
+                        </div>
+                        <div class="input">
+                            DUOS <input v-model="input_data.tariffs.central_battery.local_solar_import_duos"/> <span class="units">($/kWh)</span>
+                        </div>
+                        <div class="input">
+                            TUOS <input v-model="input_data.tariffs.central_battery.local_solar_import_tuos"/> <span class="units">($/kWh)</span>
+                        </div>
+                        <div class="input">
+                            TUOS <input v-model="input_data.tariffs.central_battery.local_solar_import_nuos"/> <span class="units">($/kWh)</span>
+                        </div>
+                    </div>
+
+                    
+
+                </div>
+            </div>
+
 
         </div>
     </div>
@@ -159,28 +225,27 @@
 
                     tariffs:{
                         local_solar:{
-                            energy:0, //Not UI Implemented
-                            retail:0, //Not UI Implemented
-                            duos:0, //Not UI Implemented
-                            tuos:0, //Not UI Implemented
+                            energy:0, 
+                            retail:0, 
+                            duos:0, 
+                            tuos:0, 
                         },
                         central_battery:{
-                            local_solar_import_energy:0,//Not UI Implemented
-                            local_solar_import_retail:0,//Not UI Implemented
-                            local_solar_import_duos:0,//Not UI Implemented
-                            local_solar_import_tuos:0,//Not UI Implemented
-                            local_solar_import_nuos:0,//Not UI Implemented
-                            energy:0, //Not UI Implemented
-                            retail:0, //Not UI Implemented
-                            duos:0, //Not UI Implemented
-                            nuos:0, //Not UI Implemented
-                            profit:0, //Not UI Implemented
-                            tuos:0,//Not UI Implemented
+                            local_solar_import_energy:0,
+                            local_solar_import_retail:0,
+                            local_solar_import_duos:0,
+                            local_solar_import_tuos:0,
+                            local_solar_import_nuos:0,
+                            energy:0, 
+                            retail:0, 
+                            duos:0, 
+                            nuos:0, 
+                            tuos:0,
+                            profit:0, 
 
                         },
                         feed_in_tariff:{
                             energy:0, //Not UI Implemented
-                            
                         },
                         retail:{
                             peak_tariff: 0.3,
@@ -198,7 +263,7 @@
                             peak_tariff: 0.2,
                             shoulder_tariff: 0.1,
                             off_peak_tariff:0.1,
-                            daily_charge:0, // Not UI Implemented
+                            daily_charge:0, 
                             demand_charge: 0, // Not UI Implemented
                             tou_weekday_only:false, //Not UI Implemented and needs backend check. Leave false for now.
                         },
@@ -207,7 +272,7 @@
                             peak_tariff: 0.4,
                             shoulder_tariff: 0.3,
                             off_peak_tariff:0.1,
-                            daily_charge:0, // Not UI Implemented
+                            daily_charge:0, 
                             demand_charge:0, // Not UI Implemented
                             tou_weekday_only:false, // Not UI Implemented and needs backend check. Leave false for now.
                         },
@@ -216,7 +281,7 @@
                             peak_tariff: 0.5,
                             shoulder_tariff: 0.1,
                             off_peak_tariff:0.1,
-                            demand_charge:0, // Not UI Implemented
+                            demand_charge:0,
                             daily_charge:0, //Not UI Implemented
                             tou_weekday_only:false, // Not UI Implemented and needs backend check. Leave false for now.
                         },
@@ -338,7 +403,7 @@
                         }
                     },
                     series: [{
-                        name: 'Network Tariff',
+                        name: 'Retail Tariff',
                         // data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
                         data: data,
 
@@ -583,16 +648,27 @@
         align-items:center;
         margin: 1.5vh 0 1.5vh 0;
         font-size:0.8em;
+        width:100%;
+        
     }
 
     .tariffs .input{
         margin: 1vw 0 1vw 0;
+        display:flex;
+        flex-direction:row;
+        justify-content:center;
+        align-items:center;
+
+    }
+
+    .tariffs input{
+        width:1.7vw;
+        margin-left:0.6vw;
     }
 
     .tariff-label{
         font-weight: bold;
         padding-right:2vw;
-        
     }
 
     .container{
@@ -603,12 +679,52 @@
         justify-content: flex-start;
         align-items:center;
         margin: 3vh 0 3vh 0;
+        width:70vw;
         /* background-color:grey; */
+    }
+
+    .container-content{
+        width:100%;
     }
 
     .container-header{
         background-color:grey;
         width:100%;
+    }
+
+    .units{
+        font-size:0.8em;
+        margin-left:0.6vw;
+    }
+
+    .key{
+        display:flex;
+        flex-direction:row;
+        justify-content:flex-start;
+        align-items:center;
+        margin-top:2vh;
+    }
+
+    .key .peak{
+        background-color:blue;
+        padding: 0.5vh 0.5vw 0.5vh 0.5vw;
+        border-radius:4px;
+        margin: 0 1vw 0 0;
+    }
+
+    .key .shoulder{
+        background-color:pink;
+        color:grey;
+        padding: 0.5vh 0.5vw 0.5vh 0.5vw;
+        border-radius:4px;
+        margin: 0 1vw 0 0;
+    }
+
+    .key .offpeak{
+        background-color:white;
+        padding: 0.5vh 0.5vw 0.5vh 0.5vw;
+        border-radius:4px;
+        margin: 0 1vw 0 0;
     }
 
     

@@ -3,7 +3,7 @@
         <h1 class="view-title">{{ view_name}}</h1>
         <div class="main-container">
             
-            <h5>central_solar Battery dropdown must be set to Central Battery</h5>
+            <!-- <h5>central_solar Battery dropdown must be set to Central Battery</h5> -->
             <div class="config-info">
                 <div class="config-heading">Input Data</div>
                 <div class="config-content">
@@ -92,11 +92,11 @@
 
                 <div class="add-participant-button" @click="add_row()">Add Participant</div>
 
-                <div class="file-buttons-container">
-                    <!--<button @click="load_participants_config(input_data.selected_config_file)">Load User Config</button>-->
-                    <!--<button @click="save_config()">Save User Config</button>-->
+                <!-- <div class="file-buttons-container">
+                    <button @click="load_participants_config(input_data.selected_config_file)">Load User Config</button>
+                    <button @click="save_config()">Save User Config</button>
                     <button @click="load_participants_config('default_config.csv')">Load from default file</button>
-                </div>
+                </div> -->
                 
             </div>
         </div>
@@ -155,10 +155,8 @@
                         ],
 
                         tariff_type_options: [
-                            "AGL TOU 1",
-                            "Tariff 2",
-                            "Another Tariff",
-                            "Business TOU"
+                            "TOU",
+                            "TOU + Block",
                         ],
 
                         battery_options: [
@@ -176,12 +174,12 @@
 
                 table_headers: [
                     {id: 0, name: "Participant ID", additional_text:"ID"},
-                    {id: 1, name: "Participant Type", additional_text:"Type"},
+                    // {id: 1, name: "Participant Type", additional_text:"Type"},
                     {id: 2, name: "Tariff Type", additional_text:"Select One"},
                     {id: 3, name: "Load Data", additional_text:"Select One"},
                     {id: 4, name: "Solar Data", additional_text:"Select One"},
                     {id: 5, name: "Solar Scaling", additional_text:"Input Number"},
-                    {id: 6, name: "Battery", additional_text:"Select One"},
+                    // {id: 6, name: "Battery", additional_text:"Select One"},
                 ],
             }
         },
@@ -277,8 +275,12 @@
 
         methods: {
            
-            add_row(participant_id="", participant_type="", retail_tariff_type="", load_profile="", solar_profile="", solar_scaling=1, battery_type="No Battery") {
+            add_row(participant_id=null, participant_type="", retail_tariff_type="", load_profile="", solar_profile="", solar_scaling=1, battery_type="No Battery") {
                 let array_length = this.input_data.table_rows.length;
+                if(participant_id == null){
+                    var participant_num = array_length + 1
+                    participant_id = "Participant "+ participant_num
+                }
                 // let participant_default = "participant_" + Number(array_length+1).toString();
                 let new_row = {
                     row_id: array_length,
@@ -290,14 +292,14 @@
                             value:participant_id,
                             placeholder:participant_id,
                         },
-                        {
-                            id: 1,
-                            name: "participant_type",
-                            tag: "my_dropdown",
-                            value:participant_type,
-                            dropdown_key: "participant_type_options",
-                            placeholder:"Type",
-                        },
+                        // {
+                        //     id: 1,
+                        //     name: "participant_type",
+                        //     tag: "my_dropdown",
+                        //     value:participant_type,
+                        //     dropdown_key: "participant_type_options",
+                        //     placeholder:"Type",
+                        // },
                         {
                             id: 2,
                             name: "retail_tariff_type",
@@ -329,14 +331,14 @@
                             value:solar_scaling,
                             placeholder:"Input Number",
                         },
-                        {
-                            id: 6,
-                            name: "battery_type",
-                            tag: "my_dropdown",
-                            value:battery_type,
-                            dropdown_key:"battery_options",
-                            placeholder:"Select Battery",
-                        },
+                        // {
+                        //     id: 6,
+                        //     name: "battery_type",
+                        //     tag: "my_dropdown",
+                        //     value:battery_type,
+                        //     dropdown_key:"battery_options",
+                        //     placeholder:"Select Battery",
+                        // },
                     ]
                 };
 
@@ -485,21 +487,34 @@
         justify-content:flex-start;
         align-items: center;
         overflow:auto;
+        width:100%;
+        
     }
 
     .participants-table {
         border: 1px solid grey;
         border-radius:4px;
         margin: 2vh 1vw 4vh 1vw;
+        width:90%;
+        display:flex;
+        flex-direction:column;
+        justify-content:flex-start;
+        align-items:center;
         /* padding: 0vh 0 1.5vw 0; */
     }
 
     .participants-table-heading{
         background-color:grey;
+        width:100%;
     }
 
     .participants-table table{
         margin: 1vh 0 1vh 0;
+    }
+
+    td{
+        /* background-color:green; */
+        padding:0 1vw 0 1vw;
     }
 
     .add-participant-button{
@@ -605,6 +620,7 @@
         background-color:grey;
         border-radius:4px;
         cursor: pointer;
+        padding: 0 0.5vw 0 0.5vw;
     }
 
     
