@@ -8,8 +8,8 @@
                     >
 
                     {{ chart.link_text }}
-                    
             </div>
+            <div class="chart-button" ><a href="http://localhost:5000/download/luomi">Download</a></div>
         </div>
 
         <div class="sub-chart-container" v-if="input_data.selected_chart">
@@ -157,6 +157,16 @@
         cursor:pointer;
         padding: 0vh 1vw 0vh 1vw;
         border-radius:4px;
+
+    }
+
+    a{
+        text-decoration: none;
+        
+    }
+
+    a:visited{
+        color:#cfcfcf;
     }
 
     .selected_button {

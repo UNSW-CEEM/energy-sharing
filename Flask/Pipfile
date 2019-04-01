@@ -18,7 +18,8 @@ matplotlib = "*"
 lazy = "*"
 pyinstaller = "*"
 tornado = "*"
-pendulum-locales = "*"
+zipfile = "*"
+pathlib = "*"
 
 [dev-packages]
 

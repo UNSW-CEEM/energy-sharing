@@ -173,15 +173,16 @@ class Parameters:
             return self.run_luomi_model(status)
 
     def run_luomi_model(self, status):
-        bc = self.ui_central_battery.get_capacity()
+        # bc = self.ui_central_battery.get_capacity()
+        info_tag = ""
         # print("RUN_LUOMI_TIME_PERIODS", self.time_periods)
         self.model_results = Results(self.time_periods, [p.get_id() for p in self.model_network.get_participants()])
         energy_sim.simulate(self.time_periods, self.model_network, self.model_tariffs, self.model_results, status)
         financial_sim.simulate(self.time_periods, self.model_network, self.model_tariffs, self.model_results, status)
-        self.model_results.to_csv(self.luomi_output_dir, info_tag=bc)
+        self.model_results.to_csv(self.luomi_output_dir, info_tag=info_tag)
 
-        parsed_results = self.ui_results_parser.luomi_temp_parser(bc)
-
+        parsed_results = self.ui_results_parser.luomi_temp_parser(info_tag)
+        
         return parsed_results
 
     def run_mike_model(self, status):

@@ -5,6 +5,9 @@ from flask_socketio import SocketIO, emit
 from .services import file_service
 from .modelling.ui_interfaces.parameters import Parameters as Ui_Parameters
 import os
+import io
+import zipfile
+import pathlib
 
 file_service = file_service.OSFileService()
 
@@ -83,6 +86,29 @@ def upload_load_file():
 
     else:
         return ''''''
+
+@app.route('/download/luomi', methods=['GET', 'POST', 'OPTIONS'])
+@cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
+def download_luomi():
+    if request.method == 'GET':
+        # check if the post request has the file part
+        base_path = os.path.join('application','modelling', 'data', 'luomi', 'output')  
+        base_path = pathlib.Path(base_path)
+        
+        data = io.BytesIO()
+        with zipfile.ZipFile(data, mode='w') as z:
+            for f_name in base_path.iterdir():
+                z.write(f_name)
+        data.seek(0)
+        return send_file(
+            data,
+            mimetype='application/zip',
+            as_attachment=True,
+            attachment_filename='data.zip'
+        )
+        
+
+
 
 
 @socketio.on('connect')
