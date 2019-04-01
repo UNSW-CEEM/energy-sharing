@@ -119,8 +119,10 @@ class Participants:
 
                 for row in reader:
                     # Writes the PROFILE data to the PARTICIPANT_ID header.
-                    this_row = {common_key: row[common_key], p_id: row[p_profile]}
-                    writer.writerow(this_row)
+                    if common_key in row and p_profile in row:
+                        this_row = {common_key: row[common_key], p_id: row[p_profile]}
+                        
+                        writer.writerow(this_row)
 
                 # Put the pointer back to the start of the file
                 p_data.seek(0)
