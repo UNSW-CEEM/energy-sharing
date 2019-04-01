@@ -11,7 +11,7 @@
             </div>
             <div class="sim-title">
             <!-- <svg viewBox="0 0 200 18"><text text-anchor="middle" x="50%" y="60%" textLength="80%">Energy Sharing Sim</text></svg>     -->
-                Energy Sharing Sim
+                Local Energy Sharing
             </div>
 
             <div class="sponsor-title">
@@ -79,12 +79,15 @@
     .sponsor-title{
         font-size: 0.8em;
         margin: 0 2vw 0 2vw;
+        color:#2c3e50;
     }
     
 
     .logo{
-        color:rgba(114, 137, 218,1);
+        
+        color:rgba(28, 166, 219,1);
         font-size:1.4em;
+        margin-left:2.8vw;
     }
 
 
@@ -92,19 +95,19 @@
         margin:0 0 0 1vw;
         font-size:1.2em;
         /* font-weight:bold; */
-        color:rgba(114, 137, 218,1);
+        color:rgba(28, 166, 219,1);
         animation-name: fade-in;
         animation-duration: 2s;
         /* animation: 3s strokefill forwards;  */
-        /* fill:rgba(114, 137, 218,1); */
+        /* fill:rgba(28, 166, 219,1); */
         
     }
 
     @keyframes strokefill {
-        0%		{stroke: rgba(114, 137, 218,1); fill: rgba(0,0,0,0); stroke-dashoffset:  25%; stroke-dasharray: 00% 50%; stroke-width: 0.4; }
+        0%		{stroke: rgba(28, 166, 219,1); fill: rgba(0,0,0,0); stroke-dashoffset:  25%; stroke-dasharray: 00% 50%; stroke-width: 0.4; }
         70%	{                       fill: rgba(0,0,0,0);                                                                        }
-        80%	{stroke: rgba(114, 137, 218,1);                                                                                             }
-        100%	{stroke: rgba(0,0,0,0); fill: rgba(114, 137, 218,1); stroke-dashoffset: -25%; stroke-dasharray: 50% 00%; stroke-width: 0.0; }
+        80%	{stroke: rgba(28, 166, 219,1);                                                                                             }
+        100%	{stroke: rgba(0,0,0,0); fill: rgba(28, 166, 219,1); stroke-dashoffset: -25%; stroke-dasharray: 50% 00%; stroke-width: 0.0; }
     }
 
     

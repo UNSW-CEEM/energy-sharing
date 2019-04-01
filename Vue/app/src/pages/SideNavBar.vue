@@ -1,6 +1,6 @@
 <template>
-    <div >
-        <h2>Inputs</h2>
+    <div class="sidebar-options">
+        <!-- <h2>Inputs</h2> -->
             <router-link class="myButton" v-for="routes in links" v-bind:key="routes.id" :to="`${routes.page}`">
             <span>
                 <font-awesome-icon class="fa-icon" v-bind:icon="routes.icon" />
@@ -88,6 +88,13 @@
 </script>
 
 <style scoped>
+
+    .sidebar-options{
+        justify-content:center;
+        height:100%;
+        /* padding-top: 15vh; */
+        
+    }
     .list-item {
         display:flex;
         flex-direction:row;
@@ -106,12 +113,15 @@
         text-decoration:none;
         font-size:1.1em;
         padding:10px 10px;
-        height: 10px;
+        height: 5vh;
+
+        background-color:#F8F8F8;
         
         display:flex;
         flex-direction:row;
         justify-content:center;
         align-items:center;
+        border-bottom:1px solid #D0D1D2;
         /* width:100%; */
         
         
@@ -131,7 +141,8 @@
     
 
     .myButton:hover {
-        background-color:#36393F;
+        /* background-color:rgb(196, 196, 196); */
+        background-color:#262930;
 
     }
 
@@ -141,7 +152,10 @@
     }
 
     .router-link-active{
-        background-color:#42464D;
+        /* background-color:#42464D; */
+        background-color:#262930;
+        color:#1CA6DB;
+        
     }
 
     

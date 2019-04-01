@@ -1,7 +1,7 @@
 <template>
     <div id="app">
+        <TopNavBar class="topnav"/>
         <div class="container">
-            <TopNavBar class="topnav"/>
             <SideNavBar class="sidenav"/>
             <router-view class="main"/>
             <ModelFooter class="footer"/>
@@ -13,6 +13,17 @@
     import SideNavBar from './pages/SideNavBar';
     import TopNavBar from './pages/TopNavBar';
     import ModelFooter from './pages/ModelFooter';
+    import 'typeface-ubuntu/index.css'
+    
+    import 'typeface-muli/index.css' 
+    import 'typeface-abel/index.css' 
+    import 'typeface-maven-pro/index.css' 
+    import 'typeface-cantarell/index.css' 
+    import 'typeface-concert-one/index.css' 
+    import 'typeface-orbitron/index.css' 
+    import 'typeface-russo-one/index.css' 
+    import 'typeface-armata/index.css' 
+    import 'typeface-montserrat-alternates/index.css' 
 
     export default {
         name: 'app',
@@ -30,62 +41,66 @@
 </script>
 
 <style lang="less">
-    #app {
-        font-family: 'Avenir', Helvetica, Arial, sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        text-align: center;
-        /*color: #2c3e50;*/
-        
-    }
+    
+    
     body{
         background-color:#202225;
         color:#cfcfcf;
-
+        margin: 0 0 0 0;
     }
+    
+    #app {
+        font-family: 'Avenir', Helvetica, Arial, sans-serif;
+        // font-family: 'Armata', sans-serif;
+        // font-family: 'Ubuntu', sans-serif;
 
-    select{
-        // width: 220px;
-        // border: 0;
-        // position: relative;
-        // z-index: 99;
+        // font-family: 'Muli', sans-serif;
+        // font-family: 'Maven Pro', sans-serif;
+        // font-family: 'Cantarell', sans-serif;
         
+        // font-family: 'Orbitron', sans-serif;
+        
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-align: center;
+        display:flex;
+        flex-direction:column;
+        justify-content:flex-start;
+        
+        color:#E9E9E9;
+        margin: 0 0 0 0;
         
     }
+    
 
     .container {
-        display: grid;
-        grid-gap: 10px;
-        grid-template-columns: repeat(10, 1fr);
-        grid-template-rows: 5vh 85vh 5vh;
-        // height: 100vh;
-        
+        display: flex;
+        flex-direction:row;
+        height:95vh;
     }
 
     .topnav {
-        grid-column-start: 1;
-        grid-column-end: 11;
-        max-height:30px;
+        height:5vh;
+        background-color:#F8F8F8;
     }
 
     .sidenav {
-        grid-column-start: 1;
-        grid-column-end: 3;
-        border-radius:5px;
-        background-color:#2F3136;
+        
+        // border-radius:5px;
+        background-color:#F8F8F8;
+        width:20vw;
     }
 
     .main {
-        grid-column-start: 3;
-        grid-column-end: 11;
+        width:80vw;
         background: rgb(219, 219, 219);
-        border-radius:5px;
-
+        
         display:flex;
         flex-direction:column;
         justify-content:flex-start;
         align-items:center;
-        background-color: #36393F;
+        // background-color: #36393F;
+        background-color:#2F323A;
     }
 
     .footer {

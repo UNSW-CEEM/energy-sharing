@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <div class="status" v-if="!sleeping"> Status: {{ status }} </div>        
+    <div class="footercontainer">
+        <!-- <div class="status" v-if="!sleeping"> Status: {{ status }} </div>         -->
         <modal height="80%"  width="80%" name="status">
             <div class="status" v-if="!sleeping"> Status: {{ status }} </div>
         </modal>
@@ -74,5 +74,9 @@
     align-items: center;
     width:100%;
     height:100%;
+}
+
+.footercontainer{
+    height:0px;
 }
 </style>

@@ -1,8 +1,52 @@
 <template>
     <div class="background">
         <div class="main-container">
-            <h1>{{ view_name }}</h1>
-            <span class="input-line">
+            <!-- <h1>{{ view_name }}</h1> -->
+
+            <div class="model">
+                <div class="header">
+                    <div class="title">
+                        LUOMI
+                    </div>
+                    <div class="author">
+                        by Naomi Stringer, Luke Marshall
+                    </div>
+                </div>
+
+                <div class="description">
+                    This model is commonly used to model small embedded networks and local energy sharing schemes with small numbers of participants. It allows for a central battery, and solar and load data for each participant. 
+                </div>
+                <div class="selected" v-if="input_data.selected_model=='luomi'">
+                    Selected ✓
+                </div>
+                <div v-else class="not-selected" v-on:click="input_data.selected_model='luomi'">
+                    Select
+                </div>
+                
+            </div>
+
+            <div class="model">
+                <div class="header">
+                    <div class="title">
+                        Apartment Model
+                    </div>
+                    <div class="author">
+                        by Mike Roberts
+                    </div>
+                </div>
+
+                <div class="description">
+                    This model is designed to handle large embedded networks in apartment blocks and high density residential complexes. It allows for the calculation of energy flows between many participants, and the sharing of a central solar and battery resource.
+                </div>
+                <div class="selected" v-if="input_data.selected_model=='mike'">
+                    Selected ✓
+                </div>
+                <div v-else class="not-selected" v-on:click="input_data.selected_model='mike'">
+                    Select
+                </div>
+                
+            </div>
+            <!-- <span class="input-line">
                 {{ input_data.model_dropdown.display_text }}
                 <SimpleDropdown
                     v-model="input_data.model_dropdown.value"
@@ -16,7 +60,7 @@
                     v-model="input_data.network_dropdown.value"
                     :my_options="input_data.selected_model_options"
                     :my_placeholder="input_data.network_dropdown.placeholder"/>
-            </span>
+            </span> -->
         </div>
     </div>
 </template>
@@ -38,11 +82,12 @@
 
         data () {
             return {
+                
                 view_name: this.$options.name,
                 model_page_name: "model_selection",
 
                 input_data: {
-                    selected_model: "",
+                    selected_model: "luomi",
                     selected_model_options: [],
 
                     model_dropdown: {
@@ -111,6 +156,68 @@
     .main-container {
         animation-name: fade-in;
         animation-duration: 1s;
+        display:flex;
+        flex-direction:row;
+        justify-content:space-around;
+        align-items:center;
+        height:100%;
+        width:100%;
+        
+    }
+
+    .model{
+        border-radius:2px;
+        /* border: 1px solid grey; */
+        height:80vh;
+        width: 35vw;
+        display:flex;
+        flex-direction:column;
+        justify-content: space-between;
+        align-items:center;
+        background-color:#F8F8F8;
+        
+        /* color:#9F86FF; */
+        /* background-color:#3E327B; */
+    }
+
+    .title{
+        font-size:1.7em;
+        font-weight:bold;
+        color:rgba(28, 166, 219,1);
+    }
+    .author{
+        font-size:0.8em;
+        color:rgba(28, 166, 219,1);
+    }
+
+    .header{
+        /* background-color:#e0e0e0; */
+        width:100%;
+        padding-bottom:0.5vh;
+    }
+
+    .description{
+        color:grey;
+        text-align:left;
+        margin: 0 2vw 0 2vw;
+    }
+
+    .selected{
+        background-color: #6BEE9C;
+        padding:1vh 1vw 1vh 1vw;
+        border-radius:2px;
+        margin: 0 0 2vh 0;
+        cursor:pointer;
+        color:white;
+    }
+
+    .not-selected{
+        background-color: #FFD670;
+        padding:1vh 1vw 1vh 1vw;
+        border-radius:2px;
+        margin: 0 0 2vh 0;
+        cursor:pointer;
+        color:white;
     }
 
     .input-line {
