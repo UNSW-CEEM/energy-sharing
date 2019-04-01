@@ -17,7 +17,7 @@
     // Line chart showing revenue at every half hour, for every participant
 
     export default {
-        name: "EnergyGenCon",
+        name: "EnergySystemFlows",
         components: {LineChart, Chart},
         props: {
             chart_data: {},
@@ -26,44 +26,33 @@
         computed:{
             
             highchartsOptions () {
-                let data = this.chart_data["energy_gencon"];
+                let data = this.chart_data["energy_flows"];
 
-                var series = [];
-                console.log('DATA POINTS', data.data_points)
-                for(const i of Object.keys(data.data_points)){
-                    console.log('Participant ID', i);
-                    var participant_data = [];
-                    for(var j = 0; j< data.data_points[i].length; j++){
-                        var date = moment(data.timestamps[j]).unix()* 1000.0;
+                var central_battery_export = [];
+                var gross_participant_central_battery_import = [];
+                var gross_participant_grid_import = [];
+                var gross_participant_local_solar_import = [];
+                var net_network_export = [];
+                var net_participant_export = [];
+                var unallocated_battery_load = [];
+                var unallocated_local_solar = [];
 
-                        
-                        participant_data.push(
-                            [
-                                date,
-                                Number(data.data_points[i][j])
-                            ]
-                        )
-                    }
-                    series.push({
-                        name:i,
-                        data:participant_data,
-                    })
+                
+                for(var i =0; i< data.length; i++){
+                    // var time = moment(data[""]).unix() * 1000.0;
+                    var time = i;
+                    central_battery_export.push([time, Number(data[i].central_battery_export)]);
+                    gross_participant_central_battery_import.push([time, Number(data[i].gross_participant_central_battery_import)]);
+                    gross_participant_grid_import.push([time, Number(data[i].gross_participant_grid_import)]);
+                    gross_participant_local_solar_import.push([time, Number(data[i].gross_participant_local_solar_import)]);
+                    net_network_export.push([time, Number(data[i].net_network_export)]);
+                    net_participant_export.push([time, Number(data[i].net_participant_export)]);
+                    unallocated_battery_load.push([time, Number(data[i].unallocated_battery_load)])
+                    unallocated_local_solar.push([time, Number(data[i].unallocated_local_solar)])
+
                 }
-                // var total_revenue = [];
-                // var central_battery_import = [];
-                // var grid_import_fixed = [];
-                // var grid_import_variable = [];
-                // var local_solar_import = [];
 
-                // for(var i = 0; i< data.data_points.total_revenue.length; i++){
-                //     var timestamp = moment(data.timestamps[i]).unix()*1000.0;
-                    
-                //     total_revenue.push([timestamp, Number(data.data_points.total_revenue[i])]);
-                //     central_battery_import.push([timestamp, Number(data.data_points.central_battery_import_revenue[i])]);
-                //     grid_import_fixed.push([timestamp, Number(data.data_points.grid_import_revenue_fixed[i])]);
-                //     grid_import_variable.push([timestamp, Number(data.data_points.grid_import_revenue_variable[i])]);
-                //     local_solar_import.push([timestamp, Number(data.data_points.local_solar_import_revenue[i])]);
-                // }
+               
                 
                 return {
                     chart: {
@@ -91,29 +80,40 @@
                     xAxis: {
                     type: 'datetime'
                     },
-                    series: series,
-                    // series: [
-                    //     {
-                    //         name: 'Total Revenue',
-                    //         data:total_revenue,
-                    //     },
-                    //     {
-                    //         name: 'Variable Grid Import',
-                    //         data:grid_import_variable,
-                    //     },
-                    //     {
-                    //         name: 'Fixed Grid Import',
-                    //         data:grid_import_fixed,
-                    //     },
-                    //     {
-                    //         name: 'Central Battery Import',
-                    //         data:central_battery_import,
-                    //     },
-                    //     {
-                    //         name: 'Local Solar',
-                    //         data:local_solar_import,
-                    //     },
-                    // ]
+                    series: [
+                        {
+                            name: 'Central Battery Export',
+                            data:central_battery_export,
+                        },
+                        {
+                            name: 'Gross Participant Central Battery Import',
+                            data:gross_participant_central_battery_import,
+                        },
+                        {
+                            name: 'Gross Participant Grid Import',
+                            data:gross_participant_grid_import,
+                        },
+                        {
+                            name: 'Gross Participant Local Solar Import',
+                            data:gross_participant_local_solar_import,
+                        },
+                        {
+                            name: 'Net Network Export',
+                            data:net_network_export,
+                        },
+                        {
+                            name: 'Net Participant Export',
+                            data:net_participant_export,
+                        },
+                        {
+                            name: 'Unallocated Battery Load',
+                            data:unallocated_battery_load,
+                        },
+                        {
+                            name: 'Unallocated Local Solar',
+                            data:unallocated_local_solar,
+                        },
+                    ]
                 }
             },
         },
@@ -132,7 +132,7 @@
                     },
                     title: {
                         fontSize: 20,
-                        text: "Participants Revenue",
+                        text: "System Energy Flows",
                         display: true,
                         fontColor: 'white'
                     },

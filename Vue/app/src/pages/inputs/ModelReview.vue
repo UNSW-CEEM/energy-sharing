@@ -22,7 +22,7 @@
                 </div>
                 <div class="info-box-content">
                     <table>
-                        <tr><th>Participant ID</th><th>Participant Type</th><th>Retail Tariff</th><th>Load Profile</th><th>Solar Profile</th><th>Solar Scaling</th><th>Battery</th></tr>
+                        <tr><th>Participant ID</th><th>Participant Type</th><th>Retail Tariff</th><th>Load Profile</th><th>Solar Profile</th></tr>
                         
                         <tr v-for="p in parsed_parameters.model_participants" :key="p.row_id">
                             <td v-for="attribute in p.row_inputs" :key="attribute.name">

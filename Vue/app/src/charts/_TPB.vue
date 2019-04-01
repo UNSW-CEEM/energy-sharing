@@ -32,7 +32,7 @@
                     },
                     title: {
                         fontSize: 20,
-                        text: "Total Participants Bill",
+                        text: "Total Participant Bill",
                         display: true,
                         fontColor: 'white',
                     },

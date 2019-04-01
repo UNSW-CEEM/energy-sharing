@@ -1,13 +1,15 @@
 <template>
     <div class="main-chart-container">
         <div class="chart-nav-container">
-            <button
-                    class="chart-button"
+            <div    class="chart-button"
                     v-for="chart in input_data.chart_boxes"
-                    v-model="input_data.selected_chart"
                     v-on:click="select_chart(chart)"
-                    v-bind:class="{selected_button: is_selected(chart)}">{{ chart.link_text }}
-            </button>
+                    v-bind:class="{selected_button: is_selected(chart)}"
+                    >
+
+                    {{ chart.link_text }}
+                    
+            </div>
         </div>
 
         <div class="sub-chart-container" v-if="input_data.selected_chart">
@@ -31,6 +33,11 @@
                 v-if="input_data.selected_chart.chart_type==='EnergyGenCon' && input_data.chart_data"
                 :chart_data="input_data.chart_data"
             />
+
+            <EnergySystemFlows
+                v-if="input_data.selected_chart.chart_type==='EnergySystemFlows' && input_data.chart_data"
+                :chart_data="input_data.chart_data"
+            />
         </div>
     </div>
 </template>
@@ -42,12 +49,13 @@
     import RevRCC from "../../charts/_RevRCC";
     import EnergyCC from "../../charts/_EnergyCC";
     import EnergyGenCon from "../../charts/_EnergyGenCon";
+    import EnergySystemFlows from "../../charts/_EnergySystemFlows";
 
     import SaveLoad from '@/mixins/SaveLoad.vue';
 
     export default {
         name: "ModelResults",
-        components: {EnergyGenCon, EnergyCC, RevRCC, RevParticipant, TPB},
+        components: {EnergyGenCon, EnergyCC, RevRCC, RevParticipant, TPB, EnergySystemFlows},
 
         mixins: [SaveLoad],
 
@@ -60,12 +68,12 @@
                     chart_boxes: [
                         {
                             id: 0,
-                            link_text: "Revenue - RCC",
+                            link_text: "Retail Revenue",
                             chart_type: 'RevRCC',
                         },
                         {
                             id: 1,
-                            link_text: "Revenue - Participant",
+                            link_text: "Bill - Participant",
                             chart_type: 'RevParticipant',
                         },
                         {
@@ -82,6 +90,11 @@
                             id: 3,
                             link_text: "Energy - Generated/Consumed",
                             chart_type: 'EnergyGenCon',
+                        },
+                        {
+                            id: 4,
+                            link_text: "Energy - System Flows",
+                            chart_type: 'EnergySystemFlows',
                         },
                     ],
                 },
@@ -138,7 +151,12 @@
     }
 
     .chart-button {
-        width: 15%;
+        /* width: 15%; */
+        background-color:grey;
+        margin: 1vh 1vw 1vh 1vw;
+        cursor:pointer;
+        padding: 0vh 1vw 0vh 1vw;
+        border-radius:4px;
     }
 
     .selected_button {

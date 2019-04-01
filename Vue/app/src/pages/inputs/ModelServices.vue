@@ -17,7 +17,7 @@
                     :my_placeholder="input.placeholder"/>
 
             </span>
-            <h1>Central Solar</h1>
+            <!-- <h1>Central Solar</h1>
             <span class="input-line">
                 {{ solar_sharing_algorithm.display_text }}
                 <SimpleDropdown
@@ -25,7 +25,7 @@
                     :my_options="my_options[solar_sharing_algorithm.dropdown_key]"
                     :my_placeholder="solar_sharing_algorithm.placeholder"
                 />
-            </span>
+            </span> -->
         </div>
     </div>
 </template>
@@ -55,7 +55,7 @@
                         id: 0,
                         name: "capacity",
                         display_text: "Capacity (kWh) ",
-                        value: "",
+                        value: 10,
                         placeholder: "kWh",
                         tag:"my_number"
                     },
@@ -63,7 +63,7 @@
                         id: 1,
                         name: "max_discharge",
                         display_text: "Max Discharge (kW) ",
-                        value: "",
+                        value: 5,
                         placeholder: "kW",
                         tag:"my_number"
                     },
@@ -71,7 +71,7 @@
                         id: 2,
                         name: "cycle_efficiency",
                         display_text: "Cycle Efficiency (%) ",
-                        value: "",
+                        value: 99,
                         placeholder: "%",
                         tag:"my_number"
                     },
@@ -79,7 +79,7 @@
                         id: 3,
                         name:"dispatch_algorithm",
                         display_text: "Dispatch Algorithm ",
-                        value: "",
+                        value: "ToU Arbitrage",
                         dropdown_key: "dispatch_algorithm",
                         placeholder: "Select One",
                         tag:"my_dropdown"
@@ -99,7 +99,7 @@
                 my_options: {
                     dispatch_algorithm: [
                         "ToU Arbitrage",
-                        "NEM Sync"
+                        // "NEM Sync"
                     ],
 
                     solar_sharing_algorithm: [

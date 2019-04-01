@@ -273,6 +273,15 @@
             this.save_page_simple();
         },
 
+        mounted(){
+            if(this.input_data.selected_load_file != ""){
+                this.get_load_profiles(this.input_data.selected_load_file);
+            }
+            if(this.input_data.selected_solar_file != ""){
+                this.get_solar_profiles(this.input_data.selected_solar_file);
+            }
+        },
+
         methods: {
            
             add_row(participant_id=null, participant_type="", retail_tariff_type="", load_profile="", solar_profile="", solar_scaling=1, battery_type="No Battery") {
