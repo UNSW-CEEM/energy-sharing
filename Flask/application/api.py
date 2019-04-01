@@ -196,6 +196,7 @@ def load_config(page_name, filename):
 @socketio.on('run_model')
 def test_run_sim(params):
     status_callback("Running Test Model Interface")
+    emit('status_channel',{'data':{'status':'running'}})
     print([key for key in params])
     # Recreate the defaults between the requests while testing
     # mp.load_defaults()
@@ -204,14 +205,14 @@ def test_run_sim(params):
     mp.load(params)
     mp.create_objects()
     results = mp.run(status_callback)
-    
+    emit('status_channel',{'data':{'status':'finished'}})
     emit('chart_results_channel', {"data": results})
     status_callback("Modelling Complete")
 
 
 def status_callback(message):
     # my_status = "Status: " + message
-    emit('status_channel',
+    emit('status_message_channel',
          {
              "data": {
                  "message": message
