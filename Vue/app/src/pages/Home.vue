@@ -1,7 +1,7 @@
 <template>
     <div>
-        <h1>Local Energy Sharing Simulator</h1>
-        <p>Click 'Model' on the left to get started. </p>
+        <!-- <h1>Local Energy Sharing Simulator</h1> -->
+        <!-- <p>Click 'Model' on the left to get started. </p> -->
         
         <modal height="80%"  width="80%" name="hello-world">
             <div class="modal-content">
@@ -32,6 +32,7 @@
             },
             hide(){
                 this.$modal.hide('hello-world');
+                this.$router.push('model');
             }
         },
         mounted(){
@@ -41,8 +42,8 @@
 
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+@import "./src/variables.scss";
 
 
 .modal-content{
@@ -68,17 +69,21 @@
 
 .get-started-button{
     cursor:pointer;
-    background-color:rgba(114, 137, 218,1);
+    background-color:$button-primary;
     padding:1.2vh 4vw 1.2vh 4vw;
     border-radius:3px;
     font-weight: bold;
+    color:$button-text;
 }
 
 .modal-content h1{
     font-weight: lighter;
+    color:$heading-text;
+    font-size:3em;
+    // font-size:5em;
+    
+
 }
-
-
 
 
 
