@@ -1,7 +1,7 @@
 <template>
     <div class="main-chart-container">
         <div class="chart-nav-container">
-            <div    class="chart-button"
+            <div  class="chart-choice"
                     v-for="chart in input_data.chart_boxes"
                     v-on:click="select_chart(chart)"
                     v-bind:class="{selected_button: is_selected(chart)}"
@@ -9,7 +9,7 @@
 
                     {{ chart.link_text }}
             </div>
-            <div class="chart-button" ><a href="http://localhost:5000/download/luomi">Download</a></div>
+            <div class="chart-choice" ><a href="http://localhost:5000/download/luomi">Download</a></div>
         </div>
 
         <div class="sub-chart-container" v-if="input_data.selected_chart">
@@ -131,38 +131,48 @@
     }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+    @import "./src/variables.scss";
     .main-chart-container {
         display: flex;
         flex-direction: column;
         height: 100%;
         width: 100%;
+        max-width:80vw;
     }
 
     .chart-nav-container {
         width: 100%;
-        height: 5%;
+        height: 10vh;
         align-items: center;
         justify-content: center;
         display: flex;
         flex-direction: row;
-        background-color:#2F3136;
+        
+        // background-color:green;
     }
 
-    .chart-button {
+    .chart-choice {
         /* width: 15%; */
         background-color:grey;
-        margin: 1vh 1vw 1vh 1vw;
+        // margin: 1vh 1vw 1vh 1vw;
         cursor:pointer;
         padding: 0vh 1vw 0vh 1vw;
-        border-radius:4px;
-
+        // border-radius:4px;
+        width:100%;
+        height:100%;
+        border-right: 1px solid $bg;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:white;
     }
+
+
 
     a{
         text-decoration: none;
-        
+        color:white;
     }
 
     a:visited{

@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="date-container">
         <div class="date-headings">
             <div class="date"> {{total_range_start.format('DD MMM YY')}} </div>
             <div v-if="!valid_range" class="heading"> No Date Crossover in Datasets</div>
@@ -127,36 +127,50 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
-.container{
+@import "./src/variables.scss";
+.date-container{
     display:flex;
     flex-direction:column;
     justify-content:flex-start;
     align-items:center;
-    width:100%;
-    background-color:grey;
+    width:75vw;
+    background-color:$heading-bg;
     border-radius:4px;
     padding-bottom:1vh;
     
 }
 
+.dates{
+        width:90%;
+        background-color:$heading-bg;
+        padding: 2vh 1vw 2vh 1vw;
+        border-radius:4px;
+        // max-height:20vh;
+    }
+
 .solar{
-    background-color:#a4a83c;
+    background-color:$secondary;
+    
 }
 
 .load{
-    background-color:#31a54c;
+    background-color:$tertiary;
 }
 
 .range{
     border-radius:4px;
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
 }
 
 .range-holder{
     width:100%;
     display:flex;
     flex-direction:row;
+    margin: 1vh 0 1vh 0;
 }
 
 .date-headings{

@@ -63,7 +63,8 @@
     }
 </script>
 
-<style>
+<style lang="scss">
+    @import "./src/variables.scss";
     .spacing {
         margin-right: 10px;
     }
@@ -85,7 +86,7 @@
 
     .logo{
         
-        color:rgba(28, 166, 219,1);
+        color:$heading-text;
         font-size:1.4em;
         margin-left:2.8vw;
     }

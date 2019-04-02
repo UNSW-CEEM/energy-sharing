@@ -1,8 +1,8 @@
 <template>
     <div class="background">
-        <div class="model-title">
+        <!-- <div class="model-title">
             <h1>{{ view_name }}</h1>
-        </div>
+        </div> -->
         <div class="main-container" v-if="parsed">
             
 
@@ -119,12 +119,13 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+    @import "./src/variables.scss";
 
     .main-container {
         display: flex;
         flex-direction:column;
-        justify-content:space-between;
+        // justify-content:space-around;
         align-items: center;
         animation-name: fade-in;
         animation-duration: 1s;
@@ -138,9 +139,10 @@
     }
 
     .run-button{
-        background-color:rgba(114, 137, 218,1);
+        background-color:$button-primary;
+        color:$button-text;
         cursor:pointer;
-        color:black;
+        
         padding: 1vh 3vw 1vh 3vw;
         margin: 1vh 0 3vh 0;
         border-radius:3px;
@@ -148,16 +150,20 @@
 
     .info-box{
         width: 80%;
-        border: 1px solid grey;
+        /* border: 1px solid grey; */
         display:flex;
         flex-direction: column;
         justify-content:flex-start;
-        border-radius:4px;
+        /* border-radius:4px; */
         margin:2vh 0 2vh 0;
+        background-color: $container-bg;
+        color:$container-text;
     }
 
     .info-box-heading{
-        background-color:grey;
+        background-color:$heading-bg;
+        color:$heading-text;
+        font-size:1.2em;
         width:100%;
     }
 

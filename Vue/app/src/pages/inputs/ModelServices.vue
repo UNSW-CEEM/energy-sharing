@@ -1,22 +1,26 @@
 <template>
     <div class="background">
-        <div class="main-container">
-            <h1 class="view-title">Central Battery</h1>
-            <span class="input-line"
-                v-for="input in input_data"
-                :key="input.id">{{ input.display_text }}
+        
 
-                <SimpleNumberInput
-                    v-if="input.tag==='my_number'"
-                    v-model="input.value"
-                    :my_placeholder="input.placeholder"/>
+            <div class="container">
+                <div class="container-header">Central Battery</div>
+                <span class="input-line"
+                    v-for="input in input_data"
+                    :key="input.id">{{ input.display_text }}
 
-                <SimpleDropdown v-else-if="input.tag==='my_dropdown'"
-                    v-model="input.value"
-                    :my_options="my_options[input.dropdown_key]"
-                    :my_placeholder="input.placeholder"/>
+                    <SimpleNumberInput
+                        v-if="input.tag==='my_number'"
+                        v-model="input.value"
+                        :my_placeholder="input.placeholder"/>
 
-            </span>
+                    <SimpleDropdown v-else-if="input.tag==='my_dropdown'"
+                        v-model="input.value"
+                        :my_options="my_options[input.dropdown_key]"
+                        :my_placeholder="input.placeholder"/>
+
+                </span>
+            
+            
             <!-- <h1>Central Solar</h1>
             <span class="input-line">
                 {{ solar_sharing_algorithm.display_text }}
@@ -124,11 +128,36 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+    @import "./src/variables.scss";
 
-    .main-container {
+    .container{
+        background-color:$container-bg;
+        color:$container-text;
+        width:75vw;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+
         animation-name: fade-in;
         animation-duration: 1s;
+    }
+
+    .container-header{
+        background-color:$heading-bg;
+        color:$heading-text;
+        width:100%;
+        font-size:1.2em;
+
+    }
+
+
+    .background{
+        height:95vh;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
     }
 
     .input-line {

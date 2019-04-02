@@ -1,9 +1,10 @@
 <template>
     <div class="background">
-        <h1 class="view-title">{{ view_name}}</h1>
+        <!-- <div class="view-title">{{ view_name}}</div> -->
+        
         <div class="main-container">
             
-            <!-- <h5>central_solar Battery dropdown must be set to Central Battery</h5> -->
+            
             <div class="config-info">
                 <div class="config-heading">Input Data</div>
                 <div class="config-content">
@@ -15,8 +16,51 @@
                 </div>
             </div>
 
-            <!-- MODAL - File Config -->
-            <modal height="80%"  width="80%" name="data-files">
+            
+            
+            <div class="participants-table">
+                <div class="participants-table-heading">Participants</div>
+                <table >
+                    <tr>
+                        <th v-for="header in table_headers" :key="header.header_id" :value="header.name">
+                            {{ header.name }}
+                        </th>
+                    </tr>
+                    <tr>
+                        <td v-for="header in table_headers" :key="header.header_id">
+                            {{ header.additional_text }}
+                        </td>
+                    </tr>
+                    <tr v-for="row in input_data.table_rows" :key="row.row_id">
+                        <td v-for="input in row.row_inputs" :key="input.col_id">
+                            <SimpleNumberInput
+                                v-if="input.tag==='my_number'"
+                                v-model="input.value"
+                                :my_placeholder="input.placeholder"/>
+                            <SimpleDropdown v-else-if="input.tag==='my_dropdown'"
+                                v-model="input.value"
+                                :my_options="input_data.my_options[input.dropdown_key]"
+                                :my_placeholder="input.placeholder"/>
+                        </td>
+                        
+                        <td><div class="show-data-button" v-on:click="show_chart(row.row_id)">Show Data</div></td>
+                    </tr>
+                </table>
+
+
+                <div class="add-participant-button" @click="add_row()">Add Participant</div>
+
+                <!-- <div class="file-buttons-container">
+                    <button @click="load_participants_config(input_data.selected_config_file)">Load User Config</button>
+                    <button @click="save_config()">Save User Config</button>
+                    <button @click="load_participants_config('default_config.csv')">Load from default file</button>
+                </div> -->
+                
+            </div>
+            
+        </div>
+
+        <modal  width="80%" name="data-files">
                 <div class="modal-container">
                     <div class="modal-header">
                         Select Solar and Load Files
@@ -59,47 +103,6 @@
             <modal name="participant-chart" height="60%"  width="80%">
                 <Chart class="mychart" :options="chartOptions"></Chart>
             </modal>
-            
-            <div class="participants-table">
-                <div class="participants-table-heading">Manage Participants</div>
-                <table >
-                    <tr>
-                        <th v-for="header in table_headers" :key="header.header_id" :value="header.name">
-                            {{ header.name }}
-                        </th>
-                    </tr>
-                    <tr>
-                        <td v-for="header in table_headers" :key="header.header_id">
-                            {{ header.additional_text }}
-                        </td>
-                    </tr>
-                    <tr v-for="row in input_data.table_rows" :key="row.row_id">
-                        <td v-for="input in row.row_inputs" :key="input.col_id">
-                            <SimpleNumberInput
-                                v-if="input.tag==='my_number'"
-                                v-model="input.value"
-                                :my_placeholder="input.placeholder"/>
-                            <SimpleDropdown v-else-if="input.tag==='my_dropdown'"
-                                v-model="input.value"
-                                :my_options="input_data.my_options[input.dropdown_key]"
-                                :my_placeholder="input.placeholder"/>
-                        </td>
-                        
-                        <td><div class="show-data-button" v-on:click="show_chart(row.row_id)">Show Data</div></td>
-                    </tr>
-                </table>
-
-
-                <div class="add-participant-button" @click="add_row()">Add Participant</div>
-
-                <!-- <div class="file-buttons-container">
-                    <button @click="load_participants_config(input_data.selected_config_file)">Load User Config</button>
-                    <button @click="save_config()">Save User Config</button>
-                    <button @click="load_participants_config('default_config.csv')">Load from default file</button>
-                </div> -->
-                
-            </div>
-        </div>
     </div>
 </template>
 
@@ -487,34 +490,59 @@
 
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+    @import "./src/variables.scss";
+
+    .background{
+        position:relative;
+        overflow:auto;
+        height:95vh;
+    }
+
     .main-container {
+        // margin:15vh 0 1vh 0;
         animation-name: fade-in;
         animation-duration: 1s;
+
         display:flex;
         flex-direction:column;
-        justify-content:flex-start;
+        justify-content:center;
         align-items: center;
-        overflow:auto;
-        width:100%;
+
+        min-height:95vh;
+        // max-height:95vh;
         
+        // overflow:scroll;
+        width:100%;
+        // margin: 5vh 0 0 0;
+        // background-color:green;
     }
 
     .participants-table {
-        border: 1px solid grey;
-        border-radius:4px;
+        // border: 1px solid grey;
+        // border-radius:4px;
         margin: 2vh 1vw 4vh 1vw;
         width:90%;
         display:flex;
         flex-direction:column;
         justify-content:flex-start;
         align-items:center;
+        color:$container-text;
+        background-color: $container-bg;
+        color:$container-text;
+        min-width:75vw;
+        // min-height:100vh;
+        
         /* padding: 0vh 0 1.5vw 0; */
+        
     }
 
     .participants-table-heading{
-        background-color:grey;
+        background-color: $heading-bg;
+        color: $heading-text;
         width:100%;
+        font-size:1.2em;
     }
 
     .participants-table table{
@@ -527,7 +555,8 @@
     }
 
     .add-participant-button{
-        background-color:grey;
+        background-color:$button-primary;
+        color:$button-text;
         padding: 1vh 1vw 1vh 1vw;
         border-radius:4px;
         width: 10vw;
@@ -554,7 +583,8 @@
     }
 
     .config-button{
-        background-color:grey;
+        background-color:$button-primary;
+        color:$button-text;
         padding: 1vh 1vw 1vh 1vw;
         border-radius:4px;
         cursor:pointer;
@@ -563,31 +593,29 @@
     }
 
     .modal-container{
-        background-color:#36393F;
-        height:80vh;
+        background-color:$container-bg;
+        height:50vh;
         width:100%;
         display:flex;
         flex-direction:column;
         justify-content:flex-start;
         align-items:center;
+        color:$container-text;
     }
 
     .modal-header{
-        background-color:grey;
+        background-color:$heading-bg;
+        color:$heading-text;
         width:100%;
         padding: 1vh 0 1vh 0;
         text-align:center;
     }
 
-    .dates{
-        width:90%;
-        background-color:grey;
-        padding: 2vh 1vw 2vh 1vw;
-        border-radius:4px;
-    }
+    
 
     .close-button{
-        background-color:grey;
+        background-color:$button-primary;
+        color:$button-text;
         cursor:pointer;
         margin: 2vh 0 2vh 0;
         padding: 1vh 1vw 1vh 1vw;
@@ -595,7 +623,9 @@
     }
 
     .config-heading{
-        background-color:grey;
+        background-color:$heading-bg;
+        color:$heading-text;
+        font-size:1.2em;
     }
 
     .config-content{
@@ -609,12 +639,13 @@
         display:flex;
         flex-direction:column;
         justify-content:flex-start;
-
-        width: 50%;
-
-        border: 1px solid grey;
         
-        border-radius:4px;
+        min-width:75vw;
+        // height:30vh;
+
+        background-color:$container-bg;
+        color:$container-text;
+        
     }
 
     .config-selected{
@@ -626,12 +657,28 @@
 
     .show-data-button{
         font-size: 0.7em;
-        background-color:grey;
+        background-color:$button-primary;
+        color:$button-text;
         border-radius:4px;
         cursor: pointer;
         padding: 0 0.5vw 0 0.5vw;
     }
 
-    
+    .spacer{
+        width:1px;
+        height:1px;
+        color:$bg;
+    }
+
+    .view-title{
+        display:flex;
+        flex-direction:row;
+        justify-content:flex-start;
+        width:100%;
+        
+        padding:0 0 0 5vw;
+        font-weight:bold;
+        margin: 1vh 0 5vh 0;
+    }
 
 </style>

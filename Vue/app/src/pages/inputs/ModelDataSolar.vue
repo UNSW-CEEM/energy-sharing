@@ -1,6 +1,6 @@
 <template>
     <div class="background">
-        <h1>Solar Data</h1>
+        
         <div class="main-container">
             
             <div class="import-container">
@@ -30,14 +30,14 @@
                         @input-filter="inputFilter"
                         @input-file="inputFile"
                         ref="upload">
-                        <button class="solar-file-button">Select files</button>
+                        <div class="solar-file-button">Select File</div>
                     </file-upload>
-                    <button v-if="!$refs.upload || !$refs.upload.active" @click.prevent="$refs.upload.active = true">
-                        Start Upload
-                    </button>
-                    <button v-else @click.prevent="$refs.upload.active = false">
-                        Stop Upload
-                    </button>
+                    <div class="import-button" v-if="!$refs.upload || !$refs.upload.active" @click.prevent="$refs.upload.active = true">
+                        Start Import
+                    </div>
+                    <div class="import-button importing" v-else @click.prevent="$refs.upload.active = false">
+                        Stop Import
+                    </div>
                 </div>
             </div>
             <div class="separator">
@@ -45,7 +45,7 @@
             </div>
 
             <div class="available-container">
-                <div class="container-heading" >Available Files</div>
+                <div class="container-heading" >Available Solar Files</div>
                 <div class="solar-files-list">   
                     <div class="solar-files-list-item "v-for="item in files_lists.solar_files_list">{{ item }}</div>
                     
@@ -139,7 +139,11 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+    @import "./src/variables.scss";
+    
+
     .main-container {
         display: flex;
         flex-direction: row;
@@ -156,7 +160,23 @@
     }
 
     .solar-file-button {
+        
+        background-color: $button-primary;
+        padding:0 1vw 0 1vw;
+        border-radius:2px;
+        color:white;
+        cursor: pointer !important;
+    }
 
+     .import-button{
+        background-color:$button-primary;
+        padding:0 1vw 0 1vw;
+        border-radius:2px;
+        color:white;
+        cursor: pointer !important;
+    }
+    .importing{
+        background-color:$button-warning;
     }
 
     .solar-files-list {
@@ -191,16 +211,18 @@
         height:40vh;
         margin: 2vh 0 0 0;
 
-        border:1px solid grey;
-        border-radius:4px;
+        // border:1px solid grey;
+        background-color:white;
+        border-radius:2px;
         /* padding: 0 1vw 1vh 1vw;       */
     }
 
     .container-heading{
         width:100%;
-        border-bottom:1px solid grey;
-        background-color:grey;
+        /* border-bottom:1px solid grey; */
+        background-color: $heading-bg;
         font-size:1.2em;
+        color:$heading-text;
         /* font-weight:bold; */
     }
 
@@ -214,8 +236,10 @@
         height:40vh;
         margin: 2vh 0 0 0;
 
-        border:1px solid grey;
-        border-radius:4px;
+        // border:1px solid grey;
+        background-color:white;
+        border-radius:2px;
+        color:$container-text;
     }
 
     .separator{
@@ -224,7 +248,7 @@
     }
     
     .button-container {
-        background-color: grey;
+        background-color: #f8f8f8;
 
         display:flex;
         flex-direction:row;
@@ -242,7 +266,7 @@
         flex-direction:column;
         justify-content:flex-start;
         align-items:flex-start;
-        
+        color:#7a7a7b;
     }
 
     .file-list .item{

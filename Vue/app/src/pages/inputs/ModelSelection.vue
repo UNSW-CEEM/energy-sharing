@@ -13,6 +13,10 @@
                     </div>
                 </div>
 
+                <div class="picture">
+                    <font-awesome-icon class="fa-icon" icon="industry" />  
+                </div>
+
                 <div class="description">
                     This model is commonly used to model small embedded networks and local energy sharing schemes with small numbers of participants. It allows for a central battery, and solar and load data for each participant. 
                 </div>
@@ -33,6 +37,10 @@
                     <div class="author">
                         by Mike Roberts
                     </div>
+                </div>
+
+                <div class="picture">
+                    <font-awesome-icon class="fa-icon" icon="building" />  
                 </div>
 
                 <div class="description">
@@ -152,7 +160,8 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+    @import "./src/variables.scss";
     .main-container {
         animation-name: fade-in;
         animation-duration: 1s;
@@ -204,6 +213,7 @@
 
     .selected{
         background-color: #6BEE9C;
+        background-color: $tertiary;
         padding:1vh 1vw 1vh 1vw;
         border-radius:2px;
         margin: 0 0 2vh 0;
@@ -212,7 +222,7 @@
     }
 
     .not-selected{
-        background-color: #FFD670;
+        background-color: $secondary;
         padding:1vh 1vw 1vh 1vw;
         border-radius:2px;
         margin: 0 0 2vh 0;
@@ -226,6 +236,19 @@
         justify-content:space-between;
         align-items:center;
         width: 20vw;
+    }
+
+    .picture{
+        font-size:6em;
+        background-color:$container-text;
+        width:15vw;
+        height:15vw;
+
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        
+        border-radius:100px;
     }
 
 </style>

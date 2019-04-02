@@ -1,7 +1,7 @@
 <template>
     <div class="background">
         <div class="main-container">
-            <h1 class="view-title">{{ view_name }}</h1>
+            <!-- <h1 class="view-title">{{ view_name }}</h1> -->
             <!-- <p>Beta Note: 'Luomi' model requires one of each tariff completed. (DUOS, NUOS, TUOS and Retail)</p> -->
             
             <div class="container">
@@ -212,9 +212,9 @@
                 
                 
                 colorizer: dotsPos => [
-                    [dotsPos[0], dotsPos[1], { backgroundColor: 'pink' }],
-                    [dotsPos[1], dotsPos[2], { backgroundColor: 'blue' }],
-                    [dotsPos[2], dotsPos[3], { backgroundColor: 'pink' }],
+                    [dotsPos[0], dotsPos[1], { backgroundColor: '#15E462' }],
+                    [dotsPos[1], dotsPos[2], { backgroundColor: '#1ca6db' }],
+                    [dotsPos[2], dotsPos[3], { backgroundColor: '#15E462' }],
                 ],
 
                 view_name: this.$options.name,
@@ -602,7 +602,9 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+    @import "./src/variables.scss";
+
     .noBullets {
         list-style: none;
     }
@@ -672,15 +674,19 @@
     }
 
     .container{
-        border: 1px solid grey;
-        border-radius:4px;
+        // border: 1px solid grey;
+        // border-radius:4px;
         display:flex;
         flex-direction:column;
         justify-content: flex-start;
         align-items:center;
         margin: 3vh 0 3vh 0;
         width:70vw;
-        /* background-color:grey; */
+        background-color:$container-bg;
+        color:$container-text;
+
+        animation-name: fade-in;
+        animation-duration: 1s;
     }
 
     .container-content{
@@ -688,8 +694,10 @@
     }
 
     .container-header{
-        background-color:grey;
+        background-color:$heading-bg;
+        color:$heading-text;
         width:100%;
+        font-size:1.2em;
     }
 
     .units{
@@ -706,7 +714,7 @@
     }
 
     .key .peak{
-        background-color:blue;
+        background-color:#1ca6db;
         padding: 0.5vh 0.5vw 0.5vh 0.5vw;
         border-radius:4px;
         margin: 0 1vw 0 0;

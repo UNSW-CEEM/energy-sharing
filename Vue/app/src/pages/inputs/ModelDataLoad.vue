@@ -1,6 +1,6 @@
 <template>
     <div class="background">
-        <h1>Load Data</h1>
+        <!-- <h1>Load Data</h1> -->
         <div class="main-container">
             
             <div class="import-container">
@@ -32,14 +32,14 @@
                         @input-filter="inputFilter"
                         @input-file="inputFile"
                         ref="upload">
-                        <button class="load-file-button">Select File</button>
+                        <div class="load-file-button">Select File</div>
                     </file-upload>
-                    <button v-if="!$refs.upload || !$refs.upload.active" @click.prevent="$refs.upload.active = true">
+                    <div class="import-button" v-if="!$refs.upload || !$refs.upload.active" @click.prevent="$refs.upload.active = true">
                         Start Import
-                    </button>
-                    <button v-else @click.prevent="$refs.upload.active = false">
+                    </div>
+                    <div class="import-button importing" v-else @click.prevent="$refs.upload.active = false">
                         Stop Import
-                    </button>
+                    </div>
                 </div>
             </div>
             <div class="separator">
@@ -170,7 +170,7 @@
     }
 
     .load-button-container {
-        background-color: grey;
+        background-color: #f8f8f8;
 
         display:flex;
         flex-direction:row;
@@ -178,10 +178,32 @@
         align-items:center;
         height: 5vh;
         width: 30vw;
+        
     }
 
     .load-file-button {
+        
+        background-color:#6BC5E8;
+        padding:0 1vw 0 1vw;
+        border-radius:2px;
+        color:white;
+        cursor: pointer !important;
+    }
 
+    .load_upload{
+        cursor: pointer;
+    }
+
+    .import-button{
+        background-color:#6BC5E8;
+        padding:0 1vw 0 1vw;
+        border-radius:2px;
+        color:white;
+        cursor: pointer !important;
+    }
+
+    .importing{
+        background-color:#FFD670;
     }
 
     
@@ -196,8 +218,10 @@
         height:40vh;
         margin: 2vh 0 0 0;
 
-        border:1px solid grey;
-        border-radius:4px;
+        /* border:1px solid #f8f8f8; */
+        border-radius:2px;
+        
+        background-color:white;
         /* padding: 0 1vw 1vh 1vw;       */
     }
 
@@ -210,12 +234,15 @@
         justify-content:flex-start;
         align-items:flex-start;
         padding-left: 1vw;
+        color:#7a7a7b;
+        
     }
 
     .container-heading{
         width:100%;
-        border-bottom:1px solid grey;
-        background-color:grey;
+        border-bottom:1px solid #f8f8f8;
+        background-color:#f8f8f8;
+        color: #1ca6db;
         font-size:1.2em;
         /* font-weight:bold; */
     }
@@ -235,8 +262,9 @@
         height:40vh;
         margin: 2vh 0 0 0;
 
-        border:1px solid grey;
-        border-radius:4px;
+        /* border:1px solid grey; */
+
+        border-radius:2px;
     }
 
     .load-files-list-container {
@@ -247,9 +275,15 @@
         width: 100%;
         height:100%;
         overflow:auto;
+        /* background-color:#6BC5E8; */
+        background-color:white;
+        color:#7a7a7b;
+        padding-top:0.5vh;
     }
 
     .load-files-list-item{
         padding-left:1vw;
     }
+
+    
 </style>

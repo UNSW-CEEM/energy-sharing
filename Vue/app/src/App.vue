@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <TopNavBar class="topnav"/>
-        <div class="container">
+        <div class="main-content">
             <SideNavBar class="sidenav"/>
             <router-view class="main"/>
             <ModelFooter class="footer"/>
@@ -40,12 +40,12 @@
     }
 </script>
 
-<style lang="less">
+<style lang="scss">
     
-    
+    @import "./src/variables.scss";
     body{
-        background-color:#202225;
-        color:#cfcfcf;
+        background-color: $bg;
+        color: $text;
         margin: 0 0 0 0;
     }
     
@@ -73,21 +73,23 @@
     }
     
 
-    .container {
+    .main-content {
         display: flex;
         flex-direction:row;
         height:95vh;
     }
 
+    
+
     .topnav {
         height:5vh;
-        background-color:#F8F8F8;
+        background-color:$nav-bg;
     }
 
     .sidenav {
         
         // border-radius:5px;
-        background-color:#F8F8F8;
+        background-color:$nav-bg;
         width:20vw;
     }
 
