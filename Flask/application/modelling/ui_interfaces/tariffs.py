@@ -52,27 +52,27 @@ class Tariffs:
             for each in self.duos_tariffs:
                 each.print()
 
-    def load_defaults(self, debug_print=False):
-        self.reset_all_tariffs()
+    # def load_defaults(self, debug_print=False):
+    #     self.reset_all_tariffs()
 
-        duos_path = os.path.join(self.luomi_defaults_dir, DUOS_NAME)
-        nuos_path = os.path.join(self.luomi_defaults_dir, NUOS_NAME)
-        tuos_path = os.path.join(self.luomi_defaults_dir, TUOS_NAME)
-        retail_path = os.path.join(self.luomi_defaults_dir, RETAIL_NAME)
+    #     duos_path = os.path.join(self.luomi_defaults_dir, DUOS_NAME)
+    #     nuos_path = os.path.join(self.luomi_defaults_dir, NUOS_NAME)
+    #     tuos_path = os.path.join(self.luomi_defaults_dir, TUOS_NAME)
+    #     retail_path = os.path.join(self.luomi_defaults_dir, RETAIL_NAME)
 
-        mapping = [
-            {'path': duos_path, 'array': self.duos_tariffs, 'tariff': DuosTariff},
-            {'path': nuos_path, 'array': self.nuos_tariffs, 'tariff': NuosTariff},
-            {'path': tuos_path, 'array': self.tuos_tariffs, 'tariff': TuosTariff},
-            {'path': retail_path, 'array': self.retail_tariffs, 'tariff': RetailTariff},
-        ]
+    #     mapping = [
+    #         {'path': duos_path, 'array': self.duos_tariffs, 'tariff': DuosTariff},
+    #         {'path': nuos_path, 'array': self.nuos_tariffs, 'tariff': NuosTariff},
+    #         {'path': tuos_path, 'array': self.tuos_tariffs, 'tariff': TuosTariff},
+    #         {'path': retail_path, 'array': self.retail_tariffs, 'tariff': RetailTariff},
+    #     ]
 
-        for each in mapping:
-            self.load_tariff_from_csv(**each)
+    #     for each in mapping:
+    #         self.load_tariff_from_csv(**each)
 
-        if debug_print:
-            for each in self.duos_tariffs:
-                each.print()
+    #     if debug_print:
+    #         for each in self.duos_tariffs:
+    #             each.print()
 
     @staticmethod
     def load_tariff_from_csv(path, array, tariff):

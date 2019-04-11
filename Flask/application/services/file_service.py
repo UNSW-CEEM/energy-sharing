@@ -66,9 +66,9 @@ class OSFileService(FileService):
 
     def update_files_lists(self):
         self.solar_files = [f for f in os.listdir(self.solar_data_save_path) if
-                            os.path.isfile(os.path.join(self.solar_path, f))]
+                            os.path.isfile(os.path.join(self.solar_path, f)) and 'csv' in f]
         self.load_files = [f for f in os.listdir(self.load_data_save_path) if
-                           os.path.isfile(os.path.join(self.load_path, f))]
+                           os.path.isfile(os.path.join(self.load_path, f)) and 'csv' in f]
         self.p_config_files = [f for f in os.listdir(self.p_config_path)
                                if os.path.isfile(os.path.join(self.p_config_path, f))]
 

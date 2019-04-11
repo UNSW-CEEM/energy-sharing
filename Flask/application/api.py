@@ -8,6 +8,8 @@ import os
 import io
 import zipfile
 import pathlib
+import pendulum
+
 
 file_service = file_service.OSFileService()
 
@@ -20,7 +22,7 @@ app.config['SECRET_KEY'] = 'pleasedonthackme'
 
 cors = CORS(app, resources={r'/*': {"origins": '*'}})
 
-socketio = SocketIO(app, async_mode = async_mode)
+socketio = SocketIO(app, async_mode = async_mode, engineio_logger=False, async_handlers=True)
 thread = None
 thread_lock = Lock()
 
@@ -36,6 +38,11 @@ client_bp = Blueprint('client_app', __name__,
                       )
 app.register_blueprint(client_bp)
 
+num_disconnects = 0
+num_connects = 0
+
+LAST_MESSAGE = "Official Last Message"
+LAST_MESSAGE_TIME = pendulum.now()
 
 @app.route('/')
 def index():
@@ -106,20 +113,25 @@ def download_luomi():
             as_attachment=True,
             attachment_filename='data.zip'
         )
-        
-
 
 
 
 @socketio.on('connect')
 def test_connect():
     print('Connection Attempted')
+    global num_connects
+    num_connects += 1
     emit('my response', {'data': 'Connected'})
+    status_callback("Connection Reset")
 
 
 @socketio.on('disconnect')
 def test_disconnect():
     print('Client disconnected')
+    global num_disconnects
+    num_disconnects += 1
+    status_callback('ERROR: Client was Disconnected')
+    
 
 
 @socketio.on('exampleJSON')
@@ -197,7 +209,10 @@ def load_config(page_name, filename):
 def test_run_sim(params):
     status_callback("Running Test Model Interface")
     emit('status_channel',{'data':{'status':'running'}})
-    print([key for key in params])
+    
+    # print([key for key in params])
+    # print("Data Sources", params['model_data_sources'])
+    # print("Participants", params['model_participants'])
     # Recreate the defaults between the requests while testing
     # mp.load_defaults()
 
@@ -210,15 +225,32 @@ def test_run_sim(params):
     status_callback("Modelling Complete")
 
 
+
 def status_callback(message):
     # my_status = "Status: " + message
-    emit('status_message_channel',
-         {
-             "data": {
-                 "message": message
-             }
-         }
-    )
+    # print("--- Status Callback", message)
+    # print("Status Callback - num disconnects", num_disconnects)
+    # print("Status Callback - num connects", num_connects)
+    global LAST_MESSAGE
+    global LAST_MESSAGE_TIME
+    # print("Last Message", LAST_MESSAGE)
+    # print("--- Status Callback", message)
+    if message != LAST_MESSAGE and LAST_MESSAGE_TIME < pendulum.now().subtract(seconds=0.1):
+        LAST_MESSAGE = message
+        # last_message = message
+        LAST_MESSAGE_TIME = pendulum.now()
+        # print("--- Status Callback", message)
+        
+        emit('status_message_channel',
+            {
+                "data": {
+                    "message": message
+                }
+            }
+        )
+       
+    
+    
 
 
 if __name__ == 'main':

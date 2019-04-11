@@ -29,6 +29,7 @@ class Participants:
             for each_dict in row:
                 # print(each_dict, "\n")
                 parameters[each_dict["name"]] = (each_dict["value"])
+                print("Participant Parameters",each_dict)
 
             p = Participant(**parameters)
             # p.print()
@@ -50,20 +51,20 @@ class Participants:
     #     p = Participant(**parameters)
     #     self.participants.append(p)
 
-    def load_defaults(self):
-        # Reset the list of participants
-        self.participants = []
+    # def load_defaults(self):
+    #     # Reset the list of participants
+    #     self.participants = []
 
-        default_participants_path = os.path.join(self.luomi_defaults_dir, DEFAULT_PARTICIPANTS_NAME)
+    #     default_participants_path = os.path.join(self.luomi_defaults_dir, DEFAULT_PARTICIPANTS_NAME)
 
-        # Parse through each line in the default csv and create participants.
-        with open(default_participants_path) as file:
-            reader = csv.DictReader(file)
-            for row in reader:
-                self.participants.append(Participant(**row))
+    #     # Parse through each line in the default csv and create participants.
+    #     with open(default_participants_path) as file:
+    #         reader = csv.DictReader(file)
+    #         for row in reader:
+    #             self.participants.append(Participant(**row))
 
-        # After parsing the participants create the input files, solar_data, and load_data.
-        self.create_data_files()
+    #     # After parsing the participants create the input files, solar_data, and load_data.
+    #     self.create_data_files()
 
     def get_participants_as_string(self):
         output = io.StringIO()
@@ -155,8 +156,7 @@ class Participant:
                  retailer='ENOVA',
                  solar_profile='',
                  load_profile='',
-                 solar_capacity=0,
-                 solar_scaling='',
+                 solar_scaling=0,
                  battery_type='',
                  ):
 
@@ -168,7 +168,7 @@ class Participant:
         self.retailer = retailer
         self.solar_profile = solar_profile
         self.load_profile = load_profile
-        self.solar_capacity = solar_capacity
+        self.solar_scaling = solar_scaling
         self.solar_scaling = solar_scaling
         self.battery_type = battery_type
 
