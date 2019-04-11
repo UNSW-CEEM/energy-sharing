@@ -44,10 +44,10 @@ class Results:
     def to_csv(self, output_dir, info_tag):
         info_tag = str(info_tag)
         for label in self.financial_output:
-            print(label)
+            # print(label)
             self.financial_output[label].to_csv(path_or_buf=os.path.join(output_dir, label+info_tag+".csv"))
         for label in self.energy_output:
-            print(label)
+            # print(label)
             self.energy_output[label].to_csv(path_or_buf=os.path.join(output_dir, label+info_tag+".csv"))
 
 

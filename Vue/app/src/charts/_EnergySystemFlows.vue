@@ -59,7 +59,7 @@
                     zoomType: 'x'
                     },
                     title: {
-                    text: 'Participant Energy Generation / Consumption'
+                    text: 'Net System Energy Flows'
                     },
                     width: null,
 

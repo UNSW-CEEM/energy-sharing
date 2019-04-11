@@ -2,7 +2,13 @@
     <div class="footercontainer">
         <!-- <div class="status" v-if="!sleeping"> Status: {{ status }} </div>         -->
         <modal height="80%"  width="80%" name="status">
-            <div class="status" v-if="!sleeping"> Status: {{ status }} </div>
+            <div class="modal-content" :clickToClose="false">
+                <div>
+                    <div class="status" v-if="!sleeping" > Status: {{ status }} </div>
+                </div>
+                <div class="cbtn" v-on:click="close()" >Close </div>
+                
+            </div>
         </modal>
     </div>
 </template>
@@ -61,12 +67,16 @@
         },
 
         methods: {
-
+            close(){
+                console.log('closing')
+                this.$modal.hide('status')
+            }
         }
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "./src/variables.scss";
 .status{
     display:flex;
     flex-direction:row;
@@ -78,5 +88,25 @@
 
 .footercontainer{
     height:0px;
+    color:$container-text;
+}
+
+.modal-content{
+    // background-color:green;
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items:center;
+}
+
+.cbtn{
+    background-color:$button-primary;
+    color:$button-text;
+    margin-top:5vh;
+    border-radius:4px;
+    padding: 1vh 1vw 1vh 1vw;
+    cursor:pointer
 }
 </style>

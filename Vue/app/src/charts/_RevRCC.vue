@@ -49,7 +49,7 @@
                     zoomType: 'x'
                     },
                     title: {
-                    text: 'Solar and Load'
+                    text: 'Retail Revenue'
                     },
                     width: null,
 
