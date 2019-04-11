@@ -3,8 +3,8 @@ const {app, BrowserWindow, Menu} = require('electron')
 let win = null;
 
 
-// var executablePath = "model/run-dev/run-dev";
-// var child = require('child_process').spawn(executablePath, { cwd: undefined, env: process.env, shell:true });
+var executablePath = "model/run-dev/run-dev";
+var child = require('child_process').spawn(executablePath, { cwd: undefined, env: process.env, shell:true });
 
 
 
@@ -15,8 +15,8 @@ app.on('ready', function () {
     win.maximize();
 
     // Specify entry point to default entry point of vue.js
-    win.loadURL('http://localhost:8080'); //this one for the hot-loading dev server run via npm run serve in the vue directory
-    // win.loadURL('http://localhost:5000'); //this one for production, post-build, from the python directory.
+    // win.loadURL('http://localhost:8080'); //this one for the hot-loading dev server run via npm run serve in the vue directory
+    win.loadURL('http://localhost:5000'); //this one for production, post-build, from the python directory.
     
     // Remove window once app is closed
     win.on('closed', function () {
@@ -110,7 +110,7 @@ app.on('activate', () => {
 
 //quit the app once closed
 app.on('window-all-closed', function () {
-    // child.kill('SIGINT');
+    child.kill('SIGINT');
     if (process.platform !== 'darwin') {
         
         app.quit();
