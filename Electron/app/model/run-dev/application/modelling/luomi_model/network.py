@@ -10,7 +10,7 @@ class Network:
         self.battery_list = []
 
     def test(self) :
-        print('hello world')
+        # print('hello world')
         print(self.name)
 
     def add_participant(self, participant):
@@ -45,21 +45,24 @@ class Network:
                     retailer=line['retailer'],
                     solar_path=os.path.join(data_dir, line['solar_path']),
                     load_path=os.path.join(data_dir, line['load_path']),
-                    solar_capacity=float(line['solar_capacity'])
+                    solar_scaling=float(line['solar_scaling'])
                 )
                 self.add_participant(participant)
 
-    def add_participants_from_string(self, data_dir, participants_string):
+    def add_participants_from_string(self, data_dir, load_path, solar_path, participants_string):
         reader = csv.DictReader(participants_string, delimiter=",")
         for line in reader:
+            print("Adding Participant with solar capacity:", float(line['solar_scaling']))
             participant = CSV_Participant(
                 participant_id=line['participant_id'],
                 participant_type=line['participant_type'],
                 retail_tariff_type=line['retail_tariff_type'],
                 network_tariff_type=line['network_tariff_type'],
                 retailer=line['retailer'],
-                solar_path=line['load_path'],
-                load_path=line['load_path'],
-                solar_capacity=float(line['solar_capacity'])
+                solar_path=os.path.join(data_dir,'shared','solar', solar_path),
+                load_path=os.path.join(data_dir,'shared', 'load',load_path),
+                solar_scaling=float(line['solar_scaling']),
+                load_profile=line['load_profile'],
+                solar_profile = line['solar_profile']
             )
             self.add_participant(participant)

@@ -1,0 +1,4 @@
+gen_type,energy_charge,retail_charge,duos_charge,profit_charge
+local_solar,0.12,0.06,0.06,
+central_battery,0.12,0.06,0.06,0.02
+central_battery_importing_local_solar,0.12,0.06,0.06,

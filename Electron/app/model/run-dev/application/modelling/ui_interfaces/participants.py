@@ -29,6 +29,7 @@ class Participants:
             for each_dict in row:
                 # print(each_dict, "\n")
                 parameters[each_dict["name"]] = (each_dict["value"])
+                print("Participant Parameters",each_dict)
 
             p = Participant(**parameters)
             # p.print()
@@ -37,20 +38,33 @@ class Participants:
         # After parsing the participants create the input files, solar_data, and load_data.
         self.create_data_files()
 
-    def load_defaults(self):
-        # Reset the list of participants
-        self.participants = []
+    # def add_participant(self, participant):
+    #     # print(participant["input_rows"])
+    #     parameters = {}
+    #     for each in participant["input_rows"]:
+    #         print(each["name"])
+    #         if each["name"] == "central_solar_data":
+    #             print(each["name"])
+    #         else:
+    #             parameters[each["name"]] = (each["value"])
+    #
+    #     p = Participant(**parameters)
+    #     self.participants.append(p)
 
-        default_participants_path = os.path.join(self.luomi_defaults_dir, DEFAULT_PARTICIPANTS_NAME)
+    # def load_defaults(self):
+    #     # Reset the list of participants
+    #     self.participants = []
 
-        # Parse through each line in the default csv and create participants.
-        with open(default_participants_path) as file:
-            reader = csv.DictReader(file)
-            for row in reader:
-                self.participants.append(Participant(**row))
+    #     default_participants_path = os.path.join(self.luomi_defaults_dir, DEFAULT_PARTICIPANTS_NAME)
 
-        # After parsing the participants create the input files, solar_data, and load_data.
-        self.create_data_files()
+    #     # Parse through each line in the default csv and create participants.
+    #     with open(default_participants_path) as file:
+    #         reader = csv.DictReader(file)
+    #         for row in reader:
+    #             self.participants.append(Participant(**row))
+
+    #     # After parsing the participants create the input files, solar_data, and load_data.
+    #     self.create_data_files()
 
     def get_participants_as_string(self):
         output = io.StringIO()
@@ -106,8 +120,10 @@ class Participants:
 
                 for row in reader:
                     # Writes the PROFILE data to the PARTICIPANT_ID header.
-                    this_row = {common_key: row[common_key], p_id: row[p_profile]}
-                    writer.writerow(this_row)
+                    if common_key in row and p_profile in row:
+                        this_row = {common_key: row[common_key], p_id: row[p_profile]}
+                        
+                        writer.writerow(this_row)
 
                 # Put the pointer back to the start of the file
                 p_data.seek(0)
@@ -140,8 +156,7 @@ class Participant:
                  retailer='ENOVA',
                  solar_profile='',
                  load_profile='',
-                 solar_capacity=0,
-                 solar_scaling='',
+                 solar_scaling=0,
                  battery_type='',
                  ):
 
@@ -153,7 +168,7 @@ class Participant:
         self.retailer = retailer
         self.solar_profile = solar_profile
         self.load_profile = load_profile
-        self.solar_capacity = solar_capacity
+        self.solar_scaling = solar_scaling
         self.solar_scaling = solar_scaling
         self.battery_type = battery_type
 

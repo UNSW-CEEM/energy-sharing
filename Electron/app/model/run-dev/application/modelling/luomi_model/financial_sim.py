@@ -41,10 +41,7 @@ def simulate(time_periods, mynetwork, my_tariffs, results, status_callback=None)
             # Left over load which requires grid import. Calculated in energy flows above.
             external_grid_import = results.get_external_grid_elec_import(time, p.get_id())
 
-            
             # Calc resultant financial flows (all except variable charge - this is done below)
-            
-
             results.set_local_solar_import_charge(time, p.get_id(),  my_tariffs.get_local_solar_import_tariff(time) * local_solar_import)
             results.set_central_batt_import_charge(time, p.get_id(),  my_tariffs.get_central_batt_tariff(time) * participant_central_batt_import)
             results.set_local_solar_sales_revenue(time, p.get_id(),  my_tariffs.get_local_solar_export_tariff(time) * local_solar_sales)
@@ -57,8 +54,9 @@ def simulate(time_periods, mynetwork, my_tariffs, results, status_callback=None)
             
             # Block tariff ---------------
             # The block tariffs will be applied by counting the volume of energy used within the period and applying the appropriate tariff accordingly
-            if retail_tariff_type == 'Business Anytime':
-                block_1_charge, block_2_charge, block_1_volume = my_tariffs.get_variable_tariff(time,retail_tariff_type)
+            # if retail_tariff_type == 'Business Anytime':
+            if 'Block' in retail_tariff_type:
+                block_1_charge, block_2_charge, block_1_volume = my_tariffs.get_variable_retail_tariff(time,'Block')
 
                 # First, calculate the current cumulative energy usage
                 # Check whether it's a new day. If the current hour is midnight and the previous hour was 11pm, then it's a new day.
@@ -84,8 +82,9 @@ def simulate(time_periods, mynetwork, my_tariffs, results, status_callback=None)
             
             # TOU Tariffs ---------------
             # The TOU tariffs will be applied by using if statements to determine whether peak/shoulder/off-peak
-            if retail_tariff_type == 'Business TOU':
-                peak_charge, shoulder_charge, offpeak_charge, peak_start_time, peak_end_time, peak_start_time_2, peak_end_time_2, shoulder_start_time, shoulder_end_time, shoulder_start_time_2, shoulder_end_time_2, tou_weekday_only_flag = my_tariffs.get_variable_tariff(time,retail_tariff_type)
+            # if retail_tariff_type == 'Business TOU':
+            if 'TOU' in retail_tariff_type:
+                peak_charge, shoulder_charge, offpeak_charge, peak_start_time, peak_end_time, peak_start_time_2, peak_end_time_2, shoulder_start_time, shoulder_end_time, shoulder_start_time_2, shoulder_end_time_2, tou_weekday_only_flag = my_tariffs.get_variable_retail_tariff(time,'TOU')
 
                 # If the TOU periods apply all days and not just weekdays then the flag will be zero
                 if tou_weekday_only_flag == 0 :
@@ -113,12 +112,6 @@ def simulate(time_periods, mynetwork, my_tariffs, results, status_callback=None)
                 # Apply the tariff
                 results.set_participant_variable_charge(time, p.get_id(),variable_tariff * external_grid_import )
 
-            # Controlled Load and Flat Tariffs ---------------
-            # The controlled load tariffs and the flat tariff will be applied simply as the tariff times by the volume of electricity consumed, so the same calculation is applied.
-            if retail_tariff_type == 'Controlled Load 1' or retail_tariff_type == 'Controlled Load 2' or retail_tariff_type == 'flat_charge':
-                variable_tariff = my_tariffs.get_variable_tariff(time, retail_tariff_type)
-                results.set_participant_variable_charge(time, p.get_id(),variable_tariff * external_grid_import )
-            
             # Total bill
 
             participant_variable_charge = results.get_participant_variable_charge(time, p.get_id())
@@ -179,15 +172,18 @@ def simulate(time_periods, mynetwork, my_tariffs, results, status_callback=None)
 
             # Controlled Load and Flat Tariffs ---------------
             # The controlled load tariffs and the flat tariff will be applied simply as the tariff times by the volume of electricity consumed, so the same calculation is applied.
-            if network_tariff_type == 'Controlled Load 1' or network_tariff_type == 'Controlled Load 2' or network_tariff_type == 'LV Small Business Anytime':
-                variable_tariff = my_tariffs.get_duos_on_grid_import_variable(time, network_tariff_type)
-                results.set_participant_duos_payments(time, p.get_id(), variable_tariff * external_grid_import)
+            # if network_tariff_type == 'Controlled Load 1' or network_tariff_type == 'Controlled Load 2' or network_tariff_type == 'LV Small Business Anytime':
+            #     variable_tariff = my_tariffs.get_duos_on_grid_import_variable(time, network_tariff_type)
+            #     results.set_participant_duos_payments(time, p.get_id(), variable_tariff * external_grid_import)
 
             # TOU Tariffs ---------------
             # The TOU tariffs will be applied by using if statements to determine whether peak/shoulder/off-peak
-            if network_tariff_type == 'LV TOU <100MWh' or network_tariff_type == 'LV Business TOU_Interval meter' or network_tariff_type == 'Small Business - Opt in Demand':
+            # if network_tariff_type == 'LV TOU <100MWh' or network_tariff_type == 'LV Business TOU_Interval meter' or network_tariff_type == 'Small Business - Opt in Demand':
+            if 'TOU' in network_tariff_type:
                 peak_charge, shoulder_charge, offpeak_charge, peak_start_time, peak_end_time, peak_start_time_2, peak_end_time_2, shoulder_start_time, shoulder_end_time, shoulder_start_time_2, shoulder_end_time_2, tou_weekday_only_flag, demand_charge = my_tariffs.get_duos_on_grid_import_variable(time,network_tariff_type)
 
+                # Assume it's off-peak time
+                variable_tariff = offpeak_charge
                 # If the TOU periods apply all days and not just weekdays then the flag will be zero
                 if tou_weekday_only_flag == 0 :
                     # Check for whether it's a peak time
@@ -204,14 +200,15 @@ def simulate(time_periods, mynetwork, my_tariffs, results, status_callback=None)
                     elif (time.hour > shoulder_start_time and time.hour <= shoulder_end_time) or (time.hour > shoulder_start_time_2 and time.hour <= shoulder_end_time_2) :
                         variable_tariff = shoulder_charge
 
-                # Else assume it's off-peak time
-                else:
-                    variable_tariff = offpeak_charge
+                
+                
+                    
                 # Apply the tariff 
                 results.set_participant_duos_payments(time, p.get_id(),variable_tariff * external_grid_import )
             
             # Demand tariff includes TOU component which is handled above. In addition, the demand component is calculated for each participant
-            if network_tariff_type == 'Small Business - Opt in Demand' :
+            # if network_tariff_type == 'Small Business - Opt in Demand' :
+            if 'Demand' in network_tariff_type:
                 current_month = time.month
                 
                 # If it's a new month, then print the max demand value to the df at the max demand time, reset the max demand to zero and set the month to the new month.
@@ -235,7 +232,8 @@ def simulate(time_periods, mynetwork, my_tariffs, results, status_callback=None)
                     df_participant_max_monthly_demand.loc[max_demand_time, p.get_id()] = max_demand * (60/TIME_PERIOD_LENGTH_MINS)
         
         # After looping through all time periods for the current participant
-        if network_tariff_type == 'Small Business - Opt in Demand' :
+        # if network_tariff_type == 'Small Business - Opt in Demand' :
+        if 'Demand' in network_tariff_type:
             # Need a separate time loop to calculate demand charges since the max kVA values are entered into the df 'retrospectively'
             for time in time_periods:
                 demand_payment = df_participant_max_monthly_demand.loc[time, p.get_id()] * demand_charge
@@ -294,13 +292,14 @@ def simulate(time_periods, mynetwork, my_tariffs, results, status_callback=None)
 
             # Controlled Load and Flat Tariffs ---------------
             # The controlled load tariffs and the flat tariff will be applied simply as the tariff times by the volume of electricity consumed, so the same calculation is applied.
-            if network_tariff_type == 'Controlled Load 1' or network_tariff_type == 'Controlled Load 2' or network_tariff_type == 'LV Small Business Anytime':
-                variable_tariff = my_tariffs.get_tuos_on_grid_import_variable(time, network_tariff_type)
-                results.set_participant_tuos_payments(time, p.get_id(), variable_tariff * external_grid_import)
+            # if network_tariff_type == 'Controlled Load 1' or network_tariff_type == 'Controlled Load 2' or network_tariff_type == 'LV Small Business Anytime':
+            #     variable_tariff = my_tariffs.get_tuos_on_grid_import_variable(time, network_tariff_type)
+            #     results.set_participant_tuos_payments(time, p.get_id(), variable_tariff * external_grid_import)
 
             # TOU Tariffs ---------------
             # The TOU tariffs will be applied by using if statements to determine whether peak/shoulder/off-peak
-            if network_tariff_type == 'LV TOU <100MWh' or network_tariff_type == 'LV Business TOU_Interval meter' or network_tariff_type == 'Small Business - Opt in Demand':
+            # if network_tariff_type == 'LV TOU <100MWh' or network_tariff_type == 'LV Business TOU_Interval meter' or network_tariff_type == 'Small Business - Opt in Demand':
+            if 'TOU' in network_tariff_type:
                 peak_charge, shoulder_charge, offpeak_charge, peak_start_time, peak_end_time, peak_start_time_2, peak_end_time_2, shoulder_start_time, shoulder_end_time, shoulder_start_time_2, shoulder_end_time_2, tou_weekday_only_flag, demand_charge = my_tariffs.get_tuos_on_grid_import_variable(time,network_tariff_type)
 
                 # If the TOU periods apply all days and not just weekdays then the flag will be zero
@@ -326,7 +325,8 @@ def simulate(time_periods, mynetwork, my_tariffs, results, status_callback=None)
                 results.set_participant_tuos_payments(time, p.get_id(), variable_tariff * external_grid_import)
             
             # Demand tariff includes TOU component which is handled above. In addition, the demand component is calculated for each participant
-            if network_tariff_type == 'Small Business - Opt in Demand' :
+            # if network_tariff_type == 'Small Business - Opt in Demand' :
+            if 'Demand' in network_tariff_type:
                 current_month = time.month
                 
                 # If it's a new month, then print the max demand value to the df at the max demand time, reset the max demand to zero and set the month to the new month.
@@ -350,7 +350,8 @@ def simulate(time_periods, mynetwork, my_tariffs, results, status_callback=None)
                     df_participant_max_monthly_demand.loc[max_demand_time, p.get_id()] = max_demand * (60/TIME_PERIOD_LENGTH_MINS)
         
         # After looping through all time periods for the current participant
-        if network_tariff_type == 'Small Business - Opt in Demand' :
+        # if network_tariff_type == 'Small Business - Opt in Demand' :
+        if 'Demand' in network_tariff_type:
             # Need a separate time loop to calculate demand charges since the max kVA values are entered into the df 'retrospectively'
             for time in time_periods:
                 demand_payment = df_participant_max_monthly_demand.loc[time, p.get_id()] * demand_charge
@@ -409,13 +410,14 @@ def simulate(time_periods, mynetwork, my_tariffs, results, status_callback=None)
 
             # Controlled Load and Flat Tariffs ---------------
             # The controlled load tariffs and the flat tariff will be applied simply as the tariff times by the volume of electricity consumed, so the same calculation is applied.
-            if network_tariff_type == 'Controlled Load 1' or network_tariff_type == 'Controlled Load 2' or network_tariff_type == 'LV Small Business Anytime':
-                variable_tariff = my_tariffs.get_nuos_on_grid_import_variable(time, network_tariff_type)
-                results.set_participant_nuos_payments(time, p.get_id(), variable_tariff * external_grid_import)
+            # if network_tariff_type == 'Controlled Load 1' or network_tariff_type == 'Controlled Load 2' or network_tariff_type == 'LV Small Business Anytime':
+            #     variable_tariff = my_tariffs.get_nuos_on_grid_import_variable(time, network_tariff_type)
+            #     results.set_participant_nuos_payments(time, p.get_id(), variable_tariff * external_grid_import)
 
             # TOU Tariffs ---------------
             # The TOU tariffs will be applied by using if statements to determine whether peak/shoulder/off-peak
-            if network_tariff_type == 'LV TOU <100MWh' or network_tariff_type == 'LV Business TOU_Interval meter' or network_tariff_type == 'Small Business - Opt in Demand':
+            # if network_tariff_type == 'LV TOU <100MWh' or network_tariff_type == 'LV Business TOU_Interval meter' or network_tariff_type == 'Small Business - Opt in Demand':
+            if 'TOU' in network_tariff_type:
                 peak_charge, shoulder_charge, offpeak_charge, peak_start_time, peak_end_time, peak_start_time_2, peak_end_time_2, shoulder_start_time, shoulder_end_time, shoulder_start_time_2, shoulder_end_time_2, tou_weekday_only_flag, demand_charge = my_tariffs.get_nuos_on_grid_import_variable(time,network_tariff_type)
 
                 # If the TOU periods apply all days and not just weekdays then the flag will be zero
@@ -441,7 +443,8 @@ def simulate(time_periods, mynetwork, my_tariffs, results, status_callback=None)
                 results.set_participant_nuos_payments(time, p.get_id(), variable_tariff * external_grid_import)
             
             # Demand tariff includes TOU component which is handled above. In addition, the demand component is calculated for each participant
-            if network_tariff_type == 'Small Business - Opt in Demand' :
+            # if network_tariff_type == 'Small Business - Opt in Demand' :
+            if 'Demand' in network_tariff_type:
                 current_month = time.month
                 
                 # If it's a new month, then print the max demand value to the df at the max demand time, reset the max demand to zero and set the month to the new month.
@@ -465,7 +468,8 @@ def simulate(time_periods, mynetwork, my_tariffs, results, status_callback=None)
                     df_participant_max_monthly_demand.loc[max_demand_time, p.get_id()] = max_demand * (60/TIME_PERIOD_LENGTH_MINS)
         
         # After looping through all time periods for the current participant
-        if network_tariff_type == 'Small Business - Opt in Demand' :
+        # if network_tariff_type == 'Small Business - Opt in Demand' :
+        if 'Demand' in network_tariff_type:
             # Need a separate time loop to calculate demand charges since the max kVA values are entered into the df 'retrospectively'
             for time in time_periods:
                 demand_payment = df_participant_max_monthly_demand.loc[time, p.get_id()] * demand_charge

@@ -1,0 +1,2 @@
+scenario,pv_filename,load_folder,arrangement,pv_cap_id,pv_capex_scaleable,cp,all_residents,parent,network_tariff,en_capex_id,a_term,a_rate,pv_scaleable,pv_kW_peak,notes
+1,ceem_ui_default.csv,ceem_ui_default,en_pv,W_max_yield,FALSE,TIDNULL,STC_20,EA305_TOU12,EA305,capex_med,20,0.06,FALSE,,

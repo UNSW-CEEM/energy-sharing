@@ -6,8 +6,8 @@ class Results:
     def __init__(self, time_periods, participant_ids):
         # Make empty df to store energy calcs
 
-        print(type(participant_ids))
-        print(time_periods)
+        # print(type(participant_ids))
+        # print(time_periods)
         self.energy_output = {
             "df_net_export" : pd.DataFrame(0,index = time_periods, columns=[p for p in participant_ids]),
             "df_network_energy_flows" : pd.DataFrame(0,index = time_periods, columns=['net_participant_export', 'central_battery_export', 'unallocated_local_solar', 'unallocated_central_battery_load','gross_participant_grid_import','gross_participant_local_solar_import','gross_participant_central_battery_import']),
@@ -44,10 +44,10 @@ class Results:
     def to_csv(self, output_dir, info_tag):
         info_tag = str(info_tag)
         for label in self.financial_output:
-            print(label)
+            # print(label)
             self.financial_output[label].to_csv(path_or_buf=os.path.join(output_dir, label+info_tag+".csv"))
         for label in self.energy_output:
-            print(label)
+            # print(label)
             self.energy_output[label].to_csv(path_or_buf=os.path.join(output_dir, label+info_tag+".csv"))
 
 

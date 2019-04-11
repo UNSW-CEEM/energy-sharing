@@ -59,11 +59,13 @@ class Parameters:
         # Legacy Stuff.
         self.time_periods = None
 
+        self.ui_inputs = None
+
     def load(self, ui_inputs):
         load_functions = [
             self.load_model_selection,
             self.load_network_name,
-            self.load_central_battery,
+            self.load_central_services,
             self.load_tariffs,
             self.load_participants,
             self.load_data_sources,
@@ -71,11 +73,17 @@ class Parameters:
 
         for each in load_functions:
             each(ui_inputs)
+        self.ui_inputs = ui_inputs
 
-    def load_defaults(self):
-        # Populate default participants from the CSV.
-        self.ui_tariffs.load_defaults()
-        self.ui_participants.load_defaults()
+    # def load_defaults(self):
+    #     # Populate default participants from the CSV.
+    #     self.ui_tariffs.load_defaults()
+    #     self.ui_participants.load_defaults()
+
+    #     # This is temporary.
+    #     start = datetime.datetime(year=2017, month=2, day=26, hour=10)
+    #     end = datetime.datetime(year=2017, month=2, day=26, hour=12)
+    #     self.time_periods = util.generate_dates_in_range(start, end, 30)
 
     def load_model_selection(self, ui_inputs):
         key = "model_selection"
@@ -92,15 +100,17 @@ class Parameters:
         if key in ui_inputs:
             self.network_name = ui_inputs[key]
 
-    def load_central_battery(self, ui_inputs):
-        key = "central_battery"
+    def load_central_services(self, ui_inputs):
+        key = "central_services"
         if key in ui_inputs:
+            print(ui_inputs[key])
             self.ui_central_battery.load(ui_inputs[key])
 
     def load_tariffs(self, ui_inputs):
-        key = "model_tariffs"
-        if key in ui_inputs:
-            self.ui_tariffs.load(ui_inputs[key])
+        # key = "model_tariffs"
+        # if key in ui_inputs:
+        #     self.ui_tariffs.load(ui_inputs[key])
+        self.ui_tariffs = ui_inputs['tariffs'] #This just grabs the new tariffs object from the ui inputs
 
     def load_participants(self, ui_inputs):
         key = "model_participants"
@@ -112,6 +122,12 @@ class Parameters:
         if key in ui_inputs:
             start, end = self.find_time_periods(ui_inputs[key])
             self.time_periods = util.generate_dates_in_range(start, end, 30)
+
+    # def load_central_solar(self, ui_inputs):
+    #     key = "model_solar"
+    #     if key in ui_inputs:
+    #         print("Called load_central_solar")
+    #         # self.ui_participants.add_participant(ui_inputs[key])
 
     def print(self):
         print("Model Type: ", self.model_type)
@@ -126,23 +142,21 @@ class Parameters:
         self.model_network = Luomi_Network(self.network_name)
 
         # Need to add participants into model
+        
         participants_string = self.ui_participants.get_participants_as_string()
-        self.model_network.add_participants_from_string(self.data_dir, participants_string)
+        
+        self.model_network.add_participants_from_string(self.data_dir, self.ui_inputs['model_data_sources']['selected_load_file'], self.ui_inputs['model_data_sources']['selected_solar_file'], participants_string)
 
         # Create a central battery from the ui_central_battery.
         self.model_central_battery = Luomi_Central_Battery(**self.ui_central_battery.get_params_dict())
         # Add the central battery to the network
         self.model_network.add_central_battery(self.model_central_battery)
-        tariffs_dict = self.ui_tariffs.get_tariffs_dict()
+        
+        # tariffs_dict = self.ui_tariffs.get_tariffs_dict()
+        
+        # self.model_tariffs = Luomi_Tariffs(**tariffs_dict)
 
-        # print(tariffs_dict)
-        self.model_tariffs = Luomi_Tariffs(**tariffs_dict)
-
-        # TODO Remove these/come up with a new system later
-        # start = datetime.datetime(year=2017, month=2, day=26, hour=10)
-        # end = datetime.datetime(year=2017, month=2, day=26, hour=12)
-        #
-        # self.time_periods = util.generate_dates_in_range(start, end, 30)
+        self.model_tariffs = Luomi_Tariffs(self.ui_tariffs)
 
         print("Made LUOMI Objects without error")
 
@@ -164,16 +178,19 @@ class Parameters:
             return self.run_luomi_model(status)
 
     def run_luomi_model(self, status):
-        bc = self.ui_central_battery.get_capacity()
-        print("RUN_LUOMI_TIME_PERIODS", self.time_periods)
+        # bc = self.ui_central_battery.get_capacity()
+        
+        info_tag = ""
+        # print("RUN_LUOMI_TIME_PERIODS", self.time_periods)
         self.model_results = Results(self.time_periods, [p.get_id() for p in self.model_network.get_participants()])
         energy_sim.simulate(self.time_periods, self.model_network, self.model_tariffs, self.model_results, status)
         financial_sim.simulate(self.time_periods, self.model_network, self.model_tariffs, self.model_results, status)
-        self.model_results.to_csv(self.luomi_output_dir, info_tag=bc)
+        self.model_results.to_csv(self.luomi_output_dir, info_tag=info_tag)
 
-        parsed_results = self.ui_results_parser.luomi_temp_parser(bc)
-
+        parsed_results = self.ui_results_parser.luomi_temp_parser(info_tag)
+        
         return parsed_results
+    
 
     def run_mike_model(self, status):
         status("Attempting Mike Model")

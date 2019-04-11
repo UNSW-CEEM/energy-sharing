@@ -15,7 +15,7 @@ IMPORTANT: Do NOT post this list to the issue-tracker. Use it as a basis for
            yourself tracking down the missing module. Thanks!
 
 missing module named pyimod03_importers - imported by /usr/local/lib/python3.7/site-packages/PyInstaller/loader/rthooks/pyi_rth_pkgres.py (top-level)
-missing module named 'pkg_resources.extern.pyparsing' - imported by pkg_resources._vendor.packaging.requirements (top-level), pkg_resources._vendor.packaging.markers (top-level)
+missing module named 'pkg_resources.extern.pyparsing' - imported by pkg_resources._vendor.packaging.markers (top-level), pkg_resources._vendor.packaging.requirements (top-level)
 missing module named __builtin__ - imported by werkzeug._compat (optional), pandas.compat (optional), numpy.core.numerictypes (conditional), numpy.core.numeric (conditional), numpy.lib.function_base (conditional), numpy.lib._iotools (conditional), numpy.ma.core (conditional), numpy.distutils.misc_util (delayed, conditional), numpy (conditional), pyparsing (conditional), pkg_resources._vendor.pyparsing (conditional), setuptools._vendor.pyparsing (conditional)
 missing module named ordereddict - imported by pyparsing (optional), pkg_resources._vendor.pyparsing (optional), setuptools._vendor.pyparsing (optional)
 missing module named 'win32com.shell' - imported by pkg_resources._vendor.appdirs (conditional, optional)
@@ -54,7 +54,7 @@ missing module named multiprocessing.TimeoutError - imported by multiprocessing 
 missing module named multiprocessing.get_context - imported by multiprocessing (top-level), multiprocessing.pool (top-level), multiprocessing.managers (top-level), multiprocessing.sharedctypes (top-level), /Users/lukemarshall/Projects/energy-sharing/Flask/run-dev.py (top-level)
 missing module named multiprocessing.get_start_method - imported by multiprocessing (top-level), multiprocessing.spawn (top-level), /Users/lukemarshall/Projects/energy-sharing/Flask/run-dev.py (top-level)
 missing module named multiprocessing.set_start_method - imported by multiprocessing (top-level), multiprocessing.spawn (top-level), /Users/lukemarshall/Projects/energy-sharing/Flask/run-dev.py (top-level)
-missing module named 'org.python' - imported by pickle (optional), setuptools.sandbox (conditional), /Users/lukemarshall/Projects/energy-sharing/Flask/run-dev.py (top-level), xml.sax (delayed, conditional)
+missing module named org - imported by pickle (optional), /Users/lukemarshall/Projects/energy-sharing/Flask/run-dev.py (top-level)
 excluded module named _frozen_importlib - imported by importlib (optional), importlib.abc (optional), /Users/lukemarshall/Projects/energy-sharing/Flask/run-dev.py (top-level)
 missing module named _frozen_importlib_external - imported by importlib._bootstrap (delayed), importlib (optional), importlib.abc (optional), /Users/lukemarshall/Projects/energy-sharing/Flask/run-dev.py (top-level)
 missing module named _winreg - imported by platform (delayed, optional), werkzeug.debug (delayed, optional), numpy.distutils.cpuinfo (delayed, conditional, optional), pendulum.tz.local_timezone (optional), /Users/lukemarshall/Projects/energy-sharing/Flask/run-dev.py (top-level), pkg_resources._vendor.appdirs (delayed, conditional)
@@ -68,7 +68,7 @@ missing module named urllib.pathname2url - imported by urllib (conditional), pan
 missing module named urllib.urlencode - imported by urllib (conditional), pandas.io.common (conditional)
 missing module named urllib.quote - imported by urllib (optional), jinja2._compat (optional)
 missing module named nt - imported by os (conditional, optional), ntpath (conditional, optional), shutil (conditional), pathlib (conditional), /Users/lukemarshall/Projects/energy-sharing/Flask/run-dev.py (top-level)
-missing module named org - imported by copy (optional), /Users/lukemarshall/Projects/energy-sharing/Flask/run-dev.py (top-level)
+missing module named 'org.python' - imported by copy (optional), setuptools.sandbox (conditional), /Users/lukemarshall/Projects/energy-sharing/Flask/run-dev.py (top-level), xml.sax (delayed, conditional)
 missing module named typing_extensions - imported by tornado.ioloop (conditional), tornado.websocket (conditional), /Users/lukemarshall/Projects/energy-sharing/Flask/run-dev.py (top-level)
 missing module named StringIO - imported by six (conditional), werkzeug._compat (conditional), pandas.compat (optional), setuptools._vendor.six (conditional), numpy.lib.utils (delayed, conditional), numpy.lib.format (delayed, conditional), numpy.testing._private.utils (conditional), /Users/lukemarshall/Projects/energy-sharing/Flask/run-dev.py (top-level), pkg_resources._vendor.six (conditional)
 missing module named contextmanager - imported by dateutil.tz.tz (optional)

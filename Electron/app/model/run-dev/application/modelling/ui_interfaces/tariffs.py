@@ -44,34 +44,35 @@ class Tariffs:
             mapped_type = mapping[parameters["tariff_type"]]
             array = mapped_type["array"]
             tariff = mapped_type["tariff"]
-
+            print(parameters["tariff_type"])
+            print(parameters)
             array.append(tariff(**parameters))
 
         if debug_print:
             for each in self.duos_tariffs:
                 each.print()
 
-    def load_defaults(self, debug_print=False):
-        self.reset_all_tariffs()
+    # def load_defaults(self, debug_print=False):
+    #     self.reset_all_tariffs()
 
-        duos_path = os.path.join(self.luomi_defaults_dir, DUOS_NAME)
-        nuos_path = os.path.join(self.luomi_defaults_dir, NUOS_NAME)
-        tuos_path = os.path.join(self.luomi_defaults_dir, TUOS_NAME)
-        retail_path = os.path.join(self.luomi_defaults_dir, RETAIL_NAME)
+    #     duos_path = os.path.join(self.luomi_defaults_dir, DUOS_NAME)
+    #     nuos_path = os.path.join(self.luomi_defaults_dir, NUOS_NAME)
+    #     tuos_path = os.path.join(self.luomi_defaults_dir, TUOS_NAME)
+    #     retail_path = os.path.join(self.luomi_defaults_dir, RETAIL_NAME)
 
-        mapping = [
-            {'path': duos_path, 'array': self.duos_tariffs, 'tariff': DuosTariff},
-            {'path': nuos_path, 'array': self.nuos_tariffs, 'tariff': NuosTariff},
-            {'path': tuos_path, 'array': self.tuos_tariffs, 'tariff': TuosTariff},
-            {'path': retail_path, 'array': self.retail_tariffs, 'tariff': RetailTariff},
-        ]
+    #     mapping = [
+    #         {'path': duos_path, 'array': self.duos_tariffs, 'tariff': DuosTariff},
+    #         {'path': nuos_path, 'array': self.nuos_tariffs, 'tariff': NuosTariff},
+    #         {'path': tuos_path, 'array': self.tuos_tariffs, 'tariff': TuosTariff},
+    #         {'path': retail_path, 'array': self.retail_tariffs, 'tariff': RetailTariff},
+    #     ]
 
-        for each in mapping:
-            self.load_tariff_from_csv(**each)
+    #     for each in mapping:
+    #         self.load_tariff_from_csv(**each)
 
-        if debug_print:
-            for each in self.duos_tariffs:
-                each.print()
+    #     if debug_print:
+    #         for each in self.duos_tariffs:
+    #             each.print()
 
     @staticmethod
     def load_tariff_from_csv(path, array, tariff):
@@ -84,13 +85,13 @@ class Tariffs:
     def get_tariffs_dict(self):
         # Create the params dict here. Similar to in central battery
         # TODO Figure out a nice way to do scheme name
-
+        
         duos_string = self.array_to_string_buffer(self.duos_tariffs)
         nuos_string = self.array_to_string_buffer(self.nuos_tariffs)
         tuos_string = self.array_to_string_buffer(self.tuos_tariffs)
         retail_string = self.array_to_string_buffer(self.retail_tariffs)
         # ui_tariff_string = self.array_to_string_buffer(self.duos_tariffs)
-
+        print("TARIFF LOOK AT ME", self.retail_tariffs)
         results = {
             "scheme_name": "Scheme Name",
             "duos_data_path": duos_string,
@@ -194,6 +195,11 @@ class DuosTariff:
                 demand_units='',
                 tou_weekday_only_flag=''):
 
+        # print("========== ==== = = = Creating DUOS Triff - tariff_name:", tariff_name, "offer_name", offer_name, "tariff_type", tariff_type)
+        if offer_name == '':
+            offer_name = tariff_name
+
+
         self.peak_charge = peak_charge
         self.shoulder_charge = shoulder_charge
         self.offpeak_charge = offpeak_charge
@@ -260,6 +266,8 @@ class NuosTariff:
                 central_battery_import='',
                 central_battery_local_solar_import=''):
 
+        
+
         self.peak_charge = peak_charge
         self.shoulder_charge = shoulder_charge
         self.offpeak_charge = offpeak_charge
@@ -268,7 +276,7 @@ class NuosTariff:
         self.fit_input = fit_input
         self.ref = ref
         self.dnsp = dnsp
-        self.offer_name = offer_name
+        self.offer_name = tariff_name
         self.type = type
         self.daily_charge = daily_charge
         self.flat_charge = flat_charge
@@ -334,7 +342,7 @@ class TuosTariff:
         self.fit_input = fit_input
         self.ref = ref
         self.dnsp = dnsp
-        self.offer_name = offer_name
+        self.offer_name = tariff_name
         self.type = type
         self.daily_charge = daily_charge
         self.flat_charge = flat_charge
@@ -390,6 +398,7 @@ class RetailTariff:
                  solar_cap_1='',
                  solar_tariff_2='',
                  tou_weekday_only_flag=''):
+        print("Creating Retail Tariff Object:", tariff_name)
 
         self.peak_charge = peak_charge
         self.shoulder_charge = shoulder_charge
@@ -399,7 +408,7 @@ class RetailTariff:
         self.fit_input = fit_input
         self.ref = ref
         self.retailer = retailer
-        self.offer_name = offer_name
+        self.offer_name = tariff_name
         self.type = type
         self.daily_charge = daily_charge
         self.flat_charge = flat_charge

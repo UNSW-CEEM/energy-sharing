@@ -2,7 +2,7 @@
 
 block_cipher = None
 
-include_folders = [('application','application'),('uploads','uploads')]
+include_folders = [('application','application')]
 
 a = Analysis(['run-dev.py'],
              pathex=['/Users/lukemarshall/Projects/energy-sharing/Flask'],

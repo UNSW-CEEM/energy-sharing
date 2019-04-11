@@ -1,6 +1,7 @@
 import os
 import csv
 import pandas as pd
+import pendulum
 
 import application.folder_routes as folder_routes
 from application.folder_routes import FolderRoutes
@@ -65,9 +66,9 @@ class OSFileService(FileService):
 
     def update_files_lists(self):
         self.solar_files = [f for f in os.listdir(self.solar_data_save_path) if
-                            os.path.isfile(os.path.join(self.solar_path, f))]
+                            os.path.isfile(os.path.join(self.solar_path, f)) and 'csv' in f]
         self.load_files = [f for f in os.listdir(self.load_data_save_path) if
-                           os.path.isfile(os.path.join(self.load_path, f))]
+                           os.path.isfile(os.path.join(self.load_path, f)) and 'csv' in f]
         self.p_config_files = [f for f in os.listdir(self.p_config_path)
                                if os.path.isfile(os.path.join(self.p_config_path, f))]
 
@@ -94,6 +95,43 @@ class OSFileService(FileService):
         self.update_files_lists()
         return self.load_files
 
+    def list_solar_start_end(self):
+        self.update_files_lists()
+        output = {}
+        for solar_filename in self.solar_files:
+            path = os.path.join(self.solar_path, solar_filename)
+            with open(path) as f:
+                reader = csv.DictReader(f)
+                for idx, line in enumerate(reader):
+                    if idx == 0:
+                        start_date = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm')).isoformat()
+                end_date = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm')).isoformat()
+            output[solar_filename] = {
+                'start_date': start_date,
+                'end_date':end_date
+            }
+        return output
+    
+    def list_load_start_end(self):
+        self.update_files_lists()
+        output = {}
+        for load_filename in self.load_files:
+            path = os.path.join(self.load_path, load_filename)
+            with open(path) as f:
+                reader = csv.DictReader(f)
+                for idx, line in enumerate(reader):
+                    if idx == 0:
+                        start_date = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm')).isoformat()
+                end_date = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm')).isoformat()
+            output[load_filename] = {
+                'start_date': start_date,
+                'end_date':end_date
+            }
+        return output
+                    
+                    
+
+
     def list_solar_profiles(self, solar_filename):
         solar_profiles = ""
         if solar_filename is not "":
@@ -111,6 +149,36 @@ class OSFileService(FileService):
                 load_profiles.pop(0)
 
         return load_profiles
+    
+    def get_solar_timeseries(self, solar_filename):
+        self.update_files_lists()
+        output = {}
+        path = os.path.join(self.solar_path, solar_filename)
+        with open(path) as f:
+            reader = csv.DictReader(f)
+            for line in reader:
+                time = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm')).timestamp() * 1000.0
+                for label in line:
+                    if not label =='timestamp':
+                        output[label] = [] if not label in output else output[label]
+                        dp = float(line[label])
+                        output[label].append([time, dp])
+        return output
+    
+    def get_load_timeseries(self, load_filename):
+        self.update_files_lists()
+        output = {}
+        path = os.path.join(self.load_path, load_filename)
+        with open(path) as f:
+            reader = csv.DictReader(f)
+            for line in reader:
+                time = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm')).timestamp() * 1000.0
+                for label in line:
+                    if not label =='timestamp':
+                        output[label] = [] if not label in output else output[label]
+                        dp = float(line[label])
+                        output[label].append([time, dp])
+        return output
 
     def save_config(self, page_name, config_filename, data, additional_headers):
         # print("Page Name: ", page_name,

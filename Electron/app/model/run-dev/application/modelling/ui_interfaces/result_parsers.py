@@ -133,7 +133,6 @@ class ResultParsers:
             "energy_gencon": energy_gencon,
             "energy_cc": energy_cc,
         }
-
         return results
 
     # 1 TPB - Total Participants Bill
@@ -151,7 +150,8 @@ class ResultParsers:
                     if key not in data_points:
                         data_points[key] = 0
                     else:
-                        data_points[key] += float(value)
+                        if value != "":
+                            data_points[key] += float(value)
 
         return data_points
 
