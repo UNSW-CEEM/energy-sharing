@@ -34,9 +34,6 @@ class MikeWrapper:
         self.network_name = 'Default_Network'
         self.network_type = 'embedded_network'
         self.data_dir = self.folder_routes.get_route('data_dir')
-        
-        
-        
 
         # UI Interface objects
         self.ui_participants = Ui_Participants(self.folder_routes)

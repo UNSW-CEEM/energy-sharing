@@ -3,7 +3,7 @@ from flask import Flask, Blueprint,render_template, request, send_file
 from flask_cors import CORS, cross_origin
 from flask_socketio import SocketIO, emit
 from .services import file_service
-from .modelling.ui_interfaces.parameters import Parameters as Ui_Parameters
+
 from .modelling.ui_interfaces.luomi import LuomiWrapper
 from .modelling.ui_interfaces.mike import MikeWrapper
 import os
@@ -213,18 +213,6 @@ def test_run_sim(params):
     status_callback("Running Test Model Interface")
     emit('status_channel',{'data':{'status':'running'}})
     
-    # print([key for key in params])
-    # print("Data Sources", params['model_data_sources'])
-    # print("Participants", params['model_participants'])
-    # Recreate the defaults between the requests while testing
-    # mp.load_defaults()
-
-    # Overwrite defaults with UI values.
-    # print("api/test_run_sim()",params)
-
-    # Old multi-purpose wrapper, thought of as a 'parameters' object.
-    # wrapper = Ui_Parameters()
-
     print("api/test_run_sim()",json.dumps(params, indent=1))
     model = params['model_selection']['model_type']
     print("api/test_run_sim()", model)
@@ -235,11 +223,11 @@ def test_run_sim(params):
         wrapper = MikeWrapper()
     else:
         raise Exception("Model was neither mike nor luomi: "+ str(model))
-    
-    
+
     wrapper.load(params)
     wrapper.create_objects()
     results = wrapper.run(status_callback)
+    print("api.test_run_sim()", "Mike Model Results", json.dumps(results, indent=1))
     emit('status_channel',{'data':{'status':'finished'}})
     emit('chart_results_channel', {"data": results})
     status_callback("Modelling Complete")
