@@ -118,7 +118,6 @@ def download_luomi():
         )
 
 
-
 @socketio.on('connect')
 def test_connect():
     print('Connection Attempted')
@@ -135,8 +134,6 @@ def test_disconnect():
     num_disconnects += 1
     status_callback('ERROR: Client was Disconnected')
     
-
-
 @socketio.on('exampleJSON')
 def test_example_json(this_json):
     print('JSON Parse Attempted')
@@ -227,7 +224,9 @@ def test_run_sim(params):
     wrapper.load(params)
     wrapper.create_objects()
     results = wrapper.run(status_callback)
-    print("api.test_run_sim()", "Mike Model Results", json.dumps(results, indent=1))
+
+    # print("api.test_run_sim()", "Model Results", json.dumps(results, indent=1))
+
     emit('status_channel',{'data':{'status':'finished'}})
     emit('chart_results_channel', {"data": results})
     status_callback("Modelling Complete")
