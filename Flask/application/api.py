@@ -4,6 +4,8 @@ from flask_cors import CORS, cross_origin
 from flask_socketio import SocketIO, emit
 from .services import file_service
 from .modelling.ui_interfaces.parameters import Parameters as Ui_Parameters
+from .modelling.ui_interfaces.luomi import LuomiWrapper
+from .modelling.ui_interfaces.mike import MikeWrapper
 import os
 import io
 import zipfile
@@ -219,12 +221,25 @@ def test_run_sim(params):
 
     # Overwrite defaults with UI values.
     # print("api/test_run_sim()",params)
-    print("api/test_run_sim()",json.dumps(params, indent=1))
 
-    mp = Ui_Parameters()
-    mp.load(params)
-    mp.create_objects()
-    results = mp.run(status_callback)
+    # Old multi-purpose wrapper, thought of as a 'parameters' object.
+    # wrapper = Ui_Parameters()
+
+    print("api/test_run_sim()",json.dumps(params, indent=1))
+    model = params['model_selection']['model_type']
+    print("api/test_run_sim()", model)
+    
+    if model == 'luomi':
+        wrapper = LuomiWrapper()
+    elif model == 'mike':
+        wrapper = MikeWrapper()
+    else:
+        raise Exception("Model was neither mike nor luomi: "+ str(model))
+    
+    
+    wrapper.load(params)
+    wrapper.create_objects()
+    results = wrapper.run(status_callback)
     emit('status_channel',{'data':{'status':'finished'}})
     emit('chart_results_channel', {"data": results})
     status_callback("Modelling Complete")

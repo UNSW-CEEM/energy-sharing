@@ -2,7 +2,6 @@
     <div class="sidebar-options">
         <h4>{{model}}</h4>
             <router-link class="myButton" v-for="routes in links" v-bind:key="routes.id" :to="`${routes.page}`">
-               
                 <span>
                     <font-awesome-icon class="fa-icon" v-bind:icon="routes.icon" />
                     {{ routes.text }}
