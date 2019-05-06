@@ -27,7 +27,7 @@ thread = None
 thread_lock = Lock()
 
 # Create a model parameters object and load up defaults.
-mp = Ui_Parameters()
+
 
 
 client_bp = Blueprint('client_app', __name__,
@@ -217,6 +217,7 @@ def test_run_sim(params):
     # mp.load_defaults()
 
     # Overwrite defaults with UI values.
+    mp = Ui_Parameters()
     mp.load(params)
     mp.create_objects()
     results = mp.run(status_callback)

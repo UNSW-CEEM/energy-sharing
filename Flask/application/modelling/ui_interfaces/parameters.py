@@ -158,7 +158,7 @@ class Parameters:
 
         self.model_tariffs = Luomi_Tariffs(self.ui_tariffs)
 
-        print("Made LUOMI Objects without error")
+        print("parameters.py/create_luomi_objects","Made LUOMI Objects without error")
 
     def create_mike_objects(self):
         # Create the main Study object
