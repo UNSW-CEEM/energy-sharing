@@ -110,8 +110,7 @@
         },
         mounted(){
             console.log('Mounting')
-            this.parse_simple_pages();
-            this.parse_all_table_pages();
+            
             this.parsed_parameters = this.get_params();
             console.log('Parsed Params',this.parsed_parameters)
             this.parsed = true;

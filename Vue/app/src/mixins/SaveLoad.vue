@@ -10,6 +10,8 @@
 
         methods: {
             get_params(){
+                this.parse_simple_pages();
+                this.parse_all_table_pages();
                 return this.parsed_parameters;
             },
             save_page_simple() {
