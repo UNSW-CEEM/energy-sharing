@@ -30,7 +30,6 @@
 
             links(){
 
-
                 return  [
                     {
                         id: 0,

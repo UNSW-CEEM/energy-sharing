@@ -54,21 +54,7 @@
                 </div>
                 
             </div>
-            <!-- <span class="input-line">
-                {{ input_data.model_dropdown.display_text }}
-                <SimpleDropdown
-                    v-model="input_data.model_dropdown.value"
-                    v-on:input="save_model_selection(input_data.model_dropdown.value)"
-                    :my_options="model_type_options"
-                    :my_placeholder="input_data.model_dropdown.placeholder"/>
-            </span>
-            <span class="input-line">
-                {{ input_data.network_dropdown.display_text }}
-                <SimpleDropdown
-                    v-model="input_data.network_dropdown.value"
-                    :my_options="input_data.selected_model_options"
-                    :my_placeholder="input_data.network_dropdown.placeholder"/>
-            </span> -->
+           
         </div>
     </div>
 </template>
@@ -114,21 +100,9 @@
                     },
                 },
 
-                network_options: {
-                    luomi: [
-                        "Embedded Network",
-                        "Peer to Peer Retail",
-                    ],
+                
 
-                    // mike: [
-                    //     "Apartment",
-                    // ]
-                },
-
-                model_type_options: [
-                    // "mike",
-                    "luomi",
-                ],
+               
             }
         },
 
