@@ -9,6 +9,7 @@ import io
 import zipfile
 import pathlib
 import pendulum
+import json
 
 
 file_service = file_service.OSFileService()
@@ -217,6 +218,9 @@ def test_run_sim(params):
     # mp.load_defaults()
 
     # Overwrite defaults with UI values.
+    # print("api/test_run_sim()",params)
+    print("api/test_run_sim()",json.dumps(params, indent=1))
+
     mp = Ui_Parameters()
     mp.load(params)
     mp.create_objects()

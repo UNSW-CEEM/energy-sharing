@@ -32,7 +32,13 @@
             parse_simple_pages() {
                 console.log("Parsing Simple Pages")
                 let select_data = this.$store.state.frontend_state["model_selection"];
-                if (select_data ) { this.parsed_parameters["model_selection"] = this.parse_selection_page(select_data)}
+                if (select_data ) { 
+                    // this.parsed_parameters["model_selection"] = this.parse_selection_page(select_data)
+                    this.parsed_parameters["model_selection"] = {
+                        model_type: select_data.selected_model,
+                        network_type:null,
+                    }
+                }
 
                 let central_services = this.$store.state.frontend_state["central_services"];
                 if (central_services) { this.parsed_parameters["central_services"] = central_services }

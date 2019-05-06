@@ -86,14 +86,10 @@ class Parameters:
     #     self.time_periods = util.generate_dates_in_range(start, end, 30)
 
     def load_model_selection(self, ui_inputs):
-        key = "model_selection"
-        if key in ui_inputs:
-            model_array = ui_inputs[key]
-            for each in model_array:
-                if each["name"] == "model_type":
-                    self.model_type = each["value"]
-                elif each["name"] == "network_type":
-                    self.network_type = each["value"]
+        if 'model_selection' in ui_inputs:
+            inputs = ui_inputs['model_selection']
+            self.model_type = inputs['model_type'] if 'model_type' in inputs else None
+            self.network_type = inputs['network_type'] if 'network_type' in inputs else None
 
     def load_network_name(self, ui_inputs):
         key = "network_name"
@@ -157,7 +153,7 @@ class Parameters:
         # self.model_tariffs = Luomi_Tariffs(**tariffs_dict)
 
         self.model_tariffs = Luomi_Tariffs(self.ui_tariffs)
-
+        
         print("parameters.py/create_luomi_objects","Made LUOMI Objects without error")
 
     def create_mike_objects(self):
