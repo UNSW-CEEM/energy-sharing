@@ -54,6 +54,11 @@ export default new Router({
             component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelParticipants.vue')
         },
         {
+            path: '/participants_mike',
+            name: 'participants',
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelParticipantsMike.vue')
+        },
+        {
             path: '/review',
             name: 'review',
             component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelReview.vue')
@@ -67,6 +72,11 @@ export default new Router({
             path: '/tariffs',
             name: 'tariffs',
             component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelTariffs.vue')
+        },
+        {
+            path: '/tariffs_mike',
+            name: 'tariffs',
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelTariffsMike.vue')
         },
        
     ]

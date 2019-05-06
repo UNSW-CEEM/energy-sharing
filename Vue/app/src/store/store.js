@@ -35,14 +35,15 @@ export const store = new Vuex.Store({
     },
 
     state: {
-
+        model:"luomi"
     },
 
     getters: {
-
     },
     mutations: {
-
+        model(state, model){
+            state.model = model;
+        }
     },
 });
 

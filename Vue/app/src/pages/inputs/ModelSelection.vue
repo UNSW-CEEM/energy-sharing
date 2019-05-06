@@ -23,7 +23,7 @@
                 <div class="selected" v-if="input_data.selected_model=='luomi'">
                     Selected ✓
                 </div>
-                <div v-else class="not-selected" v-on:click="input_data.selected_model='luomi'">
+                <div v-else class="not-selected" v-on:click="select_model('luomi')">
                     Select
                 </div>
                 
@@ -49,7 +49,7 @@
                 <div class="selected" v-if="input_data.selected_model=='mike'">
                     Selected ✓
                 </div>
-                <div v-else class="not-selected" v-on:click="input_data.selected_model='mike'">
+                <div v-else class="not-selected" v-on:click="select_model('mike')">
                     Select
                 </div>
                 
@@ -141,21 +141,25 @@
         },
 
         methods: {
-            // frontend "global"ish variable. Set in the store. May be used for hiding financing page.
-            save_model_selection(selection) {
-                this.input_data.selected_model_options = this.network_options[selection];
-
-                if (this.input_data.network_dropdown.value === "") {
-                    this.input_data.network_dropdown.value = this.input_data.selected_model_options[0]
-                }
-
-                let payload = {
-                    model_page_name: "selected_model",
-                    data: selection
-                };
-
-                this.$store.commit('save_page', payload)
+            select_model(model){
+                this.input_data.selected_model= model;
+                this.$store.commit('model', model)
             },
+            // frontend "global"ish variable. Set in the store. May be used for hiding financing page.
+            // save_model_selection(selection) {
+            //     this.input_data.selected_model_options = this.network_options[selection];
+
+            //     if (this.input_data.network_dropdown.value === "") {
+            //         this.input_data.network_dropdown.value = this.input_data.selected_model_options[0]
+            //     }
+
+            //     let payload = {
+            //         model_page_name: "selected_model",
+            //         data: selection
+            //     };
+
+            //     this.$store.commit('save_page', payload)
+            // },
         }
     }
 </script>

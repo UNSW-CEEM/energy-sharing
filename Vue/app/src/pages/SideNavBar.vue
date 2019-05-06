@@ -1,22 +1,37 @@
 <template>
     <div class="sidebar-options">
-        <!-- <h2>Inputs</h2> -->
+        <h4>{{model}}</h4>
             <router-link class="myButton" v-for="routes in links" v-bind:key="routes.id" :to="`${routes.page}`">
-            <span>
-                <font-awesome-icon class="fa-icon" v-bind:icon="routes.icon" />
-                {{ routes.text }}
-            </span>
+               
+                <span>
+                    <font-awesome-icon class="fa-icon" v-bind:icon="routes.icon" />
+                    {{ routes.text }}
+                </span>
             </router-link>
     </div>
 </template>
 
 <script>
+    import { mapState } from 'vuex'
     export default {
         name: "SideNavBar",
         data () {
             return {
                 // TODO I think these links should be moved to the state. And retrieved from there.
-                links: [
+                
+            }
+        },
+
+        computed: {
+
+            model(){
+                return this.$store.state.model;
+            },
+
+            links(){
+
+
+                return  [
                     {
                         id: 0,
                         text: 'Model',
@@ -41,13 +56,13 @@
                     {
                         id: 3,
                         text: 'Participants',
-                        page: '/participants',
+                        page: this.model =="luomi" ? '/participants': '/participants_mike',
                         storage_key: "participants",
                         icon:"user"
                     },{
                         id: 4,
                         text: 'Tariffs',
-                        page: '/tariffs',
+                        page: this.model =="luomi" ? '/tariffs' : '/tariffs_mike',
                         storage_key: "tariffs",
                         icon:"exchange-alt"
                     },{
