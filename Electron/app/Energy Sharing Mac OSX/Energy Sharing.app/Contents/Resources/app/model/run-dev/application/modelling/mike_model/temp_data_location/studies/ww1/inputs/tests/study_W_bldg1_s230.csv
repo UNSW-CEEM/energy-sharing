@@ -1,2 +1,0 @@
-scenario,pv_filename,load_folder,arrangement,pv_cap_id,cp,all_residents,parent,network_tariff,en_capex_id,a_term,a_rate,output_types
-230,W_max_pv.csv,W,btm_i_c,W_max_pv,EASO_TOU_15pc,EASO_TOU_15pc,TIDNULL,EA305,,5,0.06,log_timeseries_detailed
