@@ -120,7 +120,7 @@ class MikeWrapper:
     def run(self, status):
         print("mike.py/run()", "Attempting Mike Model Run")
         status("Attempting to run Mike Model")
-        # self.mike_model.run()
+        self.mike_model.run()
 
         print("mike.py/run()", "Finished Running Mike Model")
         status("Finished Running Mike Model. Parsing Results")

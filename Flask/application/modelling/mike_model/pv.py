@@ -21,6 +21,8 @@ class PVCollection():
     
     def scale(self, scaling_factor):
         """Allows scaling of PV data by a given factor. """
+        print("pv.py/PVCollection()/scale()", "Multiplying by", scaling_factor)
+        print("pv.py/PVCollection()/scale()", "Multiplying", self._data, "by", scaling_factor)
         self._data = self._data * scaling_factor
     
     def copy(self):

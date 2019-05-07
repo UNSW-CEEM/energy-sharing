@@ -24,16 +24,13 @@ class Scenario:
         self.label = self.study.name + '_' + "{:03}".format(int(self.name))
 
         # Copy all scenario parameters to allow for threading:
-        if use_threading == 'True':
-            with lock:
-                self.parameters = study.study_parameters.loc[self.name].copy()
-        else:
-            self.parameters = study.study_parameters.loc[self.name].copy()
+        self.parameters = study.study_parameters.copy()
+
         # --------------------------------------------
         # Set up network arrangement for this scenario
         # --------------------------------------------
         self.arrangement = self.parameters['arrangement']
-        self.pv_exists = not (self.parameters.isnull()['pv_filename']
+        self.pv_exists = not (self.parameters['pv_filename']== ''
                               or 'bau' in self.arrangement
                               or self.arrangement == 'en') \
                          and study.pv_exists
@@ -45,12 +42,12 @@ class Scenario:
         # -----------------------------------
         # Set up flags for logging timeseries
         # -----------------------------------
-        if 'output_types' in self.parameters.index:
-            if 'log_timeseries_detailed' in self.parameters.fillna('')['output_types']:
+        if 'output_types' in self.parameters:
+            if 'log_timeseries_detailed' in self.parameters['output_types']:
                 self.log_timeseries_detailed = True
             else:
                 self.log_timeseries_detailed = False
-            if 'log_timeseries_brief' in self.parameters.fillna('')['output_types']:
+            if 'log_timeseries_brief' in self.parameters['output_types']:
                 self.log_timeseries_brief = True
             else:
                 self.log_timeseries_brief = False
@@ -129,8 +126,7 @@ class Scenario:
                     logging.info('***************Exception!!! PV %s index does not align with load ', self.pvFile)
                     sys.exit("PV has bad timeseries")
                 # Scaleable PV has a 1kW generation input file scaled to array size:
-                self.pv_scaleable = ('pv_scaleable' in self.parameters.index) and \
-                                    self.parameters.fillna(False)['pv_scaleable']
+                self.pv_scaleable = ('pv_scaleable' in self.parameters) and (self.parameters['pv_scaleable'] == True)
                 if self.pv_scaleable:
                     self.pv_kW_peak = self.parameters['pv_kW_peak']
                     # self.pv = self.pv * self.pv_kW_peak
@@ -146,7 +142,7 @@ class Scenario:
         # Customer tariffs can be individually allocated, or can be fixed for all residents
         # if 'all residents' is present in scenario csv, it trumps individual customer tariffs
         # and is copied across (except for cp):
-        if 'all_residents' in self.parameters.index:
+        if 'all_residents' in self.parameters:
             if (self.parameters['all_residents'] == ''):
                 logging.info('Missing tariff data for all_residents in study csv')
             else:  # read tariff for each customer
@@ -161,8 +157,10 @@ class Scenario:
         # --------------------------------------------
         self.customers_with_tariffs = self.resident_list + ['parent']
         self.dnsp_tariff = self.parameters['network_tariff']
-        self.tariff_in_use = self.parameters[self.customers_with_tariffs]  # tariff ids for each customer
-        self.tariff_short_list = self.tariff_in_use.tolist() + [self.dnsp_tariff]  # list of tariffs in use
+        # self.tariff_in_use = self.parameters[self.customers_with_tariffs]  # tariff ids for each customer
+        self.tariff_in_use = {customer:self.parameters[customer] for customer in self.customers_with_tariffs}
+        # self.tariff_short_list = self.tariff_in_use.tolist() + [self.dnsp_tariff]  # list of tariffs in use
+        self.tariff_short_list = [self.tariff_in_use[customer] for customer in self.tariff_in_use] + [self.dnsp_tariff]  # list of tariffs in use
         self.tariff_short_list = list(set(self.tariff_short_list))  # drop duplicates
         for tariff_id in self.tariff_short_list:
 
@@ -202,7 +200,7 @@ class Scenario:
         # identify batteries for this scenario
         # ------------------------------------
         if self.arrangement != 'bau':
-            possible_batteries = [i for i in self.parameters.index if 'battery' in i]
+            possible_batteries = [i for i in self.parameters if 'battery' in i]
             # Central battery
             # ---------------
             if 'central_battery_id' in possible_batteries and 'central_battery_strategy' in possible_batteries:
@@ -210,7 +208,7 @@ class Scenario:
                 self.central_battery_strategy = self.parameters['central_battery_strategy']
                 self.has_central_battery = not pd.isnull(self.central_battery_id) and \
                                            not pd.isnull(self.central_battery_strategy)
-                if 'central_battery_capacity_kWh' in self.parameters.index:
+                if 'central_battery_capacity_kWh' in self.parameters:
                     if not pd.isnull(self.parameters['central_battery_capacity_kWh']):
                         self.central_battery_capacity_kWh = self.parameters['central_battery_capacity_kWh']
                     else:
@@ -233,7 +231,7 @@ class Scenario:
                 self.has_ind_batteries = 'none'
             # Battery capex to override values in battery_lookup.csv:
             # --------------------------------------------------------
-            if 'battery_capex_per_kWh' in self.parameters.index:
+            if 'battery_capex_per_kWh' in self.parameters:
                 if not np.isnan(self.parameters['battery_capex_per_kWh']):
                     self.battery_capex_per_kWh = self.parameters['battery_capex_per_kWh']
                 else:
@@ -313,16 +311,15 @@ class Scenario:
 
             #  Option to use standard 1kW PV output and scale
             #  with pv_capex and inverter cost given as $/kW
-            self.pv_scaleable = ('pv_scaleable' in self.parameters.index) and \
-                                self.parameters.fillna(False)['pv_scaleable']
+            self.pv_scaleable = ('pv_scaleable' in self.parameters) and self.parameters['pv_scaleable']
             # pv capex is scaleable if pv is scaleable....
+            
             if self.pv_scaleable:
                 self.pv_capex_scaleable = True
             else:
                 self.pv_capex_scaleable = False
             # .... unless otherwise specified ....
-            if 'pv_capex_scaleable' in self.parameters.index:
-                if self.parameters.fillna('missing')['pv_capex_scaleable'] != 'missing':
+            if 'pv_capex_scaleable' in self.parameters and self.parameters['pv_capex_scaleable']:
                     self.pv_capex_scaleable = self.parameters['pv_capex_scaleable']
 
             if self.pv_capex_scaleable:

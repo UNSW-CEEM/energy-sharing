@@ -243,7 +243,7 @@ class Network(Customer):
 
         # CP battery
         # ----------
-        if 'cp_battery_id' in scenario.parameters.index and 'cp_battery_strategy' in scenario.parameters.index:
+        if 'cp_battery_id' in scenario.parameters and 'cp_battery_strategy' in scenario.parameters:
             if not pd.isnull(scenario.parameters['cp_battery_id']) and \
                     not pd.isnull(scenario.parameters['cp_battery_strategy']):
                 self.resident['cp'].has_battery = True
@@ -252,7 +252,7 @@ class Network(Customer):
                 scenario.has_ind_batteries = 'True'
                 cp_battery_capacity_kWh = 1
                 # Scalable battery:
-                if 'cp_battery_capacity_kWh' in scenario.parameters.index:
+                if 'cp_battery_capacity_kWh' in scenario.parameters:
                     if not pd.isnull(scenario.parameters['cp_battery_capacity_kWh']):
                         cp_battery_capacity_kWh = scenario.parameters['cp_battery_capacity_kWh']
                 # Initialise battery:
@@ -270,7 +270,7 @@ class Network(Customer):
         # ----------------------------------
         bat_name = 'all_battery_id'
         bat_strategy = 'all_battery_strategy'
-        if bat_name in scenario.parameters.index and bat_strategy in scenario.parameters.index and \
+        if bat_name in scenario.parameters and bat_strategy in scenario.parameters and \
                 not pd.isnull(scenario.parameters[bat_name]) and \
                 not pd.isnull(scenario.parameters[bat_strategy]):
             self.any_resident_has_battery = True
@@ -279,7 +279,7 @@ class Network(Customer):
             scenario.has_ind_batteries = 'True'
             all_battery_capacity_kWh = 1
             # Scalable batteries:
-            if 'all_battery_capacity_kWh' in scenario.parameters.index:
+            if 'all_battery_capacity_kWh' in scenario.parameters:
                 if not pd.isnull(scenario.parameters['all_battery_capacity_kWh']):
                     all_battery_capacity_kWh = scenario.parameters['all_battery_capacity_kWh']
             for c in self.households:
@@ -298,7 +298,7 @@ class Network(Customer):
                 bat_strategy = str(c) + '_battery_strategy'
                 bat_capacity = str(c) + '_battery_capacity_kWh'
                 battery_capacity_kWh = 1
-                if bat_name in scenario.parameters.index and bat_strategy in scenario.parameters.index:
+                if bat_name in scenario.parameters and bat_strategy in scenario.parameters:
                     if not pd.isnull(scenario.parameters[bat_name]) and \
                             not pd.isnull(scenario.parameters[bat_strategy]):
                         self.resident[c].has_battery = True
@@ -307,7 +307,7 @@ class Network(Customer):
                         self.battery_list.append(c)
                         scenario.has_ind_batteries = 'True'
                         # Scalable battery:
-                        if bat_capacity in scenario.parameters.index:
+                        if bat_capacity in scenario.parameters:
                             if not pd.isnull(scenario.parameters[bat_capacity]):
                                 battery_capacity_kWh = scenario.parameters[bat_capacity]
                     self.resident[c].battery = Battery(scenario=scenario,

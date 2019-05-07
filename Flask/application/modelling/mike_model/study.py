@@ -20,7 +20,6 @@ class Study:
                  base_path,
                  project,
                  study_name,
-                 
                  ):
         
         # --------------------------------
@@ -33,7 +32,9 @@ class Study:
 
         self.use_threading = False
 
+        
         # reference files
+        # We don't want to load this data on the fly from the UI at all - it's seemingly there to provide additional information
         # ---------------
         self.reference_path = os.path.join(self.base_path, 'reference')  # 'reference_TEST'
         self.input_path = os.path.join(self.project_path, 'inputs')
@@ -55,15 +56,41 @@ class Study:
         study_filename = 'study_' + study_name + '.csv'
         study_file = os.path.join(self.input_path, study_filename)
 
+
         # --------------------
         # read study scenarios
         # --------------------
-        self.study_parameters = pd.read_csv(study_file)
-        self.study_parameters.set_index('scenario', inplace=True)
-        self.scenario_list = [s for s in self.study_parameters.index if not pd.isnull(s)]
+
+        # Old version - read from file
+        # self.study_parameters = pd.read_csv(study_file)
+        # self.study_parameters.set_index('scenario', inplace=True)
+        # self.scenario_list = [s for s in self.study_parameters.index if not pd.isnull(s)]
+        
+        # New version so we can programatically tweak.
+        self.study_parameters ={
+            'scenario': 1,
+            'pv_filename':'ceem_ui_default.csv',
+            'load_folder': 'ceem_ui_default',
+            'arrangement':'en_pv',
+            'pv_cap_id': 'W_max_yield',
+            'pv_capex_scaleable':False,
+            'cp':'TIDNULL',
+            'all_residents':'STC_20',
+            'parent': 'EA305_TOU12',
+            'network_tariff':'EA305',
+            'en_capex_id':'capex_med',
+            'a_term':20,
+            'a_rate':0.06,
+            'pv_scaleable':False,
+            'pv_kW_peak':'',
+            'notes':''
+        }
+        self.scenario_list = [self.study_parameters['scenario']]
+        
         # Read list of output requirements and strip from df
 
-        if 'output_types' in self.study_parameters.columns:
+        # if 'output_types' in self.study_parameters.columns:
+        if 'output_types' in self.study_parameters:
             self.output_list = self.study_parameters['output_types'].dropna().tolist()
         else:
             self.output_list = []
@@ -71,7 +98,8 @@ class Study:
         # --------------------------
         #  read Daylight Savings Time
         # --------------------------
-        if 'dst' in self.study_parameters.columns:
+        # if 'dst' in self.study_parameters.columns:
+        if 'dst' in self.study_parameters:
             if self.study_parameters.isnull()['dst'].all():
                 self.dst = 'nsw'
             else:
@@ -150,13 +178,16 @@ class Study:
         # -------------------
         #  Identify load data
         # -------------------
-        if len(self.study_parameters['load_folder'].unique()) == 1:
-            self.different_loads = False  # Same load or set of loads for each scenario
-        else:
-            self.different_loads = True  # Different loads for each scenario
+        # Originally, could identify different loads for each scenario. 
+        # Now we're in one-scenario-land, so we just set self.different_loads to False.
+        self.different_loads = False
+        # if len(self.study_parameters['load_folder'].unique()) == 1:
+        #     self.different_loads = False  # Same load or set of loads for each scenario
+        # else:
+        #     self.different_loads = True  # Different loads for each scenario
 
-        self.load_path = os.path.join(self.base_path, 'load_profiles',
-                                      self.study_parameters.loc[self.study_parameters.index[0], 'load_folder'])
+        # self.load_path = os.path.join(self.base_path, 'load_profiles',self.study_parameters.loc[self.study_parameters.index[0], 'load_folder'])
+        self.load_path = os.path.join(self.base_path, 'load_profiles',self.study_parameters['load_folder'])
         self.load_list = os.listdir(self.load_path)
         if len(self.load_list) == 0:
             logging.info('***************** Load folder %s is empty *************************', self.load_path)
@@ -227,7 +258,8 @@ class Study:
         # ---------------------------------------------------------------
         # Initialise Tariff Look-up table and generate all static tariffs
         # ---------------------------------------------------------------
-        parameter_list = self.study_parameters.values.flatten().tolist()
+        # parameter_list = self.study_parameters.values.flatten().tolist()
+        parameter_list = [self.study_parameters[key] for key in self.study_parameters]
 
         self.tariff_data = TariffData(
             tariff_lookup_path=self.t_lookupFile,
