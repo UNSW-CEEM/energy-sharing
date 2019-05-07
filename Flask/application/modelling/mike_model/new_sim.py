@@ -22,13 +22,13 @@ class NewSim:
         self.base_dir = folder_routes.get_route("mike_base_dir")
         self.project = folder_routes.get_route("mike_project_name")
         self.study_name = folder_routes.get_route("mike_study_name")
-        self.dst_region = 'nsw'
-        self.override_output = 'False'
-        self.use_threading = False
-
+        print("new_sim.py/NewSim()/__init__", "Base Directory", self.base_dir)
+        print("new_sim.py/NewSim()/__init__", "Project Directory", self.project)
+        print("new_sim.py/NewSim()/__init__", "Study Name", self.study_name)
+        
         # print("\n\n It be working", self.base_dir, "\n", self.project, self.study_name)
 
-        self.study = Study(self.base_dir, self.project, self.study_name, self.dst_region, self.override_output, self.use_threading)
+        self.study = Study(self.base_dir, self.project, self.study_name)
 
     def run(self):
         for scenario in self.study.get_scenario_list():

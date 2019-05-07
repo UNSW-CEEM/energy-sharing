@@ -5,7 +5,7 @@ from .tariffs import Tariffs as Ui_Tariffs
 from .participants import Participants as Ui_Participants
 from .result_parsers import ResultParsers as Ui_Results_Parsers
 from application.folder_routes import FolderRoutes as FolderRoutes
-from .csv_helpers import create_csvs
+
 
 # Luomi Modules
 from ..luomi_model.network import Network as Luomi_Network
@@ -104,12 +104,9 @@ class LuomiWrapper:
             start, end = self.find_time_periods(ui_inputs[key])
             self.time_periods = util.generate_dates_in_range(start, end, 30)
 
-    def print(self):
-        print("Model Type: ", self.model_type)
 
     def create_objects(self):
-        
-        
+    
         self.model_network = Luomi_Network(self.network_name)
 
         # Need to add participants into model

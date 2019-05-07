@@ -20,9 +20,7 @@ class Study:
                  base_path,
                  project,
                  study_name,
-                 dst_region,
-                 override_output,
-                 use_threading=False,
+                 
                  ):
         
         # --------------------------------
@@ -33,7 +31,7 @@ class Study:
         self.name = study_name
         self.project_path = os.path.join(self.base_path, 'studies', project)
 
-        self.use_threading = use_threading
+        self.use_threading = False
 
         # reference files
         # ---------------
@@ -88,10 +86,12 @@ class Study:
         # -------------------
         # Set up output paths
         # -------------------
-        if override_output != 'False':
+        override_output = False
+        if override_output:
             self.output_path = override_output
         else:
             self.output_path = os.path.join(self.project_path, 'outputs')
+        
         os.makedirs(self.output_path, exist_ok=True)
         self.output_path = os.path.join(self.output_path, study_name)
         os.makedirs(self.output_path, exist_ok=True)
@@ -205,7 +205,7 @@ class Study:
             # load=self.load_profiles.profiles[self.load_list[0]],
             load=self.load_profiles.get_profile(self.load_list[0]).to_df(),
             dst_lookup=self.dst_lookup,
-            dst_region=dst_region)
+            dst_region='nsw')
 
         # Lists of meters / residents (includes cp)
         # -----------------------------------------

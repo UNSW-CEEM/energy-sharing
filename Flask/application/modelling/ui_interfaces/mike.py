@@ -5,7 +5,7 @@ from .tariffs import Tariffs as Ui_Tariffs
 from .participants import Participants as Ui_Participants
 from .result_parsers import ResultParsers as Ui_Results_Parsers
 from application.folder_routes import FolderRoutes as FolderRoutes
-from .csv_helpers import create_csvs
+# from .csv_helpers import create_csvs
 
 # Luomi Modules
 from ..luomi_model.network import Network as Luomi_Network
@@ -26,6 +26,7 @@ import json
 
 class MikeWrapper:
     def __init__(self):
+        
         # Folder Routes
         self.folder_routes = FolderRoutes()
 
@@ -93,7 +94,8 @@ class MikeWrapper:
         # key = "model_tariffs"
         # if key in ui_inputs:
         #     self.ui_tariffs.load(ui_inputs[key])
-        self.ui_tariffs = ui_inputs['tariffs'] #This just grabs the new tariffs object from the ui inputs
+        
+        self.ui_tariffs = ui_inputs['model_tariffs_mike'] if 'model_tariffs_mike' in ui_inputs else None #This just grabs the new tariffs object from the ui inputs
 
     def load_participants(self, ui_inputs):
         key = "model_participants"
@@ -113,32 +115,21 @@ class MikeWrapper:
         
         # Create the main Study object
         self.mike_model = NewSim(self.folder_routes)
-        # Create the CSV's from the standard objects.
-        create_csvs(self.ui_participants,
-                    self.ui_tariffs,
-                    self.ui_finances,
-                    self.ui_central_battery,
-                    self.ui_central_solar,
-                    self.folder_routes)
-
+       
 
     def run(self, status):
         print("mike.py/run()", "Attempting Mike Model Run")
         status("Attempting to run Mike Model")
-        self.mike_model.run()
+        # self.mike_model.run()
 
         print("mike.py/run()", "Finished Running Mike Model")
         status("Finished Running Mike Model. Parsing Results")
         parsed_results = self.ui_results_parser.mike_temp_parser()
 
+
         print("mike.py/run()", "Finished Parsing Results")
         status("Finished Parsing Results")
         return parsed_results
-
-
-
-
-        
 
     # Might move this later.
     def find_time_periods(self, frontend_data):
