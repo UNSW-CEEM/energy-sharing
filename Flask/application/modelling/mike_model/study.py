@@ -20,6 +20,8 @@ class Study:
                  base_path,
                  project,
                  study_name,
+                 pv_path, 
+                 load_path
                  ):
         
         # --------------------------------
@@ -135,10 +137,11 @@ class Study:
         # --------------
         #  Locate pv data
         # --------------
-        self.pv_path = os.path.join(self.base_path, 'pv_profiles')
+        # self.pv_path = os.path.join(self.base_path, 'pv_profiles')
+        self.pv_path = pv_path
         if os.path.exists(self.pv_path):
-            self.pv_list = os.listdir(self.pv_path)
-            if len(self.pv_list) > 0:
+            pv_list = os.listdir(self.pv_path)
+            if len(pv_list) > 0:
                 self.pv_exists = True
             else:
                 self.pv_exists = False
@@ -187,7 +190,8 @@ class Study:
         #     self.different_loads = True  # Different loads for each scenario
 
         # self.load_path = os.path.join(self.base_path, 'load_profiles',self.study_parameters.loc[self.study_parameters.index[0], 'load_folder'])
-        self.load_path = os.path.join(self.base_path, 'load_profiles',self.study_parameters['load_folder'])
+        # self.load_path = os.path.join(self.base_path, 'load_profiles', self.study_parameters['load_folder'])
+        self.load_path = load_path
         self.load_list = os.listdir(self.load_path)
         if len(self.load_list) == 0:
             logging.info('***************** Load folder %s is empty *************************', self.load_path)
