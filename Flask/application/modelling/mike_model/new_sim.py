@@ -36,8 +36,19 @@ class NewSim:
         print("new_sim.py/NewSim()/__init__", "Study Name", self.study_name)
         
         # print("\n\n It be working", self.base_dir, "\n", self.project, self.study_name)
+
+        participants = {
+            'Participant 1':{
+                'load':'profile_1',
+                'solar':'profile_1'
+            },
+            'Participant 2':{
+                'load':'profile_2',
+                'solar':'profile_2'
+            }
+        }
         
-        self.study = Study(base_path, self.project, self.study_name, pv_path, load_path)
+        self.study = Study(base_path, self.project, self.study_name, pv_path, load_path, participants)
         print("new_sim.py/NewSim()/__init__", "NewSim Created")
 
     def run(self):

@@ -21,7 +21,8 @@ class Study:
                  project,
                  study_name,
                  pv_path, 
-                 load_path
+                 load_path,
+                 participants
                  ):
         print("study.py/Study()/__init__()", "Starting Initialising Study Object")
         # --------------------------------
@@ -31,6 +32,7 @@ class Study:
         self.base_path = base_path
         self.name = study_name
         self.project_path = os.path.join(self.base_path, 'studies', project)
+        self._participants = participants
 
         # self.use_threading = False
 
@@ -173,21 +175,9 @@ class Study:
         # -------------------
         # Originally, could identify different loads for each scenario. 
         # Now we're in one-scenario-land, so we just set self.different_loads to False.
-        self.load_path = load_path
-       
-        # ---------------------------------------------
-        # If same loads throughout Study, get them now:
-        # ---------------------------------------------
-        self.load_profiles = LoadCollection()
-        temp_load = pd.read_csv(load_path,
-                                parse_dates=['timestamp'],
-                                dayfirst=True)
-        temp_load = temp_load.set_index('timestamp')
-        if 'cp' not in temp_load.columns:
-            temp_load['cp'] = 0
-        self.load_profiles.add_profile_from_df(temp_load, 'default')
+        self.load_profiles = self._generate_load_profiles(participants, load_path)
+        
 
-       
         # -----------------------------------------------------------------
         # Use first load profile to initialise timeseries and resident_list
         # -----------------------------------------------------------------
@@ -210,7 +200,7 @@ class Study:
         # 'default' here was once upon a time the filename within a folder of different profiles, where a profile had multiple loads. 
         temp_resident_list = self.load_profiles.get_profile('default').get_participant_names()
         self.resident_list = [str(resident) for resident in temp_resident_list]
-       
+        
         # ---------------------------------------------------------------
         # Initialise Tariff Look-up table and generate all static tariffs
         # ---------------------------------------------------------------
@@ -229,6 +219,52 @@ class Study:
         # -----------------------------
         self.op = pd.DataFrame(index=self.scenario_list)
         print("study.py/Study()/__init__()", "Finished Initialising Study Object")
+
+
+    def _generate_load_profiles(self, participants, load_path):
+        # ---------------------------------------------
+        # Get loads from data file.
+        # ---------------------------------------------
+        # Count the number of times each load profile is used
+        load_profile_counts = {participants[p]['load']:0 for p in participants}
+        for p in participants:
+            load_profile_counts[participants[p]['load']] += 1
+        
+        # Get the raw load data from the pandas dataframe. 
+        temp_load = pd.read_csv(load_path,
+                                parse_dates=['timestamp'],
+                                dayfirst=True)
+        temp_load = temp_load.set_index('timestamp')        
+        
+        # Associate the data with each load
+        for p in participants:
+            # If duplication required
+            load_key = participants[p]['load']
+            if load_profile_counts[load_key] > 1:
+                # create a new key with a _number appended
+                new_key = load_key+"_"+str(load_profile_counts[load_key])
+                # Duplicate the column with a _number appended
+                temp_load[new_key] = temp_load[load_key]
+                # Update participants dict.
+                participants[p]['load'] = new_key
+                # Decrement load profile counts by 1
+                load_profile_counts[load_key] -= 1
+        
+        # Remove any unused load columns
+        used_loads = [participants[p]['load'] for p in participants]
+        for load_key in temp_load.columns:
+            if (load_key not in used_loads) and (load_key != 'cp'):
+                temp_load = temp_load.drop(load_key, axis=1)
+
+        # Add 'cp' load if not present
+        if 'cp' not in temp_load.columns:
+            temp_load['cp'] = 0
+        
+        print("study.py/Study()/__init__()", temp_load)
+        # Create a LoadCollection() object to take care of the load profile.
+        load_profiles = LoadCollection()
+        load_profiles.add_profile_from_df(temp_load, 'default')
+        return load_profiles
 
     def log_study_data(self):
         """Saves study outputs and summary to .csv files."""
