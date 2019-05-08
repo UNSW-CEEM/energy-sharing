@@ -15,6 +15,7 @@ class PVCollectionFactory():
 class PVCollection():
     def __init__(self, pv_df):
         self._data = pv_df
+        # print("pv.py/PVCollection()/__init__() Initialising pv data", pv_df)
 
     def get_date_times(self):
         return [x for x in self._data.index]

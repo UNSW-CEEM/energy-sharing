@@ -70,9 +70,8 @@ class Study:
         # New version so we can programatically tweak.
         self.study_parameters ={
             'scenario': 1,
-            
-            'load_folder': 'ceem_ui_default',
-            'load_file': 'ceem_ui_default.csv',
+            # 'load_folder': 'ceem_ui_default',
+            # 'load_file': 'ceem_ui_default.csv',
             'arrangement':'en_pv',
             'pv_cap_id': 'W_max_yield',
             'pv_capex_scaleable':False,
@@ -111,8 +110,7 @@ class Study:
         temp_df = pd.read_csv(self.dst_file, index_col=[0])
         cols = temp_df.columns.tolist()
         self.dst_lookup = pd.read_csv(self.dst_file, index_col=[0], parse_dates=cols, dayfirst=True)
-        pass
-
+        
         # -------------------
         # Set up output paths
         # -------------------

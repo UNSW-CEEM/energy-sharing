@@ -82,7 +82,7 @@ class Scenario:
         #     # use first load profile in list to establish list of residents:
         #     # --------------------------------------------------------------
         #     templist = list(self.load_profiles.profiles[self.load_list[0]].columns.values)  # list of potential child meters - residents + cp
-        #     self.resident_list = []
+        #     self.study.resident_list = []
         #     for i in templist:
         #         if type(i) == 'str':
         #             self.resident_list += [i]
@@ -93,18 +93,18 @@ class Scenario:
         # -----------------------------------------------------------------
         self.load_profiles = LoadCollection()
         self.load_profiles.profiles = study.load_profiles.profiles.copy()
-        self.resident_list = study.resident_list.copy()  # includes cp
+        # self.resident_list = study.resident_list.copy()  # includes cp
         # self.load_list = study.load_list.copy()
 
-        self.households = [c for c in self.resident_list if c != 'cp']
+        self.households = [c for c in self.study.resident_list if c != 'cp']
         self.results = pd.DataFrame()
 
         # ---------------------------------
         # read PV profile for this scenario
         # ---------------------------------
         if not self.pv_exists:
-            # self.pv = pd.DataFrame(index=self.ts.get_date_times(), columns=self.resident_list).fillna(0)
-            self.pv = PVCollectionFactory().empty_collection(self.ts.get_date_times(), self.resident_list)
+            # self.pv = pd.DataFrame(index=self.ts.get_date_times(), columns=self.study.resident_list).fillna(0)
+            self.pv = PVCollectionFactory().empty_collection(self.ts.get_date_times(), self.study.resident_list)
         else:
             pvFile = study.pv_path
             if '.csv' not in pvFile:
@@ -132,8 +132,8 @@ class Scenario:
                     self.pv.scale(self.pv_kW_peak)
             if self.pv.get_aggregate_sum() == 0:
                 self.pv_exists = False
-                # self.pv = pd.DataFrame(index=pd.DatetimeIndex(data=self.ts.get_date_times()), columns=self.resident_list).fillna(0)
-                self.pv = PVCollectionFactory().empty_collection(self.ts.get_date_times(),self.resident_list)
+                # self.pv = pd.DataFrame(index=pd.DatetimeIndex(data=self.ts.get_date_times()), columns=self.study.resident_list).fillna(0)
+                self.pv = PVCollectionFactory().empty_collection(self.ts.get_date_times(),self.study.resident_list)
 
         # ---------------------------------------
         # Set up tariffs for this scenario
@@ -154,7 +154,7 @@ class Scenario:
         # --------------------------------------------
         # Create list of tariffs used in this scenario
         # --------------------------------------------
-        self.customers_with_tariffs = self.resident_list + ['parent']
+        self.customers_with_tariffs = self.study.resident_list + ['parent']
         self.dnsp_tariff = self.parameters['network_tariff']
         # self.tariff_in_use = self.parameters[self.customers_with_tariffs]  # tariff ids for each customer
         self.tariff_in_use = {customer:self.parameters[customer] for customer in self.customers_with_tariffs}
@@ -254,7 +254,7 @@ class Scenario:
                 # ------------------------------------
                 self.en_capex = study.en_capex.loc[self.en_cap_id, 'site_capex'] + \
                                 (study.en_capex.loc[self.en_cap_id, 'unit_capex'] *
-                                 len(self.resident_list))
+                                 len(self.study.resident_list))
             else:
                 # ----------------------------
                 # metering capex for units only
@@ -285,7 +285,7 @@ class Scenario:
                 # billing / opex for all units and cp:
                 # ------------------------------------
                 self.en_opex = study.en_capex.loc[self.en_cap_id, 'site_opex'] + \
-                               (study.en_capex.loc[self.en_cap_id, 'unit_opex'] * len(self.resident_list))
+                               (study.en_capex.loc[self.en_cap_id, 'unit_opex'] * len(self.study.resident_list))
             else:
                 # ------------------------------
                 # billing / opex for units only:
@@ -354,7 +354,7 @@ class Scenario:
         # ----------------------------------
         # Cashflows for individual residents
         # ----------------------------------
-        for c in net.resident_list:
+        for c in self.study.resident_list:
             net.resident[c].calc_cash_flow()
             net.receipts_from_residents += net.resident[c].energy_bill
             net.cum_resident_total_payments += net.resident[c].total_payment
@@ -447,11 +447,11 @@ class Scenario:
                        net.battery_cycles,
                        net.battery_SOH] + \
                       [net.resident['cp'].energy_bill / 100] + \
-                      [net.resident[c].energy_bill / 100 for c in net.resident_list if c != 'cp'] + \
+                      [net.resident[c].energy_bill / 100 for c in self.study.resident_list if c != 'cp'] + \
                       [net.resident['cp'].local_solar_bill / 100] + \
-                      [net.resident[c].local_solar_bill / 100 for c in net.resident_list if c != 'cp'] + \
+                      [net.resident[c].local_solar_bill / 100 for c in self.study.resident_list if c != 'cp'] + \
                       [net.resident['cp'].total_payment / 100] + \
-                      [net.resident[c].total_payment / 100 for c in net.resident_list if c != 'cp']
+                      [net.resident[c].total_payment / 100 for c in self.study.resident_list if c != 'cp']
 
         result_labels = ['total$_building_costs',
                          'checksum_total_payments$',
@@ -479,11 +479,11 @@ class Scenario:
                          'central_battery_cycles',
                          'central_battery_SOH'] + \
                         ['cust_bill_cp'] + \
-                        ['cust_bill_' + '%s' % r for r in net.resident_list if r != 'cp'] + \
+                        ['cust_bill_' + '%s' % r for r in self.study.resident_list if r != 'cp'] + \
                         ['cust_solar_bill_cp'] + \
-                        ['cust_solar_bill_' + '%s' % r for r in net.resident_list if r != 'cp'] + \
+                        ['cust_solar_bill_' + '%s' % r for r in self.study.resident_list if r != 'cp'] + \
                         ['cust_total$_cp'] + \
-                        ['cust_total$_' + '%s' % r for r in net.resident_list if r != 'cp']
+                        ['cust_total$_' + '%s' % r for r in self.study.resident_list if r != 'cp']
 
         self.results = self.results.append(pd.Series(result_list,
                                                      index=result_labels,
