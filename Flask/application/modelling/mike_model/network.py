@@ -17,8 +17,6 @@ class Network(Customer):
     In other scenarios, it has no meaning irw, just passes energy and $ between other players"""
 
     def __init__(self, scenario, study, timeseries):
-        # all residents plus cp
-        # self.study.resident_list = scenario.resident_list.copy()
         # just residents, not cp
         self.households = scenario.households.copy()
         # residents (inc cp) with batteries - initial state
@@ -42,9 +40,7 @@ class Network(Customer):
         # read load data
         # --------------
         self.load_name = load_name
-        # self.network_load = scenario.load_profiles.profiles[load_name].to_df()
         self.nl_profile = scenario.load_profiles.get_profile(load_name)
-        # self.network_load = scenario.dict_load_profiles.get_profile(load_name)
 
         # set eno load, cumulative load and generation to zero
         # ----------------------------------------------------
@@ -59,12 +55,10 @@ class Network(Customer):
         # initialise residents' loads
         # ---------------------------
         for c in self.study.resident_list:
-            # self.resident[c].initialise_customer_load(customer_load=np.array(self.network_load[c]).astype(np.float64))
             self.resident[c].initialise_customer_load(customer_load=np.array(self.nl_profile.get_load_data(c)).astype(np.float64))
 
         # Calculate total site load
         # --------------------------
-        # self.total_building_load = self.network_load.sum().sum()
         self.total_building_load = self.nl_profile.get_aggregate_sum()
 
         # Initialise cash totals
@@ -149,10 +143,7 @@ class Network(Customer):
         elif any(word in scenario.arrangement for word in ['btm_s_c', 'btm_p_c']):
             # For btm_s_c and btm_p_c, split pv between all residents INCLUDING CP according to INSTANTANEOUS load
             if self.pv.get_num_systems() != 1:
-                # self.pv.data['total'] = self.pv.data.sum(axis=1)
-                # self.pv.data = self.pv.data.loc[:, ['total']] # this is deleting every system other than total, right?
                 self.pv.aggregate_systems('total')
-            # self.pv.data.columns = ['total']
             system_name = self.pv.get_system_names()[0]
             self.rename_system(system_name, 'total')
             # LUKE
@@ -162,24 +153,18 @@ class Network(Customer):
             # Then multiplying pv by that fraction. 
             
             network_load_fractions = self.nl_profile.to_df().div(self.nl_profile.get_aggregate_data(), axis=0).fillna(1 / len(self.study.resident_list))
-            # self.pv.data =  network_load_fractions.multiply(self.pv.data.loc[:, 'total'], axis=0)
             self.pv.multiply_by_timeseries('total', network_load_fractions)
 
         elif any(word in scenario.arrangement for word in ['btm_s_u', 'btm_p_u']):
             # For btm_s_u and btm_p_u, split pv between all residents EXCLUDING CP according to INSTANTANEOUS  load
             if self.pv.get_num_systems() != 1:
-                # self.pv.data['total'] = self.pv.data.sum(axis=1)
-                # self.pv.data = self.pv.data.loc[:, ['total']]
                 self.pv.aggregate_systems('total')
-            # self.pv.data.columns = ['total']
             system_name = self.pv.get_system_names()[0]
             self.rename_system(system_name, 'total')
             # Get units only
             load_units_only = self.nl_profile.to_df().copy().drop('cp', axis=1)
             load_fractions = load_units_only.div(load_units_only.sum(axis=1), axis=0).fillna(1 / len(self.households))
-            # self.pv.data =load_fractions.multiply(self.pv.data.loc[:, 'total'], axis=0)
             self.pv.multiply_by_timeseries('total', load_fractions)
-            # self.pv.data['cp'] = 0
             self.pv.scale_system('cp', 0)
 
         elif 'bau' not in scenario.arrangement:
@@ -188,6 +173,7 @@ class Network(Customer):
             print('***************Exception!!! Invalid technical arrangement ', scenario.arrangement, ' for scenario ',
                   scenario.name)
             sys.exit("Invalid technical Arrangement")
+
 
         # HOLY GRAIL HERE
         # Add blank columns for all residents with no pv and for central
@@ -200,16 +186,9 @@ class Network(Customer):
         # Initialise all residents with their allocated PV generation
         # -----------------------------------------------------------
         for c in self.study.resident_list:
-            # self.resident[c].initialise_customer_pv(np.array(self.pv.data[c]).astype(np.float64))
             self.resident[c].initialise_customer_pv(np.array(self.pv.get_data(c)).astype(np.float64))
-        # self.initialise_customer_pv(np.array(self.pv.data['central']).astype(np.float64))
         self.initialise_customer_pv(np.array(self.pv.get_data('central')).astype(np.float64))
 
-        # # For diagnostics only
-        # pvpath = os.path.join(study.output_path, 'pv')
-        # os.makedirs(pvpath, exist_ok=True)
-        # pvFile = os.path.join(pvpath, self.name + '_pv_' + str(scenario.name) +'_' + scenario.arrangement + '.csv')
-        # um.df_to_csv(self.pv, pvFile)
 
     
     def initialiseAllBatteries(self, scenario):
@@ -584,17 +563,12 @@ class Network(Customer):
                                                               self.resident[c].generation)
                 self.sum_of_coincidences += self.resident[c].coincidence
             # ... for central PV:
-
-            # self.total_aggregated_coincidence = np.minimum(self.network_load.sum(axis=1),self.pv.data['central'] + self.total_discharge)
-            # self.total_aggregated_coincidence = np.minimum(self.network_load.sum(axis=1),pd.Series(self.pv.get_data('central')) + self.total_discharge)
             self.total_aggregated_coincidence = np.minimum(self.nl_profile.get_aggregate_data(), pd.Series(self.pv.get_data('central')) + self.total_discharge)
 
             if 'en_pv' in scenario.arrangement:
-                # self.self_consumption = np.sum(self.total_aggregated_coincidence) / self.pv.data.sum().sum() * 100
                 self.self_consumption = np.sum(self.total_aggregated_coincidence) / self.pv.get_aggregate_sum() * 100
                 self.self_sufficiency = np.sum(self.total_aggregated_coincidence) / self.total_building_load * 100
             else:
-                # self.self_consumption = np.sum(self.sum_of_coincidences) / self.pv.data.sum().sum() * 100
                 self.self_consumption = np.sum(self.sum_of_coincidences) / self.pv.get_aggregate_sum() * 100
                 self.self_sufficiency = np.sum(self.sum_of_coincidences) / self.total_building_load * 100
         else:
@@ -604,7 +578,6 @@ class Network(Customer):
         # 2) OLD VERSIONS - for checking. Same for non battery scenarios and for SS
         # -------------------------------------------------------------------------
         if scenario.pv_exists:
-            # self.self_consumption_OLD = 100 - (self.total_building_export / self.pv.data.sum().sum() * 100)
             self.self_consumption_OLD = 100 - (self.total_building_export / self.pv.get_aggregate_sum() * 100)
             self.self_sufficiency_OLD = 100 - (self.total_import / self.total_building_load * 100)
         else:
@@ -615,9 +588,7 @@ class Network(Customer):
         """Logs timeseries data for whole building to csv file."""
 
         timedata = pd.DataFrame(index=pd.DatetimeIndex(data=self.ts.get_date_times()))
-        # timedata['network_load'] = self.network_load.sum(axis=1)
         timedata['network_load'] = self.nl_profile.get_aggregate_data()
-        # timedata['pv_generation'] = self.pv.data.sum(axis=1)
         timedata['pv_generation'] = self.pv.get_aggregate_data()
         timedata['grid_import'] = self.imports
         timedata['grid_export'] = self.exports
@@ -629,14 +600,7 @@ class Network(Customer):
             timedata['battery_charge_kWh'] = self.battery.SOC_log * self.battery.capacity_kWh / 100
         if scenario.has_ind_batteries == 'True':
             timedata['ind_battery_SOC'] = self.cum_ind_bat_charge / self.tot_ind_bat_capacity * 100
-            # for c in self.study.resident_list:
-            #     bc1 = 'battery_'+c+'cycles'
-            #     bc2 = 'SOH_battery_'+c
-            #     bc3 = 'SOC_battery_'+c
-            #     if self.resident[c].has_battery:
-            #         timedata[bc1] = self.resident[c].battery.number_cycles
-            #         timedata[bc2] = self.resident[c].battery.SOH
-            #         timedata[bc3] = self.resident[c].battery.SOC_log
+       
 
         time_file = os.path.join(self.study.timeseries_path,
                                  self.scenario.label + '_' +

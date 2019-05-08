@@ -89,8 +89,6 @@ class Study:
         self.scenario_list = [self.study_parameters['scenario']]
         
         # Read list of output requirements and strip from df
-
-        # if 'output_types' in self.study_parameters.columns:
         if 'output_types' in self.study_parameters:
             self.output_list = self.study_parameters['output_types'].dropna().tolist()
         else:
@@ -99,7 +97,6 @@ class Study:
         # --------------------------
         #  read Daylight Savings Time
         # --------------------------
-        # if 'dst' in self.study_parameters.columns:
         if 'dst' in self.study_parameters:
             if self.study_parameters.isnull()['dst'].all():
                 self.dst = 'nsw'
@@ -135,7 +132,6 @@ class Study:
         # --------------
         #  Locate pv data
         # --------------
-        # self.pv_path = os.path.join(self.base_path, 'pv_profiles')
         self.pv_path = pv_path
         if os.path.isfile(self.pv_path):
             self.pv_exists = True
@@ -177,59 +173,27 @@ class Study:
         # -------------------
         # Originally, could identify different loads for each scenario. 
         # Now we're in one-scenario-land, so we just set self.different_loads to False.
-        # self.different_loads = False
-        # if len(self.study_parameters['load_folder'].unique()) == 1:
-        #     self.different_loads = False  # Same load or set of loads for each scenario
-        # else:
-        #     self.different_loads = True  # Different loads for each scenario
-
-        # self.load_path = os.path.join(self.base_path, 'load_profiles',self.study_parameters.loc[self.study_parameters.index[0], 'load_folder'])
-        # self.load_path = os.path.join(self.base_path, 'load_profiles', self.study_parameters['load_folder'])
         self.load_path = load_path
-        # self.load_list = os.listdir(self.load_path)
-        # if len(self.load_list) == 0:
-        #     logging.info('***************** Load folder %s is empty *************************', self.load_path)
-        #     sys.exit("Missing load data")
-        # elif len(self.load_list) == 1:
-        #     self.multiple_loads = False  # single load profile for each scenario
-        # else:
-        #     self.multiple_loads = True  # multiple load profiles for each scenario - outputs are mean ,std dev, etc.
-
+       
         # ---------------------------------------------
         # If same loads throughout Study, get them now:
         # ---------------------------------------------
-        # self.load_profiles = {}
         self.load_profiles = LoadCollection()
-        # if not self.different_loads:
-        # for profile_name in self.load_list:
-        # load_file = os.path.join(self.load_path, profile_name)
         temp_load = pd.read_csv(load_path,
                                 parse_dates=['timestamp'],
                                 dayfirst=True)
         temp_load = temp_load.set_index('timestamp')
         if 'cp' not in temp_load.columns:
             temp_load['cp'] = 0
-        # self.load_profiles.profiles[profile_name] = temp_load
         self.load_profiles.add_profile_from_df(temp_load, 'default')
 
-        # Otherwise, get the first load anyway:#@
-        # -------------------------------------
-        # else:
-        #     load_file = os.path.join(self.load_path, self.load_list[0])
-        #     temp_load = pd.read_csv(load_file,
-        #                             parse_dates=['timestamp'],
-        #                             dayfirst=True)
-        #     # self.load_profiles.profiles[self.load_list[0]] = temp_load.set_index('timestamp')
-        #     profile_name = self.load_list[0]
-        #     self.load_profiles.add_profile_from_df(temp_load.set_index('timestamp'),profile_name)
-
+       
         # -----------------------------------------------------------------
         # Use first load profile to initialise timeseries and resident_list
         # -----------------------------------------------------------------
         # Initialise timeseries
         # ---------------------
-        # TODO More globals. ts_ng = timeseries not global
-        # global ts  # (assume timeseries are all the same for all load profiles)
+        
         self.ts_ng = Timeseries(
             # load=self.load_profiles.profiles[self.load_list[0]],
             load=self.load_profiles.get_profile('default').to_df(),
@@ -240,21 +204,13 @@ class Study:
         # -----------------------------------------
         # This is used for initialisation (and when different_loads = FALSE),
         # but RESIDENT_LIST CAN VARY for each scenario:
-        # list of potential child meters - residents + cp
-        # temp_list = list(self.load_profiles.profiles[self.load_list[0]].columns.values)
-        
-        # profile_name = THIS WAS ONCE THE FILE NAME WITHIN THE FOLDER OF PROFILES
         # 'Profiles' consisted of a file with many difference customers' loads. 
         # Now we just want one of these 'profiles'.
+        # list of potential child meters - residents + cp
+        # 'default' here was once upon a time the filename within a folder of different profiles, where a profile had multiple loads. 
         temp_resident_list = self.load_profiles.get_profile('default').get_participant_names()
         self.resident_list = [str(resident) for resident in temp_resident_list]
-        # self.resident_list = []
-
-        # for i in temp_list:
-        #     if type(i) == 'str':
-        #         self.resident_list += [i]
-        #     else:
-        #         self.resident_list += [str(i)]
+       
         # ---------------------------------------------------------------
         # Initialise Tariff Look-up table and generate all static tariffs
         # ---------------------------------------------------------------
@@ -285,7 +241,7 @@ class Study:
 
         self.op.index.name = 'scenario'
         # Separate individual customer data and save as csv
-        # if not self.different_loads:
+        
         op_customer = self.op[[c for c in self.op.columns if 'cust_' in c and 'cp' not in c]]
         self.op = self.op.drop(op_customer.columns, axis=1)
         op_customer_file = os.path.join(self.output_path, self.name + '_customer_results.csv')

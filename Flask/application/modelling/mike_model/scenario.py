@@ -19,7 +19,6 @@ class Scenario:
         self.name = scenario_name
         self.study = study
         self.ts = timeseries
-        # self.use_threading = False
 
         self.label = self.study.name + '_' + "{:03}".format(int(self.name))
 
@@ -57,38 +56,7 @@ class Scenario:
         # -----------------------------------------------------------------
         # Set up load profiles, resident list & results df for the scenario
         # -----------------------------------------------------------------
-        # if same load profile(s) used for all scenarios, this comes from Study
-        # If different loads used, get resident list from first load
-        # self.load_folder = self.parameters['load_folder']
-        # if study.different_loads:
-        #     load_path = os.path.join(study.base_path, 'load_profiles', self.load_folder)
-        #     self.load_list = os.listdir(load_path)
-
-        #     # read all load profiles into dict of dfs
-        #     # ---------------------------------------
-        #     # self.load_profiles = {}
-        #     self.load_profiles = LoadCollection()
-        #     for load_name in self.load_list:
-        #         loadFile = os.path.join(load_path, load_name)
-        #         temp_load = pd.read_csv(loadFile,
-        #                                 parse_dates=['timestamp'],
-        #                                 dayfirst=True)
-        #         temp_load = temp_load.set_index('timestamp')
-        #         if not 'cp' in temp_load.columns:
-        #             temp_load['cp'] = 0
-        #         # self.load_profiles[load_name] = temp_load.copy()
-        #         # self.load_profiles.profiles[load_name] = temp_load.copy()
-        #         self.load_profiles.add_profile_from_df(temp_load, load_name)
-        #     # use first load profile in list to establish list of residents:
-        #     # --------------------------------------------------------------
-        #     templist = list(self.load_profiles.profiles[self.load_list[0]].columns.values)  # list of potential child meters - residents + cp
-        #     self.study.resident_list = []
-        #     for i in templist:
-        #         if type(i) == 'str':
-        #             self.resident_list += [i]
-        #         else:
-        #             self.resident_list += [str(i)]
-        # else:
+       
         # Loads are the same for every scenario and have been read already:
         # -----------------------------------------------------------------
         self.load_profiles = LoadCollection()
@@ -103,7 +71,6 @@ class Scenario:
         # read PV profile for this scenario
         # ---------------------------------
         if not self.pv_exists:
-            # self.pv = pd.DataFrame(index=self.ts.get_date_times(), columns=self.study.resident_list).fillna(0)
             self.pv = PVCollectionFactory().empty_collection(self.ts.get_date_times(), self.study.resident_list)
         else:
             pvFile = study.pv_path
@@ -116,11 +83,7 @@ class Scenario:
             else:
                 # Load pv generation data:
                 # -----------------------
-                # self.pv = pd.read_csv(pvFile, parse_dates=['timestamp'], dayfirst=True)
-                # self.pv.data.set_index('timestamp', inplace=True)
                 self.pv = PVCollectionFactory().from_file(pvFile)
-                
-                # if not self.pv.data.index.equals(pd.DatetimeIndex(data=self.ts.get_date_times())):
                 if not pd.DatetimeIndex(data=self.pv.get_date_times()).equals(pd.DatetimeIndex(data=self.ts.get_date_times())):
                     logging.info('***************Exception!!! PV %s index does not align with load ', pvFile)
                     sys.exit("PV has bad timeseries")
@@ -128,7 +91,6 @@ class Scenario:
                 self.pv_scaleable = ('pv_scaleable' in self.parameters) and (self.parameters['pv_scaleable'] == True)
                 if self.pv_scaleable:
                     self.pv_kW_peak = self.parameters['pv_kW_peak']
-                    # self.pv = self.pv * self.pv_kW_peak
                     self.pv.scale(self.pv_kW_peak)
             if self.pv.get_aggregate_sum() == 0:
                 self.pv_exists = False
@@ -146,19 +108,13 @@ class Scenario:
                 logging.info('Missing tariff data for all_residents in study csv')
             else:  # read tariff for each customer
                 for c in self.households:
-                    # if use_threading == 'True':
-                    #     with lock:
-                    #         self.parameters[c] = self.parameters['all_residents']
-                    # else:
                     self.parameters[c] = self.parameters['all_residents']
         # --------------------------------------------
         # Create list of tariffs used in this scenario
         # --------------------------------------------
         self.customers_with_tariffs = self.study.resident_list + ['parent']
         self.dnsp_tariff = self.parameters['network_tariff']
-        # self.tariff_in_use = self.parameters[self.customers_with_tariffs]  # tariff ids for each customer
         self.tariff_in_use = {customer:self.parameters[customer] for customer in self.customers_with_tariffs}
-        # self.tariff_short_list = self.tariff_in_use.tolist() + [self.dnsp_tariff]  # list of tariffs in use
         self.tariff_short_list = [self.tariff_in_use[customer] for customer in self.tariff_in_use] + [self.dnsp_tariff]  # list of tariffs in use
         self.tariff_short_list = list(set(self.tariff_short_list))  # drop duplicates
         for tariff_id in self.tariff_short_list:
@@ -184,7 +140,6 @@ class Scenario:
                             if 'Demand' in self.tariff_lookup.loc[t, 'tariff_type']]
         self.has_demand_charges = len(self.demand_list) > 0
         self.has_dynamic_tariff = len(self.dynamic_list) > 0
-        #  previously:(list(set(self.tariff_short_list).intersection(self.dynamic_list)))
         self.has_solar_block = len(solar_block_list) > 0
         self.has_solar_inst = len(self.solar_inst_list) > 0
 
