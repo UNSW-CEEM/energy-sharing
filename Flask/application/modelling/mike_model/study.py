@@ -183,7 +183,7 @@ class Study:
         # -------------------
         # Originally, could identify different loads for each scenario. 
         # Now we're in one-scenario-land, so we just set self.different_loads to False.
-        self.different_loads = False
+        # self.different_loads = False
         # if len(self.study_parameters['load_folder'].unique()) == 1:
         #     self.different_loads = False  # Same load or set of loads for each scenario
         # else:
@@ -206,17 +206,17 @@ class Study:
         # ---------------------------------------------
         # self.load_profiles = {}
         self.load_profiles = LoadCollection()
-        if not self.different_loads:
-            for profile_name in self.load_list:
-                load_file = os.path.join(self.load_path, profile_name)
-                temp_load = pd.read_csv(load_file,
-                                        parse_dates=['timestamp'],
-                                        dayfirst=True)
-                temp_load = temp_load.set_index('timestamp')
-                if 'cp' not in temp_load.columns:
-                    temp_load['cp'] = 0
-                # self.load_profiles.profiles[profile_name] = temp_load
-                self.load_profiles.add_profile_from_df(temp_load, profile_name)
+        # if not self.different_loads:
+        for profile_name in self.load_list:
+            load_file = os.path.join(self.load_path, profile_name)
+            temp_load = pd.read_csv(load_file,
+                                    parse_dates=['timestamp'],
+                                    dayfirst=True)
+            temp_load = temp_load.set_index('timestamp')
+            if 'cp' not in temp_load.columns:
+                temp_load['cp'] = 0
+            # self.load_profiles.profiles[profile_name] = temp_load
+            self.load_profiles.add_profile_from_df(temp_load, profile_name)
 
         # Otherwise, get the first load anyway:#@
         # -------------------------------------
@@ -288,11 +288,11 @@ class Study:
 
         self.op.index.name = 'scenario'
         # Separate individual customer data and save as csv
-        if not self.different_loads:
-            op_customer = self.op[[c for c in self.op.columns if 'cust_' in c and 'cp' not in c]]
-            self.op = self.op.drop(op_customer.columns, axis=1)
-            op_customer_file = os.path.join(self.output_path, self.name + '_customer_results.csv')
-            util.df_to_csv(op_customer, op_customer_file)
+        # if not self.different_loads:
+        op_customer = self.op[[c for c in self.op.columns if 'cust_' in c and 'cp' not in c]]
+        self.op = self.op.drop(op_customer.columns, axis=1)
+        op_customer_file = os.path.join(self.output_path, self.name + '_customer_results.csv')
+        util.df_to_csv(op_customer, op_customer_file)
 
         # Separate standard deviations and save as csv
         op_std = self.op[[c for c in self.op.columns if 'std' in c]]

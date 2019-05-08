@@ -61,41 +61,41 @@ class Scenario:
         # if same load profile(s) used for all scenarios, this comes from Study
         # If different loads used, get resident list from first load
         self.load_folder = self.parameters['load_folder']
-        if study.different_loads:
-            load_path = os.path.join(study.base_path, 'load_profiles', self.load_folder)
-            self.load_list = os.listdir(load_path)
+        # if study.different_loads:
+        #     load_path = os.path.join(study.base_path, 'load_profiles', self.load_folder)
+        #     self.load_list = os.listdir(load_path)
 
-            # read all load profiles into dict of dfs
-            # ---------------------------------------
-            # self.load_profiles = {}
-            self.load_profiles = LoadCollection()
-            for load_name in self.load_list:
-                loadFile = os.path.join(load_path, load_name)
-                temp_load = pd.read_csv(loadFile,
-                                        parse_dates=['timestamp'],
-                                        dayfirst=True)
-                temp_load = temp_load.set_index('timestamp')
-                if not 'cp' in temp_load.columns:
-                    temp_load['cp'] = 0
-                # self.load_profiles[load_name] = temp_load.copy()
-                # self.load_profiles.profiles[load_name] = temp_load.copy()
-                self.load_profiles.add_profile_from_df(temp_load, load_name)
-            # use first load profile in list to establish list of residents:
-            # --------------------------------------------------------------
-            templist = list(self.load_profiles.profiles[self.load_list[0]].columns.values)  # list of potential child meters - residents + cp
-            self.resident_list = []
-            for i in templist:
-                if type(i) == 'str':
-                    self.resident_list += [i]
-                else:
-                    self.resident_list += [str(i)]
-        else:
-            # Loads are the same for every scenario and have been read already:
-            # -----------------------------------------------------------------
-            self.load_profiles = LoadCollection()
-            self.load_profiles.profiles = study.load_profiles.profiles.copy()
-            self.resident_list = study.resident_list.copy()  # includes cp
-            self.load_list = study.load_list.copy()
+        #     # read all load profiles into dict of dfs
+        #     # ---------------------------------------
+        #     # self.load_profiles = {}
+        #     self.load_profiles = LoadCollection()
+        #     for load_name in self.load_list:
+        #         loadFile = os.path.join(load_path, load_name)
+        #         temp_load = pd.read_csv(loadFile,
+        #                                 parse_dates=['timestamp'],
+        #                                 dayfirst=True)
+        #         temp_load = temp_load.set_index('timestamp')
+        #         if not 'cp' in temp_load.columns:
+        #             temp_load['cp'] = 0
+        #         # self.load_profiles[load_name] = temp_load.copy()
+        #         # self.load_profiles.profiles[load_name] = temp_load.copy()
+        #         self.load_profiles.add_profile_from_df(temp_load, load_name)
+        #     # use first load profile in list to establish list of residents:
+        #     # --------------------------------------------------------------
+        #     templist = list(self.load_profiles.profiles[self.load_list[0]].columns.values)  # list of potential child meters - residents + cp
+        #     self.resident_list = []
+        #     for i in templist:
+        #         if type(i) == 'str':
+        #             self.resident_list += [i]
+        #         else:
+        #             self.resident_list += [str(i)]
+        # else:
+        # Loads are the same for every scenario and have been read already:
+        # -----------------------------------------------------------------
+        self.load_profiles = LoadCollection()
+        self.load_profiles.profiles = study.load_profiles.profiles.copy()
+        self.resident_list = study.resident_list.copy()  # includes cp
+        self.load_list = study.load_list.copy()
 
         self.households = [c for c in self.resident_list if c != 'cp']
         self.results = pd.DataFrame()
@@ -528,10 +528,10 @@ class Scenario:
         # ----------------------------------------
         # Reduced data logging for different_loads
         # ----------------------------------------
-        if self.study.different_loads:
-            # Don't log individual customer $ if each scenario has different load profiles
-            # (because each scenario may have different number of residents):
-            cols = [c for c in cols if c not in (cust_bill_list + cust_total_list + cust_solar_list)]  # .tolist()
+        # if self.study.different_loads:
+        #     # Don't log individual customer $ if each scenario has different load profiles
+        #     # (because each scenario may have different number of residents):
+        #     cols = [c for c in cols if c not in (cust_bill_list + cust_total_list + cust_solar_list)]  # .tolist()
         # -------------------------------------
         # Average results across multiple loads
         # -------------------------------------
