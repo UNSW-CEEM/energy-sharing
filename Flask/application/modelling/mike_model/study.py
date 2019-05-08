@@ -143,6 +143,7 @@ class Study:
             self.pv_exists = True
         else:
             self.pv_exists = False
+            raise Exception("PV Data not found: "+self.pv_path)
             logging.info('************Missing PV Profile ***************')
             sys.exit("Missing PV data")
        
