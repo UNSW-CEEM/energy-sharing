@@ -207,7 +207,7 @@ def load_config(page_name, filename):
 
 @socketio.on('run_model')
 def test_run_sim(params):
-    status_callback("Running Test Model Interface")
+    status_callback("api.py/test_run_sim() Running Test Model Interface")
     emit('status_channel',{'data':{'status':'running'}})
     
     print("api/test_run_sim()",json.dumps(params, indent=1))
@@ -225,7 +225,7 @@ def test_run_sim(params):
     wrapper.create_objects()
     results = wrapper.run(status_callback)
 
-    # print("api.test_run_sim()", "Model Results", json.dumps(results, indent=1))
+    print("api.test_run_sim()", "Model Results", json.dumps(results, indent=1))
 
     emit('status_channel',{'data':{'status':'finished'}})
     emit('chart_results_channel', {"data": results})

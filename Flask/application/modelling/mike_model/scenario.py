@@ -12,14 +12,14 @@ from ..mike_model.load import LoadCollection
 class Scenario:
     """Contains a single set of input parameters, but may contain multiple load profiles."""
 
-    def __init__(self, scenario_name, study, timeseries, use_threading=False):
+    def __init__(self, scenario_name, study, timeseries):
         # ------------------------------
         # Set up key scenario parameters
         # ------------------------------
         self.name = scenario_name
         self.study = study
         self.ts = timeseries
-        self.use_threading = use_threading
+        # self.use_threading = False
 
         self.label = self.study.name + '_' + "{:03}".format(int(self.name))
 
@@ -30,8 +30,7 @@ class Scenario:
         # Set up network arrangement for this scenario
         # --------------------------------------------
         self.arrangement = self.parameters['arrangement']
-        self.pv_exists = not (self.parameters['pv_filename']== ''
-                              or 'bau' in self.arrangement
+        self.pv_exists = not ('bau' in self.arrangement
                               or self.arrangement == 'en') \
                          and study.pv_exists
         if any(word in self.arrangement for word in ['btm_s_c', 'btm_s_u', 'btm_p_c', 'btm_p_u', 'btm_i_c']):
@@ -60,7 +59,7 @@ class Scenario:
         # -----------------------------------------------------------------
         # if same load profile(s) used for all scenarios, this comes from Study
         # If different loads used, get resident list from first load
-        self.load_folder = self.parameters['load_folder']
+        # self.load_folder = self.parameters['load_folder']
         # if study.different_loads:
         #     load_path = os.path.join(study.base_path, 'load_profiles', self.load_folder)
         #     self.load_list = os.listdir(load_path)
@@ -95,7 +94,7 @@ class Scenario:
         self.load_profiles = LoadCollection()
         self.load_profiles.profiles = study.load_profiles.profiles.copy()
         self.resident_list = study.resident_list.copy()  # includes cp
-        self.load_list = study.load_list.copy()
+        # self.load_list = study.load_list.copy()
 
         self.households = [c for c in self.resident_list if c != 'cp']
         self.results = pd.DataFrame()
@@ -107,23 +106,23 @@ class Scenario:
             # self.pv = pd.DataFrame(index=self.ts.get_date_times(), columns=self.resident_list).fillna(0)
             self.pv = PVCollectionFactory().empty_collection(self.ts.get_date_times(), self.resident_list)
         else:
-            self.pvFile = os.path.join(study.pv_path, self.parameters['pv_filename'])
-            if '.csv' not in self.pvFile:
-                self.pvFile = self.pvFile + '.csv'
-            if not os.path.exists(self.pvFile):
-                logging.info('***************Exception!!! PV file %s NOT FOUND', self.pvFile)
-                print('***************Exception!!! PV file %s NOT FOUND: ', self.pvFile)
+            pvFile = study.pv_path
+            if '.csv' not in pvFile:
+                pvFile = pvFile + '.csv'
+            if not os.path.exists(pvFile):
+                logging.info('***************Exception!!! PV file %s NOT FOUND', pvFile)
+                print('***************Exception!!! PV file %s NOT FOUND: ', pvFile)
                 sys.exit("PV file missing")
             else:
                 # Load pv generation data:
                 # -----------------------
-                # self.pv = pd.read_csv(self.pvFile, parse_dates=['timestamp'], dayfirst=True)
+                # self.pv = pd.read_csv(pvFile, parse_dates=['timestamp'], dayfirst=True)
                 # self.pv.data.set_index('timestamp', inplace=True)
-                self.pv = PVCollectionFactory().from_file(self.pvFile)
+                self.pv = PVCollectionFactory().from_file(pvFile)
                 
                 # if not self.pv.data.index.equals(pd.DatetimeIndex(data=self.ts.get_date_times())):
                 if not pd.DatetimeIndex(data=self.pv.get_date_times()).equals(pd.DatetimeIndex(data=self.ts.get_date_times())):
-                    logging.info('***************Exception!!! PV %s index does not align with load ', self.pvFile)
+                    logging.info('***************Exception!!! PV %s index does not align with load ', pvFile)
                     sys.exit("PV has bad timeseries")
                 # Scaleable PV has a 1kW generation input file scaled to array size:
                 self.pv_scaleable = ('pv_scaleable' in self.parameters) and (self.parameters['pv_scaleable'] == True)
@@ -147,11 +146,11 @@ class Scenario:
                 logging.info('Missing tariff data for all_residents in study csv')
             else:  # read tariff for each customer
                 for c in self.households:
-                    if use_threading == 'True':
-                        with lock:
-                            self.parameters[c] = self.parameters['all_residents']
-                    else:
-                        self.parameters[c] = self.parameters['all_residents']
+                    # if use_threading == 'True':
+                    #     with lock:
+                    #         self.parameters[c] = self.parameters['all_residents']
+                    # else:
+                    self.parameters[c] = self.parameters['all_residents']
         # --------------------------------------------
         # Create list of tariffs used in this scenario
         # --------------------------------------------
@@ -505,7 +504,7 @@ class Scenario:
         self.study.op.loc[self.name, 'scenario_label'] = self.label
         self.study.op.loc[self.name, 'arrangement'] = self.arrangement
         self.study.op.loc[self.name, 'number_of_households'] = len(self.households)
-        self.study.op.loc[self.name, 'load_folder'] = self.load_folder
+        self.study.op.loc[self.name, 'load_folder'] = 'no_longer_required'
 
         # Scenario total capex and opex repayments
         # ----------------------------------------

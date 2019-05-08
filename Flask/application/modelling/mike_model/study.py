@@ -23,7 +23,7 @@ class Study:
                  pv_path, 
                  load_path
                  ):
-        
+        print("study.py/Study()/__init__()", "Starting Initialising Study Object")
         # --------------------------------
         # Set up paths and files for Study
         # --------------------------------
@@ -32,9 +32,8 @@ class Study:
         self.name = study_name
         self.project_path = os.path.join(self.base_path, 'studies', project)
 
-        self.use_threading = False
+        # self.use_threading = False
 
-        
         # reference files
         # We don't want to load this data on the fly from the UI at all - it's seemingly there to provide additional information
         # ---------------
@@ -71,8 +70,9 @@ class Study:
         # New version so we can programatically tweak.
         self.study_parameters ={
             'scenario': 1,
-            'pv_filename':'ceem_ui_default.csv',
+            
             'load_folder': 'ceem_ui_default',
+            'load_file': 'ceem_ui_default.csv',
             'arrangement':'en_pv',
             'pv_cap_id': 'W_max_yield',
             'pv_capex_scaleable':False,
@@ -139,18 +139,13 @@ class Study:
         # --------------
         # self.pv_path = os.path.join(self.base_path, 'pv_profiles')
         self.pv_path = pv_path
-        if os.path.exists(self.pv_path):
-            pv_list = os.listdir(self.pv_path)
-            if len(pv_list) > 0:
-                self.pv_exists = True
-            else:
-                self.pv_exists = False
-                logging.info('************Missing PV Profile ***************')
-                sys.exit("Missing PV data")
+        if os.path.isfile(self.pv_path):
+            self.pv_exists = True
         else:
             self.pv_exists = False
             logging.info('************Missing PV Profile ***************')
             sys.exit("Missing PV data")
+       
         # --------------------------------------
         #  read capex costs into reference tables
         # --------------------------------------
@@ -192,14 +187,14 @@ class Study:
         # self.load_path = os.path.join(self.base_path, 'load_profiles',self.study_parameters.loc[self.study_parameters.index[0], 'load_folder'])
         # self.load_path = os.path.join(self.base_path, 'load_profiles', self.study_parameters['load_folder'])
         self.load_path = load_path
-        self.load_list = os.listdir(self.load_path)
-        if len(self.load_list) == 0:
-            logging.info('***************** Load folder %s is empty *************************', self.load_path)
-            sys.exit("Missing load data")
-        elif len(self.load_list) == 1:
-            self.multiple_loads = False  # single load profile for each scenario
-        else:
-            self.multiple_loads = True  # multiple load profiles for each scenario - outputs are mean ,std dev, etc.
+        # self.load_list = os.listdir(self.load_path)
+        # if len(self.load_list) == 0:
+        #     logging.info('***************** Load folder %s is empty *************************', self.load_path)
+        #     sys.exit("Missing load data")
+        # elif len(self.load_list) == 1:
+        #     self.multiple_loads = False  # single load profile for each scenario
+        # else:
+        #     self.multiple_loads = True  # multiple load profiles for each scenario - outputs are mean ,std dev, etc.
 
         # ---------------------------------------------
         # If same loads throughout Study, get them now:
@@ -207,27 +202,27 @@ class Study:
         # self.load_profiles = {}
         self.load_profiles = LoadCollection()
         # if not self.different_loads:
-        for profile_name in self.load_list:
-            load_file = os.path.join(self.load_path, profile_name)
-            temp_load = pd.read_csv(load_file,
-                                    parse_dates=['timestamp'],
-                                    dayfirst=True)
-            temp_load = temp_load.set_index('timestamp')
-            if 'cp' not in temp_load.columns:
-                temp_load['cp'] = 0
-            # self.load_profiles.profiles[profile_name] = temp_load
-            self.load_profiles.add_profile_from_df(temp_load, profile_name)
+        # for profile_name in self.load_list:
+        # load_file = os.path.join(self.load_path, profile_name)
+        temp_load = pd.read_csv(load_path,
+                                parse_dates=['timestamp'],
+                                dayfirst=True)
+        temp_load = temp_load.set_index('timestamp')
+        if 'cp' not in temp_load.columns:
+            temp_load['cp'] = 0
+        # self.load_profiles.profiles[profile_name] = temp_load
+        self.load_profiles.add_profile_from_df(temp_load, 'default')
 
         # Otherwise, get the first load anyway:#@
         # -------------------------------------
-        else:
-            load_file = os.path.join(self.load_path, self.load_list[0])
-            temp_load = pd.read_csv(load_file,
-                                    parse_dates=['timestamp'],
-                                    dayfirst=True)
-            # self.load_profiles.profiles[self.load_list[0]] = temp_load.set_index('timestamp')
-            profile_name = self.load_list[0]
-            self.load_profiles.add_profile_from_df(temp_load.set_index('timestamp'),profile_name)
+        # else:
+        #     load_file = os.path.join(self.load_path, self.load_list[0])
+        #     temp_load = pd.read_csv(load_file,
+        #                             parse_dates=['timestamp'],
+        #                             dayfirst=True)
+        #     # self.load_profiles.profiles[self.load_list[0]] = temp_load.set_index('timestamp')
+        #     profile_name = self.load_list[0]
+        #     self.load_profiles.add_profile_from_df(temp_load.set_index('timestamp'),profile_name)
 
         # -----------------------------------------------------------------
         # Use first load profile to initialise timeseries and resident_list
@@ -238,7 +233,7 @@ class Study:
         # global ts  # (assume timeseries are all the same for all load profiles)
         self.ts_ng = Timeseries(
             # load=self.load_profiles.profiles[self.load_list[0]],
-            load=self.load_profiles.get_profile(self.load_list[0]).to_df(),
+            load=self.load_profiles.get_profile('default').to_df(),
             dst_lookup=self.dst_lookup,
             dst_region='nsw')
 
@@ -249,16 +244,18 @@ class Study:
         # list of potential child meters - residents + cp
         # temp_list = list(self.load_profiles.profiles[self.load_list[0]].columns.values)
         
-        profile_name = self.load_list[0]
-        temp_list = self.load_profiles.get_profile(profile_name).get_participant_names()
-        
-        self.resident_list = []
+        # profile_name = THIS WAS ONCE THE FILE NAME WITHIN THE FOLDER OF PROFILES
+        # 'Profiles' consisted of a file with many difference customers' loads. 
+        # Now we just want one of these 'profiles'.
+        temp_resident_list = self.load_profiles.get_profile('default').get_participant_names()
+        self.resident_list = [str(resident) for resident in temp_resident_list]
+        # self.resident_list = []
 
-        for i in temp_list:
-            if type(i) == 'str':
-                self.resident_list += [i]
-            else:
-                self.resident_list += [str(i)]
+        # for i in temp_list:
+        #     if type(i) == 'str':
+        #         self.resident_list += [i]
+        #     else:
+        #         self.resident_list += [str(i)]
         # ---------------------------------------------------------------
         # Initialise Tariff Look-up table and generate all static tariffs
         # ---------------------------------------------------------------
@@ -276,6 +273,7 @@ class Study:
         # Initialise output data frames:
         # -----------------------------
         self.op = pd.DataFrame(index=self.scenario_list)
+        print("study.py/Study()/__init__()", "Finished Initialising Study Object")
 
     def log_study_data(self):
         """Saves study outputs and summary to .csv files."""
@@ -327,56 +325,56 @@ class Study:
         #     eno.initialiseDailySolarBlockQuotas(scenario)
 
         # Iterate through all load profiles for this scenario:
-        for load_name in scenario.load_list:
-            eno.initialise_building_loads(load_name, scenario)
-            if scenario.pv_allocation == 'load_dependent':  # ie. for btm_i_c, btm_s and btm_p arrangements
-                eno.allocatePV(scenario, scenario.pv)
-            # eno.initialiseSolarInstQuotas(scenario)  # depends on load and pv - not implemented. Solar Inst for EN
+        # for load_name in scenario.load_list:
+        eno.initialise_building_loads('default', scenario)
+        if scenario.pv_allocation == 'load_dependent':  # ie. for btm_i_c, btm_s and btm_p arrangements
+            eno.allocatePV(scenario, scenario.pv)
+        # eno.initialiseSolarInstQuotas(scenario)  # depends on load and pv - not implemented. Solar Inst for EN
 
-            # If no battery, calc all internal energy flows statically (i.e. as single df calculation)
-            # ----------------------------------------------------------------------------------------
-            if not eno.has_central_battery and not eno.any_resident_has_battery:
-                eno.calcBuildingStaticEnergyFlows()
-            else:
-                # If battery, reset then calculate energy flows stepwise:
-                # -------------------------------------------------------
-                eno.resetAllBatteries(scenario)
-                for step in np.arange(0, self.ts_ng.get_num_steps()):
-                    eno.calcBuildingDynamicEnergyFlows(step)
+        # If no battery, calc all internal energy flows statically (i.e. as single df calculation)
+        # ----------------------------------------------------------------------------------------
+        if not eno.has_central_battery and not eno.any_resident_has_battery:
+            eno.calcBuildingStaticEnergyFlows()
+        else:
+            # If battery, reset then calculate energy flows stepwise:
+            # -------------------------------------------------------
+            eno.resetAllBatteries(scenario)
+            for step in np.arange(0, self.ts_ng.get_num_steps()):
+                eno.calcBuildingDynamicEnergyFlows(step)
 
-            # Energy Flows for retailer (static)
-            # -----------------------------------
-            # retailer acts like a customer too, buying from DNSP
-            # These are the load and generation that it presents to DNSP
-            eno.retailer.initialise_customer_load(eno.imports)
-            eno.retailer.initialise_customer_pv(eno.exports)
-            eno.retailer.calc_static_energy()
+        # Energy Flows for retailer (static)
+        # -----------------------------------
+        # retailer acts like a customer too, buying from DNSP
+        # These are the load and generation that it presents to DNSP
+        eno.retailer.initialise_customer_load(eno.imports)
+        eno.retailer.initialise_customer_pv(eno.exports)
+        eno.retailer.calc_static_energy()
 
-            # Summary energy metrics
-            # ----------------------lo
-            eno.calcEnergyMetrics(scenario)
+        # Summary energy metrics
+        # ----------------------lo
+        eno.calcEnergyMetrics(scenario)
 
-            # Financial's
-            # ----------
-            eno.calcAllDemandCharges()
-            # per load profile to allow for scenarios where capex allocation depends on load
-            eno.allocateAllCapex(scenario)
-            # If tariffs are dynamic (e.g block), calculate them stepwise:
-            # ------------------------------------------------------------
+        # Financial's
+        # ----------
+        eno.calcAllDemandCharges()
+        # per load profile to allow for scenarios where capex allocation depends on load
+        eno.allocateAllCapex(scenario)
+        # If tariffs are dynamic (e.g block), calculate them stepwise:
+        # ------------------------------------------------------------
 
-            scenario.calcFinancials(eno)
-            scenario.collate_network_results(eno)
-            if scenario.log_timeseries_detailed:
-                eno.logTimeseriesDetailed(scenario)
-            if scenario.log_timeseries_brief:
-                eno.logTimeseriesBrief(scenario)
+        scenario.calcFinancials(eno)
+        scenario.collate_network_results(eno)
+        if scenario.log_timeseries_detailed:
+            eno.logTimeseriesDetailed(scenario)
+        if scenario.log_timeseries_brief:
+            eno.logTimeseriesBrief(scenario)
 
         # collate / log data for all loads in scenario
         # TODO Work out how to remove this global.
-        if self.use_threading is 'True':
-            with lock:
-                scenario.log_scenario_data()
-        else:
-            scenario.log_scenario_data()
+        # if self.use_threading is 'True':
+        #     with lock:
+        #         scenario.log_scenario_data()
+        # else:
+        scenario.log_scenario_data()
 
         logging.info('Completed Scenario %i', scenario_name)

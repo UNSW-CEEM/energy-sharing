@@ -22,14 +22,19 @@ class NewSim:
         base_path = folder_routes.get_route("mike_base_dir")
         self.project = folder_routes.get_route("mike_project_name")
         self.study_name = folder_routes.get_route("mike_study_name")
+        pv_path = os.path.join(base_path, 'pv_profiles', 'ceem_ui_default.csv')
+        load_path = os.path.join(base_path, 'load_profiles', 'ceem_ui_default','ceem_ui_default.csv')
+
         print("new_sim.py/NewSim()/__init__", "Base Directory", base_path)
         print("new_sim.py/NewSim()/__init__", "Project Directory", self.project)
+        print("new_sim.py/NewSim()/__init__", "PV Path", pv_path)
+        print("new_sim.py/NewSim()/__init__", "Load Path", load_path)
         print("new_sim.py/NewSim()/__init__", "Study Name", self.study_name)
         
         # print("\n\n It be working", self.base_dir, "\n", self.project, self.study_name)
-        pv_path = os.path.join(base_path, 'pv_profiles')
-        load_path = os.path.join(base_path, 'load_profiles', 'ceem_ui_default')
+        
         self.study = Study(base_path, self.project, self.study_name, pv_path, load_path)
+        print("new_sim.py/NewSim()/__init__", "NewSim Created")
 
     def run(self):
         for scenario in self.study.get_scenario_list():
