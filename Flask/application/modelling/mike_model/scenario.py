@@ -454,14 +454,16 @@ class Scenario:
                 self.pv_exists = False
                 # self.pv = pd.DataFrame(index=pd.DatetimeIndex(data=self.ts.get_date_times()), columns=self.study.resident_list).fillna(0)
                 self.pv = PVCollectionFactory().empty_collection(self.ts.get_date_times(),self.study.resident_list)
-
+        # 
         # Change the array somewhat to deal with duplicated participant profiles
+        # 
         participants = self.study.get_participants()
+        # Get a count of the number of time each solar profile is used. 
         solar_profile_counts = {participants[p]['solar']:0 for p in participants}
         for p in participants:
             solar_profile_counts[participants[p]['solar']] += 1
 
-        # Associate each participant with a solar data source, duplicate if double-used. 
+        # Duplicate solar profiles if double-used. 
         for p in participants:
             solar_key = participants[p]['solar']
             if solar_profile_counts[solar_key] > 1:
@@ -472,6 +474,13 @@ class Scenario:
                 self.study.change_solar_profile(p, new_key)
                 # Decrement the number of times the original key has been used.
                 solar_profile_counts[solar_key] -= 1
+        
+        # Remove any unused solar profiles
+        used_systems = [participants[p]['solar'] for p in self.study.get_participants()]
+        for system in self.pv.get_system_names():
+            if (system not in used_systems) and (system != 'cp'):
+                self.pv.delete_system(system)
+        
         print("scenario.py/Scenario()/_generate_pv_profiles()", "Solar Data Frame",self.pv._data)
 
     def log_scenario_data(self):
