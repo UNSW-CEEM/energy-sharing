@@ -68,35 +68,16 @@ class Scenario:
         self.results = pd.DataFrame()
 
         # ---------------------------------
-        # read PV profile for this scenario
+        # Read PV profile for this scenario, configure the PV data array to the participants construction.
         # ---------------------------------
-        if not self.pv_exists:
-            self.pv = PVCollectionFactory().empty_collection(self.ts.get_date_times(), self.study.resident_list)
-        else:
-            pvFile = study.pv_path
-            if '.csv' not in pvFile:
-                pvFile = pvFile + '.csv'
-            if not os.path.exists(pvFile):
-                logging.info('***************Exception!!! PV file %s NOT FOUND', pvFile)
-                print('***************Exception!!! PV file %s NOT FOUND: ', pvFile)
-                sys.exit("PV file missing")
-            else:
-                # Load pv generation data:
-                # -----------------------
-                self.pv = PVCollectionFactory().from_file(pvFile)
-                if not pd.DatetimeIndex(data=self.pv.get_date_times()).equals(pd.DatetimeIndex(data=self.ts.get_date_times())):
-                    logging.info('***************Exception!!! PV %s index does not align with load ', pvFile)
-                    sys.exit("PV has bad timeseries")
-                # Scaleable PV has a 1kW generation input file scaled to array size:
-                self.pv_scaleable = ('pv_scaleable' in self.parameters) and (self.parameters['pv_scaleable'] == True)
-                if self.pv_scaleable:
-                    self.pv_kW_peak = self.parameters['pv_kW_peak']
-                    self.pv.scale(self.pv_kW_peak)
-            if self.pv.get_aggregate_sum() == 0:
-                self.pv_exists = False
-                # self.pv = pd.DataFrame(index=pd.DatetimeIndex(data=self.ts.get_date_times()), columns=self.study.resident_list).fillna(0)
-                self.pv = PVCollectionFactory().empty_collection(self.ts.get_date_times(),self.study.resident_list)
+        # ie. Ensure that for each participant there is a corresponding PV data set, 
+        # and that duplicates are present where needed
+        self._generate_pv_profiles()
 
+
+
+
+        
         # ---------------------------------------
         # Set up tariffs for this scenario
         # ---------------------------------------
@@ -443,6 +424,55 @@ class Scenario:
         self.results = self.results.append(pd.Series(result_list,
                                                      index=result_labels,
                                                      name=net.load_name))
+
+    def _generate_pv_profiles(self):
+
+        # Generate PV Data Source
+        if not self.pv_exists:
+            self.pv = PVCollectionFactory().empty_collection(self.ts.get_date_times(), self.study.resident_list)
+        else:
+            pvFile = self.study.pv_path
+            if '.csv' not in pvFile:
+                pvFile = pvFile + '.csv'
+            if not os.path.exists(pvFile):
+                logging.info('***************Exception!!! PV file %s NOT FOUND', pvFile)
+                print('***************Exception!!! PV file %s NOT FOUND: ', pvFile)
+                sys.exit("PV file missing")
+            else:
+                # Load pv generation data:
+                # -----------------------
+                self.pv = PVCollectionFactory().from_file(pvFile)
+                if not pd.DatetimeIndex(data=self.pv.get_date_times()).equals(pd.DatetimeIndex(data=self.ts.get_date_times())):
+                    logging.info('***************Exception!!! PV %s index does not align with load ', pvFile)
+                    sys.exit("PV has bad timeseries")
+                # Scaleable PV has a 1kW generation input file scaled to array size:
+                self.pv_scaleable = ('pv_scaleable' in self.parameters) and (self.parameters['pv_scaleable'] == True)
+                if self.pv_scaleable:
+                    self.pv_kW_peak = self.parameters['pv_kW_peak']
+                    self.pv.scale(self.pv_kW_peak)
+            if self.pv.get_aggregate_sum() == 0:
+                self.pv_exists = False
+                # self.pv = pd.DataFrame(index=pd.DatetimeIndex(data=self.ts.get_date_times()), columns=self.study.resident_list).fillna(0)
+                self.pv = PVCollectionFactory().empty_collection(self.ts.get_date_times(),self.study.resident_list)
+
+        # Change the array somewhat to deal with duplicated participant profiles
+        participants = self.study.get_participants()
+        solar_profile_counts = {participants[p]['solar']:0 for p in participants}
+        for p in participants:
+            solar_profile_counts[participants[p]['solar']] += 1
+
+        # Associate each participant with a solar data source, duplicate if double-used. 
+        for p in participants:
+            solar_key = participants[p]['solar']
+            if solar_profile_counts[solar_key] > 1:
+                new_key = solar_key+"_"+str(solar_profile_counts[solar_key])
+                # Copy solar data to new column with new key
+                self.pv.copy_system(solar_key, new_key)
+                # Assign the new key to the participant
+                self.study.change_solar_profile(p, new_key)
+                # Decrement the number of times the original key has been used.
+                solar_profile_counts[solar_key] -= 1
+        print("scenario.py/Scenario()/_generate_pv_profiles()", "Solar Data Frame",self.pv._data)
 
     def log_scenario_data(self):
         """Saves a csv file for each scenario and logs a row of results to output df."""

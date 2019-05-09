@@ -43,8 +43,8 @@ class NewSim:
                 'solar':'profile_1'
             },
             'Participant 2':{
-                'load':'profile_2',
-                'solar':'profile_2'
+                'load':'profile_1',
+                'solar':'profile_1'
             }
         }
         

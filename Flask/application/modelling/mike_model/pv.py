@@ -18,6 +18,7 @@ class PVCollection():
         # print("pv.py/PVCollection()/__init__() Initialising pv data", pv_df)
 
     def get_date_times(self):
+        print("pv.py/PVCollection()/__init__() Getting PV Date Times")
         return [x for x in self._data.index]
     
     def scale(self, scaling_factor):
@@ -27,12 +28,15 @@ class PVCollection():
         self._data = self._data * scaling_factor
     
     def copy(self):
+        print("pv.py/PVCollection()/__init__() Copying PV Collection")
         return PVCollection(self._data)
     
     def get_num_systems(self):
+        print("pv.py/PVCollection()/__init__() Getting Num Systems")
         return len(self._data.columns)
     
     def get_system_names(self):
+        print("pv.py/PVCollection()/__init__() Getting PV Date Times")
         return self._data.columns
 
     def rename_system(self, old_name, new_name):

@@ -175,7 +175,7 @@ class Study:
         # -------------------
         # Originally, could identify different loads for each scenario. 
         # Now we're in one-scenario-land, so we just set self.different_loads to False.
-        self.load_profiles = self._generate_load_profiles(participants, load_path)
+        self.load_profiles = self._generate_load_profiles(load_path)
         
 
         # -----------------------------------------------------------------
@@ -221,11 +221,12 @@ class Study:
         print("study.py/Study()/__init__()", "Finished Initialising Study Object")
 
 
-    def _generate_load_profiles(self, participants, load_path):
+    def _generate_load_profiles(self, load_path):
         # ---------------------------------------------
         # Get loads from data file.
         # ---------------------------------------------
         # Count the number of times each load profile is used
+        participants = self._participants
         load_profile_counts = {participants[p]['load']:0 for p in participants}
         for p in participants:
             load_profile_counts[participants[p]['load']] += 1
@@ -246,7 +247,7 @@ class Study:
                 # Duplicate the column with a _number appended
                 temp_load[new_key] = temp_load[load_key]
                 # Update participants dict.
-                participants[p]['load'] = new_key
+                self.change_load_profile(p, new_key)
                 # Decrement load profile counts by 1
                 load_profile_counts[load_key] -= 1
         
@@ -264,7 +265,19 @@ class Study:
         # Create a LoadCollection() object to take care of the load profile.
         load_profiles = LoadCollection()
         load_profiles.add_profile_from_df(temp_load, 'default')
+
+        # Return the load profile.
         return load_profiles
+    
+    def change_solar_profile(self, participant, new_key):
+        self._participants[participant]['solar'] = new_key
+    
+    def change_load_profile(self, participant, new_key):
+        self._participants[participant]['load'] = new_key
+    
+    def get_participants(self):
+        return self._participants
+
 
     def log_study_data(self):
         """Saves study outputs and summary to .csv files."""
