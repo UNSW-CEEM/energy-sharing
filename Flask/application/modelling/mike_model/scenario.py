@@ -478,7 +478,7 @@ class Scenario:
         # Remove any unused solar profiles
         used_systems = [participants[p]['solar'] for p in self.study.get_participants()]
         for system in self.pv.get_system_names():
-            if (system not in used_systems) and (system != 'cp'):
+            if (system not in used_systems) and (system not in ['cp', 'central']):
                 self.pv.delete_system(system)
         
         print("scenario.py/Scenario()/_generate_pv_profiles()", "Solar Data Frame",self.pv._data)
