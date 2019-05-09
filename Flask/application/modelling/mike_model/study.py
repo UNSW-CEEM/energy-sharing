@@ -198,8 +198,8 @@ class Study:
         # Now we just want one of these 'profiles'.
         # list of potential child meters - residents + cp
         # 'default' here was once upon a time the filename within a folder of different profiles, where a profile had multiple loads. 
-        temp_resident_list = self.load_profiles.get_profile('default').get_participant_names()
-        self.resident_list = [str(resident) for resident in temp_resident_list]
+        # temp_resident_list = self.load_profiles.get_profile('default').get_participant_names()
+        # self.resident_list = [str(resident) for resident in temp_resident_list]
         
         # ---------------------------------------------------------------
         # Initialise Tariff Look-up table and generate all static tariffs
@@ -220,6 +220,26 @@ class Study:
         self.op = pd.DataFrame(index=self.scenario_list)
         print("study.py/Study()/__init__()", "Finished Initialising Study Object")
 
+
+    def get_load_profiles(self):
+        return [self._participants[p]['load'] for p in self._participants]
+    
+    def get_load_profile(self, p):
+        if p == 'cp':
+            return 'cp'
+        else:
+            return self._participants[p]['load']
+    
+    def get_solar_profiles(self):
+        return [self._participants[p]['solar'] for p in self._participants]
+    
+    def get_solar_profile(self, p):
+        return self._participants[p]['solar']
+    
+    def get_participant_names(self):
+        return [p for p in self._participants]
+    
+    
 
     def _generate_load_profiles(self, load_path):
         # ---------------------------------------------

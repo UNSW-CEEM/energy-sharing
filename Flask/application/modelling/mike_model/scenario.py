@@ -61,10 +61,8 @@ class Scenario:
         # -----------------------------------------------------------------
         self.load_profiles = LoadCollection()
         self.load_profiles.profiles = study.load_profiles.profiles.copy()
-        # self.resident_list = study.resident_list.copy()  # includes cp
-        # self.load_list = study.load_list.copy()
 
-        self.households = [c for c in self.study.resident_list if c != 'cp']
+        # self.study.get_participant_names() = [c for c in self.study.get_load_profiles() if c != 'cp']
         self.results = pd.DataFrame()
 
         # ---------------------------------
@@ -88,12 +86,12 @@ class Scenario:
             if (self.parameters['all_residents'] == ''):
                 logging.info('Missing tariff data for all_residents in study csv')
             else:  # read tariff for each customer
-                for c in self.households:
+                for c in self.study.get_participant_names():
                     self.parameters[c] = self.parameters['all_residents']
         # --------------------------------------------
         # Create list of tariffs used in this scenario
         # --------------------------------------------
-        self.customers_with_tariffs = self.study.resident_list + ['parent']
+        self.customers_with_tariffs = self.study.get_participant_names() + ['parent', 'cp']
         self.dnsp_tariff = self.parameters['network_tariff']
         self.tariff_in_use = {customer:self.parameters[customer] for customer in self.customers_with_tariffs}
         self.tariff_short_list = [self.tariff_in_use[customer] for customer in self.tariff_in_use] + [self.dnsp_tariff]  # list of tariffs in use
@@ -190,14 +188,14 @@ class Scenario:
                 # ------------------------------------
                 self.en_capex = study.en_capex.loc[self.en_cap_id, 'site_capex'] + \
                                 (study.en_capex.loc[self.en_cap_id, 'unit_capex'] *
-                                 len(self.study.resident_list))
+                                 len(self.study.get_load_profiles))
             else:
                 # ----------------------------
                 # metering capex for units only
                 # ----------------------------
                 self.en_capex = study.en_capex.loc[self.en_cap_id, 'site_capex'] + \
                                 (study.en_capex.loc[self.en_cap_id, 'unit_capex'] *
-                                 len(self.households))
+                                 len(self.study.get_participant_names()))
         else:
             self.en_capex = 0.0
 
@@ -221,13 +219,13 @@ class Scenario:
                 # billing / opex for all units and cp:
                 # ------------------------------------
                 self.en_opex = study.en_capex.loc[self.en_cap_id, 'site_opex'] + \
-                               (study.en_capex.loc[self.en_cap_id, 'unit_opex'] * len(self.study.resident_list))
+                               (study.en_capex.loc[self.en_cap_id, 'unit_opex'] * len(self.study.get_load_profiles()))
             else:
                 # ------------------------------
                 # billing / opex for units only:
                 # ------------------------------
                 self.en_opex = study.en_capex.loc[self.en_cap_id, 'site_opex'] + \
-                               (study.en_capex.loc[self.en_cap_id, 'unit_opex'] * len(self.households))
+                               (study.en_capex.loc[self.en_cap_id, 'unit_opex'] * len(self.study.get_participant_names()))
         else:
             self.en_opex = 0
         # --------------------------------------------------------
@@ -290,7 +288,7 @@ class Scenario:
         # ----------------------------------
         # Cashflows for individual residents
         # ----------------------------------
-        for c in self.study.resident_list:
+        for c in self.study.get_participant_names() + ['cp']:
             net.resident[c].calc_cash_flow()
             net.receipts_from_residents += net.resident[c].energy_bill
             net.cum_resident_total_payments += net.resident[c].total_payment
@@ -357,6 +355,7 @@ class Scenario:
         # Collate all results for network / eno  in one row of results df
         # ---------------------------------------------------------------
         # includes c -> $ conversion
+        
         result_list = [net.total_building_payment / 100,
                        net.checksum_total_payments / 100,
                        net.receipts_from_residents / 100,
@@ -381,13 +380,14 @@ class Scenario:
                        net.central_battery_capacity,
                        net.total_battery_losses,
                        net.battery_cycles,
-                       net.battery_SOH] + \
-                      [net.resident['cp'].energy_bill / 100] + \
-                      [net.resident[c].energy_bill / 100 for c in self.study.resident_list if c != 'cp'] + \
-                      [net.resident['cp'].local_solar_bill / 100] + \
-                      [net.resident[c].local_solar_bill / 100 for c in self.study.resident_list if c != 'cp'] + \
-                      [net.resident['cp'].total_payment / 100] + \
-                      [net.resident[c].total_payment / 100 for c in self.study.resident_list if c != 'cp']
+                       net.battery_SOH]
+        print("scenario.py/collate_network_results()", "energy_bill",net.resident['cp'].energy_bill)
+        result_list += [net.resident['cp'].energy_bill / 100]
+        result_list += [net.resident[c].energy_bill / 100 for c in self.study.get_participant_names() if c != 'cp']
+        result_list += [net.resident['cp'].local_solar_bill / 100]
+        result_list += [net.resident[c].local_solar_bill / 100 for c in self.study.get_participant_names() if c != 'cp']
+        result_list += [net.resident['cp'].total_payment / 100]
+        result_list += [net.resident[c].total_payment / 100 for c in self.study.get_participant_names() if c != 'cp']
 
         result_labels = ['total$_building_costs',
                          'checksum_total_payments$',
@@ -415,11 +415,11 @@ class Scenario:
                          'central_battery_cycles',
                          'central_battery_SOH'] + \
                         ['cust_bill_cp'] + \
-                        ['cust_bill_' + '%s' % r for r in self.study.resident_list if r != 'cp'] + \
+                        ['cust_bill_' + '%s' % r for r in self.study.get_participant_names() if r != 'cp'] + \
                         ['cust_solar_bill_cp'] + \
-                        ['cust_solar_bill_' + '%s' % r for r in self.study.resident_list if r != 'cp'] + \
+                        ['cust_solar_bill_' + '%s' % r for r in self.study.get_participant_names() if r != 'cp'] + \
                         ['cust_total$_cp'] + \
-                        ['cust_total$_' + '%s' % r for r in self.study.resident_list if r != 'cp']
+                        ['cust_total$_' + '%s' % r for r in self.study.get_participant_names() if r != 'cp']
 
         self.results = self.results.append(pd.Series(result_list,
                                                      index=result_labels,
@@ -429,7 +429,7 @@ class Scenario:
 
         # Generate PV Data Source
         if not self.pv_exists:
-            self.pv = PVCollectionFactory().empty_collection(self.ts.get_date_times(), self.study.resident_list)
+            self.pv = PVCollectionFactory().empty_collection(self.ts.get_date_times(), self.study.get_solar_profiles())
         else:
             pvFile = self.study.pv_path
             if '.csv' not in pvFile:
@@ -452,8 +452,7 @@ class Scenario:
                     self.pv.scale(self.pv_kW_peak)
             if self.pv.get_aggregate_sum() == 0:
                 self.pv_exists = False
-                # self.pv = pd.DataFrame(index=pd.DatetimeIndex(data=self.ts.get_date_times()), columns=self.study.resident_list).fillna(0)
-                self.pv = PVCollectionFactory().empty_collection(self.ts.get_date_times(),self.study.resident_list)
+                self.pv = PVCollectionFactory().empty_collection(self.ts.get_date_times(),self.study.get_solar_profiles())
         # 
         # Change the array somewhat to deal with duplicated participant profiles
         # 
@@ -481,7 +480,7 @@ class Scenario:
             if (system not in used_systems) and (system not in ['cp', 'central']):
                 self.pv.delete_system(system)
         
-        print("scenario.py/Scenario()/_generate_pv_profiles()", "Solar Data Frame",self.pv._data)
+        # print("scenario.py/Scenario()/_generate_pv_profiles()", "Solar Data Frame",self.pv._data)
 
     def log_scenario_data(self):
         """Saves a csv file for each scenario and logs a row of results to output df."""
@@ -497,7 +496,7 @@ class Scenario:
         # Scenario label and key parameters for scenario
         self.study.op.loc[self.name, 'scenario_label'] = self.label
         self.study.op.loc[self.name, 'arrangement'] = self.arrangement
-        self.study.op.loc[self.name, 'number_of_households'] = len(self.households)
+        self.study.op.loc[self.name, 'number_of_households'] = len(self.study.get_participant_names())
         self.study.op.loc[self.name, 'load_folder'] = 'no_longer_required'
 
         # Scenario total capex and opex repayments

@@ -45,7 +45,8 @@ class NewSim:
             'Participant 2':{
                 'load':'profile_1',
                 'solar':'profile_1'
-            }
+            },
+            
         }
         
         self.study = Study(base_path, self.project, self.study_name, pv_path, load_path, participants)

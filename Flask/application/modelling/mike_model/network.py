@@ -18,7 +18,7 @@ class Network(Customer):
 
     def __init__(self, scenario, study, timeseries):
         # just residents, not cp
-        self.households = scenario.households.copy()
+        # self.households = scenario.households.copy()
         # residents (inc cp) with batteries - initial state
         self.battery_list = []
         # (these may change later if different_loads)
@@ -30,7 +30,7 @@ class Network(Customer):
         super().__init__('network', self.study, self.ts)
         #  initialise the customers / members within the network
         # (includes residents and cp)
-        self.resident = {c: Customer(name=c, study=self.study, timeseries=self.ts) for c in self.study.resident_list}
+        self.resident = {c: Customer(name=c, study=self.study, timeseries=self.ts) for c in (self.study.get_participant_names() + ['cp'])}
         self.retailer = Customer(name='retailer', study=self.study, timeseries=self.ts)
         if 'btm_p' in scenario.arrangement:
             self.solar_retailer = Customer(name='solar_retailer', study=self.study, timeseries=self.ts)
@@ -54,8 +54,8 @@ class Network(Customer):
 
         # initialise residents' loads
         # ---------------------------
-        for c in self.study.resident_list:
-            self.resident[c].initialise_customer_load(customer_load=np.array(self.nl_profile.get_load_data(c)).astype(np.float64))
+        for c in self.study.get_participant_names() + ['cp']:
+            self.resident[c].initialise_customer_load(customer_load=np.array(self.nl_profile.get_load_data(self.study.get_load_profile(c))).astype(np.float64))
 
         # Calculate total site load
         # --------------------------
@@ -73,7 +73,7 @@ class Network(Customer):
         # initialise parent meter tariff
         self.initialise_customer_tariff(scenario.tariff_in_use['parent'], scenario)
         # initialise internal customer tariffs
-        for c in self.study.resident_list:
+        for c in self.study.get_participant_names() + ['cp']:
             self.resident[c].initialise_customer_tariff(scenario.tariff_in_use[c], scenario)
         # initialise retailer's network tariff
         self.retailer.initialise_customer_tariff(scenario.dnsp_tariff, scenario)
@@ -152,7 +152,7 @@ class Network(Customer):
             # If there's no data, filling in 1/ num_residents
             # Then multiplying pv by that fraction. 
             
-            network_load_fractions = self.nl_profile.to_df().div(self.nl_profile.get_aggregate_data(), axis=0).fillna(1 / len(self.study.resident_list))
+            network_load_fractions = self.nl_profile.to_df().div(self.nl_profile.get_aggregate_data(), axis=0).fillna(1 / len(self.study.get_load_profiles()))
             self.pv.multiply_by_timeseries('total', network_load_fractions)
 
         elif any(word in scenario.arrangement for word in ['btm_s_u', 'btm_p_u']):
@@ -163,7 +163,7 @@ class Network(Customer):
             self.rename_system(system_name, 'total')
             # Get units only
             load_units_only = self.nl_profile.to_df().copy().drop('cp', axis=1)
-            load_fractions = load_units_only.div(load_units_only.sum(axis=1), axis=0).fillna(1 / len(self.households))
+            load_fractions = load_units_only.div(load_units_only.sum(axis=1), axis=0).fillna(1 / len(self.study.get_load_profiles()))
             self.pv.multiply_by_timeseries('total', load_fractions)
             self.pv.scale_system('cp', 0)
 
@@ -178,15 +178,15 @@ class Network(Customer):
         # HOLY GRAIL HERE
         # Add blank columns for all residents with no pv and for central
         # -----------------------------------------------------------
-        blank_column_names = [x for x in (self.study.resident_list + ['central']) if x not in self.pv.get_system_names()]
+        blank_column_names = [x for x in (self.study.get_solar_profiles() + ['central']) if x not in self.pv.get_system_names()]
         # self.pv.data = pd.concat([self.pv.data, pd.DataFrame(columns=blank_column_names)], sort=False).fillna(0)
         for system_name in blank_column_names:
             self.pv.add_zero_system(system_name)
 
         # Initialise all residents with their allocated PV generation
         # -----------------------------------------------------------
-        for c in self.study.resident_list:
-            self.resident[c].initialise_customer_pv(np.array(self.pv.get_data(c)).astype(np.float64))
+        for c in self.study.get_participant_names():
+            self.resident[c].initialise_customer_pv(np.array(self.pv.get_data(self.study.get_solar_profile(c))).astype(np.float64))
         self.initialise_customer_pv(np.array(self.pv.get_data('central')).astype(np.float64))
 
 
@@ -250,14 +250,14 @@ class Network(Customer):
                 not pd.isnull(scenario.parameters[bat_strategy]):
             self.any_resident_has_battery = True
             self.any_householder_has_battery = True
-            self.battery_list += self.households
+            self.battery_list += [n for n in self.study.get_participant_names()]
             scenario.has_ind_batteries = 'True'
             all_battery_capacity_kWh = 1
             # Scalable batteries:
             if 'all_battery_capacity_kWh' in scenario.parameters:
                 if not pd.isnull(scenario.parameters['all_battery_capacity_kWh']):
                     all_battery_capacity_kWh = scenario.parameters['all_battery_capacity_kWh']
-            for c in self.households:
+            for c in self.study.get_participant_names():
                 self.resident[c].battery = Battery(scenario=scenario,
                                                    battery_id=scenario.parameters[bat_name],
                                                    battery_strategy=scenario.parameters[bat_strategy],
@@ -268,7 +268,7 @@ class Network(Customer):
         # Household batteries - separately defined
         # ----------------------------------------
         elif scenario.has_ind_batteries != 'none':
-            for c in self.households:
+            for c in self.study.get_participant_names:
                 bat_name = str(c) + '_battery_id'
                 bat_strategy = str(c) + '_battery_strategy'
                 bat_capacity = str(c) + '_battery_capacity_kWh'
@@ -298,7 +298,7 @@ class Network(Customer):
         # No individual household batteries
         # ---------------------------------
         else:
-            for c in self.households:
+            for c in self.study.get_participant_names():
                 self.resident[c].has_battery = False
             self.any_householder_has_battery = False
 
@@ -350,7 +350,7 @@ class Network(Customer):
         """Calculate all internal energy flows for all timesteps (no storage or dm)."""
 
         # Calculate flows for each resident and cumulative values for ENO
-        for c in self.study.resident_list:
+        for c in self.study.get_participant_names():
             self.resident[c].calc_static_energy()
             # Cumulative load and generation are what the "ENO" presents to the retailer:
             self.cum_resident_imports += self.resident[c].imports
@@ -367,7 +367,7 @@ class Network(Customer):
     def calcAllDemandCharges(self):
         """Calculates demand charges for ENO and for all residents."""
         self.calc_demand_charge()
-        for c in self.study.resident_list:
+        for c in self.study.get_participant_names() + ['cp']:
             self.resident[c].calc_demand_charge()
         self.retailer.calc_demand_charge()
 
@@ -377,7 +377,7 @@ class Network(Customer):
         # ---------------------------------------------------------------
         # Calculate flows for each resident and cumulative values for ENO
         # ---------------------------------------------------------------
-        for c in self.study.resident_list:
+        for c in self.study.get_participant_names():
             # Calc flows (inc battery dispatch) for each resident
             # ---------------------------------------------------
             self.resident[c].calc_dynamic_energy(step)
@@ -423,7 +423,7 @@ class Network(Customer):
 
         # Individual battery capex:
         # -------------------------
-        for c in self.study.resident_list:
+        for c in self.study.get_participant_names() + ['cp']:
             self.resident[c].pv_capex_repayment = 0
             self.resident[c].bat_capex_repayment = 0
             if self.resident[c].has_battery:
@@ -482,20 +482,20 @@ class Network(Customer):
         elif 'btm_s_c' in scenario.arrangement:
             # For btm_s_c, apportion capex costs equally between units and cp.
             # (Not ideal - needs more sophisticated analysis of practical btm_s arrangements)
-            for c in self.study.resident_list:
-                self.resident[c].pv_capex_repayment = scenario.pv_capex_repayment / len(self.study.resident_list)
-                self.resident[c].en_capex_repayment = scenario.en_capex_repayment / len(self.study.resident_list)
-                self.resident[c].en_opex = scenario.en_opex / len(self.study.resident_list)
-                self.resident[c].bat_capex_repayment += central_bat_capex_repayment / len(self.study.resident_list)
+            for c in self.study.get_participant_names():
+                self.resident[c].pv_capex_repayment = scenario.pv_capex_repayment / len(self.study.get_participant_names())
+                self.resident[c].en_capex_repayment = scenario.en_capex_repayment / len(self.study.get_participant_names())
+                self.resident[c].en_opex = scenario.en_opex / len(self.study.get_participant_names())
+                self.resident[c].bat_capex_repayment += central_bat_capex_repayment / len(self.study.get_participant_names())
 
         elif 'btm_s_u' in scenario.arrangement:
             # For btm_s_u, apportion capex costs equally between units only
             # (Not ideal - needs more sophisticated analysis of practical btm_s arrangements)
-            for c in self.households:
-                self.resident[c].pv_capex_repayment = scenario.pv_capex_repayment / len(self.households)
-                self.resident[c].en_opex = scenario.en_opex / len(self.households)
-                self.resident[c].en_capex_repayment = scenario.en_capex_repayment / len(self.households)
-                self.resident[c].bat_capex_repayment += central_bat_capex_repayment / len(self.households)
+            for c in self.study.get_participant_names():
+                self.resident[c].pv_capex_repayment = scenario.pv_capex_repayment / len(self.study.get_participant_names())
+                self.resident[c].en_opex = scenario.en_opex / len(self.study.get_participant_names())
+                self.resident[c].en_capex_repayment = scenario.en_capex_repayment / len(self.study.get_participant_names())
+                self.resident[c].bat_capex_repayment += central_bat_capex_repayment / len(self.study.get_participant_names())
 
         elif 'btm_p' in scenario.arrangement:
             # all solar and btm capex costs paid by solar retailer
@@ -515,7 +515,7 @@ class Network(Customer):
             # Building import is sum of customer imports
             self.total_building_export = 0
             self.total_import = 0
-            for c in self.study.resident_list:
+            for c in self.study.get_participant_names():
                 self.total_building_export += self.resident[c].exports.sum()
                 self.total_import += self.resident[c].imports.sum()
         elif 'en' in scenario.arrangement:
@@ -553,7 +553,7 @@ class Network(Customer):
         # Calculate coincidence (ie overlap of load and generation profiles accounting for battery losses)
         # ...for individual or btm PV:
         if self.pv_exists:
-            for c in self.study.resident_list:
+            for c in self.study.get_participant_names():
                 if self.resident[c].has_battery:
                     self.resident[c].coincidence = np.minimum(self.resident[c].load,
                                                               self.resident[c].generation +
