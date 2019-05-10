@@ -216,8 +216,7 @@ class Customer:
                                   self.en_capex_repayment +
                                   self.en_opex +
                                   self.bat_capex_repayment) * 100
-            if self.name == 'cp':
-                print("customer.py/calc_cash_flow()", self.total_payment, self.energy_bill, self.local_solar_bill, self.pv_capex_repayment, self.en_capex_repayment, self.en_opex, self.bat_capex_repayment)
+            
 
         # --------
         # Calc NPV

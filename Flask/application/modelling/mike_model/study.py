@@ -22,7 +22,8 @@ class Study:
                  study_name,
                  pv_path, 
                  load_path,
-                 participants
+                 participants,
+                 dynamic_tariffs
                  ):
         print("study.py/Study()/__init__()", "Starting Initialising Study Object")
         # --------------------------------
@@ -211,7 +212,8 @@ class Study:
             tariff_lookup_path=self.t_lookupFile,
             output_path=self.output_path,
             parameter_list=parameter_list,
-            ts=self.ts_ng)
+            ts=self.ts_ng,
+            dynamic_tariffs = dynamic_tariffs)
 
         self.tariff_data.generateStaticTariffs()
         # -----------------------------
@@ -281,7 +283,7 @@ class Study:
         if 'cp' not in temp_load.columns:
             temp_load['cp'] = 0
         
-        print("study.py/Study()/__init__()", temp_load)
+        # print("study.py/Study()/__init__()", temp_load)
         # Create a LoadCollection() object to take care of the load profile.
         load_profiles = LoadCollection()
         load_profiles.add_profile_from_df(temp_load, 'default')

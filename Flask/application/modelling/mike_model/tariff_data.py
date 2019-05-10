@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 from ..mike_model import en_utilities as util
-
+import pendulum
 
 class TariffData:
     """Reference resource with time-specific price data for multiple tariffs"""
@@ -13,11 +13,12 @@ class TariffData:
             tariff_lookup_path,
             output_path,
             parameter_list,
-            ts):
+            ts,
+            dynamic_tariffs):
         """Initialise tariff look-up table."""
-
+        self.dynamic_tariffs = dynamic_tariffs
         self.ts = ts
-
+        
         self.saved_tariff_path = os.path.join(output_path, 'saved_tariffs')
         os.makedirs(self.saved_tariff_path, exist_ok=True)
         # read csv of tariff parameters
@@ -42,6 +43,14 @@ class TariffData:
 
     def generateStaticTariffs(self):
         """ Creates time-based rates for all load-independent tariffs."""
+
+        print("=======")
+        print("=======")
+        print("=======")
+        print("=======")
+        print("=======")
+        print("tariff_data.py")
+
         for tid in self.all_tariffs:
             # apply discounts to all tariffs:
             # -------------------------------
@@ -143,10 +152,65 @@ class TariffData:
                 self.static_exports[tid] = 0
             elif self.lookup.loc[tid, 'fit_type'] == 'Flat_Rate':
                 self.static_exports[tid] = self.lookup['fit_flat_rate'].fillna(0).loc[tid]
+        
+        # ==================================
+        # DYNAMIC TOU TARIFF IMPLEMENTATION
+        # ==================================
+        # HOLY GRAIL NUMBER 2
+        # These three params (static_imports etc. ) are timeseries' that are queried for the tariff.
+        # Two ways to do this, but the lighter touch is to extend this module
+        # Such that these three params still exist, but are generated on the fly from supplied params.
+        
+            
+        print(self.static_imports)
+
         # Save tariffs as csvs
         import_name = os.path.join(self.saved_tariff_path, 'static_import_tariffs.csv')
         solar_name = os.path.join(self.saved_tariff_path, 'static_solar_import_tariffs.csv')
         export_name = os.path.join(self.saved_tariff_path, 'static_export_tariffs.csv')
+
         util.df_to_csv(self.static_imports, import_name)
         util.df_to_csv(self.static_solar_imports, solar_name)
         util.df_to_csv(self.static_exports, export_name)
+
+        print("ending tariff_data.py")
+        print("=======")
+        print("=======")
+    
+    def _configure_dynamic_tariffs(self):
+        """This is a parser to get the data from the dynamic tariffs UI construction into the dataframe format used in the Mike mode. """
+        static_imports = []
+        for key in self.static_imports.index:
+            dt = pendulum.instance(key)
+            # Luke's first ever use of the for...else construction.
+            for period in self.dynamic_tariffs['static_imports']:
+                if (dt.hour >= period['start_hr']) and (dt.hour < period['end_hr']):
+                    static_imports.append(period['price'])
+                    break
+            else:
+                static_imports.append(0)
+        self.static_imports['user_interface'] = static_imports
+
+        static_solar_imports = []
+        for key in self.static_solar_imports.index:
+            dt = pendulum.instance(key)
+            # Luke's first ever use of the for...else construction.
+            for period in self.dynamic_tariffs['static_solar_imports']:
+                if (dt.hour >= period['start_hr']) and (dt.hour < period['end_hr']):
+                    static_solar_imports.append(period['price'])
+                    break
+            else:
+                static_solar_imports.append(0)
+        self.static_solar_imports['user_interface'] = static_solar_imports
+
+        static_exports = []
+        for key in self.static_exports.index:
+            dt = pendulum.instance(key)
+            # Luke's first ever use of the for...else construction.
+            for period in self.dynamic_tariffs['static_exports']:
+                if (dt.hour >= period['start_hr']) and (dt.hour < period['end_hr']):
+                    static_exports.append(period['price'])
+                    break
+            else:
+                static_exports.append(0)
+        self.static_exports['user_interface'] = static_exports
