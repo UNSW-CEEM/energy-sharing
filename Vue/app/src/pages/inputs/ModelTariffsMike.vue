@@ -62,11 +62,29 @@
         data () {
             return {
 
-                colorizer: dotsPos => [
-                    [dotsPos[0], dotsPos[1], { backgroundColor: '#15E462' }],
-                    [dotsPos[1], dotsPos[2], { backgroundColor: '#1ca6db' }],
-                    [dotsPos[2], dotsPos[3], { backgroundColor: '#15E462' }],
-                ],
+                colorizer(dotsPos){
+                    // colors = [];
+
+                    // for(var i = 0; i<10; i++){
+                    //     if(i % 2 == 0){
+                    //         colors.push([dotsPos[i], dotsPos[i+1], { backgroundColor: '#15E462' }])
+                    //     }else{
+                    //         colors.push([dotsPos[i], dotsPos[i+1], { backgroundColor: '#1ca6db' }])
+                    //     }
+                    // }
+                    // return colors;
+
+                    return [
+                        [dotsPos[0], dotsPos[1], { backgroundColor: '#15E462' }],
+                        [dotsPos[1], dotsPos[2], { backgroundColor: '#1ca6db' }],
+                        [dotsPos[2], dotsPos[3], { backgroundColor: '#15E462' }],
+                        [dotsPos[3], dotsPos[4], { backgroundColor: '#1ca6db' }],
+                        [dotsPos[4], dotsPos[5], { backgroundColor: '#15E462' }],
+                        [dotsPos[5], dotsPos[6], { backgroundColor: '#1ca6db' }],
+                        [dotsPos[6], dotsPos[7], { backgroundColor: '#15E462' }],
+                        [dotsPos[7], dotsPos[8], { backgroundColor: '#1ca6db' }],
+                    ]
+                },
 
                 view_name: this.$options.name,
                 model_page_name: "model_tariffs_mike",
@@ -78,8 +96,8 @@
                     tariffs:{
                         
                         daily_fixed_rate:{
-                            tou_times: [5,10],
-                            period_rates:[1,2,1],
+                            tou_times: [7,15],
+                            period_rates:[0.2,0.4,0.2],
                         },
 
                         
