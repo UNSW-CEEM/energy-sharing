@@ -18,7 +18,7 @@ from ..mike_model.study import Study
 
 
 class NewSim:
-    def __init__(self, folder_routes):
+    def __init__(self, folder_routes, participants, dynamic_tariffs):
         base_path = folder_routes.get_route("mike_base_dir")
         self.project = folder_routes.get_route("mike_project_name")
         self.study_name = folder_routes.get_route("mike_study_name")
@@ -37,46 +37,46 @@ class NewSim:
         
         # print("\n\n It be working", self.base_dir, "\n", self.project, self.study_name)
 
-        participants = {
-            'Participant 1':{
-                'load':'profile_1',
-                'solar':'profile_1',
-                'tariff':'user_interface',
-            },
-            'Participant 2':{
-                'load':'profile_1',
-                'solar':'profile_1',
-                'tariff':'STC_20',
-            },
-        }
+        # participants = {
+        #     'Participant 1':{
+        #         'load':'profile_1',
+        #         'solar':'profile_1',
+        #         'tariff':'user_interface',
+        #     },
+        #     'Participant 2':{
+        #         'load':'profile_1',
+        #         'solar':'profile_1',
+        #         'tariff':'STC_20',
+        #     },
+        # }
 
 
 
-        dynamic_tariffs = [
-            {
-                'name':'user_interface',
-                'daily_fixed_rate': 0.5,
-                'static_imports':[
-                    {
-                        'start_hr':7,
-                        'end_hr':10,
-                        'price':0.3
-                    },
-                    {
-                        'start_hr':10,
-                        'end_hr':15,
-                        'price':0.5
-                    },
-                    {
-                        'start_hr':15,
-                        'end_hr':18,
-                        'price':0.3
-                    },
-                ],
-                'static_solar_imports':[],
-                'static_exports':[]
-            }
-        ]
+        # dynamic_tariffs = [
+        #     {
+        #         'name':'user_interface',
+        #         'daily_fixed_rate': 0.5,
+        #         'static_imports':[
+        #             {
+        #                 'start_hr':7,
+        #                 'end_hr':10,
+        #                 'price':0.3
+        #             },
+        #             {
+        #                 'start_hr':10,
+        #                 'end_hr':15,
+        #                 'price':0.5
+        #             },
+        #             {
+        #                 'start_hr':15,
+        #                 'end_hr':18,
+        #                 'price':0.3
+        #             },
+        #         ],
+        #         'static_solar_imports':[],
+        #         'static_exports':[]
+        #     }
+        # ]
         
         
         self.study = Study(base_path, self.project, self.study_name, pv_path, load_path, participants, dynamic_tariffs)

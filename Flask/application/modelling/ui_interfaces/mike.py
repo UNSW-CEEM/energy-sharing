@@ -38,11 +38,15 @@ class MikeWrapper:
 
         # UI Interface objects
         self.ui_participants = Ui_Participants(self.folder_routes)
-        self.ui_tariffs = Ui_Tariffs(self.folder_routes)
+        self.ui_tariffs = None
         self.ui_finances = None
         self.ui_central_battery = Ui_Central_Battery(self.folder_routes)
         self.ui_central_solar = Ui_Central_Solar(self.folder_routes)
         self.ui_results_parser = Ui_Results_Parsers(self.folder_routes)
+
+        
+
+        
 
         # Model Objects
         self.model_network = None
@@ -95,12 +99,49 @@ class MikeWrapper:
         # if key in ui_inputs:
         #     self.ui_tariffs.load(ui_inputs[key])
         
-        self.ui_tariffs = ui_inputs['model_tariffs_mike'] if 'model_tariffs_mike' in ui_inputs else None #This just grabs the new tariffs object from the ui inputs
+        # self.ui_tariffs = ui_inputs['model_tariffs_mike'] if 'model_tariffs_mike' in ui_inputs else None #This just grabs the new tariffs object from the ui inputs
+        self.ui_tariffs = [
+            {
+                'name':'user_interface',
+                'daily_fixed_rate': 1,
+                'static_imports':[
+                    {
+                        'start_hr':7,
+                        'end_hr':10,
+                        'price':0.3
+                    },
+                    {
+                        'start_hr':10,
+                        'end_hr':15,
+                        'price':0.5
+                    },
+                    {
+                        'start_hr':15,
+                        'end_hr':18,
+                        'price':0.3
+                    },
+                ],
+                'static_solar_imports':[],
+                'static_exports':[]
+            }
+        ]
 
     def load_participants(self, ui_inputs):
-        key = "model_participants"
-        if key in ui_inputs:
-            self.ui_participants.load(ui_inputs[key])
+        # key = "model_participants"
+        # if key in ui_inputs:
+        #     self.ui_participants.load(ui_inputs[key])
+        self.ui_participants = {
+            'Participant 1':{
+                'load':'profile_1',
+                'solar':'profile_1',
+                'tariff':'user_interface',
+            },
+            'Participant 2':{
+                'load':'profile_1',
+                'solar':'profile_1',
+                'tariff':'STC_20',
+            },
+        }
 
     def load_data_sources(self, ui_inputs):
         key = "model_data_sources"
@@ -114,7 +155,7 @@ class MikeWrapper:
     def create_objects(self):
         
         # Create the main Study object
-        self.mike_model = NewSim(self.folder_routes)
+        self.mike_model = NewSim(self.folder_routes, self.ui_participants, self.ui_tariffs)
        
 
     def run(self, status):
