@@ -14,7 +14,7 @@ class Tariff:
         """Create time-based rates for single specific tariff."""
         if tariff_id not in scenario.tariff_lookup.index:
             msg = '******Exception: Tariff ' + tariff_id + ' is not in tariff_lookup.csv'
-            exit(msg)
+            raise Exception(msg)
 
         # ------------------------------
         # Export Tariff and Fixed Charge
@@ -140,3 +140,12 @@ class Tariff:
             self.import_tariff = (scenario.static_imports[tariff_id]).values
         else:
             self.import_tariff = np.zeros(self.ts.get_num_steps())
+        
+        self._print_tariff(tariff_id)
+    
+    def _print_tariff(self, tariff_id):
+        print("======")
+        print("TARIFF: ", tariff_id)
+        for attr, value in self.__dict__.items():
+            print(attr, value)
+        print("======")

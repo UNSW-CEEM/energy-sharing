@@ -102,11 +102,13 @@ class Scenario:
         tariff_short_list = list(set(tariff_short_list))  # drop duplicates
         for tariff_id in tariff_short_list:
 
-            if tariff_id not in study.tariff_data.lookup.index:
+            if (tariff_id not in study.tariff_data.lookup.index) and (tariff_id not in [t['name'] for t in self.study.tariff_data.dynamic_tariffs]):
                 msg = '******Exception: Tariff ' + tariff_id + ' is not in tariff_lookup.csv'
                 raise Exception(msg)
         #  Slice tariff_lookup table for this scenario
         self.tariff_lookup = study.tariff_data.lookup.loc[tariff_short_list]
+        
+        
 
         self.dynamic_list = [t for t in tariff_short_list
                              if any(

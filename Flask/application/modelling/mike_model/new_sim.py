@@ -41,7 +41,7 @@ class NewSim:
             'Participant 1':{
                 'load':'profile_1',
                 'solar':'profile_1',
-                'tariff':'STC_20',
+                'tariff':'user_interface',
             },
             'Participant 2':{
                 'load':'profile_1',
@@ -55,6 +55,7 @@ class NewSim:
         dynamic_tariffs = [
             {
                 'name':'user_interface',
+                'daily_fixed_rate': 0.5,
                 'static_imports':[
                     {
                         'start_hr':7,
