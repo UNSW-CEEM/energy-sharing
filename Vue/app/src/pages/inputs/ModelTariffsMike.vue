@@ -17,7 +17,6 @@
                     </div>
 
                     <div class="tariffs">
-                       
                         <div class="input">
                             <div v-for="(tariff, index) in input_data.tariffs.daily_fixed_rate.period_rates">
                                 <span class="units">Period {{index + 1}}</span>
@@ -280,8 +279,10 @@
         justify-content:space-around;
         align-items:center;
         width:100%;
-        
-
+        flex-wrap: wrap;
+    }
+    .tariffs .input * {
+        padding: 1vh 0 1vh 0;
     }
 
     .tariffs input{
