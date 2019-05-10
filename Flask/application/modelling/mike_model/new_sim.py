@@ -40,37 +40,43 @@ class NewSim:
         participants = {
             'Participant 1':{
                 'load':'profile_1',
-                'solar':'profile_1'
+                'solar':'profile_1',
+                'tariff':'STC_20',
             },
             'Participant 2':{
                 'load':'profile_1',
-                'solar':'profile_1'
+                'solar':'profile_1',
+                'tariff':'STC_20',
             },
         }
 
 
 
-        dynamic_tariffs = {
-            'static_imports':[
-                {
-                    'start_hr':7,
-                    'end_hr':10,
-                    'price':0.3
-                },
-                {
-                    'start_hr':10,
-                    'end_hr':15,
-                    'price':0.5
-                },
-                {
-                    'start_hr':15,
-                    'end_hr':18,
-                    'price':0.3
-                },
-            ],
-            'static_solar_imports':[],
-            'static_exports':[]
-        }
+        dynamic_tariffs = [
+            {
+                'name':'user_interface',
+                'static_imports':[
+                    {
+                        'start_hr':7,
+                        'end_hr':10,
+                        'price':0.3
+                    },
+                    {
+                        'start_hr':10,
+                        'end_hr':15,
+                        'price':0.5
+                    },
+                    {
+                        'start_hr':15,
+                        'end_hr':18,
+                        'price':0.3
+                    },
+                ],
+                'static_solar_imports':[],
+                'static_exports':[]
+            }
+        ]
+        
         
         self.study = Study(base_path, self.project, self.study_name, pv_path, load_path, participants, dynamic_tariffs)
         print("new_sim.py/NewSim()/__init__", "NewSim Created")

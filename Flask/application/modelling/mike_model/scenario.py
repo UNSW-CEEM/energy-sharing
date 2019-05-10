@@ -82,40 +82,44 @@ class Scenario:
         # Customer tariffs can be individually allocated, or can be fixed for all residents
         # if 'all residents' is present in scenario csv, it trumps individual customer tariffs
         # and is copied across (except for cp):
-        if 'all_residents' in self.parameters:
-            if (self.parameters['all_residents'] == ''):
-                logging.info('Missing tariff data for all_residents in study csv')
-            else:  # read tariff for each customer
-                for c in self.study.get_participant_names():
-                    self.parameters[c] = self.parameters['all_residents']
+        # if 'all_residents' in self.parameters:
+        #     if (self.parameters['tariffs']['all_residents'] == ''):
+        #         logging.info('Missing tariff data for all_residents in study csv')
+        #     else:  # read tariff for each customer
+        #         for c in self.study.get_participant_names():
+        #             self.parameters['tariffs'][c] = self.parameters['all_residents']
+        
+
         # --------------------------------------------
         # Create list of tariffs used in this scenario
         # --------------------------------------------
-        self.customers_with_tariffs = self.study.get_participant_names() + ['parent', 'cp']
-        self.dnsp_tariff = self.parameters['network_tariff']
-        self.tariff_in_use = {customer:self.parameters[customer] for customer in self.customers_with_tariffs}
-        self.tariff_short_list = [self.tariff_in_use[customer] for customer in self.tariff_in_use] + [self.dnsp_tariff]  # list of tariffs in use
-        self.tariff_short_list = list(set(self.tariff_short_list))  # drop duplicates
-        for tariff_id in self.tariff_short_list:
+        
+        self.dnsp_tariff = self.parameters['tariffs']['network_tariff']
+        self.tariff_in_use = {participant:self.study.get_tariff_type(participant) for participant in self.study.get_participant_names()}
+        self.tariff_in_use['parent'] = self.parameters['tariffs']['parent']
+        self.tariff_in_use['cp'] = self.parameters['tariffs']['cp']
+        tariff_short_list = [self.tariff_in_use[customer] for customer in self.tariff_in_use] + [self.dnsp_tariff]  # list of tariffs in use
+        tariff_short_list = list(set(tariff_short_list))  # drop duplicates
+        for tariff_id in tariff_short_list:
 
             if tariff_id not in study.tariff_data.lookup.index:
                 msg = '******Exception: Tariff ' + tariff_id + ' is not in tariff_lookup.csv'
-                exit(msg)
+                raise Exception(msg)
         #  Slice tariff_lookup table for this scenario
-        self.tariff_lookup = study.tariff_data.lookup.loc[self.tariff_short_list]
+        self.tariff_lookup = study.tariff_data.lookup.loc[tariff_short_list]
 
-        self.dynamic_list = [t for t in self.tariff_short_list
+        self.dynamic_list = [t for t in tariff_short_list
                              if any(
                 word in self.tariff_lookup.loc[t, 'tariff_type'] for word in ['Block', 'block', 'Dynamic', 'dynamic'])]
         # Currently only includes block, could also add demand tariffs
         # if needed - e.g. for demand tariffs on < 12 month period
-        self.solar_list = [t for t in self.tariff_short_list
+        self.solar_list = [t for t in tariff_short_list
                            if any(word in self.tariff_lookup.loc[t, 'tariff_type'] for word in ['Solar', 'solar'])]
         solar_block_list = [t for t in self.solar_list
                             if any(word in self.tariff_lookup.loc[t, 'tariff_type'] for word in ['Block', 'block'])]
         self.solar_inst_list = [t for t in self.solar_list
                                 if any(word in self.tariff_lookup.loc[t, 'tariff_type'] for word in ['Inst', 'inst'])]
-        self.demand_list = [t for t in self.tariff_short_list
+        self.demand_list = [t for t in tariff_short_list
                             if 'Demand' in self.tariff_lookup.loc[t, 'tariff_type']]
         self.has_demand_charges = len(self.demand_list) > 0
         self.has_dynamic_tariff = len(self.dynamic_list) > 0
@@ -124,8 +128,8 @@ class Scenario:
 
         #  Slice  static tariffs for this scenario
         # ----------------------------------------
-        self.static_imports = study.tariff_data.static_imports[self.tariff_short_list]
-        self.static_exports = study.tariff_data.static_exports[self.tariff_short_list]
+        self.static_imports = study.tariff_data.static_imports[tariff_short_list]
+        self.static_exports = study.tariff_data.static_exports[tariff_short_list]
         if len(self.solar_list) > 0:
             self.static_solar_imports = study.tariff_data.static_solar_imports[self.solar_list]
 

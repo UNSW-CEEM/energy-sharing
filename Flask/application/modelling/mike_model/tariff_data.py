@@ -172,38 +172,41 @@ class TariffData:
     
     def _configure_dynamic_tariffs(self):
         """This is a parser to get the data from the dynamic tariffs UI construction into the dataframe format used in the Mike model. """
-        static_imports = []
-        for key in self.static_imports.index:
-            dt = pendulum.instance(key)
-            # Luke's first ever use of the for...else construction.
-            for period in self.dynamic_tariffs['static_imports']:
-                if (dt.hour >= period['start_hr']) and (dt.hour < period['end_hr']):
-                    static_imports.append(period['price'])
-                    break
-            else:
-                static_imports.append(0)
-        self.static_imports['user_interface'] = static_imports
+        # Loop through each dynamic tariff in the list. 
+        for dynamic_tariff in dynamic_tariffs:
+            # Add they dynamic tariff's static import data
+            static_imports = []
+            for key in self.static_imports.index:
+                dt = pendulum.instance(key)
+                # Luke's first ever use of the for...else construction.
+                for period in dynamic_tariff['static_imports']:
+                    if (dt.hour >= period['start_hr']) and (dt.hour < period['end_hr']):
+                        static_imports.append(period['price'])
+                        break
+                else:
+                    static_imports.append(0)
+            self.static_imports[dynamic_tariff['name']] = static_imports
 
-        static_solar_imports = []
-        for key in self.static_solar_imports.index:
-            dt = pendulum.instance(key)
-            # Luke's first ever use of the for...else construction.
-            for period in self.dynamic_tariffs['static_solar_imports']:
-                if (dt.hour >= period['start_hr']) and (dt.hour < period['end_hr']):
-                    static_solar_imports.append(period['price'])
-                    break
-            else:
-                static_solar_imports.append(0)
-        self.static_solar_imports['user_interface'] = static_solar_imports
+            # Add they dynamic tariff's static solar import data
+            static_solar_imports = []
+            for key in self.static_solar_imports.index:
+                dt = pendulum.instance(key)
+                for period in dynamic_tariff['static_solar_imports']:
+                    if (dt.hour >= period['start_hr']) and (dt.hour < period['end_hr']):
+                        static_solar_imports.append(period['price'])
+                        break
+                else:
+                    static_solar_imports.append(0)
+            self.static_solar_imports[dynamic_tariff['name']] = static_solar_imports
 
-        static_exports = []
-        for key in self.static_exports.index:
-            dt = pendulum.instance(key)
-            # Luke's first ever use of the for...else construction.
-            for period in self.dynamic_tariffs['static_exports']:
-                if (dt.hour >= period['start_hr']) and (dt.hour < period['end_hr']):
-                    static_exports.append(period['price'])
-                    break
-            else:
-                static_exports.append(0)
-        self.static_exports['user_interface'] = static_exports
+            # Add they dynamic tariff's static export data
+            static_exports = []
+            for key in self.static_exports.index:
+                dt = pendulum.instance(key)
+                for period in dynamic_tariff['static_exports']:
+                    if (dt.hour >= period['start_hr']) and (dt.hour < period['end_hr']):
+                        static_exports.append(period['price'])
+                        break
+                else:
+                    static_exports.append(0)
+            self.static_exports[dynamic_tariff['name']] = static_exports

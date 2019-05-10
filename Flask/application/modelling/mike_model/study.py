@@ -78,16 +78,19 @@ class Study:
             'arrangement':'en_pv',
             'pv_cap_id': 'W_max_yield',
             'pv_capex_scaleable':False,
-            'cp':'TIDNULL',
-            'all_residents':'STC_20',
-            'parent': 'EA305_TOU12',
-            'network_tariff':'EA305',
+            
             'en_capex_id':'capex_med',
             'a_term':20,
             'a_rate':0.06,
             'pv_scaleable':False,
             'pv_kW_peak':'',
-            'notes':''
+            'notes':'',
+            'tariffs':{
+                'cp':'TIDNULL',
+                'all_residents':'STC_20',
+                'parent': 'EA305_TOU12',
+                'network_tariff':'EA305',
+            }
         }
         self.scenario_list = [self.study_parameters['scenario']]
         
@@ -206,7 +209,7 @@ class Study:
         # Initialise Tariff Look-up table and generate all static tariffs
         # ---------------------------------------------------------------
         # parameter_list = self.study_parameters.values.flatten().tolist()
-        parameter_list = [self.study_parameters[key] for key in self.study_parameters]
+        parameter_list = [self.study_parameters['tariffs'][key] for key in self.study_parameters['tariffs']]
 
         self.tariff_data = TariffData(
             tariff_lookup_path=self.t_lookupFile,
@@ -240,6 +243,10 @@ class Study:
     
     def get_participant_names(self):
         return [p for p in self._participants]
+    
+    def get_tariff_type(self, p):
+        return self._participants[p]['tariff']
+
     
     
 
