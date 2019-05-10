@@ -44,12 +44,7 @@ class TariffData:
     def generateStaticTariffs(self):
         """ Creates time-based rates for all load-independent tariffs."""
 
-        print("=======")
-        print("=======")
-        print("=======")
-        print("=======")
-        print("=======")
-        print("tariff_data.py")
+       
 
         for tid in self.all_tariffs:
             # apply discounts to all tariffs:
@@ -161,8 +156,8 @@ class TariffData:
         # Two ways to do this, but the lighter touch is to extend this module
         # Such that these three params still exist, but are generated on the fly from supplied params.
         
-            
-        print(self.static_imports)
+        self._configure_dynamic_tariffs()
+        
 
         # Save tariffs as csvs
         import_name = os.path.join(self.saved_tariff_path, 'static_import_tariffs.csv')
@@ -173,12 +168,10 @@ class TariffData:
         util.df_to_csv(self.static_solar_imports, solar_name)
         util.df_to_csv(self.static_exports, export_name)
 
-        print("ending tariff_data.py")
-        print("=======")
-        print("=======")
+        
     
     def _configure_dynamic_tariffs(self):
-        """This is a parser to get the data from the dynamic tariffs UI construction into the dataframe format used in the Mike mode. """
+        """This is a parser to get the data from the dynamic tariffs UI construction into the dataframe format used in the Mike model. """
         static_imports = []
         for key in self.static_imports.index:
             dt = pendulum.instance(key)
