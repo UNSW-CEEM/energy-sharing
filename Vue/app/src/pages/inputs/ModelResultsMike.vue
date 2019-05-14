@@ -14,6 +14,10 @@
         </div>
 
         <div class="sub-chart-container" v-if="selected_chart">
+            <SummaryTable
+                v-if="selected_chart.chart_type==='SummaryTable' && input_data.chart_data"
+                :chart_data="input_data.chart_data"
+            />
             <CustomerTotals
                 v-if="selected_chart.chart_type==='CustomerTotals' && input_data.chart_data"
                 :chart_data="input_data.chart_data"
@@ -62,13 +66,14 @@
     import CustomerTotals from "../../charts/_CustomerTotals";
     import CustomerSolarBills from "../../charts/_CustomerSolarBills";
     import CustomerBills from "../../charts/_CustomerBills";
+    import SummaryTable from "../../charts/_SummaryTable";
     import moment from 'moment'
 
     import SaveLoad from '@/mixins/SaveLoad.vue';
 
     export default {
         name: "ModelResultsMike",
-        components: {EnergyGenCon, EnergyCC, RevRCC, RevParticipant, TPB, EnergySystemFlows, CustomerTotals, CustomerSolarBills, CustomerBills},
+        components: {EnergyGenCon, EnergyCC, RevRCC, RevParticipant, TPB, EnergySystemFlows, CustomerTotals, CustomerSolarBills, CustomerBills, SummaryTable},
 
         mixins: [SaveLoad],
 
@@ -89,16 +94,21 @@
                     chart_boxes: [
                         {
                             id: 0,
+                            link_text: "Summary Table",
+                            chart_type: 'SummaryTable',
+                        },
+                        {
+                            id: 1,
                             link_text: "Customer Totals",
                             chart_type: 'CustomerTotals',
                         },
                         {
-                            id: 1,
+                            id: 2,
                             link_text: "Customer Solar Bills",
                             chart_type: 'CustomerSolarBills',
                         },
                         {
-                            id: 2,
+                            id: 3,
                             link_text: "Customer Bills",
                             chart_type: 'CustomerBills',
                         },

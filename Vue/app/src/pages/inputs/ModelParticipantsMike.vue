@@ -3,10 +3,63 @@
         <!-- <div class="view-title">{{ view_name}}</div> -->
         
         <div class="main-container">
+
+            <div class="config-info">
+                <div class="config-heading">Arrangement</div>
+                <div class="arrangement-selection">
+
+                    <div class="arrangement">
+                        <div class="heading">
+                            Individual Behind The Meter
+                        </div>
+                        <div class="description">
+                            Each Participant has a solar system.
+                        </div>
+                        <div class="selected-arrangement-button" v-if="input_data.selected_arrangement=='btm_i'">
+                            Selected ✓
+                        </div>
+                        <div class="select-arrangement-button" v-else v-on:click="input_data.selected_arrangement = 'btm_i'">
+                            Select
+                        </div>
+                    </div>
+
+                    <div class="arrangement">
+                        <div class="heading">
+                            Embedded Network
+                        </div>
+                        <div class="description">
+                            Central solar only.
+                        </div>
+                        <div class="selected-arrangement-button" v-if="input_data.selected_arrangement=='en'">
+                            Selected ✓
+                        </div>
+                        <div class="select-arrangement-button" v-else v-on:click="input_data.selected_arrangement = 'en'">
+                            Select
+                        </div>
+                    </div>
+
+                    <div class="arrangement">
+                        <div class="heading">
+                            Shared Behind The Meter
+                        </div>
+                        <div class="description">
+                            On market with grid supply, shared dist system ie. local solar.
+                        </div>
+                        <div class="selected-arrangement-button" v-if="input_data.selected_arrangement=='btm_s'">
+                            Selected ✓
+                        </div>
+                        <div class="select-arrangement-button" v-else v-on:click="input_data.selected_arrangement = 'btm_s'">
+                            Select
+                        </div>
+                    </div>
+
+                    
+                </div>
+            </div>
             
             
             <div class="config-info">
-                <div class="config-heading">Input Data - Mike Model</div>
+                <div class="config-heading">Input Data</div>
                 <div class="config-content">
                     <div class="config-selected">
                         <span>Selected Load File: {{input_data.selected_load_file}}</span>
@@ -140,7 +193,7 @@
                 },
 
                 input_data: {
-                    
+                    selected_arrangement:'btm_i',
                     selected_solar_file: '',
                     selected_load_file: '',
                     selected_config_file: 'user_config.csv',
@@ -521,7 +574,7 @@
 
         display:flex;
         flex-direction:column;
-        justify-content:center;
+        justify-content:flex-start;
         align-items: center;
 
         min-height:95vh;
@@ -675,6 +728,7 @@
 
         background-color:$container-bg;
         color:$container-text;
+        margin:2vh 0 0 0;
         
     }
 
@@ -715,6 +769,44 @@
         display:flex;
         flex-direction:row;
         margin: 4vh 0 0 0;
+    }
+
+    .arrangement-selection{
+        display:flex;
+        flex-direction:row;
+        justify-content:space-around;
+        align-items:center;
+    }
+
+    .arrangement{
+        width:25%;
+        max-width:25%;
+        height:20vh;
+        // background-color:$heading-bg;
+        border:solid $heading-bg 2px;
+        margin: 2vh 0 2vh 0;
+        border-radius:4px;
+        display:flex;
+        flex-direction:column;
+        justify-content:space-between;
+
+    }
+
+    .arrangement .heading{
+        background-color:$heading-bg;
+        color:$heading-text;
+    }
+
+    .select-arrangement-button{
+        background-color:$secondary;
+        color:$button-text;
+        cursor: pointer;
+    }
+
+    .selected-arrangement-button{
+        background-color:$tertiary;
+        color:$button-text;
+        cursor: pointer;
     }
 
 </style>
