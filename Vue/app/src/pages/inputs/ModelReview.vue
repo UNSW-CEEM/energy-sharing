@@ -11,8 +11,8 @@
                     Data Sources
                 </div>
                 <div class="info-box-content">
-                    <div> Selected solar file: {{parsed_parameters.model_data_sources.selected_solar_file |checkBlank}}</div>
-                    <div> Selected load file: {{parsed_parameters.model_data_sources.selected_solar_file |checkBlank}}</div>
+                    <div> Selected solar file: {{selected_solar_file |checkBlank}}</div>
+                    <div> Selected load file: {{selected_load_file |checkBlank}}</div>
                 </div>
             </div>
 
@@ -21,7 +21,17 @@
                     Participants
                 </div>
                 <div class="info-box-content">
-                    <table>
+                    <table v-if='parsed_parameters.model_selection.model_type=="mike"'>
+                        <tr><th>Participant ID</th><th>Tariff</th><th>Load Profile</th><th>Solar Profile</th></tr>
+                        
+                        <tr v-for="p in parsed_parameters.model_participants_mike" :key="p.row_id">
+                            <td v-for="attribute in p.row_inputs" :key="attribute.name">
+                                 {{attribute.value |checkBlank}}
+                            </td>
+                        </tr>
+                        
+                    </table>
+                    <table v-else>
                         <tr><th>Participant ID</th><th>Participant Type</th><th>Retail Tariff</th><th>Load Profile</th><th>Solar Profile</th></tr>
                         
                         <tr v-for="p in parsed_parameters.model_participants" :key="p.row_id">
@@ -29,6 +39,7 @@
                                  {{attribute.value |checkBlank}}
                             </td>
                         </tr>
+                        
                     </table>
                 </div>
             </div>
@@ -88,10 +99,22 @@
             selected_solar_file(){
                 if(this.parsed_parameters.model_data_sources){
                     return this.parsed_parameters.model_data_sources.selected_solar_file;
+                }else if(this.parsed_parameters.model_data_sources_mike){
+                    return this.parsed_parameters.model_data_sources_mike.selected_solar_file;
                 }else{
                     return "No File Selected"
                 }
                 
+            },
+
+            selected_load_file(){
+                if(this.parsed_parameters.model_data_sources){
+                    return this.parsed_parameters.model_data_sources.selected_load_file;
+                }else if(this.parsed_parameters.model_data_sources_mike){
+                    return this.parsed_parameters.model_data_sources_mike.selected_load_file;
+                }else{
+                    return "No File Selected"
+                }
             }
         },
 
