@@ -15,13 +15,13 @@ class ResultParsers:
 
     def mike_temp_parser(self):
         row_data = []
-
+        print("result_parsers.py/mike_temp_parser()", "output file", self.mike_output_file_path)
         # All info on one line.
         with open(self.mike_output_file_path) as file:
             reader = csv.DictReader(file)
             for row in reader:
                 row_data.append(row)
-
+        print("result_parsers.py/mike_temp_parser()", "row_data", row_data)
         customer_bills = {}
         customer_solar_bills = {}
         customer_totals = {}
@@ -29,6 +29,12 @@ class ResultParsers:
 
         for row in row_data:
             for key, value in row.items():
+                # They all seem to be numbers - cast to floats.
+                try:
+                    value = float(value)
+                except ValueError:
+                    pass
+
                 if "cust_bill" in key:
                     customer_bills[key] = value
                 elif "cust_solar" in key:
@@ -38,29 +44,17 @@ class ResultParsers:
                 else:
                     scenario_info[key] = value
 
-        tpb = self.mike_parse_tpb(customer_totals)
-        rev_participant = False
-        revenue_retailer = False
-        energy_gencon = False
-        energy_cc = False
 
         results = {
-            "total_participant_bill": tpb,
-            "revenue_participant": rev_participant,
-            "revenue_retailer": revenue_retailer,
-            "energy_gencon": energy_gencon,
-            "energy_cc": energy_cc,
+            "customer_totals": customer_totals,
+            "customer_solar_bills": customer_solar_bills,
+            "customer_total": revenue_retailer,
+            "energy_gencon": customer_totals,
+            "scenario_info": scenario_info,
         }
 
         return results
 
-    @staticmethod
-    def mike_parse_tpb(data):
-        for each in data:
-            # print(each, data[each])
-            pass
-
-        return data
 
     def luomi_temp_parser(self, battery_capacity):
         energy_flows_path = os.path.join(
