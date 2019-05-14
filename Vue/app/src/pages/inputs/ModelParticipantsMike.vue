@@ -8,50 +8,21 @@
                 <div class="config-heading">Arrangement</div>
                 <div class="arrangement-selection">
 
-                    <div class="arrangement">
+                    <div class="arrangement" v-for="arrangement in arrangements">
                         <div class="heading">
-                            Individual Behind The Meter
+                            {{arrangement.heading}}
                         </div>
                         <div class="description">
-                            Each Participant has a solar system.
+                            {{arrangement.description}}
                         </div>
-                        <div class="selected-arrangement-button" v-if="input_data.selected_arrangement=='btm_i'">
+                        <div class="selected-arrangement-button" v-if="input_data.selected_arrangement==arrangement.id">
                             Selected ✓
                         </div>
-                        <div class="select-arrangement-button" v-else v-on:click="input_data.selected_arrangement = 'btm_i'">
+                        <div class="select-arrangement-button" v-else v-on:click="input_data.selected_arrangement = arrangement.id">
                             Select
                         </div>
                     </div>
 
-                    <div class="arrangement">
-                        <div class="heading">
-                            Embedded Network
-                        </div>
-                        <div class="description">
-                            Central solar only.
-                        </div>
-                        <div class="selected-arrangement-button" v-if="input_data.selected_arrangement=='en'">
-                            Selected ✓
-                        </div>
-                        <div class="select-arrangement-button" v-else v-on:click="input_data.selected_arrangement = 'en'">
-                            Select
-                        </div>
-                    </div>
-
-                    <div class="arrangement">
-                        <div class="heading">
-                            Shared Behind The Meter
-                        </div>
-                        <div class="description">
-                            On market with grid supply, shared dist system ie. local solar.
-                        </div>
-                        <div class="selected-arrangement-button" v-if="input_data.selected_arrangement=='btm_s'">
-                            Selected ✓
-                        </div>
-                        <div class="select-arrangement-button" v-else v-on:click="input_data.selected_arrangement = 'btm_s'">
-                            Select
-                        </div>
-                    </div>
 
                     
                 </div>
@@ -191,6 +162,18 @@
                     solar_timeseries:{},
                     load_timeseries:{},
                 },
+
+                arrangements:[
+                    {id:'en', heading:"Embedded Network", description:"Central solar only."},
+                    {id:'btm_i', heading:"Individual Behind the Meter", description:"Each Participant has a solar system."},
+                    {id:'btm_s', heading:"Shared Behind the Meter", description:"On market with grid supply, shared dist system ie. local solar."},
+                    {id:'cp', heading:"Common Property", description:"Central Building Load"},
+                    {id:'btm_i_c', heading:"Behind the Meter Individual / Common", description:"Each Participant has a solar system + common solar system."},
+                    {id:'btm_s_c', heading:"Behind the Meter Shared / Common", description:"A single solar system's output is split between all residents and the common property."},
+                    {id:'btm_s_u', heading:"Behind the Meter Shared", description:"A single solar system's output is split between all residents but not used to power the common property."},
+                    {id:'btm_p_c', heading:"Behind the Meter PPA / Common", description:"A single solar system's output is split between all residends and the common property. Generation is paid for under a PPA."},
+                    {id:'btm_p_u', heading:"Behind the Meter PPA / Common", description:"A single solar system's output is split between all residents but not used to power the common property. Generation is paid for under a PPA."},
+                ],
 
                 input_data: {
                     selected_arrangement:'btm_i',
@@ -776,6 +759,8 @@
         flex-direction:row;
         justify-content:space-around;
         align-items:center;
+        flex-wrap:wrap;
+        max-width:75vw;
     }
 
     .arrangement{
@@ -789,12 +774,17 @@
         display:flex;
         flex-direction:column;
         justify-content:space-between;
+        
 
     }
 
     .arrangement .heading{
         background-color:$heading-bg;
         color:$heading-text;
+    }
+
+    .arrangement .description{
+        font-size:0.8em;
     }
 
     .select-arrangement-button{
