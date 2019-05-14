@@ -141,7 +141,7 @@ class Tariff:
         else:
             self.import_tariff = np.zeros(self.ts.get_num_steps())
         
-        self._print_tariff(tariff_id)
+        # self._print_tariff(tariff_id)
     
     def _print_tariff(self, tariff_id):
         print("======")

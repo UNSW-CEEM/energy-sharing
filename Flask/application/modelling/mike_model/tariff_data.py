@@ -173,8 +173,10 @@ class TariffData:
         """This is a parser to get the data from the dynamic tariffs UI construction into the dataframe format used in the Mike model. """
         # Loop through each dynamic tariff in the list. 
         for dynamic_tariff in self.dynamic_tariffs:
+            print("tariff_data.py/_configure_dynamic_tariffs()", dynamic_tariff)
             # Add they dynamic tariff's static import data
             static_imports = []
+            
             for key in self.static_imports.index:
                 dt = pendulum.instance(key)
                 # Luke's first ever use of the for...else construction.
@@ -209,6 +211,9 @@ class TariffData:
                 else:
                     static_exports.append(0)
             self.static_exports[dynamic_tariff['name']] = static_exports
+
+            # print("tariff_data.py/_configure_dynamic_tariffs", self.static_imports.to_string())
+            
 
             # Modify the tariff lookup so that it contains a special tariff type for each custom tariff. 
             self.lookup.loc[dynamic_tariff['name'], 'tariff_type'] = 'custom'

@@ -2,37 +2,74 @@
     <div class="background">
         <div class="main-container">
             <!-- <h1 class="view-title">{{ view_name }}</h1> -->
-            <!-- <p>Beta Note: 'Luomi' model requires one of each tariff completed. (DUOS, NUOS, TUOS and Retail)</p> -->
             
             <div class="container">
                 <div class="container-header">
-                    Daily Fixed Rate
+                    Imports
                 </div>
                 <div class="container-content">
-                    <Chart class="mychart" :options="daily_fixed_rate_chart_options"></Chart>
+                    <Chart class="mychart" :options="static_imports_chart_options"></Chart>
                     <div class="slider">
-                        <vue-slider v-model="input_data.tariffs.daily_fixed_rate.tou_times" :process="colorizer" :min="1" :max="24" :interval="1"></vue-slider>
-                        <button v-on:click="add_time_period('daily_fixed_rate')">Add Time Period</button>
+                        <vue-slider v-model="input_data.tariffs.static_imports.tou_times" :process="colorizer" :min="1" :max="24" :interval="1"></vue-slider>
+                        <button v-on:click="add_time_period('static_imports')">Add Time Period</button>
 
                     </div>
-
                     <div class="tariffs">
                         <div class="input">
-                            <div v-for="(tariff, index) in input_data.tariffs.daily_fixed_rate.period_rates">
+                            <div v-for="(tariff, index) in input_data.tariffs.static_imports.period_rates">
                                 <span class="units">Period {{index + 1}}</span>
-                                <input v-model.number="input_data.tariffs.daily_fixed_rate.period_rates[index]"/> 
+                                <input v-model.number="input_data.tariffs.static_imports.period_rates[index]"/> 
                                 <span class="units">($/kWh)</span>
                             </div>
                         </div>
-                        
                     </div>
-
-                
                 </div>
             </div>
 
-            
+            <div class="container">
+                <div class="container-header">
+                    Solar Imports
+                </div>
+                <div class="container-content">
+                    <Chart class="mychart" :options="static_solar_imports_chart_options"></Chart>
+                    <div class="slider">
+                        <vue-slider v-model="input_data.tariffs.static_solar_imports.tou_times" :process="colorizer" :min="1" :max="24" :interval="1"></vue-slider>
+                        <button v-on:click="add_time_period('static_solar_imports')">Add Time Period</button>
 
+                    </div>
+                    <div class="tariffs">
+                        <div class="input">
+                            <div v-for="(tariff, index) in input_data.tariffs.static_solar_imports.period_rates">
+                                <span class="units">Period {{index + 1}}</span>
+                                <input v-model.number="input_data.tariffs.static_solar_imports.period_rates[index]"/> 
+                                <span class="units">($/kWh)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="container-header">
+                    Exports
+                </div>
+                <div class="container-content">
+                    <Chart class="mychart" :options="static_exports_chart_options"></Chart>
+                    <div class="slider">
+                        <vue-slider v-model="input_data.tariffs.static_exports.tou_times" :process="colorizer" :min="1" :max="24" :interval="1"></vue-slider>
+                        <button v-on:click="add_time_period('static_exports')">Add Time Period</button>
+                    </div>
+                    <div class="tariffs">
+                        <div class="input">
+                            <div v-for="(tariff, index) in input_data.tariffs.static_exports.period_rates">
+                                <span class="units">Period {{index + 1}}</span>
+                                <input v-model.number="input_data.tariffs.static_exports.period_rates[index]"/> 
+                                <span class="units">($/kWh)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
     </div>
@@ -63,17 +100,6 @@
             return {
 
                 colorizer(dotsPos){
-                    // colors = [];
-
-                    // for(var i = 0; i<10; i++){
-                    //     if(i % 2 == 0){
-                    //         colors.push([dotsPos[i], dotsPos[i+1], { backgroundColor: '#15E462' }])
-                    //     }else{
-                    //         colors.push([dotsPos[i], dotsPos[i+1], { backgroundColor: '#1ca6db' }])
-                    //     }
-                    // }
-                    // return colors;
-
                     return [
                         [dotsPos[0], dotsPos[1], { backgroundColor: '#15E462' }],
                         [dotsPos[1], dotsPos[2], { backgroundColor: '#1ca6db' }],
@@ -90,12 +116,21 @@
                 model_page_name: "model_tariffs_mike",
 
                 input_data: {
-                    
-
 
                     tariffs:{
-                        
-                        daily_fixed_rate:{
+                        daily_fixed_rate: 1,
+                        static_imports: {
+                            tou_times: [7,15],
+                            period_rates:[0.2,0.4,0.2],
+                            
+                        },
+
+                        static_solar_imports:{
+                            tou_times: [7,15],
+                            period_rates:[0.2,0.4,0.2],
+                        },
+
+                        static_exports:{
                             tou_times: [7,15],
                             period_rates:[0.2,0.4,0.2],
                         },
@@ -142,20 +177,148 @@
 
         computed:{
 
-            daily_fixed_rate_chart_options () {
+            static_imports_chart_options () {
                 var data = [];
 
                 for(var hour = 0; hour < 24; hour++){
                     var tariff = null;
-                    for (var i = this.input_data.tariffs.daily_fixed_rate.tou_times.length-1; i >= 0; i--){
-                        var tariff_hour = this.input_data.tariffs.daily_fixed_rate.tou_times[i];
+                    for (var i = this.input_data.tariffs.static_imports.tou_times.length-1; i >= 0; i--){
+                        var tariff_hour = this.input_data.tariffs.static_imports.tou_times[i];
                         if(hour < tariff_hour){
-                            tariff = Number(this.input_data.tariffs.daily_fixed_rate.period_rates[i]);
+                            tariff = Number(this.input_data.tariffs.static_imports.period_rates[i]);
                         }
                         
                     }
                     if(tariff == null){
-                        tariff = tariff = this.input_data.tariffs.daily_fixed_rate.period_rates[this.input_data.tariffs.daily_fixed_rate.period_rates.length-1];
+                        tariff = tariff = this.input_data.tariffs.static_imports.period_rates[this.input_data.tariffs.static_imports.period_rates.length-1];
+                    }
+                   
+                    data.push(tariff);
+                }
+
+                return {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Retail Time of Use Tariff'
+                    },
+                    subtitle: {
+                        text: 'Drag Slider to Adjust Times'
+                    },
+                    xAxis: {
+                        labels:{
+                            step:1,
+                        },
+                        crosshair: true
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: '$/kWh'
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                            '<td style="padding:0"><b>{point.y:.1f} $/kWh</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: [{
+                        name: 'Retail Tariff',
+                        // data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+                        data: data,
+
+                    }]
+                }
+            },
+
+            static_solar_imports_chart_options () {
+                var data = [];
+
+                for(var hour = 0; hour < 24; hour++){
+                    var tariff = null;
+                    for (var i = this.input_data.tariffs.static_solar_imports.tou_times.length-1; i >= 0; i--){
+                        var tariff_hour = this.input_data.tariffs.static_solar_imports.tou_times[i];
+                        if(hour < tariff_hour){
+                            tariff = Number(this.input_data.tariffs.static_solar_imports.period_rates[i]);
+                        }
+                        
+                    }
+                    if(tariff == null){
+                        tariff = tariff = this.input_data.tariffs.static_solar_imports.period_rates[this.input_data.tariffs.static_solar_imports.period_rates.length-1];
+                    }
+                   
+                    data.push(tariff);
+                }
+
+                return {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Retail Time of Use Tariff'
+                    },
+                    subtitle: {
+                        text: 'Drag Slider to Adjust Times'
+                    },
+                    xAxis: {
+                        labels:{
+                            step:1,
+                        },
+                        crosshair: true
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: '$/kWh'
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                            '<td style="padding:0"><b>{point.y:.1f} $/kWh</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: [{
+                        name: 'Retail Tariff',
+                        // data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+                        data: data,
+
+                    }]
+                }
+            },
+
+            static_exports_chart_options () {
+                var data = [];
+
+                for(var hour = 0; hour < 24; hour++){
+                    var tariff = null;
+                    for (var i = this.input_data.tariffs.static_exports.tou_times.length-1; i >= 0; i--){
+                        var tariff_hour = this.input_data.tariffs.static_exports.tou_times[i];
+                        if(hour < tariff_hour){
+                            tariff = Number(this.input_data.tariffs.static_exports.period_rates[i]);
+                        }
+                        
+                    }
+                    if(tariff == null){
+                        tariff = tariff = this.input_data.tariffs.static_exports.period_rates[this.input_data.tariffs.static_exports.period_rates.length-1];
                     }
                    
                     data.push(tariff);

@@ -95,11 +95,8 @@ class MikeWrapper:
             self.ui_central_battery.load(ui_inputs[key])
 
     def load_tariffs(self, ui_inputs):
-        # key = "model_tariffs"
-        # if key in ui_inputs:
-        #     self.ui_tariffs.load(ui_inputs[key])
-        
-        # self.ui_tariffs = ui_inputs['model_tariffs_mike'] if 'model_tariffs_mike' in ui_inputs else None #This just grabs the new tariffs object from the ui inputs
+        print("mike.py/load_tariffs()", ui_inputs['model_tariffs_mike'])
+        self.ui_tariffs = ui_inputs['model_tariffs_mike']
         self.ui_tariffs = [
             {
                 'name':'user_interface',

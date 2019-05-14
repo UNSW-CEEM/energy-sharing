@@ -12,6 +12,7 @@
             get_params(){
                 this.parse_simple_pages();
                 this.parse_all_table_pages();
+                this.parse_mike_tariffs();
                 return this.parsed_parameters;
             },
             save_page_simple() {
@@ -27,6 +28,73 @@
                 if (this.model_page_name in this.$store.state.frontend_state) {
                     this.input_data = this.$store.state.frontend_state[this.model_page_name]
                 }
+            },
+
+            parse_mike_tariffs(){
+                let select_data = this.$store.state.frontend_state["model_tariffs_mike"];
+                console.log("SaveLoad.vue/parse_mike_tariffs()", select_data)
+                let output = {
+                    name:'user_interface',
+                    daily_fixed_rate: 1,
+                    static_imports:[],
+                    static_solar_imports:[],
+                    static_exports:[],
+                }
+                
+                if(select_data){
+                    for(var i = 0; i< select_data.tariffs.static_imports.period_rates.length; i++){
+                        output.static_imports.push({
+                            start_hr: i==0 ? 0: select_data.tariffs.static_imports.tou_times[i-1],
+                            end_hr: i== select_data.tariffs.static_imports.tou_times.length? 24: select_data.tariffs.static_imports.tou_times[i],
+                            price: select_data.tariffs.static_imports.period_rates[i]
+                        })
+                    }
+
+                    for(var i = 0; i< select_data.tariffs.static_solar_imports.period_rates.length; i++){
+                        output.static_solar_imports.push({
+                            start_hr: i==0 ? 0: select_data.tariffs.static_solar_imports.tou_times[i-1],
+                            end_hr: i==select_data.tariffs.static_solar_imports.tou_times.length? 24: select_data.tariffs.static_solar_imports.tou_times[i],
+                            price: select_data.tariffs.static_solar_imports.period_rates[i]
+                        })
+                    }
+
+                    for(var i = 0; i< select_data.tariffs.static_exports.period_rates.length; i++){
+                        output.static_exports.push({
+                            start_hr: i==0 ? 0: select_data.tariffs.static_exports.tou_times[i-1],
+                            end_hr: i==select_data.tariffs.static_exports.tou_times.length ? 24 : select_data.tariffs.static_exports.tou_times[i],
+                            price: select_data.tariffs.static_exports.period_rates[i]
+                        })
+                    }
+                }
+
+                output = 
+                    {
+                        'name':'user_interface',
+                        'daily_fixed_rate': 1,
+                        'static_imports':[
+                            {
+                                'start_hr':7,
+                                'end_hr':10,
+                                'price':0.3
+                            },
+                            {
+                                'start_hr':10,
+                                'end_hr':15,
+                                'price':0.5
+                            },
+                            {
+                                'start_hr':15,
+                                'end_hr':18,
+                                'price':0.3
+                            },
+                        ],
+                        'static_solar_imports':[],
+                        'static_exports':[]
+                    }
+                
+
+                
+                this.parsed_parameters["model_tariffs_mike"] = [output]; //put it in an array - can theoretically have more than one config (ie one per participant - but we will leave for now. )
             },
 
             parse_simple_pages() {
