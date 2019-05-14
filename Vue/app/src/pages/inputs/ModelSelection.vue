@@ -18,7 +18,7 @@
                 </div>
 
                 <div class="description">
-                    This model is commonly used to model small embedded networks and local energy sharing schemes with small numbers of participants. It allows for a central battery, and solar and load data for each participant. 
+                    This model is commonly used to simulate small embedded networks and local energy sharing schemes with small numbers of participants. It allows for a central battery, and solar and load data for each participant. 
                 </div>
                 <div class="selected" v-if="input_data.selected_model=='luomi'">
                     Selected ✓
@@ -112,6 +112,10 @@
 
         beforeDestroy() {
             this.save_page_simple();
+        },
+
+        mounted(){
+            this.select_model('mike');
         },
 
         methods: {

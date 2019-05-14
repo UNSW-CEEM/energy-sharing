@@ -95,7 +95,10 @@
                         <span v-if="input_data.selected_load_file">Load Start Date:{{input_data.load_dates[input_data.selected_load_file]['start_date']}}</span>
                         <span v-if="input_data.selected_load_file">Load End Date:{{input_data.load_dates[input_data.selected_load_file]['end_date']}}</span> -->
                     </div>
-                    <div class="close-button" v-on:click="hide">Done</div>
+                    <div class="modal-close-buttons">
+                        <div class="close-button" v-on:click="hide">Set</div>
+                        <div class="close-autofill-button" v-on:click="hide(); auto_fill();">Set and Autofill</div>
+                    </div>
                 </div>
             </modal>
             
@@ -286,6 +289,16 @@
         },
 
         methods: {
+            auto_fill(){
+                if(this.input_data.selected_load_file != "" && this.input_data.selected_solar_file != ""){
+                    var solar_profiles = this.input_data.my_options.solar_profiles_options;
+                    var load_profiles = this.input_data.my_options.load_profiles_options;
+                    this.input_data.table_rows = [];
+                    for(var i = 0; i< Math.min(solar_profiles.length, load_profiles.length); i++){
+                        this.add_row("Participant "+(i+1), "", "TOU", load_profiles[i], solar_profiles[i],1)
+                    }
+                }
+            },
            
             add_row(participant_id=null, participant_type="", retail_tariff_type="", load_profile="", solar_profile="", solar_scaling=1, battery_type="No Battery") {
                 let array_length = this.input_data.table_rows.length;
@@ -614,14 +627,29 @@
     
 
     .close-button{
+        background-color:$button-warning;
+        color:$button-text;
+        cursor:pointer;
+        margin: 2vh 0 2vh 0;
+        padding: 1vh 1vw 1vh 1vw;
+        border-radius:4px;
+        margin: 0 2vw 0 2vw;
+        width:10vw;
+        text-align:center;
+
+    }
+
+    .close-autofill-button{
         background-color:$button-primary;
         color:$button-text;
         cursor:pointer;
         margin: 2vh 0 2vh 0;
         padding: 1vh 1vw 1vh 1vw;
         border-radius:4px;
+        margin: 0 2vw 0 2vw;
+        width:10vw;
+        text-align:center;
     }
-
     .config-heading{
         background-color:$heading-bg;
         color:$heading-text;
@@ -680,5 +708,12 @@
         font-weight:bold;
         margin: 1vh 0 5vh 0;
     }
+
+    .modal-close-buttons{
+        display:flex;
+        flex-direction:row;
+        margin: 4vh 0 0 0;
+    }
+
 
 </style>
