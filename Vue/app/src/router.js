@@ -69,6 +69,11 @@ export default new Router({
             component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelResults.vue')
         },
         {
+            path: '/results_mike',
+            name: 'results',
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelResultsMike.vue')
+        },
+        {
             path: '/tariffs',
             name: 'tariffs',
             component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelTariffs.vue')

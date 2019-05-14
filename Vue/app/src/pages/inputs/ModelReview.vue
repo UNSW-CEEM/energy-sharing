@@ -128,7 +128,12 @@
                 // this.parse_all_table_pages();
 
                 this.$socket.emit('run_model', this.parsed_parameters);
-                this.$router.push('results');
+                if(this.parsed_parameters.model_selection.model_type=="mike"){
+                    this.$router.push('results_mike');
+                }else{
+                    this.$router.push('results');
+                }
+                
             },
         },
         mounted(){
