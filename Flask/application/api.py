@@ -114,9 +114,36 @@ def download_luomi():
             data,
             mimetype='application/zip',
             as_attachment=True,
-            attachment_filename='data.zip'
+            attachment_filename='luomi_data_'+pendulum.now().format('YYYY_MM_DD_HH_mm')+'.zip'
         )
 
+@app.route('/download/mike', methods=['GET', 'POST', 'OPTIONS'])
+@cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
+def download_mike():
+    if request.method == 'GET':
+        # check if the post request has the file part
+        base_path = os.path.join('application','modelling', 'data', 'mike', 'studies', 'ceem_ui', 'outputs')  
+        base_path = pathlib.Path(base_path)
+        
+        data = io.BytesIO()
+        with zipfile.ZipFile(data, mode='w') as z:
+            for f_name in base_path.iterdir():
+                z.write(f_name)
+        data.seek(0)
+
+        return send_file(
+            data,
+            mimetype='application/zip',
+            as_attachment=True,
+            attachment_filename='mike_data_'+pendulum.now().format('YYYY_MM_DD_HH_mm_ss')+'.zip'
+        )
+
+@app.after_request
+def after_request(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, public, max-age=0"
+    response.headers["Expires"] = 0
+    response.headers["Pragma"] = "no-cache"
+    return response
 
 @socketio.on('connect')
 def test_connect():

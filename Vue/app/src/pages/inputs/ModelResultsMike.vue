@@ -1,6 +1,6 @@
 <template>
     <div class="main-chart-container">
-        <h1>Mike Model Results</h1>
+        <!-- <h1>Mike Model Results</h1> -->
         <div class="chart-nav-container">
             <div  class="chart-choice"
                     v-for="chart in input_data.chart_boxes"
@@ -10,35 +10,43 @@
 
                     {{ chart.link_text }}
             </div>
-            <div class="chart-choice" ><a href="http://localhost:5000/download/luomi">Download</a></div>
+            <div class="chart-choice" ><a :href="download_link">Download</a></div>
         </div>
 
-        <div class="sub-chart-container" v-if="input_data.selected_chart">
-            <TPB
-                v-if="input_data.selected_chart.chart_type==='TPB' && input_data.chart_data"
+        <div class="sub-chart-container" v-if="selected_chart">
+            <CustomerTotals
+                v-if="selected_chart.chart_type==='CustomerTotals' && input_data.chart_data"
                 :chart_data="input_data.chart_data"
             />
-            <RevParticipant
-                v-if="input_data.selected_chart.chart_type==='RevParticipant' && input_data.chart_data"
+            <CustomerSolarBills
+                v-if="selected_chart.chart_type==='CustomerSolarBills' && input_data.chart_data"
+                :chart_data="input_data.chart_data"
+            />
+            <CustomerBills
+                v-if="selected_chart.chart_type==='CustomerBills' && input_data.chart_data"
+                :chart_data="input_data.chart_data"
+            />
+            <!-- <RevParticipant
+                v-if="selected_chart.chart_type==='RevParticipant' && input_data.chart_data"
                 :chart_data="input_data.chart_data"
             />
             <RevRCC
-                v-if="input_data.selected_chart.chart_type==='RevRCC' && input_data.chart_data"
+                v-if="selected_chart.chart_type==='RevRCC' && input_data.chart_data"
                 :chart_data="input_data.chart_data"
-            />
+            /> -->
             <!--<EnergyCC-->
                 <!--v-if="selected_chart.chart_type==='EnergyCC' && chart_data"-->
                 <!--:chart_data="chart_data"-->
             <!--/>-->
-            <EnergyGenCon
-                v-if="input_data.selected_chart.chart_type==='EnergyGenCon' && input_data.chart_data"
+            <!-- <EnergyGenCon
+                v-if="selected_chart.chart_type==='EnergyGenCon' && input_data.chart_data"
                 :chart_data="input_data.chart_data"
             />
 
             <EnergySystemFlows
-                v-if="input_data.selected_chart.chart_type==='EnergySystemFlows' && input_data.chart_data"
+                v-if="selected_chart.chart_type==='EnergySystemFlows' && input_data.chart_data"
                 :chart_data="input_data.chart_data"
-            />
+            /> -->
         </div>
     </div>
 </template>
@@ -51,52 +59,74 @@
     import EnergyCC from "../../charts/_EnergyCC";
     import EnergyGenCon from "../../charts/_EnergyGenCon";
     import EnergySystemFlows from "../../charts/_EnergySystemFlows";
+    import CustomerTotals from "../../charts/_CustomerTotals";
+    import CustomerSolarBills from "../../charts/_CustomerSolarBills";
+    import CustomerBills from "../../charts/_CustomerBills";
+    import moment from 'moment'
 
     import SaveLoad from '@/mixins/SaveLoad.vue';
 
     export default {
         name: "ModelResultsMike",
-        components: {EnergyGenCon, EnergyCC, RevRCC, RevParticipant, TPB, EnergySystemFlows},
+        components: {EnergyGenCon, EnergyCC, RevRCC, RevParticipant, TPB, EnergySystemFlows, CustomerTotals, CustomerSolarBills, CustomerBills},
 
         mixins: [SaveLoad],
+
+        computed:{
+            download_link(){
+                return "http://localhost:5000/download/mike?time="+moment().format();
+            }
+        },
 
         data () {
             return  {
                 model_page_name: "model_results_mike",
+                selected_chart: false,
+                
                 input_data: {
                     chart_data: false,
-                    selected_chart: false,
+                    // selected_chart: false,
                     chart_boxes: [
                         {
                             id: 0,
-                            link_text: "Retail Revenue",
-                            chart_type: 'RevRCC',
+                            link_text: "Customer Totals",
+                            chart_type: 'CustomerTotals',
                         },
                         {
                             id: 1,
-                            link_text: "Bill - Participant",
-                            chart_type: 'RevParticipant',
+                            link_text: "Customer Solar Bills",
+                            chart_type: 'CustomerSolarBills',
                         },
                         {
                             id: 2,
-                            link_text: "Revenue - Total Participant",
-                            chart_type: 'TPB',
+                            link_text: "Customer Bills",
+                            chart_type: 'CustomerBills',
                         },
+                        // {
+                        //     id: 1,
+                        //     link_text: "Bill - Participant",
+                        //     chart_type: 'RevParticipant',
+                        // },
+                        // {
+                        //     id: 2,
+                        //     link_text: "Revenue - Total Participant",
+                        //     chart_type: 'TPB',
+                        // },
                         // {
                         //     id: 3,
                         //     link_text: "Energy - Central",
                         //     chart_type: 'EnergyCC',
                         // },
-                        {
-                            id: 3,
-                            link_text: "Energy - Generated/Consumed",
-                            chart_type: 'EnergyGenCon',
-                        },
-                        {
-                            id: 4,
-                            link_text: "Energy - System Flows",
-                            chart_type: 'EnergySystemFlows',
-                        },
+                        // {
+                        //     id: 3,
+                        //     link_text: "Energy - Generated/Consumed",
+                        //     chart_type: 'EnergyGenCon',
+                        // },
+                        // {
+                        //     id: 4,
+                        //     link_text: "Energy - System Flows",
+                        //     chart_type: 'EnergySystemFlows',
+                        // },
                     ],
                 },
             }
@@ -112,11 +142,11 @@
 
         methods: {
             select_chart(chart) {
-                this.input_data.selected_chart = chart;
+                this.selected_chart = chart;
             },
 
             is_selected(chart) {
-                if (this.input_data.selected_chart===chart) {
+                if (this.selected_chart===chart) {
                     return true;
                 }
                 return false;

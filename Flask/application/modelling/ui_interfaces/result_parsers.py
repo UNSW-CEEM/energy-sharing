@@ -44,12 +44,11 @@ class ResultParsers:
                 else:
                     scenario_info[key] = value
 
-
+        
         results = {
             "customer_totals": customer_totals,
             "customer_solar_bills": customer_solar_bills,
-            "customer_total": revenue_retailer,
-            "energy_gencon": customer_totals,
+            "customer_bills": customer_totals,
             "scenario_info": scenario_info,
         }
 

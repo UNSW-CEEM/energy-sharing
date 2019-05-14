@@ -9,7 +9,7 @@
 
                     {{ chart.link_text }}
             </div>
-            <div class="chart-choice" ><a href="http://localhost:5000/download/luomi">Download</a></div>
+            <div class="chart-choice" ><a :href="download_link">Download</a></div>
         </div>
 
         <div class="sub-chart-container" v-if="input_data.selected_chart">
@@ -107,6 +107,12 @@
 
         beforeDestroy() {
             this.save_page_simple();
+        },
+
+        computed:{
+            download_link(){
+                return "http://localhost:5000/download/luomi?time="+moment().format();
+            }
         },
 
         methods: {

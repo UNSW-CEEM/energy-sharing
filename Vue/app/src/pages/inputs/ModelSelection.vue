@@ -81,7 +81,7 @@
                 model_page_name: "model_selection",
 
                 input_data: {
-                    selected_model: "luomi",
+                    selected_model: "mike",
                     selected_model_options: [],
 
                     model_dropdown: {

@@ -87,7 +87,7 @@
                     {
                         id: 8,
                         text: 'Results',
-                        page: 'results',
+                        page: this.model =="luomi" ? '/results': '/results_mike',
                         storage_key: "review",
                         icon:"poll"
                     },
