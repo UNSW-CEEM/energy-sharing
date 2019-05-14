@@ -97,48 +97,62 @@ class MikeWrapper:
     def load_tariffs(self, ui_inputs):
         print("mike.py/load_tariffs()", ui_inputs['model_tariffs_mike'])
         self.ui_tariffs = ui_inputs['model_tariffs_mike']
-        self.ui_tariffs = [
-            {
-                'name':'user_interface',
-                'daily_fixed_rate': 1,
-                'static_imports':[
-                    {
-                        'start_hr':7,
-                        'end_hr':10,
-                        'price':0.3
-                    },
-                    {
-                        'start_hr':10,
-                        'end_hr':15,
-                        'price':0.5
-                    },
-                    {
-                        'start_hr':15,
-                        'end_hr':18,
-                        'price':0.3
-                    },
-                ],
-                'static_solar_imports':[],
-                'static_exports':[]
-            }
-        ]
+        # self.ui_tariffs = [
+        #     {
+        #         'name':'user_interface',
+        #         'daily_fixed_rate': 1,
+        #         'static_imports':[
+        #             {
+        #                 'start_hr':7,
+        #                 'end_hr':10,
+        #                 'price':0.3
+        #             },
+        #             {
+        #                 'start_hr':10,
+        #                 'end_hr':15,
+        #                 'price':0.5
+        #             },
+        #             {
+        #                 'start_hr':15,
+        #                 'end_hr':18,
+        #                 'price':0.3
+        #             },
+        #         ],
+        #         'static_solar_imports':[],
+        #         'static_exports':[]
+        #     }
+        # ]
 
     def load_participants(self, ui_inputs):
-        # key = "model_participants"
-        # if key in ui_inputs:
-        #     self.ui_participants.load(ui_inputs[key])
-        self.ui_participants = {
-            'Participant 1':{
-                'load':'profile_1',
-                'solar':'profile_1',
-                'tariff':'user_interface',
-            },
-            'Participant 2':{
-                'load':'profile_1',
-                'solar':'profile_1',
-                'tariff':'STC_20',
-            },
-        }
+        ui_participants = {}
+        if "model_participants_mike" in ui_inputs:
+            for row in ui_inputs["model_participants_mike"]:
+                row_selections = {}
+                for row_input in row['row_inputs']:
+                    if row_input['name'] == 'participant_id':
+                        row_selections['participant_id'] = row_input['value']
+                    if row_input['name'] == 'retail_tariff_type':
+                        row_selections['tariff'] = row_input['value']
+                    if row_input['name'] == 'load_profile':
+                        row_selections['load'] = row_input['value']
+                    if row_input['name'] == 'solar_profile':
+                        row_selections['solar'] = row_input['value']
+                
+                ui_participants[row_selections['participant_id']] = row_selections
+        print("mike.py/load_participants()",ui_participants)
+        self.ui_participants = ui_participants
+        # self.ui_participants = {
+        #     'Participant 1':{
+        #         'load':'profile_1',
+        #         'solar':'profile_1',
+        #         'tariff':'user_interface',
+        #     },
+        #     'Participant 2':{
+        #         'load':'profile_1',
+        #         'solar':'profile_1',
+        #         'tariff':'STC_20',
+        #     },
+        # }
 
     def load_data_sources(self, ui_inputs):
         key = "model_data_sources"

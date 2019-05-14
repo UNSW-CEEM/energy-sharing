@@ -13,6 +13,7 @@
                 this.parse_simple_pages();
                 this.parse_all_table_pages();
                 this.parse_mike_tariffs();
+                this.parse_mike_participants();
                 return this.parsed_parameters;
             },
             save_page_simple() {
@@ -29,6 +30,14 @@
                     this.input_data = this.$store.state.frontend_state[this.model_page_name]
                 }
             },
+
+            parse_mike_participants(){
+                let select_data = this.$store.state.frontend_state["model_participants_mike"];
+                if(select_data){
+
+                }
+            },
+
 
             parse_mike_tariffs(){
                 let select_data = this.$store.state.frontend_state["model_tariffs_mike"];
@@ -67,30 +76,30 @@
                     }
                 }
 
-                output = 
-                    {
-                        'name':'user_interface',
-                        'daily_fixed_rate': 1,
-                        'static_imports':[
-                            {
-                                'start_hr':7,
-                                'end_hr':10,
-                                'price':0.3
-                            },
-                            {
-                                'start_hr':10,
-                                'end_hr':15,
-                                'price':0.5
-                            },
-                            {
-                                'start_hr':15,
-                                'end_hr':18,
-                                'price':0.3
-                            },
-                        ],
-                        'static_solar_imports':[],
-                        'static_exports':[]
-                    }
+                // output = 
+                //     {
+                //         'name':'user_interface',
+                //         'daily_fixed_rate': 1,
+                //         'static_imports':[
+                //             {
+                //                 'start_hr':7,
+                //                 'end_hr':10,
+                //                 'price':0.3
+                //             },
+                //             {
+                //                 'start_hr':10,
+                //                 'end_hr':15,
+                //                 'price':0.5
+                //             },
+                //             {
+                //                 'start_hr':15,
+                //                 'end_hr':18,
+                //                 'price':0.3
+                //             },
+                //         ],
+                //         'static_solar_imports':[],
+                //         'static_exports':[]
+                //     }
                 
 
                 
@@ -130,6 +139,12 @@
                 if (p_data) {
                     this.parsed_parameters["model_participants"] = this.parse_table_page(p_data);
                     this.parsed_parameters["model_data_sources"] = this.parse_data_sources(p_data);
+                }
+
+                let pm_data = this.$store.state.frontend_state["model_participants_mike"];
+                if (pm_data) {
+                    this.parsed_parameters["model_participants_mike"] = this.parse_table_page(pm_data);
+                    this.parsed_parameters["model_data_sources_mike"] = this.parse_data_sources(pm_data);
                 }
 
                 let t_data = this.$store.state.frontend_state["model_tariffs"];

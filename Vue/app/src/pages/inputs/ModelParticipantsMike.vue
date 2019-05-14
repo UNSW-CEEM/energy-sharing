@@ -16,7 +16,7 @@
                 </div>
             </div>
 
-            
+            <button v-on:click="auto_fill()">Auto-Fill </button>
             
             <div class="participants-table">
                 <div class="participants-table-heading">Participants</div>
@@ -158,8 +158,8 @@
                         ],
 
                         tariff_type_options: [
-                            "TOU",
-                            "TOU + Block",
+                            "user_interface",
+                            "EASO_Flat","EASO_Flat_15pc","EASO_Flat_20pc","EASO_Flat_25pc","EASO_TOU","EASO_TOU_15pc","EASO_TOU_20pc","EASO_TOU_25pc","EASO_TOU_15pc_FIT12","EASO_TOU_15pc_FIT8","EA225","EA302","EA225_p","EA302_p","EA305","EA310","_TOU9","EA225_TOU9","EA302_TOU9","EA225_p_TOU9","EA302_p_TOU9","EA305_TOU9","EA310_TOU9","_TOU12","EA225_TOU12","EA302_TOU12","EA225_p_TOU12","EA302_p_TOU12","EA305_TOU12","EA310_TOU12","_TOU9_FIT8","EA225_TOU9_FIT8","EA302_TOU9_FIT8","EA225_p_TOU9_FIT8","EA302_p_TOU9_FIT8","EA305_TOU9_FIT8","EA310_TOU9_FIT8","_TOU12_FIT8","EA225_TOU12_FIT8","EA302_TOU12_FIT8","EA225_p_TOU12_FIT8","EA302_p_TOU12_FIT8","EA305_TOU12_FIT8","EA310_TOU12_FIT8","_TOU9_FIT12","EA225_TOU9_FIT12","EA302_TOU9_FIT12","EA225_p_TOU9_FIT12","EA302_p_TOU9_FIT12","EA305_TOU9_FIT12","EA310_TOU9_FIT12","_TOU12_FIT12","EA225_TOU12_FIT12","EA302_TOU12_FIT12","EA225_p_TOU12_FIT12","EA302_p_TOU12_FIT12","EA305_TOU12_FIT12","EA310_TOU12_FIT12","SIT_15_FIT8_ppa1","SIT_15_FIT8_ppa2","SIT_15_FIT12_ppa1","SIT_15_FIT12_ppa2","SIT_15_ppa1","SIT_15_ppa2","STS_35","STS_40","STC_15","STC_20","EA_Basic_Home","PS_100G","SE_BW_20","PS_STDSAV","OR_F18","AGL_F13","EA_VSHP","test_bd","test_flat","test_bq",
                         ],
 
                         battery_options: [
@@ -181,7 +181,7 @@
                     {id: 2, name: "Tariff Type", additional_text:"Select One"},
                     {id: 3, name: "Load Data", additional_text:"Select One"},
                     {id: 4, name: "Solar Data", additional_text:"Select One"},
-                    {id: 5, name: "Solar Scaling", additional_text:"Input Number"},
+                    // {id: 5, name: "Solar Scaling", additional_text:"Input Number"},
                     // {id: 6, name: "Battery", additional_text:"Select One"},
                 ],
             }
@@ -286,6 +286,17 @@
         },
 
         methods: {
+
+            auto_fill(){
+                if(this.input_data.selected_load_file != "" && this.input_data.selected_solar_file != ""){
+                    var solar_profiles = this.input_data.my_options.solar_profiles_options;
+                    var load_profiles = this.input_data.my_options.load_profiles_options;
+                    this.input_data.table_rows = [];
+                    for(var i = 0; i< Math.min(solar_profiles.length, load_profiles.length); i++){
+                        this.add_row("Participant "+(i+1), "", "user_interface", load_profiles[i], solar_profiles[i])
+                    }
+                }
+            },
            
             add_row(participant_id=null, participant_type="", retail_tariff_type="", load_profile="", solar_profile="", solar_scaling=1, battery_type="No Battery") {
                 let array_length = this.input_data.table_rows.length;
@@ -336,13 +347,13 @@
                             dropdown_key:"solar_profiles_options",
                             placeholder:"Select One",
                         },
-                        {
-                            id: 5,
-                            name: "solar_scaling",
-                            tag: "my_number",
-                            value:solar_scaling,
-                            placeholder:"Input Number",
-                        },
+                        // {
+                        //     id: 5,
+                        //     name: "solar_scaling",
+                        //     tag: "my_number",
+                        //     value:solar_scaling,
+                        //     placeholder:"Input Number",
+                        // },
                         // {
                         //     id: 6,
                         //     name: "battery_type",
