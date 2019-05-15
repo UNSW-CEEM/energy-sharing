@@ -161,9 +161,10 @@
         },
         created() {
             this.load_page_simple();
-            // this.initialise_participant_batteries()
+            this.initialise_participant_batteries()
         },
         mounted(){
+            
             this.initialise_participant_batteries()
         },
 
