@@ -71,6 +71,7 @@ class MikeWrapper:
             self.load_tariffs,
             self.load_participants,
             self.load_data_sources,
+            self.load_study_parameters,
         ]
 
         for each in load_functions:
@@ -95,7 +96,7 @@ class MikeWrapper:
             self.ui_central_battery.load(ui_inputs[key])
 
     def load_tariffs(self, ui_inputs):
-        print("mike.py/load_tariffs()", ui_inputs['model_tariffs_mike'])
+        # print("mike.py/load_tariffs()", ui_inputs['model_tariffs_mike'])
         self.ui_tariffs = ui_inputs['model_tariffs_mike']
         # self.ui_tariffs = [
         #     {
@@ -123,6 +124,29 @@ class MikeWrapper:
         #     }
         # ]
 
+    def load_study_parameters(self, ui_inputs):
+        if 'study_parameters_mike' in ui_inputs:
+            self.study_parameters = ui_inputs['study_parameters_mike']
+        # self.study_parameters = {
+        #     'scenario': 1,
+        #     'arrangement':'en_pv',
+        #     'pv_cap_id': 'W_max_yield',
+        #     'pv_capex_scaleable':False,
+            
+        #     'en_capex_id':'capex_med',
+        #     'a_term':20,
+        #     'a_rate':0.06,
+        #     'pv_scaleable':False,
+        #     'pv_kW_peak':'',
+        #     'notes':'',
+        #     'tariffs':{
+        #         'cp':'TIDNULL',
+        #         'all_residents':'STC_20',
+        #         'parent': 'EA305_TOU12',
+        #         'network_tariff':'EA305',
+        #     }
+        # }
+
     def load_participants(self, ui_inputs):
         ui_participants = {}
         if "model_participants_mike" in ui_inputs:
@@ -139,7 +163,7 @@ class MikeWrapper:
                         row_selections['solar'] = row_input['value']
                 
                 ui_participants[row_selections['participant_id']] = row_selections
-        print("mike.py/load_participants()",ui_participants)
+        # print("mike.py/load_participants()",ui_participants)
         self.ui_participants = ui_participants
         # self.ui_participants = {
         #     'Participant 1':{
@@ -166,7 +190,7 @@ class MikeWrapper:
     def create_objects(self):
         
         # Create the main Study object
-        self.mike_model = NewSim(self.folder_routes, self.ui_participants, self.ui_tariffs)
+        self.mike_model = NewSim(self.folder_routes, self.ui_participants, self.ui_tariffs, self.study_parameters)
        
 
     def run(self, status):

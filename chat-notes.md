@@ -6,7 +6,6 @@ Discount Rate
 Demand Charge
 
 
-
 So Network - option at top to be in 'block mode' or 'TOU / Flat mode'
 
 Either retail + NUOS 

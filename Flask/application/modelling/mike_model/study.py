@@ -23,7 +23,8 @@ class Study:
                  pv_path, 
                  load_path,
                  participants,
-                 dynamic_tariffs
+                 dynamic_tariffs,
+                 study_parameters
                  ):
         print("study.py/Study()/__init__()", "Starting Initialising Study Object")
         # --------------------------------
@@ -34,6 +35,10 @@ class Study:
         self.name = study_name
         self.project_path = os.path.join(self.base_path, 'studies', project)
         self._participants = participants
+
+        print("study.py/__init__", "common_property_load_profile", study_parameters['common_property_load_profile'])
+        print("study.py/__init__", "shared_solar_profile", study_parameters['central_solar_profile'])
+        print("study.py/__init__", "shared_solar_profile", study_parameters['common_property_solar_profile'])
 
         # self.use_threading = False
 
@@ -71,27 +76,28 @@ class Study:
         # self.scenario_list = [s for s in self.study_parameters.index if not pd.isnull(s)]
         
         # New version so we can programatically tweak.
-        self.study_parameters ={
-            'scenario': 1,
-            # 'load_folder': 'ceem_ui_default',
-            # 'load_file': 'ceem_ui_default.csv',
-            'arrangement':'en_pv',
-            'pv_cap_id': 'W_max_yield',
-            'pv_capex_scaleable':False,
+        self.study_parameters = study_parameters
+        # self.study_parameters ={
+        #     'scenario': 1,
+        #     # 'load_folder': 'ceem_ui_default',
+        #     # 'load_file': 'ceem_ui_default.csv',
+        #     'arrangement':'en_pv',
+        #     'pv_cap_id': 'W_max_yield',
+        #     'pv_capex_scaleable':False,
             
-            'en_capex_id':'capex_med',
-            'a_term':20,
-            'a_rate':0.06,
-            'pv_scaleable':False,
-            'pv_kW_peak':'',
-            'notes':'',
-            'tariffs':{
-                'cp':'TIDNULL',
-                'all_residents':'STC_20',
-                'parent': 'EA305_TOU12',
-                'network_tariff':'EA305',
-            }
-        }
+        #     'en_capex_id':'capex_med',
+        #     'a_term':20,
+        #     'a_rate':0.06,
+        #     'pv_scaleable':False,
+        #     'pv_kW_peak':'',
+        #     'notes':'',
+        #     'tariffs':{
+        #         'cp':'TIDNULL',
+        #         'all_residents':'STC_20',
+        #         'parent': 'EA305_TOU12',
+        #         'network_tariff':'EA305',
+        #     }
+        # }
         self.scenario_list = [self.study_parameters['scenario']]
         
         # Read list of output requirements and strip from df
@@ -264,7 +270,13 @@ class Study:
         temp_load = pd.read_csv(load_path,
                                 parse_dates=['timestamp'],
                                 dayfirst=True)
-        temp_load = temp_load.set_index('timestamp')        
+        temp_load = temp_load.set_index('timestamp') 
+
+        
+        # Copy 'cp' load from another column if directed
+        if 'common_property_load_profile' in self.study_parameters:
+            if self.study_parameters['common_property_load_profile']:
+                temp_load['cp'] = temp_load[self.study_parameters['common_property_load_profile']]
         
         # Associate the data with each load
         for p in participants:
@@ -280,11 +292,14 @@ class Study:
                 # Decrement load profile counts by 1
                 load_profile_counts[load_key] -= 1
         
+
+        
         # Remove any unused load columns
         used_loads = [participants[p]['load'] for p in participants]
         for load_key in temp_load.columns:
             if (load_key not in used_loads) and (load_key != 'cp'):
                 temp_load = temp_load.drop(load_key, axis=1)
+        
 
         # Add 'cp' load if not present
         if 'cp' not in temp_load.columns:
@@ -295,6 +310,7 @@ class Study:
         load_profiles = LoadCollection()
         load_profiles.add_profile_from_df(temp_load, 'default')
 
+        print("study.py/_generate_load_profiles", temp_load)
         # Return the load profile.
         return load_profiles
     

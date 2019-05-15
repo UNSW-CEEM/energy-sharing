@@ -71,7 +71,7 @@ class PVCollection():
     
     def multiply_by_timeseries(self, system_name, timeseries):
         print("input timeseries is a pandas df here -  and i want to convert away from pandas df - but couldnt call this code before. Refactor now!")
-        self._data =  network_load_fractions.multiply(self._data.loc[:, system_name], axis=0)
+        self._data = timeseries.multiply(self._data.loc[:, system_name], axis=0)
     
     def get_system_sum(self, system_name):     
         """Return the sum of all the energy produced by one pv system"""   

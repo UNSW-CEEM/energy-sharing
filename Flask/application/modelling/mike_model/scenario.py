@@ -194,7 +194,7 @@ class Scenario:
                 # ------------------------------------
                 self.en_capex = study.en_capex.loc[self.en_cap_id, 'site_capex'] + \
                                 (study.en_capex.loc[self.en_cap_id, 'unit_capex'] *
-                                 len(self.study.get_load_profiles))
+                                 len(self.study.get_load_profiles() ) )
             else:
                 # ----------------------------
                 # metering capex for units only
@@ -480,13 +480,22 @@ class Scenario:
                 # Decrement the number of times the original key has been used.
                 solar_profile_counts[solar_key] -= 1
         
+        # Add cp system
+        if 'central_solar_profile' in self.parameters:
+            if self.parameters['central_solar_profile']:
+                self.pv.copy_system(self.parameters['central_solar_profile'], 'central')
+            
+        if 'common_property_solar_profile' in self.parameters:
+            if self.parameters['common_property_solar_profile']:
+                self.pv.copy_system(self.parameters['central_solar_profile'], 'cp')
+        
         # Remove any unused solar profiles
         used_systems = [participants[p]['solar'] for p in self.study.get_participants()]
         for system in self.pv.get_system_names():
-            if (system not in used_systems) and (system not in ['cp', 'central']):
+            if (system not in used_systems) and (system not in ['cp', 'central', self.parameters['central_solar_profile'], self.parameters['common_property_solar_profile']]):
                 self.pv.delete_system(system)
         
-        # print("scenario.py/Scenario()/_generate_pv_profiles()", "Solar Data Frame",self.pv._data)
+        print("scenario.py/Scenario()/_generate_pv_profiles()", "Solar Data Frame",self.pv._data)
 
     def log_scenario_data(self):
         """Saves a csv file for each scenario and logs a row of results to output df."""

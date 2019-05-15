@@ -97,12 +97,15 @@ class Network(Customer):
             if self.pv.get_num_systems() == 1:
                 system_name = self.pv.get_system_names()[0]
                 self.pv.rename_system(system_name, 'central')
+            # if 'shared_solar_profile' in scenario.parameters:
+            #     if scenario.parameters['shared_solar_profile']:
+            #         pv.copy_system(scenario.parameters['shared_solar_profile'], 'central')
                 
 
         elif 'cp_only' in scenario.arrangement:
             # no action required
             # rename single column in pv file if necessary
-            if 'cp' not in self.pv.data.columns:
+            if 'cp' not in self.pv._data.columns:
                 system_name = self.pv.get_system_names()[0]
                 self.pv.rename_system(system_name, 'cp')
 
@@ -145,7 +148,7 @@ class Network(Customer):
             if self.pv.get_num_systems() != 1:
                 self.pv.aggregate_systems('total')
             system_name = self.pv.get_system_names()[0]
-            self.rename_system(system_name, 'total')
+            self.pv.rename_system(system_name, 'total')
             # LUKE
             # OK - so here we are going through every load timeperiod,
             # Dividing by the total network load (to find fraction of network load used)
@@ -160,12 +163,13 @@ class Network(Customer):
             if self.pv.get_num_systems() != 1:
                 self.pv.aggregate_systems('total')
             system_name = self.pv.get_system_names()[0]
-            self.rename_system(system_name, 'total')
+            self.pv.rename_system(system_name, 'total')
             # Get units only
             load_units_only = self.nl_profile.to_df().copy().drop('cp', axis=1)
             load_fractions = load_units_only.div(load_units_only.sum(axis=1), axis=0).fillna(1 / len(self.study.get_load_profiles()))
             self.pv.multiply_by_timeseries('total', load_fractions)
-            self.pv.scale_system('cp', 0)
+            if('cp' in self.pv.get_system_names()):
+                self.pv.scale_system('cp', 0)
 
         elif 'bau' not in scenario.arrangement:
             logging.info('*********** Exception!!! Invalid technical arrangement %s for scenario %s',
@@ -178,7 +182,7 @@ class Network(Customer):
         # HOLY GRAIL HERE
         # Add blank columns for all residents with no pv and for central
         # -----------------------------------------------------------
-        blank_column_names = [x for x in (self.study.get_solar_profiles() + ['central']) if x not in self.pv.get_system_names()]
+        blank_column_names = [x for x in (self.study.get_solar_profiles() + ['central', 'cp']) if x not in self.pv.get_system_names()]
         # self.pv.data = pd.concat([self.pv.data, pd.DataFrame(columns=blank_column_names)], sort=False).fillna(0)
         for system_name in blank_column_names:
             self.pv.add_zero_system(system_name)
@@ -472,12 +476,13 @@ class Network(Customer):
         elif 'btm_i' in scenario.arrangement:
             # For btm_i apportion pv AND central bat capex costs according to pv allocation
             
-            pv_customers = [c for c in self.pv.get_system_names() if self.pv.get_system_sum(c) > 0]
+            pv_customers = [c for c in self.study.get_participant_names() if self.pv.get_system_sum(self.study.get_solar_profile(c)) > 0]
             for c in pv_customers:
+                pv_id = self.study.get_solar_profile(c)
                 # self.resident[c].pv_capex_repayment = self.pv.data[c].sum() / self.pv.data.sum().sum() * scenario.pv_capex_repayment
-                self.resident[c].pv_capex_repayment = self.pv.get_system_sum(c) / self.pv.get_aggregate_sum() * scenario.pv_capex_repayment
+                self.resident[c].pv_capex_repayment = self.pv.get_system_sum(pv_id) / self.pv.get_aggregate_sum() * scenario.pv_capex_repayment
                 # self.resident[c].bat_capex_repayment += self.pv.data[c].sum() / self.pv.data.sum().sum() * central_bat_capex_repayment
-                self.resident[c].bat_capex_repayment += self.pv.get_system_sum(c) / self.pv.get_aggregate_sum() * central_bat_capex_repayment
+                self.resident[c].bat_capex_repayment += self.pv.get_system_sum(pv_id) / self.pv.get_aggregate_sum() * central_bat_capex_repayment
 
         elif 'btm_s_c' in scenario.arrangement:
             # For btm_s_c, apportion capex costs equally between units and cp.

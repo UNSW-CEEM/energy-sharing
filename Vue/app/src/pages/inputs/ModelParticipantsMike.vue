@@ -22,9 +22,6 @@
                             Select
                         </div>
                     </div>
-
-
-                    
                 </div>
             </div>
             
@@ -37,6 +34,34 @@
                         <span>Selected Solar File: {{input_data.selected_solar_file}}</span>
                     </div>
                     <div class="config-button" v-on:click="show()">Configure Data Sources </div>
+                </div>
+            </div>
+
+
+            <div class="config-info">
+                <div class="config-heading">Central Solar / Load</div>
+                <div class="central-profiles-selection">
+                    <div>
+                        Central Solar Profile
+                        <SimpleDropdown 
+                                    v-model="input_data.central_solar_profile"
+                                    :my_options="input_data.my_options['solar_profiles_options']"
+                                    :my_placeholder="Select"/>
+                    </div>
+                    <div>
+                        Common Property Solar Profile
+                        <SimpleDropdown 
+                                    v-model="input_data.common_property_solar_profile"
+                                    :my_options="input_data.my_options['solar_profiles_options']"
+                                    :my_placeholder="Select"/>
+                    </div>
+                    <div>
+                        Common Property Load Profile
+                        <SimpleDropdown 
+                                    v-model="input_data.central_load_profile"
+                                    :my_options="input_data.my_options['load_profiles_options']"
+                                    :my_placeholder="Select"/>
+                    </div>
                 </div>
             </div>
 
@@ -164,22 +189,25 @@
                 },
 
                 arrangements:[
-                    {id:'en', heading:"Embedded Network", description:"Central solar only."},
-                    {id:'btm_i', heading:"Individual Behind the Meter", description:"Each Participant has a solar system."},
-                    {id:'btm_s', heading:"Shared Behind the Meter", description:"On market with grid supply, shared dist system ie. local solar."},
-                    {id:'cp', heading:"Common Property", description:"Central Building Load"},
+                    {id:'en_pv', heading:"Embedded Network", description:"Central solar only."},
+                    // {id:'btm_i', heading:"Individual Behind the Meter", description:"Each Participant has a solar system."},
+                    // {id:'btm_s', heading:"Shared Behind the Meter", description:"On market with grid supply, shared dist system ie. local solar."},
+                    {id:'cp_only', heading:"Common Property", description:"Central Building Load"},
                     {id:'btm_i_c', heading:"Behind the Meter Individual / Common", description:"Each Participant has a solar system + common solar system."},
                     {id:'btm_s_c', heading:"Behind the Meter Shared / Common", description:"A single solar system's output is split between all residents and the common property."},
                     {id:'btm_s_u', heading:"Behind the Meter Shared", description:"A single solar system's output is split between all residents but not used to power the common property."},
-                    {id:'btm_p_c', heading:"Behind the Meter PPA / Common", description:"A single solar system's output is split between all residends and the common property. Generation is paid for under a PPA."},
-                    {id:'btm_p_u', heading:"Behind the Meter PPA / Common", description:"A single solar system's output is split between all residents but not used to power the common property. Generation is paid for under a PPA."},
+                    {id:'btm_p_c', heading:"Behind the Meter PPA / Common", description:"A single solar system's output is split between all residents and the common property. Generation is paid for under a PPA."},
+                    {id:'btm_p_u', heading:"Behind the Meter PPA", description:"A single solar system's output is split between all residents but not used to power the common property. Generation is paid for under a PPA."},
                 ],
 
                 input_data: {
-                    selected_arrangement:'btm_i',
+                    selected_arrangement:'btm_p_u',
                     selected_solar_file: '',
                     selected_load_file: '',
                     selected_config_file: 'user_config.csv',
+                    central_solar_profile: null,
+                    common_property_solar_profile: null,
+                    central_load_profile: null,
 
                     solar_files_list: [],
                     load_files_list: [],
@@ -797,6 +825,16 @@
         background-color:$tertiary;
         color:$button-text;
         cursor: pointer;
+    }
+
+    .central-profiles-selection{
+        display:flex;
+        flex-direction:row;
+        width:100%;
+        justify-content:space-around;
+        margin: 2vh 0 2vh 0;
+
+
     }
 
 </style>

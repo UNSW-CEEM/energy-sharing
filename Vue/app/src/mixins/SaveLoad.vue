@@ -13,7 +13,7 @@
                 this.parse_simple_pages();
                 this.parse_all_table_pages();
                 this.parse_mike_tariffs();
-                this.parse_mike_participants();
+                this.parse_mike_config_options();
                 return this.parsed_parameters;
             },
             save_page_simple() {
@@ -31,12 +31,40 @@
                 }
             },
 
-            parse_mike_participants(){
+            parse_mike_config_options(){
+                var options = {
+                    'scenario': 1,
+                    'arrangement':'en_pv',
+                    'pv_cap_id': 'W_max_yield',
+                    'pv_capex_scaleable':false,
+                    'en_capex_id':'capex_med',
+                    'a_term':20,
+                    'a_rate':0.06,
+                    'pv_scaleable':false,
+                    'pv_kW_peak':'',
+                    'notes':'',
+                    'tariffs':{
+                        'cp':'TIDNULL',
+                        // 'all_residents':'STC_20',
+                        'parent': 'EA305_TOU12',
+                        'network_tariff':'EA305',
+                    },
+                    'common_property_load_profile':null,
+                    'common_property_solar_profile':null,
+                    'central_solar_profile':null,
+                }
+
                 let select_data = this.$store.state.frontend_state["model_participants_mike"];
                 if(select_data){
-
+                    options['arrangement'] = select_data['selected_arrangement'];
+                    options['common_property_load_profile'] = select_data['central_load_profile'];
+                    options['common_property_solar_profile'] = select_data['common_property_solar_profile'];
+                    options['central_solar_profile'] = select_data['central_solar_profile'];
                 }
+
+                this.parsed_parameters["study_parameters_mike"] = options;
             },
+            
 
 
             parse_mike_tariffs(){
