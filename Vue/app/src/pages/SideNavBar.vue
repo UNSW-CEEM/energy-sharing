@@ -65,8 +65,8 @@
                         icon:"exchange-alt"
                     },{
                         id: 5,
-                        text: 'Central Services',
-                        page: '/central_services',
+                        text: 'Batteries',
+                        page: this.model =="luomi" ? '/central_services': '/battery_mike',
                         storage_key: "central_services",
                         icon:"battery-full"
                     },

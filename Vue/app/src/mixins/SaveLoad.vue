@@ -14,6 +14,7 @@
                 this.parse_all_table_pages();
                 this.parse_mike_tariffs();
                 this.parse_mike_config_options();
+                
                 return this.parsed_parameters;
             },
             save_page_simple() {
@@ -60,6 +61,22 @@
                     options['common_property_load_profile'] = select_data['central_load_profile'];
                     options['common_property_solar_profile'] = select_data['common_property_solar_profile'];
                     options['central_solar_profile'] = select_data['central_solar_profile'];
+                }
+
+                select_data = this.$store.state.frontend_state["battery_mike"];
+                if(select_data){
+                    if(select_data['central_battery_type'] && select_data['central_dispatch_strategy']){
+                        options['central_battery_id'] = select_data['central_battery_type']
+                        options['central_battery_strategy'] = select_data['central_dispatch_strategy']
+                    }
+                    for(var participant in select_data['participant_batteries']){
+                        var pbd = select_data['participant_batteries'][participant];
+                        if(pbd.capacity_kWh && pbd.type && pbd.dispatch_strategy ){
+                            options[participant+'_battery_id'] = pbd.type;
+                            options[participant+'_battery_strategy'] = pbd.dispatch_strategy;
+                            options[participant+'_battery_capacity_kWh'] = Number(pbd.capacity_kWh)
+                        }
+                    }
                 }
 
                 this.parsed_parameters["study_parameters_mike"] = options;

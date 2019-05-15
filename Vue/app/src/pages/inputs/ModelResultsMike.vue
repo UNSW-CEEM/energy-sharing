@@ -7,7 +7,6 @@
                     v-on:click="select_chart(chart)"
                     v-bind:class="{selected_button: is_selected(chart)}"
                     >
-
                     {{ chart.link_text }}
             </div>
             <div class="chart-choice" ><a :href="download_link">Download</a></div>

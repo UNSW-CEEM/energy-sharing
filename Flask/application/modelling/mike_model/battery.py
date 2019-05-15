@@ -410,8 +410,7 @@ class Battery:
             self.max_timestep_delivered = self.discharge_rate_kW * self.ts.get_interval() / 3600
             self.max_timestep_accepted = self.charge_rate_kW * self.ts.get_interval() / 3600
             self.cumulative_losses = 0
-            self.net_discharge = np.zeros(
-                self.ts.num_steps)  # this is +ve for discharge, -ve for charge. Used for SC and SS calcs
+            self.net_discharge = np.zeros(self.ts.get_num_steps())  # this is +ve for discharge, -ve for charge. Used for SC and SS calcs
 
             # Assume losses are all in charging part of cycle:
             # This works if energy capacity is actually "useful discharge capacity"
@@ -421,16 +420,16 @@ class Battery:
 
             # Initialise SOC log
             # ------------------
-            self.SOC_log = np.zeros(self.ts.num_steps)
+            self.SOC_log = np.zeros(self.ts.get_num_steps())
 
     def reset(self,
               annual_load):  # annual road as np.array
         self.charge_level_kWh = self.capacity_kWh * self.initial_SOC
         self.number_cycles = 0
         self.SOH = 100
-        self.SOC_log = np.zeros(self.ts.num_steps)
+        self.SOC_log = np.zeros(self.ts.get_num_steps())
         self.cumulative_losses = 0
-        self.net_discharge = np.zeros(self.ts.num_steps)
+        self.net_discharge = np.zeros(self.ts.get_num_steps())
         annual_peak_load = np.multiply(annual_load, self.discharge_period_array).max()
         self.peak_demand_threshold = annual_peak_load * self.peak_demand_percentage / 100
 

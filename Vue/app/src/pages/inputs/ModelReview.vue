@@ -44,7 +44,7 @@
                 </div>
             </div>
 
-            <div class="info-box">
+            <div class="info-box" v-if="parsed_parameters.central_services">
                 <div class="info-box-heading">
                     Central Services (Battery)
                 </div>

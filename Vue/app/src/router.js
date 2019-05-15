@@ -38,6 +38,11 @@ export default new Router({
             name: 'central_services',
             component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelServices.vue')
         },
+        {
+            path: '/battery_mike',
+            name: 'battery_mike',
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelBatteryMike.vue')
+        },
         // {
         //     path: '/central_solar',
         //     name: 'central_solar',

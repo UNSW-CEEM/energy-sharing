@@ -46,21 +46,21 @@
                         <SimpleDropdown 
                                     v-model="input_data.central_solar_profile"
                                     :my_options="[null].concat(input_data.my_options['solar_profiles_options'])"
-                                    :my_placeholder="Select"/>
+                                    :my_placeholder="null"/>
                     </div>
                     <div>
                         Common Property Solar Profile
                         <SimpleDropdown 
                                     v-model="input_data.common_property_solar_profile"
                                     :my_options="[null].concat(input_data.my_options['solar_profiles_options'])"
-                                    :my_placeholder="Select"/>
+                                    :my_placeholder="null"/>
                     </div>
                     <div>
                         Common Property Load Profile
                         <SimpleDropdown 
                                     v-model="input_data.central_load_profile"
                                     :my_options="[null].concat(input_data.my_options['load_profiles_options'])"
-                                    :my_placeholder="Select"/>
+                                    :my_placeholder="null"/>
                     </div>
                 </div>
             </div>

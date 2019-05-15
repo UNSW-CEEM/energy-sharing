@@ -272,7 +272,8 @@ class Network(Customer):
         # Household batteries - separately defined
         # ----------------------------------------
         elif scenario.has_ind_batteries != 'none':
-            for c in self.study.get_participant_names:
+            for c in self.study.get_participant_names():
+                
                 bat_name = str(c) + '_battery_id'
                 bat_strategy = str(c) + '_battery_strategy'
                 bat_capacity = str(c) + '_battery_capacity_kWh'
