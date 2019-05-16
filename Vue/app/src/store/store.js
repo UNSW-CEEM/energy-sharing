@@ -25,12 +25,19 @@ const frontend_state = {
             state[payload.model_page_name] = payload.data;
         },
         load_config(state, payload){
-            console.log('Loading Config', payload)
+            console.log('store.js Loading Config', payload)
             for(var item in payload){
                 state[item] = payload[item]
             }
-            console.log('new state', state)
+            console.log('store.js new state', state)
             // state = payload;
+        },
+        clear_params(state){
+            console.log('store.js clearing state');
+            for(var item in state){
+                delete state[item];
+            }
+            state.selected_model = false;
         }
 
     }

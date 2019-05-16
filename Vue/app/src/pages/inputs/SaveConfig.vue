@@ -1,21 +1,57 @@
 <template>
     <div class="background">
-       
+        <modal width="40%" height="40%" name="clear">
+            <div class="modal-content">
+                <div class="info-box-heading">
+                    Clear
+                </div>
+
+                <div class="info-box-content">
+                    Are you sure you want to clear all settings and start again?
+                </div>
+
+                <div class="modal-button-line">
+                    <div class="deny-button" v-on:click="$modal.hide('clear')">Don't Clear</div>
+                    <div class="confirm-button" v-on:click="clear_params()">Clear</div>
+                </div>
+            </div>
+        </modal>
+
+        <modal width="40%" height="40%" name="load-success">
+            <div class="modal-content">
+                <div class="info-box-heading">
+                    Success
+                </div>
+
+                <div class="info-box-content">
+                    The configuration file was successfully loaded.
+                </div>
+
+                <div class="modal-button-line">
+                    <div class="confirm-button" v-on:click="$modal.hide('load-success')">Close</div>
+                </div>
+            </div>
+        </modal>
 
          <div class="main-container" >
             
             <div class="info-box">
                 <div class="info-box-heading">
-                    Save Config
+                    Save Configuration
                 </div>
+                
                 <div class="info-box-content">
-                    <div class="save-button" v-on:click="saveToFile()"> Save</div>
+                    <div class="config-name">
+                        <span class="config-name-label">File Name</span>
+                        <input v-model="config_name">
+                    </div>
+                    <div class="confirm-button" v-on:click="saveToFile()"> Save</div>
                 </div>
             </div>
 
             <div class="info-box">
                 <div class="info-box-heading">
-                    Load Config
+                    Load Configuration
                 </div>
                 <div class="info-box-content">
                     <div> 
@@ -23,6 +59,15 @@
                             <input type="file" @change="loadTextFromFile">
                         </label>
                     </div>
+                </div>
+            </div>
+
+             <div class="info-box">
+                <div class="info-box-heading">
+                    Clear Configuration
+                </div>
+                <div class="info-box-content">
+                    <div class="confirm-button" v-on:click="$modal.show('clear')"> Clear</div>
                 </div>
             </div>
 
@@ -41,6 +86,7 @@
         data () {
             return {
                 view_name: this.$options.name,
+                config_name:'Simulation 1'
             }
         },
         
@@ -64,6 +110,7 @@
                     var params = JSON.parse(e.target.result);
                     // console.log(params)
                     self.$store.commit('load_config', params)
+                    self.$modal.show('load-success')
                 }
                 
                 //This will trigger the above onload function and then allow processing. 
@@ -80,7 +127,7 @@
 
             saveToFile(){
                 var params_string = JSON.stringify(this.$store.state.frontend_state);
-                this.download('config.json', params_string);
+                this.download(this.config_name+'.json', params_string);
             },
 
             download(filename, text) {
@@ -97,7 +144,12 @@
                 else {
                     pom.click();
                 }
+            },
+            clear_params(){
+                this.$store.commit('clear_params')
+                this.$modal.hide('clear');
             }
+
         },
         mounted(){
            
@@ -122,14 +174,25 @@
 
    
 
-    .save-button{
+    .confirm-button{
         background-color:$button-primary;
         color:$button-text;
         cursor:pointer;
         
         padding: 1vh 3vw 1vh 3vw;
-        margin: 1vh 0 3vh 0;
+        margin: 1vh 1vw 3vh 1vw;
         border-radius:3px;
+    }
+
+    .deny-button{
+        background-color:$button-warning;
+        color:$button-text;
+        cursor:pointer;
+        
+        padding: 1vh 3vw 1vh 3vw;
+        margin: 1vh 1vw 3vh 1vw;
+        border-radius:3px;
+        
     }
 
     .info-box{
@@ -181,6 +244,32 @@
         padding: 1vh 1vw 1vh 1vw;
         border-radius:4px;
         cursor:pointer;
+    }
+
+    .modal-content{
+        display:flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        color:$container-text;
+        height:100%;
+    }
+
+    .modal-button-line{
+        display:flex;
+        flex-direction:row;
+    }
+
+    .config-name{
+        display:flex;
+        flex-direction:row;
+        justify-content:center;
+        align-items:center;
+        margin: 0 0 2vh 0;
+    }
+    .config-name-label{
+        font-size:0.8em;
+        margin: 0 1vw 0 1vw;
     }
 
 </style>
