@@ -18,7 +18,7 @@ from ..mike_model.study import Study
 
 
 class NewSim:
-    def __init__(self, folder_routes, participants, dynamic_tariffs, study_parameters, solar_filename, load_filename):
+    def __init__(self, folder_routes, participants, dynamic_tariffs, study_parameters, solar_filename, load_filename, solar_skiprows, load_skiprows):
         base_path = folder_routes.get_route("mike_base_dir")
         self.project = folder_routes.get_route("mike_project_name")
         self.study_name = folder_routes.get_route("mike_study_name")
@@ -79,7 +79,7 @@ class NewSim:
         # ]
         
         
-        self.study = Study(base_path, self.project, self.study_name, pv_path, load_path, participants, dynamic_tariffs, study_parameters)
+        self.study = Study(base_path, self.project, self.study_name, pv_path, load_path, participants, dynamic_tariffs, study_parameters, solar_skiprows, load_skiprows)
         print("new_sim.py/NewSim()/__init__", "NewSim Created")
 
     def run(self):

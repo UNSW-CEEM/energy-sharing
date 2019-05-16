@@ -179,7 +179,22 @@ class MikeWrapper:
         if "model_data_sources_mike" in ui_inputs:
             self.solar_filename = ui_inputs["model_data_sources_mike"]['selected_solar_file']
             self.load_filename = ui_inputs["model_data_sources_mike"]['selected_load_file']
-            # start, end = self.find_time_periods(ui_inputs[key])
+            
+            
+            # This code figures out where the datasets need to be chopped such that they match.
+            start, end = self.find_time_periods(self.solar_filename, self.load_filename)
+            self.solar_skiprows = self.find_skiprows(
+                os.path.join(self.folder_routes.solar_profiles_dir, self.solar_filename),
+                start,
+                end
+            )
+
+            self.load_skiprows = self.find_skiprows(
+                os.path.join(self.folder_routes.load_profiles_dir, self.load_filename),
+                start,
+                end
+            )
+
             # self.time_periods = util.generate_dates_in_range(start, end, 30)
 
     def print(self):
@@ -188,7 +203,15 @@ class MikeWrapper:
     def create_objects(self):
         
         # Create the main Study object
-        self.mike_model = NewSim(self.folder_routes, self.ui_participants, self.ui_tariffs, self.study_parameters, self.solar_filename, self.load_filename)
+        self.mike_model = NewSim(
+            self.folder_routes, 
+            self.ui_participants, 
+            self.ui_tariffs, 
+            self.study_parameters, 
+            self.solar_filename, 
+            self.load_filename,
+            self.solar_skiprows,
+            self.load_skiprows)
        
 
     def run(self, status):
@@ -206,13 +229,10 @@ class MikeWrapper:
         return parsed_results
 
     # Might move this later.
-    def find_time_periods(self, frontend_data):
+    def find_time_periods(self, solar_filename, load_filename):
 
-        s_path = self.folder_routes.solar_profiles_dir
-        l_path = self.folder_routes.load_profiles_dir
-
-        s_file_path = os.path.join(s_path, frontend_data["selected_solar_file"])
-        l_file_path = os.path.join(l_path, frontend_data["selected_load_file"])
+        s_file_path = os.path.join(self.folder_routes.solar_profiles_dir, solar_filename)
+        l_file_path = os.path.join(self.folder_routes.load_profiles_dir, load_filename)
 
         s_df = pd.read_csv(s_file_path)
         l_df = pd.read_csv(l_file_path)
@@ -230,6 +250,33 @@ class MikeWrapper:
         l_end = pd.datetime.strptime(l_end_string, '%d/%m/%Y %H:%M')
 
         return max(s_start, l_start), min(s_end, l_end)
+    
+
+    def find_skiprows(self, path, start, end):
+        """
+        This generates a skiprows array that can be passed to a pd.read_csv function.
+        Given two datetimes, it searches through the dataset and determines arrays of rows to skip.
+        These can be passed to pd.read_csv (ie. pd.read_csv(path, skiprows=skiprows)) and results in loading the constrained period. 
+        """
+        df = pd.read_csv(path)
+        start_idx = 0
+        end_idx = 0
+        for index, row in df.iterrows():
+            dt = pd.datetime.strptime(row['timestamp'], '%d/%m/%Y %H:%M')
+            print(index, row['timestamp'])
+            if dt.isoformat() == start.isoformat():
+                start_idx = index + 1
+            if dt.isoformat() == end.isoformat():
+                end_idx = index+2
+        final_index = df.shape[0] + 1
+        
+
+        skiprows = list(range(1,start_idx))+list(range(end_idx,final_index))
+        # trimmed_df = pd.read_csv(path, skiprows=skiprows)
+        # print(trimmed_df)
+
+        return skiprows
+            
 
 
 def dummy_status_callback(message):

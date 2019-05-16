@@ -12,13 +12,14 @@ from ..mike_model.load import LoadCollection
 class Scenario:
     """Contains a single set of input parameters, but may contain multiple load profiles."""
 
-    def __init__(self, scenario_name, study, timeseries):
+    def __init__(self, scenario_name, study, timeseries, solar_skiprows):
         # ------------------------------
         # Set up key scenario parameters
         # ------------------------------
         self.name = scenario_name
         self.study = study
         self.ts = timeseries
+        self.solar_skiprows = solar_skiprows
 
         self.label = self.study.name + '_' + "{:03}".format(int(self.name))
 
@@ -387,7 +388,7 @@ class Scenario:
                        net.total_battery_losses,
                        net.battery_cycles,
                        net.battery_SOH]
-        print("scenario.py/collate_network_results()", "energy_bill",net.resident['cp'].energy_bill)
+        # print("scenario.py/collate_network_results()", "energy_bill",net.resident['cp'].energy_bill)
         result_list += [net.resident['cp'].energy_bill / 100]
         result_list += [net.resident[c].energy_bill / 100 for c in self.study.get_participant_names() if c != 'cp']
         result_list += [net.resident['cp'].local_solar_bill / 100]
@@ -447,7 +448,7 @@ class Scenario:
             else:
                 # Load pv generation data:
                 # -----------------------
-                self.pv = PVCollectionFactory().from_file(pvFile)
+                self.pv = PVCollectionFactory().from_file(pvFile, self.solar_skiprows)
                 if not pd.DatetimeIndex(data=self.pv.get_date_times()).equals(pd.DatetimeIndex(data=self.ts.get_date_times())):
                     logging.info('***************Exception!!! PV %s index does not align with load ', pvFile)
                     sys.exit("PV has bad timeseries")
@@ -495,7 +496,7 @@ class Scenario:
             if (system not in used_systems) and (system not in ['cp', 'central']):
                 self.pv.delete_system(system)
         
-        print("scenario.py/Scenario()/_generate_pv_profiles()", "Solar Data Frame",self.pv._data)
+        # print("scenario.py/Scenario()/_generate_pv_profiles()", "Solar Data Frame",self.pv._data)
 
     def log_scenario_data(self):
         """Saves a csv file for each scenario and logs a row of results to output df."""

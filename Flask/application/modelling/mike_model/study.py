@@ -24,7 +24,9 @@ class Study:
                  load_path,
                  participants,
                  dynamic_tariffs,
-                 study_parameters
+                 study_parameters,
+                 solar_skiprows,
+                 load_skiprows
                  ):
         print("study.py/Study()/__init__()", "Starting Initialising Study Object")
         # --------------------------------
@@ -35,6 +37,7 @@ class Study:
         self.name = study_name
         self.project_path = os.path.join(self.base_path, 'studies', project)
         self._participants = participants
+        self.solar_skiprows = solar_skiprows
 
         print("study.py/__init__", "common_property_load_profile", study_parameters['common_property_load_profile'])
         print("study.py/__init__", "shared_solar_profile", study_parameters['central_solar_profile'])
@@ -185,7 +188,7 @@ class Study:
         # -------------------
         # Originally, could identify different loads for each scenario. 
         # Now we're in one-scenario-land, so we just set self.different_loads to False.
-        self.load_profiles = self._generate_load_profiles(load_path)
+        self.load_profiles = self._generate_load_profiles(load_path, load_skiprows)
         
 
         # -----------------------------------------------------------------
@@ -256,7 +259,7 @@ class Study:
     
     
 
-    def _generate_load_profiles(self, load_path):
+    def _generate_load_profiles(self, load_path, skiprows):
         # ---------------------------------------------
         # Get loads from data file.
         # ---------------------------------------------
@@ -269,7 +272,8 @@ class Study:
         # Get the raw load data from the pandas dataframe. 
         temp_load = pd.read_csv(load_path,
                                 parse_dates=['timestamp'],
-                                dayfirst=True)
+                                dayfirst=True,
+                                skiprows=skiprows)
         temp_load = temp_load.set_index('timestamp') 
 
         
@@ -359,7 +363,7 @@ class Study:
         print("Running Scenario number", scenario_name)
         logging.info("Running Scenario number %i ", scenario_name)
         # Initialise scenario
-        scenario = Scenario(scenario_name=scenario_name, study=self, timeseries=self.ts_ng)
+        scenario = Scenario(scenario_name=scenario_name, study=self, timeseries=self.ts_ng, solar_skiprows=self.solar_skiprows)
         eno = Network(scenario=scenario, study=self, timeseries=self.ts_ng)
         # N.B. in embedded network scenarios, eno is the actual embedded network operator,
         # but in other scenarios, it is a virtual intermediary to organise energy and cash flows

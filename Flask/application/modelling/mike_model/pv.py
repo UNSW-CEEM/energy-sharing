@@ -6,9 +6,9 @@ class PVCollectionFactory():
         data.set_index('timestamp', inplace=True)
         return PVCollection(data)
     
-    def from_file(self, file_path):
+    def from_file(self, file_path, skiprows):
         print("Reading PV from file: ", file_path)
-        data = pd.read_csv(file_path, parse_dates=['timestamp'], dayfirst=True)
+        data = pd.read_csv(file_path, parse_dates=['timestamp'], dayfirst=True, skiprows=skiprows)
         data.set_index('timestamp', inplace=True)
         return PVCollection(data)
 
