@@ -8,7 +8,7 @@
                 <div class="config-heading">Arrangement</div>
                 <div class="arrangement-selection">
 
-                    <div class="arrangement" v-for="arrangement in arrangements">
+                    <div class="arrangement" v-for="arrangement in arrangements" v-bind:key="arrangement.id">
                         <div class="heading">
                             {{arrangement.heading}}
                         </div>
@@ -80,7 +80,7 @@
                             {{ header.additional_text }}
                         </td>
                     </tr>
-                    <tr v-for="row in input_data.table_rows" :key="row.row_id">
+                    <tr v-for="(row, index) in input_data.table_rows" :key="row.row_id">
                         <td v-for="input in row.row_inputs" :key="input.col_id">
                             <SimpleNumberInput
                                 v-if="input.tag==='my_number'"
@@ -92,7 +92,9 @@
                                 :my_placeholder="input.placeholder"/>
                         </td>
                         
-                        <td><div class="show-data-button" v-on:click="show_chart(row.row_id)">Show Data</div></td>
+                        <td><div class="show-data-button" v-on:click="$modal.show('loading'); show_chart(row.row_id);">Show Data</div></td>
+                        <td><div class="remove-row-button" v-on:click="remove_row(index);">Remove</div></td>
+                        
                     </tr>
                 </table>
 
@@ -109,6 +111,14 @@
             
         </div>
 
+        <modal width="20%" height="20%" name="loading">
+            <div class="loading-modal">
+                <span>
+                    Loading...
+                </span>
+            </div>
+        </modal>
+
         <modal  width="80%" name="data-files">
                 <div class="modal-container">
                     <div class="modal-header">
@@ -120,12 +130,14 @@
                                 v-model="input_data.selected_load_file"
                                 v-on:input="get_load_profiles(input_data.selected_load_file)"
                                 :my_options="input_data.load_files_list"
+                                v-on:click="loading_load_profiles = true;"
                                 :my_placeholder="'Select File'"/>
 
                         <h4 class="solar-title">Solar File:</h4>
                         <SimpleDropdown
                                 v-model="input_data.selected_solar_file"
                                 v-on:input="get_solar_profiles(input_data.selected_solar_file)"
+                                v-on:click="loading_solar_profiles = true;"
                                 :my_options="input_data.solar_files_list"
                                 :my_placeholder="'Select File'" />
                         
@@ -144,9 +156,10 @@
                         <span v-if="input_data.selected_load_file">Load Start Date:{{input_data.load_dates[input_data.selected_load_file]['start_date']}}</span>
                         <span v-if="input_data.selected_load_file">Load End Date:{{input_data.load_dates[input_data.selected_load_file]['end_date']}}</span> -->
                     </div>
+                    
                     <div class="modal-close-buttons">
                         <div class="close-button" v-on:click="hide">Set</div>
-                        <div class="close-autofill-button" v-on:click="hide(); auto_fill();">Set and Autofill</div>
+                        <div class="close-autofill-button" v-on:click="hide(); auto_fill();" >Set and Autofill</div>
                     </div>
                 </div>
             </modal>
@@ -178,6 +191,9 @@
 
         data () {
             return {
+                loading_solar_profiles:false,
+                loading_load_profiles:false,
+
                 view_name: this.$options.name,
                 model_page_name:"model_participants_mike",
                 chart:{
@@ -364,6 +380,10 @@
                     }
                 }
             },
+
+            remove_row(index){
+                this.input_data.table_rows.splice(index,1);
+            },
            
             add_row(participant_id=null, participant_type="", retail_tariff_type="", load_profile="", solar_profile="", solar_scaling=1, battery_type="No Battery") {
                 let array_length = this.input_data.table_rows.length;
@@ -446,12 +466,14 @@
             },
 
             get_solar_profiles (filename) {
+                
                 this.$socket.emit('get_solar_profiles', filename)
                 this.$socket.emit('get_solar_timeseries', filename);
                 console.log('Getting solar profiles')
             },
 
             get_load_profiles (filename) {
+                this.loading_load_profiles = true;
                 this.$socket.emit('get_load_profiles', filename);
                 this.$socket.emit('get_load_timeseries', filename);
                 console.log('Getting load profiles')
@@ -501,6 +523,7 @@
                 this.chart.solar_participant_id = solar_participant_id;
                 this.chart.load_participant_id = load_participant_id;
                 this.chart.solar_scaling_factor = solar_scaling_factor;
+                this.$modal.hide('loading')
                 this.$modal.show('participant-chart');
             },
 
@@ -536,6 +559,12 @@
             profilesChannel: function(response) {
                 console.log('profiles',response)
                 this.input_data.my_options[response.key] = response.data;
+                if(response.key == "solar_profiles_options"){
+                    this.loading_solar_profiles = false;
+                }
+                if(response.key == "load_profiles_options"){
+                    this.loading_load_profiles = false;
+                }
             },
 
             participants_file_channel: function(response) {
@@ -759,6 +788,15 @@
         padding: 0 0.5vw 0 0.5vw;
     }
 
+    .remove-row-button{
+        font-size: 0.7em;
+        background-color:$button-warning;
+        color:$button-text;
+        border-radius:4px;
+        cursor: pointer;
+        padding: 0 0.5vw 0 0.5vw;
+    }
+
     .spacer{
         width:1px;
         height:1px;
@@ -833,8 +871,21 @@
         width:100%;
         justify-content:space-around;
         margin: 2vh 0 2vh 0;
+    }
 
+    .blanked{
+        cursor:default;
+        background-color:grey !important;
+    }
 
+    .loading-modal{
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+        width:100%;
+        height:100%;
+        color:$heading-text;
     }
 
 </style>

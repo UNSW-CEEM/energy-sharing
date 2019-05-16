@@ -193,11 +193,11 @@ class MikeWrapper:
 
     def run(self, status):
         print("mike.py/run()", "Attempting Mike Model Run")
-        status("Attempting to run Mike Model")
+        status("Running Mike Simulation")
         self.mike_model.run()
 
         print("mike.py/run()", "Finished Running Mike Model")
-        status("Finished Running Mike Model. Parsing Results")
+        status("Finished Running Model. Parsing Results")
         parsed_results = self.ui_results_parser.mike_temp_parser()
 
 

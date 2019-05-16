@@ -1,5 +1,10 @@
 <template>
     <div class="background">
+
+        <modal height="60%" width="80%" name='battery-info'>
+            <BatteryInfo height="100%" width="100%"/>
+        </modal>
+
             <div class="container">
                 <div class="container-header">Central Battery</div>
                 <div class="central-battery-config">
@@ -21,7 +26,9 @@
                             :my_placeholder="null"/>
                     </span>
 
-                    
+                    <div class="info-icon" v-on:click="$modal.show('battery-info')">
+                        <font-awesome-icon class="fa-icon" icon="info" /> 
+                    </div>
 
                     
                 </div>
@@ -70,6 +77,7 @@
 <script>
     import SimpleNumberInput from '@/components/SimpleNumberInput.vue';
     import SimpleDropdown from '@/components/SimpleDropdown.vue';
+    import BatteryInfo from '@/components/BatteryInfo.vue';
     import SaveLoad from '@/mixins/SaveLoad.vue';
     import Vue from 'vue'
 
@@ -78,6 +86,7 @@
         components: {
             SimpleDropdown,
             SimpleNumberInput,
+            BatteryInfo
         },
 
         mixins: [SaveLoad],
@@ -264,6 +273,19 @@
 
     .participant-heading{
         font-weight:bold;
+    }
+
+    .info-icon{
+        margin: 1vh 3vw 1vh 3vw;
+        border: 1px solid grey;
+        width:2vw;
+        height:2vw;
+        display:flex;
+        flex-direction:row;
+        justify-content:center;
+        align-items:center;
+        border-radius:10px;
+        cursor: pointer;
     }
     
 </style>
