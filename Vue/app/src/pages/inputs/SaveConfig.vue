@@ -9,7 +9,7 @@
                     Save Config
                 </div>
                 <div class="info-box-content">
-                    <div v-on:click="saveToFile()"> Download some stuff</div>
+                    <div class="save-button" v-on:click="saveToFile()"> Save</div>
                 </div>
             </div>
 
@@ -18,13 +18,11 @@
                     Load Config
                 </div>
                 <div class="info-box-content">
-                    <div> Some Content</div>
-
-                    <label class="text-reader">
-                        <input type="file" @change="loadTextFromFile">
-                    </label>
-
-
+                    <div> 
+                        <label class="text-reader">
+                            <input type="file" @change="loadTextFromFile">
+                        </label>
+                    </div>
                 </div>
             </div>
 
@@ -124,7 +122,7 @@
 
    
 
-    .run-button{
+    .save-button{
         background-color:$button-primary;
         color:$button-text;
         cursor:pointer;
@@ -159,6 +157,7 @@
         flex-direction:column;
         justify-content:flex-start;
         align-items:center;
+        margin: 3vh 0 3vh 0;
     }
 
     .not-ready-container{
