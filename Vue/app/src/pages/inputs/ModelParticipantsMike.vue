@@ -69,6 +69,7 @@
             
             <div class="participants-table">
                 <div class="participants-table-heading">Participants</div>
+                <div class="table-container">
                 <table >
                     <tr>
                         <th v-for="header in table_headers" :key="header.header_id" :value="header.name">
@@ -97,10 +98,12 @@
                         
                     </tr>
                 </table>
-
-
                 <div class="add-participant-button" @click="add_row()">Add Participant</div>
+                </div>
 
+
+                
+                
                 <!-- <div class="file-buttons-container">
                     <button @click="load_participants_config(input_data.selected_config_file)">Load User Config</button>
                     <button @click="save_config()">Save User Config</button>
@@ -631,7 +634,9 @@
         // border-radius:4px;
         margin: 2vh 1vw 4vh 1vw;
         width:90%;
-        display:flex;
+        // display:flex;
+        display:block;
+        
         flex-direction:column;
         justify-content:flex-start;
         align-items:center;
@@ -639,9 +644,11 @@
         background-color: $container-bg;
         color:$container-text;
         min-width:75vw;
+        // min-height:30vh;
         // min-height:100vh;
         
-        /* padding: 0vh 0 1.5vw 0; */
+        padding: 0vh 0 1.5vw 0;
+        // overflow:visible;
         
     }
 
@@ -886,6 +893,13 @@
         width:100%;
         height:100%;
         color:$heading-text;
+    }
+
+    .table-container{
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items: center;
     }
 
 </style>

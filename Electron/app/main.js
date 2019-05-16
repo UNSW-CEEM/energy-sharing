@@ -9,7 +9,7 @@ let win = null;
 // var executablePath = "Resources/app/model/run-dev/run-dev";
 var executablePath = path.resolve(__dirname+"/model/run-dev/run-dev");
 
-var child = childProcess.spawn(executablePath, { cwd: undefined, env: process.env, shell:true });
+// var child = childProcess.spawn(executablePath, { cwd: undefined, env: process.env, shell:true });
 
 // var executablePath = path.resolve(__dirname+"/model/run-dev");
 // var child = require('child_process').spawn(process.env.SHELL, ['-c', 'cd ' + __dirname+"/model/run-dev" + ' && run-dev'])
@@ -23,8 +23,8 @@ app.on('ready', function () {
     // Specify entry point to default entry point of vue.js
     // Need to wait a few seconds for the python server to boot, ortherwise user needs cmd+r
     setTimeout(function () {
-        // win.loadURL('http://localhost:8080'); //this one for the hot-loading dev server run via npm run serve in the vue directory
-        win.loadURL('http://localhost:5000'); //this one for production, post-build, from the python directory.
+        win.loadURL('http://localhost:8080'); //this one for the hot-loading dev server run via npm run serve in the vue directory
+        // win.loadURL('http://localhost:5000'); //this one for production, post-build, from the python directory.
     }, 1);
     
     // Remove window once app is closed
@@ -124,7 +124,7 @@ app.on('activate', () => {
 
 //quit the app once closed
 app.on('window-all-closed', function () {
-    child.kill('SIGINT');
+    // child.kill('SIGINT');
     if (process.platform !== 'darwin') {
       app.quit();
     }

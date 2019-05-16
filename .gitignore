@@ -1,4 +1,6 @@
 Electron/app/node_modules
 Flask/Pipfile
 Flask/dist
+Flask/build
 Flask/application/modelling/data/luomi/output/*
+Electron/app/model
