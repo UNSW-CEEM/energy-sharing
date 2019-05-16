@@ -9,8 +9,27 @@
         },
 
         methods: {
-            ready_to_go(){
-                return {ready:false, message:'You are not ready.'}
+            get_readiness_status(){
+                if(this.parsed_parameters['model_selection']['model_type'] == 'mike'){
+                    if(!this.parsed_parameters['model_data_sources_mike']){
+                        return {ready:false, message:'Solar and load data sources not selected. Please navigate to the Arrangement page and select data sources.'}
+                    }
+                    for( var i = 0; i<this.parsed_parameters['model_participants_mike'].length; i++){
+                        var participant_row = this.parsed_parameters['model_participants_mike'][i];
+                        for(var j = 0; j < participant_row.row_inputs.length; j++){
+                            if(participant_row.row_inputs[j].value == ""){
+                                return {ready:false, message:'Participants are not configured - at least one participant does not have a tariff, solar or load profile selected. Please navigate to the Arrangement page and update participant profiles.'}
+                            }
+                        }
+                    }
+                }else{
+
+                }
+
+
+
+
+                return {ready:true, message:''}
             },
             get_params(){
                 this.parse_simple_pages();
@@ -137,12 +156,6 @@
                             price: select_data.tariffs.static_exports.period_rates[i]
                         })
                     }
-
-
-                    
-
-
-
 
                 }
 

@@ -108,6 +108,7 @@
 
         created() {
             this.load_page_simple();
+            
         },
 
         beforeDestroy() {
@@ -115,7 +116,7 @@
         },
 
         mounted(){
-            this.select_model('mike');
+            
         },
 
         methods: {
@@ -123,21 +124,6 @@
                 this.input_data.selected_model= model;
                 this.$store.commit('model', model)
             },
-            // frontend "global"ish variable. Set in the store. May be used for hiding financing page.
-            // save_model_selection(selection) {
-            //     this.input_data.selected_model_options = this.network_options[selection];
-
-            //     if (this.input_data.network_dropdown.value === "") {
-            //         this.input_data.network_dropdown.value = this.input_data.selected_model_options[0]
-            //     }
-
-            //     let payload = {
-            //         model_page_name: "selected_model",
-            //         data: selection
-            //     };
-
-            //     this.$store.commit('save_page', payload)
-            // },
         }
     }
 </script>

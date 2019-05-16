@@ -3,6 +3,17 @@
         <!-- <div class="model-title">
             <h1>{{ view_name }}</h1>
         </div> -->
+
+        <modal  width="40%" name="notready">
+            <div class="info-box-heading">
+                    Error
+            </div>
+            <div class="not-ready-container">
+                
+                <div class="message">{{not_ready_message}} </div>
+                <div class="close-button" v-on:click="close_not_ready_modal()"> Close </div>
+            </div>
+        </modal>
         <div class="main-container" v-if="parsed">
             
 
@@ -81,6 +92,7 @@
                 view_name: this.$options.name,
                 parsed:false,
                 results_received: false,
+                not_ready_message:''
 
                 // parsed_parameters: {},
             }
@@ -126,14 +138,23 @@
             run_model() {
                 // this.parse_simple_pages();
                 // this.parse_all_table_pages();
-
-                this.$socket.emit('run_model', this.parsed_parameters);
-                if(this.parsed_parameters.model_selection.model_type=="mike"){
-                    this.$router.push('results_mike');
+                var status = this.get_readiness_status()
+                if(status.ready){
+                    this.$socket.emit('run_model', this.parsed_parameters);
+                    if(this.parsed_parameters.model_selection.model_type=="mike"){
+                        this.$router.push('results_mike');
+                    }else{
+                        this.$router.push('results');
+                    }
                 }else{
-                    this.$router.push('results');
+                    this.not_ready_message = status.message
+                    this.$modal.show('notready')
                 }
                 
+                
+            },
+            close_not_ready_modal(){
+                this.$modal.hide('notready')
             },
         },
         mounted(){
@@ -192,6 +213,7 @@
         color:$heading-text;
         font-size:1.2em;
         width:100%;
+        text-align:center;
     }
 
     .info-box-content{
@@ -199,6 +221,29 @@
         flex-direction:column;
         justify-content:flex-start;
         align-items:center;
+    }
+
+    .not-ready-container{
+        display:flex;
+        flex-direction:column;
+        justify-content:space-around;
+        align-items:center;
+        width:100%;
+        height:100%;
+       
+    }
+
+    .not-ready-container .message{
+        color:$container-text;
+        padding: 0 3vh 0 3vh;
+        text-align:center;
+    }
+
+    .not-ready-container .close-button{
+        background-color:$button-primary;
+        padding: 1vh 1vw 1vh 1vw;
+        border-radius:4px;
+        cursor:pointer;
     }
 
 </style>
