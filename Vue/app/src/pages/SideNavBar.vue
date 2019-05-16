@@ -53,7 +53,7 @@
                     },
                     {
                         id: 3,
-                        text: 'Participants',
+                        text: 'Arrangement',
                         page: this.model =="luomi" ? '/participants': '/participants_mike',
                         storage_key: "participants",
                         icon:"user"

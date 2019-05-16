@@ -44,10 +44,6 @@ class MikeWrapper:
         self.ui_central_solar = Ui_Central_Solar(self.folder_routes)
         self.ui_results_parser = Ui_Results_Parsers(self.folder_routes)
 
-        
-
-        
-
         # Model Objects
         self.model_network = None
         self.model_central_battery = None
@@ -179,10 +175,12 @@ class MikeWrapper:
         # }
 
     def load_data_sources(self, ui_inputs):
-        key = "model_data_sources"
-        if key in ui_inputs:
-            start, end = self.find_time_periods(ui_inputs[key])
-            self.time_periods = util.generate_dates_in_range(start, end, 30)
+        
+        if "model_data_sources_mike" in ui_inputs:
+            self.solar_filename = ui_inputs["model_data_sources_mike"]['selected_solar_file']
+            self.load_filename = ui_inputs["model_data_sources_mike"]['selected_load_file']
+            # start, end = self.find_time_periods(ui_inputs[key])
+            # self.time_periods = util.generate_dates_in_range(start, end, 30)
 
     def print(self):
         print("Model Type: ", self.model_type)
@@ -190,7 +188,7 @@ class MikeWrapper:
     def create_objects(self):
         
         # Create the main Study object
-        self.mike_model = NewSim(self.folder_routes, self.ui_participants, self.ui_tariffs, self.study_parameters)
+        self.mike_model = NewSim(self.folder_routes, self.ui_participants, self.ui_tariffs, self.study_parameters, self.solar_filename, self.load_filename)
        
 
     def run(self, status):

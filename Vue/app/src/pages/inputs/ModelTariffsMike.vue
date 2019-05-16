@@ -71,7 +71,92 @@
                 </div>
             </div>
 
+            <div class="container">
+                <div class="container-header">
+                    Daily Block Tariffs
+                </div>
+                <div class="container-content">
+                    <div class="tariffs">
+                        <div class="input">
+                            <div>
+                                <span class="units">Block 1 Rate </span>
+                                <input v-model.number="input_data.tariffs.block_rate_1"/> 
+                                <span class="units">($/kWh)</span>
+                            </div>
+                        </div>
+                        <div class="input">
+                            <div>
+                                <span class="units">Block 1 Threshold</span>
+                                <input v-model.number="input_data.tariffs.high_1"/> 
+                                <span class="units">(kWh)</span>
+                            </div>
+                        </div>
+                        <div class="input">
+                            <div>
+                                <span class="units">Block 2 Rate </span>
+                                <input v-model.number="input_data.tariffs.block_rate_2"/> 
+                                <span class="units">($/kWh)</span>
+                            </div>
+                        </div>
+                        <div class="input">
+                            <div>
+                                <span class="units">Block 2 Threshold</span>
+                                <input v-model.number="input_data.tariffs.high_2"/> 
+                                <span class="units">(kWh)</span>
+                            </div>
+                        </div>
+                        <div class="input">
+                            <div>
+                                <span class="units">Block 3 Rate </span>
+                                <input v-model.number="input_data.tariffs.block_rate_3"/> 
+                                <span class="units">($/kWh)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
+
+        <div class="container">
+                <div class="container-header">
+                    Metering Service Charges
+                </div>
+                <div class="container-content">
+                    <div class="tariffs">
+                        <div class="input">
+                            <div>
+                                <span class="units">Metering Service Charge</span>
+                                <input v-model.number="input_data.tariffs.metering_sc_non_cap"/> 
+                                <span class="units">($/kWh)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        
+        <div class="container">
+                <div class="container-header">
+                    Solar
+                </div>
+                <div class="container-content">
+                    <div class="tariffs">
+                        <div class="input">
+                            <div>
+                                <span class="units">Feed-in Tariff Flat Rate</span>
+                                <input v-model.number="input_data.tariffs.fit_flat_rate"/> 
+                                <span class="units">($/kWh)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+
+        
     </div>
 </template>
 
@@ -119,6 +204,14 @@
 
                     tariffs:{
                         daily_fixed_rate: 1,
+                        block_rate_1:0,
+                        block_rate_2:0,
+                        block_rate_3:0,
+                        high_1:1,
+                        high_2:2,
+                        metering_sc_non_cap: 0,
+                        fit_flat_rate:0,
+                        
                         static_imports: {
                             tou_times: [7,15],
                             period_rates:[0.2,0.4,0.2],
@@ -201,7 +294,7 @@
                         type: 'column'
                     },
                     title: {
-                        text: 'Retail Time of Use Tariff'
+                        text: 'Time of Use Tariff'
                     },
                     subtitle: {
                         text: 'Drag Slider to Adjust Times'
@@ -265,7 +358,7 @@
                         type: 'column'
                     },
                     title: {
-                        text: 'Retail Time of Use Tariff'
+                        text: 'Time of Use Tariff'
                     },
                     subtitle: {
                         text: 'Drag Slider to Adjust Times'
@@ -329,7 +422,7 @@
                         type: 'column'
                     },
                     title: {
-                        text: 'Retail Time of Use Tariff'
+                        text: 'Time of Use Tariff'
                     },
                     subtitle: {
                         text: 'Drag Slider to Adjust Times'

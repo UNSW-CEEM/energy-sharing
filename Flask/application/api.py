@@ -62,17 +62,20 @@ def index():
 @cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
 def upload_solar_file():
     if request.method == 'POST':
-        # check if the post request has the file part
+        
 
         new_file = request.files['file']
         # if user does not select file, browser also
         # submit a empty part without filename
         if new_file.filename == '':
             print("No file selected.")
+        
+        valid, message = file_service.valid_file(new_file)
 
-        if new_file and file_service.valid_file(new_file.filename):
+        if new_file and valid:
             file_service.save(new_file, "solar_data")
-            return "<h1>Upload Success: "+new_file.filename+"</h1>"
+
+        return message
 
     else:
         return ''''''
@@ -90,9 +93,10 @@ def upload_load_file():
         if new_file.filename == '':
             print("No file selected.")
 
-        if new_file and file_service.valid_file(new_file.filename):
+        valid, message = file_service.valid_file(new_file)
+        if new_file and valid:
             file_service.save(new_file, "load_data")
-            return "<h1>Upload Success: "+new_file.filename+"</h1>"
+        return message
 
     else:
         return ''''''

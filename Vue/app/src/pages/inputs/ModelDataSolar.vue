@@ -8,12 +8,13 @@
                 <div class="file-list">
                     <div class="item" v-for="(file, index) in solar_files" :key="file.id">
                         <span>{{file.name}}</span> - 
-                        <span>({{file.size}} kb)</span>
+                        <!-- <span>({{file.size}} kb)</span> -->
+                        <span>({{file.response}} kb)</span>
                         <span v-if="file.error"> - {{file.error}}</span>
-                        <span v-else-if="file.success"> - success</span>
+                        <!-- <span v-else-if="file.success"> - success</span>
                         <span v-else-if="file.active"> - active</span>
-                        <span v-else-if="file.active"> - active</span>
-                        <span v-else></span>
+                        <span v-else-if="file.active"> - active</span> -->
+                        <!-- <span v-else></span> -->
                     </div>
                     
                     

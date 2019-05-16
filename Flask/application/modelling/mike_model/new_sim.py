@@ -18,7 +18,7 @@ from ..mike_model.study import Study
 
 
 class NewSim:
-    def __init__(self, folder_routes, participants, dynamic_tariffs, study_parameters):
+    def __init__(self, folder_routes, participants, dynamic_tariffs, study_parameters, solar_filename, load_filename):
         base_path = folder_routes.get_route("mike_base_dir")
         self.project = folder_routes.get_route("mike_project_name")
         self.study_name = folder_routes.get_route("mike_study_name")
@@ -26,8 +26,8 @@ class NewSim:
         # pv_path = os.path.join(base_path, 'pv_profiles', 'ceem_ui_default.csv')
         # load_path = os.path.join(base_path, 'load_profiles', 'ceem_ui_default','ceem_ui_default.csv')
 
-        pv_path = os.path.join(folder_routes.get_route("data_dir"), 'shared','solar', 'solar_profiles_6.csv')
-        load_path = os.path.join(folder_routes.get_route("data_dir"), 'shared','load', 'load_profiles_6.csv')
+        pv_path = os.path.join(folder_routes.get_route("data_dir"), 'shared','solar', solar_filename)
+        load_path = os.path.join(folder_routes.get_route("data_dir"), 'shared','load', load_filename)
 
         print("new_sim.py/NewSim()/__init__", "Base Directory", base_path)
         print("new_sim.py/NewSim()/__init__", "Project Directory", self.project)

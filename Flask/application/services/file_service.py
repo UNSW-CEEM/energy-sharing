@@ -6,6 +6,10 @@ import pendulum
 import application.folder_routes as folder_routes
 from application.folder_routes import FolderRoutes
 
+import io
+import csv
+import re
+
 SHARED_SOLAR_LOCATION = os.path.realpath(os.path.join(
     folder_routes.BASE_DIR_NAME, 'shared', 'solar'))
 SHARED_LOAD_LOCATION = os.path.realpath(os.path.join(
@@ -21,7 +25,7 @@ SHARED_FINANCING_CONFIG_LOCATION = os.path.realpath(os.path.join(
 class FileService:
 
     # Checks that a file is valid.
-    def valid_file(self, filename):
+    def valid_file(self, new_file):
         pass
     
     # Given a file, saves it (internally)
@@ -72,8 +76,28 @@ class OSFileService(FileService):
         self.p_config_files = [f for f in os.listdir(self.p_config_path)
                                if os.path.isfile(os.path.join(self.p_config_path, f))]
 
-    def valid_file(self, filename):
-        return True
+    def valid_file(self, new_file):
+        print("file_service.py/valid_file", new_file)
+        print("file_service.py/valid_file", new_file.filename)
+        # print("file_service.py/valid_file", new_file.read())
+        # Ensure the file ends in a csv.
+        if not new_file.filename.lower().endswith('csv'):
+            return False, "Error: Expected CSV File"
+        
+        # try:
+        contents_str = new_file.read().decode("utf-8") 
+        reader = csv.DictReader(io.StringIO(contents_str))
+        for line in reader:
+            if 'timestamp' not in line:
+                return False, "timestamp column not found"
+            if line['timestamp'].isspace() or line['timestamp'] == '':
+                return False, "Blank timestamp found - check end of file perhaps?"
+            if re.compile("^[0-9]+/[0-9]+/[0-9]+ [0-9]+:[0-9][0-9]$").match(line['timestamp']):
+                return False, "Incorrectly formatted timestamp found. Must follow DD/MM/YYYY HH:mm"
+        # except:
+        #     return False, "Could not parse CSV file - check formatting."
+        
+        return True, "Success"
 
     def save(self, file, save_type):
         if save_type == "solar_data":

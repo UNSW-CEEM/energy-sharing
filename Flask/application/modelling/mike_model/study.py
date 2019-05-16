@@ -310,7 +310,7 @@ class Study:
         load_profiles = LoadCollection()
         load_profiles.add_profile_from_df(temp_load, 'default')
 
-        print("study.py/_generate_load_profiles", temp_load)
+        # print("study.py/_generate_load_profiles", temp_load)
         # Return the load profile.
         return load_profiles
     

@@ -1,5 +1,7 @@
 <template>
     <div class="background">
+         
+
         <!-- <h1>Load Data</h1> -->
         <div class="main-container">
             
@@ -11,16 +13,18 @@
                 <div class="file-list">
                     <div v-for="(file, index) in load_files" :key="file.id">
                         <span>{{file.name}}</span> -
-                        <span>{{file.size}}</span> -
+                        <!-- <span>{{file.size}}</span> - -->
+                        <span>{{file.response}}</span> 
                         <span v-if="file.error">{{file.error}}</span>
-                        <span v-else-if="file.success">success</span>
+                        <!-- <span v-else-if="file.success">success</span>
                         <span v-else-if="file.active">active</span>
-                        <span v-else-if="file.active">active</span>
-                        <span v-else></span>
+                        <span v-else-if="file.active">active</span> -->
+                        <!-- <span v-else></span> -->
                     </div>
                 </div>
 
                 <div class="load-button-container">
+                    <span class="hoverable">
                     <file-upload
                         class="load_upload"
                         post-action="http://localhost:5000/upload/load_data"
@@ -34,6 +38,7 @@
                         ref="upload">
                         <div class="load-file-button">Select File</div>
                     </file-upload>
+                    </span>
                     <div class="import-button" v-if="!$refs.upload || !$refs.upload.active" @click.prevent="$refs.upload.active = true">
                         Start Import
                     </div>
@@ -65,7 +70,7 @@
     // "https://github.com/lian-yue/vue-upload-component/blob/master/docs/views/examples/Simple.vue"
 
     import FileUpload from 'vue-upload-component';
-
+    import moment from 'moment';
     export default {
         name: "ModelDataLoad",
         components: {
@@ -142,6 +147,10 @@
                 this.is_connected = true;
                 this.files_lists[response.key] = response.data;
             },
+            uploadsChannel: function(response) {
+                console.log('HI THIS IS AN UPLOAD ALERT')
+                alert(response)
+            },
         }
     }
 </script>
@@ -191,7 +200,7 @@
     }
 
     .load_upload{
-        cursor: pointer;
+        cursor: pointer !important;
     }
 
     .import-button{
@@ -283,6 +292,18 @@
 
     .load-files-list-item{
         padding-left:1vw;
+    }
+
+    .hoverable{
+        cursor:pointer !important;
+        display:flex;
+        align-items:center;
+        height:100%;
+
+    }
+
+    button{
+        cursor:pointer;
     }
 
     

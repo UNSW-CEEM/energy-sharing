@@ -214,10 +214,10 @@ class TariffData:
 
             # print("tariff_data.py/_configure_dynamic_tariffs", self.static_imports.to_string())
             
-
             # Modify the tariff lookup so that it contains a special tariff type for each custom tariff. 
             self.lookup.loc[dynamic_tariff['name'], 'tariff_type'] = 'custom'
-            for parameter in ['daily_fixed_rate']:
-                self.lookup.loc[dynamic_tariff['name'], parameter] = dynamic_tariff[parameter]
+            for parameter in ['daily_fixed_rate', 'block_rate_1', 'block_rate_2', 'block_rate_3', 'high_1', 'high_2', 'metering_sc_non_cap', 'fit_flat_rate']:
+                if parameter in dynamic_tariff:
+                    self.lookup.loc[dynamic_tariff['name'], parameter] = dynamic_tariff[parameter]
     
     

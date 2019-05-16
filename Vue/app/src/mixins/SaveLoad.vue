@@ -9,6 +9,9 @@
         },
 
         methods: {
+            ready_to_go(){
+                return {ready:false, message:'You are not ready.'}
+            },
             get_params(){
                 this.parse_simple_pages();
                 this.parse_all_table_pages();
@@ -89,13 +92,28 @@
                 console.log("SaveLoad.vue/parse_mike_tariffs()", select_data)
                 let output = {
                     name:'user_interface',
-                    daily_fixed_rate: 1,
+                    block_rate_1:0,
+                    block_rate_2:0,
+                    block_rate_3:0,
+                    high_1:1,
+                    high_2:2,
+                    metering_sc_non_cap:0,
+                    fit_flat_rate:0,
                     static_imports:[],
                     static_solar_imports:[],
                     static_exports:[],
                 }
                 
                 if(select_data){
+                    output.daily_fixed_rate = select_data.tariffs.daily_fixed_rate;
+                    output.block_rate_1 = select_data.tariffs.block_rate_1;
+                    output.block_rate_2 = select_data.tariffs.block_rate_2;
+                    output.block_rate_3 = select_data.tariffs.block_rate_3;
+                    output.high_1 = select_data.tariffs.high_1;
+                    output.high_2 = select_data.tariffs.high_2;
+                    output.metering_sc_non_cap = select_data.tariffs.metering_sc_non_cap;
+                    output.fit_flat_rate = select_data.tariffs.fit_flat_rate;
+
                     for(var i = 0; i< select_data.tariffs.static_imports.period_rates.length; i++){
                         output.static_imports.push({
                             start_hr: i==0 ? 0: select_data.tariffs.static_imports.tou_times[i-1],
@@ -119,6 +137,13 @@
                             price: select_data.tariffs.static_exports.period_rates[i]
                         })
                     }
+
+
+                    
+
+
+
+
                 }
 
                 // output = 
