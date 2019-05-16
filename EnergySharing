@@ -1,0 +1,3 @@
+#!/bin/bash
+cd Contents/Resources/app/model/run-dev/
+./run-dev

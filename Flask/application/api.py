@@ -45,7 +45,7 @@ num_disconnects = 0
 num_connects = 0
 
 LAST_MESSAGE = "Official Last Message"
-LAST_MESSAGE_TIME = pendulum.now()
+LAST_MESSAGE_TIME = pendulum.now('UTC')
 
 @app.route('/')
 def index():
@@ -118,7 +118,7 @@ def download_luomi():
             data,
             mimetype='application/zip',
             as_attachment=True,
-            attachment_filename='luomi_data_'+pendulum.now().format('YYYY_MM_DD_HH_mm')+'.zip'
+            attachment_filename='luomi_data_'+pendulum.now('UTC').format('YYYY_MM_DD_HH_mm')+'.zip'
         )
 
 @app.route('/download/mike', methods=['GET', 'POST', 'OPTIONS'])
@@ -139,7 +139,7 @@ def download_mike():
             data,
             mimetype='application/zip',
             as_attachment=True,
-            attachment_filename='mike_data_'+pendulum.now().format('YYYY_MM_DD_HH_mm_ss')+'.zip'
+            attachment_filename='mike_data_'+pendulum.now('UTC').format('YYYY_MM_DD_HH_mm_ss')+'.zip'
         )
 
 @app.after_request
@@ -273,10 +273,10 @@ def status_callback(message):
     global LAST_MESSAGE_TIME
     # print("Last Message", LAST_MESSAGE)
     # print("--- Status Callback", message)
-    if message != LAST_MESSAGE and LAST_MESSAGE_TIME < pendulum.now().subtract(seconds=0.1):
+    if message != LAST_MESSAGE and LAST_MESSAGE_TIME < pendulum.now('UTC').subtract(seconds=0.1):
         LAST_MESSAGE = message
         # last_message = message
-        LAST_MESSAGE_TIME = pendulum.now()
+        LAST_MESSAGE_TIME = pendulum.now('UTC')
         # print("--- Status Callback", message)
         
         emit('status_message_channel',
