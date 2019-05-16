@@ -23,7 +23,16 @@ const frontend_state = {
     mutations: {
         save_page(state, payload) {
             state[payload.model_page_name] = payload.data;
+        },
+        load_config(state, payload){
+            console.log('Loading Config', payload)
+            for(var item in payload){
+                state[item] = payload[item]
+            }
+            console.log('new state', state)
+            // state = payload;
         }
+
     }
 };
 

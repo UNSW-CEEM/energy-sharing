@@ -91,6 +91,13 @@
                         storage_key: "review",
                         icon:"poll"
                     },
+                    {
+                        id: 9,
+                        text: 'Save / Load',
+                        page: '/save_config',
+                        storage_key: "save_config",
+                        icon:"save"
+                    },
                 ]
             }
         },

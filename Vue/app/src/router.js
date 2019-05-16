@@ -88,6 +88,11 @@ export default new Router({
             name: 'tariffs',
             component: () => import(/* webpackChunkName: "model" */ './pages/inputs/ModelTariffsMike.vue')
         },
+        {
+            path: '/save_config',
+            name: 'save_config',
+            component: () => import(/* webpackChunkName: "model" */ './pages/inputs/SaveConfig.vue')
+        },
        
     ]
 })

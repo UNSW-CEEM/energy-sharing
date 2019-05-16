@@ -29,10 +29,10 @@
 
             <div class="container">
                 <div class="container-header">Participant Batteries</div>
-                <div class="participant-config" v-for="(value, name) in input_data.participant_batteries" v-bind:key="name">
+                <div class="participant-config" v-for="(value, name, index) in input_data.participant_batteries" v-bind:key="name">
                     <div class="participant-heading">{{name}}</div>
                     <!-- <div class="add-battery-button" v-on:click="add_battery(name)">Add Battery</div> -->
-                    <div class="battery-config"  >
+                    <div class="battery-config"  v-if="show_participant_battery[index]">
                         <span class="input-line" >
                         <span>Battery Type</span>
                             <SimpleDropdown 
@@ -58,6 +58,9 @@
                             :my_placeholder="null"/>
                         </span>
                     </div>
+                    <div v-else>
+                        <div class="add-battery-button" v-on:click="add_battery(index)">Add Battery</div>
+                    </div>
                 </div>
             
             </div>
@@ -80,13 +83,14 @@
         mixins: [SaveLoad],
 
         data () {
+            
             return {
                 view_name: this.$options.name,
                 model_page_name: "battery_mike",
                 // heading_text: "Central Services",
                 battery_types:['pw_26','pw_52','pw_78','pw_104','pw_scale','powerwall2_1','powerwall2_2','powerwall2_3','powerwall2_4',],
                 dispatch_strategies:['ed1700_cmax_dmax','ed1700_c20_d20','ed1730_cmax_dmax','ed1630_c20_d20','ch_ed1630_cmax_d20','ch_ed1700_cmax_dmax','sc1700_c20_dmax','sc1700_cmax_dmax','dc1700_c20_dmax','dc1700_cmax_dmax','pdt_pps_80','pdt_pps_85','pdt_pps_90','pdt_pps_95','pdt_ch_80','pdt_sc_80','pdt_sc_75','pdt_sc_70','pdt_sc_65','pdt_sc_60','pdt_sc_55','pdt_sc_50','pdt_sc_45','pdt_sc_40','pdt_sc_35','pdt_sc_30'],
-                
+                show_participant_battery:[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,],
                 
                 input_data: {
                     central_battery_type:null,
@@ -131,10 +135,9 @@
         },
 
         methods: {
-            add_battery(participant){
-                console.log('Adding Battery')
-                
-                
+            add_battery(index){
+                console.log('Adding Battery at index', index)
+                this.show_participant_battery.splice(index, 1, true);
             },
             initialise_participant_batteries(){
                 console.log('ModelBatteryMike.vue/initialise_participant_batteries() called')
@@ -154,6 +157,14 @@
                 //         delete this.input_data.participant_batteries[participant]
                 //     }
                 // }
+                var i = 0;
+                for(var p_id in this.input_data.participant_batteries){
+                    var participant = this.input_data.participant_batteries[p_id];
+                    if(participant.capacity_kWh && participant.type && participant.dispatch_strategy){
+                        this.add_battery(i);
+                    }
+                    i++;
+                }
 
                 console.log('ModelBatteryMike.vue/initialise_participant_batteries() ', this.input_data.participant_batteries)
 
@@ -165,7 +176,7 @@
         },
         mounted(){
             
-            this.initialise_participant_batteries()
+            // this.initialise_participant_batteries()
         },
 
         beforeDestroy() {
@@ -227,6 +238,10 @@
         justify-content:space-around;
         align-items:center;
         margin: 1vh 0 1vh 0;
+        background-color:$nav-bg;
+        margin: 1vh 2vw 1vh 2vw;
+        border-radius:4px;
+        padding:1vh 0 1vh 0;
     }
 
 
@@ -246,4 +261,9 @@
         align-items:center;
         width:100%;
     }
+
+    .participant-heading{
+        font-weight:bold;
+    }
+    
 </style>

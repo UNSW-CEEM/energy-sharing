@@ -11,9 +11,11 @@
         methods: {
             get_readiness_status(){
                 if(this.parsed_parameters['model_selection']['model_type'] == 'mike'){
+                    //Check that data sources are configured on arrangement page
                     if(!this.parsed_parameters['model_data_sources_mike']){
                         return {ready:false, message:'Solar and load data sources not selected. Please navigate to the Arrangement page and select data sources.'}
                     }
+                    // Check that each participant has a load / solar / tariff
                     for( var i = 0; i<this.parsed_parameters['model_participants_mike'].length; i++){
                         var participant_row = this.parsed_parameters['model_participants_mike'][i];
                         for(var j = 0; j < participant_row.row_inputs.length; j++){
@@ -49,6 +51,7 @@
             },
 
             load_page_simple() {
+                console.log('Loading Page', this.model_page_name);
                 if (this.model_page_name in this.$store.state.frontend_state) {
                     this.input_data = this.$store.state.frontend_state[this.model_page_name]
                 }
