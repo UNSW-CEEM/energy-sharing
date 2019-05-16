@@ -1,5 +1,5 @@
 {
-  "name": "Energy Sharing",
+  "name": "EnergySharing",
   "version": "0.1.0",
   "description": "Local Energy Sharing Simulator",
   "main": "main.js",
@@ -10,7 +10,7 @@
   "author": "DM & LM",
   "licence": "TBC",
   "devDependencies": {
-    "electron": "^3.0.4"
+    "electron": "^5.0.1"
   },
   "dependencies": {}
 }

@@ -1,6 +1,6 @@
 cd Vue/app
-echo "Installing Vue Dependencies"
-npm install
+# echo "Installing Vue Dependencies"
+# npm install
 echo "Building Vue app"
 npm run build
 cd ..
