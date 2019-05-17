@@ -1,4 +1,9 @@
-# energy-sharing
+# Local Energy Sharing Simulator
+This software is designed to model emerging business models, based on the concept of sharing energy between residences or businesses with solar and battery systems. 
+
+It is based on the work of Mike Roberts, Luke Marshall and Naomi Stringer at the Center for Energy and Environmental Markets, UNSW. Additional software development has been completed by David Martin. 
+
+
 
 
 # Packaging

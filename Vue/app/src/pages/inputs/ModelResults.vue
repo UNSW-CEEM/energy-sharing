@@ -50,9 +50,9 @@
     import EnergyCC from "../../charts/_EnergyCC";
     import EnergyGenCon from "../../charts/_EnergyGenCon";
     import EnergySystemFlows from "../../charts/_EnergySystemFlows";
-
     import SaveLoad from '@/mixins/SaveLoad.vue';
-
+    import moment from 'moment'
+    
     export default {
         name: "ModelResults",
         components: {EnergyGenCon, EnergyCC, RevRCC, RevParticipant, TPB, EnergySystemFlows},

@@ -128,8 +128,11 @@ class OSFileService(FileService):
                 reader = csv.DictReader(f)
                 for idx, line in enumerate(reader):
                     if idx == 0:
-                        start_date = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm')).isoformat()
-                end_date = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm')).isoformat()
+                        
+                        start_date = pd.datetime.strptime(line['timestamp'], '%d/%m/%Y %H:%M').isoformat()
+                        # start_date = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm'), tz='UTC').isoformat()
+                end_date = pd.datetime.strptime(line['timestamp'], '%d/%m/%Y %H:%M').isoformat()
+                # end_date = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm'), tz='UTC').isoformat()
             output[solar_filename] = {
                 'start_date': start_date,
                 'end_date':end_date
@@ -145,8 +148,10 @@ class OSFileService(FileService):
                 reader = csv.DictReader(f)
                 for idx, line in enumerate(reader):
                     if idx == 0:
-                        start_date = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm')).isoformat()
-                end_date = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm')).isoformat()
+                        start_date = pd.datetime.strptime(line['timestamp'], '%d/%m/%Y %H:%M').isoformat()
+                        # start_date = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm'), tz='UTC').isoformat()
+                end_date = pd.datetime.strptime(line['timestamp'], '%d/%m/%Y %H:%M').isoformat()
+                # end_date = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm'), tz='UTC').isoformat()
             output[load_filename] = {
                 'start_date': start_date,
                 'end_date':end_date
@@ -181,7 +186,9 @@ class OSFileService(FileService):
         with open(path) as f:
             reader = csv.DictReader(f)
             for line in reader:
-                time = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm')).timestamp() * 1000.0
+                # There is a small (I think timezone) difference in these two. But pendulum is wack in compiled versions.
+                time = pd.datetime.strptime(line['timestamp'], '%d/%m/%Y %H:%M').timestamp() * 1000.0
+                # time = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm'), tz='UTC').timestamp() * 1000.0
                 for label in line:
                     if not label =='timestamp':
                         output[label] = [] if not label in output else output[label]
@@ -196,7 +203,8 @@ class OSFileService(FileService):
         with open(path) as f:
             reader = csv.DictReader(f)
             for line in reader:
-                time = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm')).timestamp() * 1000.0
+                time = pd.datetime.strptime(line['timestamp'], '%d/%m/%Y %H:%M').timestamp() * 1000.0
+                # time = pendulum.from_format(line['timestamp'], ('DD/MM/YYYY HH:mm')).timestamp() * 1000.0
                 for label in line:
                     if not label =='timestamp':
                         output[label] = [] if not label in output else output[label]
