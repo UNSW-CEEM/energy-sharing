@@ -3,6 +3,12 @@ This software is designed to model emerging business models, based on the concep
 
 It is based on the work of Mike Roberts, Luke Marshall and Naomi Stringer at the Center for Energy and Environmental Markets, UNSW. Additional software development has been completed by David Martin. 
 
+![Screenshot 2019-05-17 12 04 13](https://user-images.githubusercontent.com/7201209/57900484-f52ad600-789b-11e9-98eb-91410324fad5.png)
+![Screenshot 2019-05-17 12 03 19](https://user-images.githubusercontent.com/7201209/57900486-f5c36c80-789b-11e9-9a06-bd73106e7aa4.png)
+![Screenshot 2019-05-17 12 03 01](https://user-images.githubusercontent.com/7201209/57900487-f5c36c80-789b-11e9-920c-e6515eea7915.png)
+![Screenshot 2019-05-17 12 02 41](https://user-images.githubusercontent.com/7201209/57900488-f5c36c80-789b-11e9-9d8c-e53861a14708.png)
+![Screenshot 2019-05-17 12 02 15](https://user-images.githubusercontent.com/7201209/57900489-f65c0300-789b-11e9-84e0-7fd8d3416ce7.png)
+
 # Downloading
 The current standalone release can be downloaded from the Releases page [here](https://github.com/luke-marshall/energy-sharing/releases).
 
