@@ -1,9 +1,11 @@
 #!/bin/bash
 killall run-dev
-cd `dirname $0`
+echo $0
+# Enter the project directory - need the extra dashes etc. to handle spaces in the path name.
+cd -- "$(dirname -- "$0")"
+pwd
 cd src
 open -a EnergySharing.app &
-pwd
 cd EnergySharing.app/Contents/Resources/app/model/run-dev/
 ./run-dev
 
