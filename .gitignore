@@ -5,3 +5,4 @@ Flask/application/dist
 Flask/build
 Flask/application/modelling/data/luomi/output/*
 Electron/app/model
+Flask/*.pyc
