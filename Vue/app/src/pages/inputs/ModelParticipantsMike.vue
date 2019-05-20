@@ -124,7 +124,7 @@
             </div>
         </modal>
 
-        <modal  width="80%" name="data-files">
+        <modal  width="80%" height="70%" name="data-files">
                 <div class="modal-container">
                     <div class="modal-header">
                         Select Solar and Load Files

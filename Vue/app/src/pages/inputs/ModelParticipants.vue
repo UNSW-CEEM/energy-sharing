@@ -48,7 +48,7 @@
                 </table>
 
 
-                <div class="add-participant-button" @click="add_row()">Add Participant</div>
+                <div class="add-participant-button" @click="add_row()">Add New Participant</div>
 
                 <!-- <div class="file-buttons-container">
                     <button @click="load_participants_config(input_data.selected_config_file)">Load User Config</button>
@@ -60,7 +60,7 @@
             
         </div>
 
-        <modal  width="80%" name="data-files">
+        <modal  width="80%" height="70%" name="data-files">
                 <div class="modal-container">
                     <div class="modal-header">
                         Select Solar and Load Files
