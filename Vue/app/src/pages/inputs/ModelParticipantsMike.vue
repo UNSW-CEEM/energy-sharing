@@ -98,6 +98,8 @@
                         
                     </tr>
                 </table>
+
+                <div class="add-participant-button" @click="add_row()">Add New Participant</div>
                 
                 </div>
 
