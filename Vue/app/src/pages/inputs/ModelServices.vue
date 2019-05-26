@@ -79,15 +79,15 @@
                         placeholder: "%",
                         tag:"my_number"
                     },
-                    {
-                        id: 3,
-                        name:"dispatch_algorithm",
-                        display_text: "Dispatch Algorithm ",
-                        value: "ToU Arbitrage",
-                        dropdown_key: "dispatch_algorithm",
-                        placeholder: "Select One",
-                        tag:"my_dropdown"
-                    },
+                    // {
+                    //     id: 3,
+                    //     name:"dispatch_algorithm",
+                    //     display_text: "Dispatch Algorithm ",
+                    //     value: "ToU Arbitrage",
+                    //     dropdown_key: "dispatch_algorithm",
+                    //     placeholder: "Select One",
+                    //     tag:"my_dropdown"
+                    // },
                 ],
 
                 solar_sharing_algorithm: {
