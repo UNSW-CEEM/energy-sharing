@@ -26,6 +26,16 @@
                     }
                 }else{
 
+                    // Check that each participant has a load / solar / tariff
+                    for( var i = 0; i<this.parsed_parameters['model_participants'].length; i++){
+                        var participant_row = this.parsed_parameters['model_participants'][i];
+                        for(var j = 0; j < participant_row.row_inputs.length; j++){
+                            if(participant_row.row_inputs[j].value == ""){
+                                return {ready:false, message:'Participants are not configured - at least one participant does not have a tariff, solar or load profile selected. Please navigate to the Arrangement page and update participant profiles.'}
+                            }
+                        }
+                    }
+
                 }
 
 

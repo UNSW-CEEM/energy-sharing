@@ -26,7 +26,7 @@ app.on('ready', function () {
     setTimeout(function () {
         // win.loadURL('http://localhost:8080'); //this one for the hot-loading dev server run via npm run serve in the vue directory
         win.loadURL('http://localhost:5000'); //this one for production, post-build, from the python directory.
-    }, 5000);
+    }, 10000);
     
     // Remove window once app is closed
     win.on('closed', function () {

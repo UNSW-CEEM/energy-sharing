@@ -1,0 +1,10 @@
+Collecting pendulum
+  Using cached https://files.pythonhosted.org/packages/5b/57/71fc910edcd937b72aa0ef51c8f5734fbd8c011fa1480fce881433847ec8/pendulum-2.0.4.tar.gz
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Installing backend dependencies: started
+  Installing backend dependencies: finished with status 'done'
+    Preparing wheel metadata: started
+    Preparing wheel metadata: finished with status 'done'
