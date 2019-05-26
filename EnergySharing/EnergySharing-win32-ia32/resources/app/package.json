@@ -1,0 +1,16 @@
+{
+  "name": "EnergySharing",
+  "version": "0.1.0",
+  "description": "Local Energy Sharing Simulator",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "DM & LM",
+  "licence": "TBC",
+  "devDependencies": {
+    "electron": "^5.0.1"
+  },
+  "dependencies": {}
+}
