@@ -110,6 +110,7 @@
                     var params = JSON.parse(e.target.result);
                     // console.log(params)
                     self.$store.commit('load_config', params)
+                    self.$store.commit('model', params.model_selection.selected_model)
                     self.$modal.show('load-success')
                 }
                 

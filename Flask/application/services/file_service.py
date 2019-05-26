@@ -92,8 +92,8 @@ class OSFileService(FileService):
                 return False, "timestamp column not found"
             if line['timestamp'].isspace() or line['timestamp'] == '':
                 return False, "Blank timestamp found - check end of file perhaps?"
-            if re.compile("^[0-9]+/[0-9]+/[0-9]+ [0-9]+:[0-9][0-9]$").match(line['timestamp']):
-                return False, "Incorrectly formatted timestamp found. Must follow DD/MM/YYYY HH:mm"
+            if not re.compile("^[0-9]+/[0-9]+/[0-9]+ [0-9]+:[0-9][0-9]$").match(line['timestamp']):
+                return False, " Incorrectly formatted timestamp found: "+str(line['timestamp'])+"-  Must follow DD/MM/YYYY HH:mm: "
         # except:
         #     return False, "Could not parse CSV file - check formatting."
         
