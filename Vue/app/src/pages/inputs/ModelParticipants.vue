@@ -31,7 +31,7 @@
                             {{ header.additional_text }}
                         </td>
                     </tr>
-                    <tr v-for="row in input_data.table_rows" :key="row.row_id">
+                    <tr v-for="(row, index) in input_data.table_rows" :key="row.row_id">
                         <td v-for="input in row.row_inputs" :key="input.col_id">
                             <SimpleNumberInput
                                 v-if="input.tag==='my_number'"
@@ -44,6 +44,7 @@
                         </td>
                         
                         <td><div class="show-data-button" v-on:click="show_chart(row.row_id)">Show Data</div></td>
+                        <td><div class="remove-row-button" v-on:click="remove_row(index);">Remove</div></td>
                     </tr>
                 </table>
 
@@ -162,7 +163,7 @@
 
                         tariff_type_options: [
                             "TOU",
-                            "TOU + Block",
+                            // "TOU + Block",
                         ],
 
                         battery_options: [
@@ -289,6 +290,10 @@
         },
 
         methods: {
+            remove_row(index){
+                this.input_data.table_rows.splice(index,1);
+            },
+            
             auto_fill(){
                 if(this.input_data.selected_load_file != "" && this.input_data.selected_solar_file != ""){
                     var solar_profiles = this.input_data.my_options.solar_profiles_options;
@@ -713,6 +718,15 @@
         display:flex;
         flex-direction:row;
         margin: 4vh 0 0 0;
+    }
+
+    .remove-row-button{
+        font-size: 0.7em;
+        background-color:$button-warning;
+        color:$button-text;
+        border-radius:4px;
+        cursor: pointer;
+        padding: 0 0.5vw 0 0.5vw;
     }
 
 

@@ -5,7 +5,7 @@
             
             <div class="container">
                 <div class="container-header">
-                    Imports
+                    Import Component
                 </div>
                 <div class="container-content">
                     <Chart class="mychart" :options="static_imports_chart_options"></Chart>
@@ -28,7 +28,7 @@
 
             <div class="container">
                 <div class="container-header">
-                    Solar Imports
+                    Solar Import Component
                 </div>
                 <div class="container-content">
                     <Chart class="mychart" :options="static_solar_imports_chart_options"></Chart>
@@ -51,7 +51,7 @@
 
             <div class="container">
                 <div class="container-header">
-                    Exports
+                    Export Component
                 </div>
                 <div class="container-content">
                     <Chart class="mychart" :options="static_exports_chart_options"></Chart>
@@ -73,7 +73,7 @@
 
             <div class="container">
                 <div class="container-header">
-                    Daily Block Tariffs
+                    Daily Block Tariff Component
                 </div>
                 <div class="container-content">
                     <div class="tariffs">
@@ -120,7 +120,7 @@
 
         <div class="container">
                 <div class="container-header">
-                    Metering Service Charges
+                    Metering Service Charge Component
                 </div>
                 <div class="container-content">
                     <div class="tariffs">
@@ -138,7 +138,7 @@
         
         <div class="container">
                 <div class="container-header">
-                    Solar
+                    Solar Component
                 </div>
                 <div class="container-content">
                     <div class="tariffs">

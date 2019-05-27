@@ -80,7 +80,7 @@
                             data:grid_import_variable,
                         },
                         {
-                            name: 'Fixed Grid Import',
+                            name: 'Daily Charge',
                             data:grid_import_fixed,
                         },
                         {

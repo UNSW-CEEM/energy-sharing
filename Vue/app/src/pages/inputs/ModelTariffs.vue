@@ -6,7 +6,7 @@
             
             <div class="container">
                 <div class="container-header">
-                    Retail Tariffs
+                    Retail Component
                 </div>
                 <div class="container-content">
                     <Chart class="mychart" :options="retailChartOptions"></Chart>
@@ -48,7 +48,7 @@
 
             <div class="container">
                 <div class="container-header">
-                    Network Tariffs
+                    Network Component
                 </div>
                 <div class="container-content">
                     <Chart class="mychart" :options="networkChartOptions"></Chart>
@@ -108,13 +108,13 @@
 
             <div class="container">
                 <div class="container-header">
-                    Local Solar
+                    Local Solar Component
                 </div>
                 <div class="container-content">
                     <div class="tariffs">
-                        <div class="input">
+                        <!-- <div class="input">
                             Energy <input v-model="input_data.tariffs.local_solar.energy"/> <span class="units">($/kWh)</span>
-                        </div>
+                        </div> -->
                         <div class="input">
                             Retail <input v-model="input_data.tariffs.local_solar.retail"/> <span class="units">($/kWh)</span>
                         </div>
@@ -124,19 +124,22 @@
                         <div class="input">
                             TUOS <input v-model="input_data.tariffs.local_solar.tuos"/> <span class="units">($/kWh)</span>
                         </div>
+                        <div class="input">
+                            Total: {{total_solar_tariff}}
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="container">
                 <div class="container-header">
-                    Central Battery
+                    Central Battery Component
                 </div>
 
                 <div class="tariffs">
                     
-                    <div class="input">
+                    <!-- <div class="input">
                         Energy <input v-model="input_data.tariffs.central_battery.energy"/> <span class="units">($/kWh)</span>
-                    </div>
+                    </div> -->
                     <div class="input">
                         Retail <input v-model="input_data.tariffs.central_battery.retail"/> <span class="units">($/kWh)</span>
                     </div>
@@ -147,7 +150,7 @@
                         TUOS <input v-model="input_data.tariffs.central_battery.tuos"/> <span class="units">($/kWh)</span>
                     </div>
                     <div class="input">
-                        TUOS <input v-model="input_data.tariffs.central_battery.nuos"/> <span class="units">($/kWh)</span>
+                        NUOS <input v-model="input_data.tariffs.central_battery.nuos"/> <span class="units">($/kWh)</span>
                     </div>
                     <div class="input">
                         Profit <input v-model="input_data.tariffs.central_battery.profit"/> <span class="units">($/kWh)</span>
@@ -156,10 +159,10 @@
                 
                 <div class="container-content">
                     <div class="tariffs">
-                        <div class="tariff-label">Local Solar Import</div>
-                        <div class="input">
+                        <div class="tariff-label">Paid to Local Solar</div>
+                        <!-- <div class="input">
                             Energy <input v-model="input_data.tariffs.central_battery.local_solar_import_energy"/> <span class="units">($/kWh)</span>
-                        </div>
+                        </div> -->
                         <div class="input">
                             Retail <input v-model="input_data.tariffs.central_battery.local_solar_import_retail"/> <span class="units">($/kWh)</span>
                         </div>
@@ -170,7 +173,7 @@
                             TUOS <input v-model="input_data.tariffs.central_battery.local_solar_import_tuos"/> <span class="units">($/kWh)</span>
                         </div>
                         <div class="input">
-                            TUOS <input v-model="input_data.tariffs.central_battery.local_solar_import_nuos"/> <span class="units">($/kWh)</span>
+                            NUOS <input v-model="input_data.tariffs.central_battery.local_solar_import_nuos"/> <span class="units">($/kWh)</span>
                         </div>
                     </div>
 
@@ -327,6 +330,11 @@
         },
 
         computed:{
+
+            total_solar_tariff(){
+                var total = Number(this.input_data.tariffs.local_solar.retail) + Number(this.input_data.tariffs.local_solar.tuos) + Number(this.input_data.tariffs.local_solar.duos);
+                return Number(total).toFixed(2);
+            },
 
             shoulder_1_times(){
                 return {
