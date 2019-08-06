@@ -14,9 +14,9 @@ class TariffData:
             output_path,
             parameter_list,
             ts,
-            dynamic_tariffs):
+            ui_tariffs):
         """Initialise tariff look-up table."""
-        self.dynamic_tariffs = dynamic_tariffs
+        self.ui_tariffs = ui_tariffs
         self.ts = ts
         
         self.saved_tariff_path = os.path.join(output_path, 'saved_tariffs')
@@ -156,7 +156,7 @@ class TariffData:
         # Two ways to do this, but the lighter touch is to extend this module
         # Such that these three params still exist, but are generated on the fly from supplied params.
         
-        self._configure_dynamic_tariffs()
+        self._configure_ui_tariffs()
         
 
         # Save tariffs as csvs
@@ -169,55 +169,55 @@ class TariffData:
         util.df_to_csv(self.static_exports, export_name)
 
         
-    def _configure_dynamic_tariffs(self):
+    def _configure_ui_tariffs(self):
         """This is a parser to get the data from the dynamic tariffs UI construction into the dataframe format used in the Mike model. """
         # Loop through each dynamic tariff in the list. 
-        for dynamic_tariff in self.dynamic_tariffs:
-            print("tariff_data.py/_configure_dynamic_tariffs()", dynamic_tariff)
+        for ui_tariff in self.ui_tariffs:
+            print("tariff_data.py/_configure_ui_tariffs()", ui_tariff)
             # Add they dynamic tariff's static import data
             static_imports = []
             
             for key in self.static_imports.index:
                 dt = pendulum.instance(key)
                 # Luke's first ever use of the for...else construction.
-                for period in dynamic_tariff['static_imports']:
+                for period in ui_tariff['static_imports']:
                     if (dt.hour >= period['start_hr']) and (dt.hour < period['end_hr']):
                         static_imports.append(period['price'])
                         break
                 else:
                     static_imports.append(0)
-            self.static_imports[dynamic_tariff['name']] = static_imports
+            self.static_imports[ui_tariff['name']] = static_imports
 
             # Add they dynamic tariff's static solar import data
             static_solar_imports = []
             for key in self.static_solar_imports.index:
                 dt = pendulum.instance(key)
-                for period in dynamic_tariff['static_solar_imports']:
+                for period in ui_tariff['static_solar_imports']:
                     if (dt.hour >= period['start_hr']) and (dt.hour < period['end_hr']):
                         static_solar_imports.append(period['price'])
                         break
                 else:
                     static_solar_imports.append(0)
-            self.static_solar_imports[dynamic_tariff['name']] = static_solar_imports
+            self.static_solar_imports[ui_tariff['name']] = static_solar_imports
 
             # Add they dynamic tariff's static export data
             static_exports = []
             for key in self.static_exports.index:
                 dt = pendulum.instance(key)
-                for period in dynamic_tariff['static_exports']:
+                for period in ui_tariff['static_exports']:
                     if (dt.hour >= period['start_hr']) and (dt.hour < period['end_hr']):
                         static_exports.append(period['price'])
                         break
                 else:
                     static_exports.append(0)
-            self.static_exports[dynamic_tariff['name']] = static_exports
+            self.static_exports[ui_tariff['name']] = static_exports
 
-            # print("tariff_data.py/_configure_dynamic_tariffs", self.static_imports.to_string())
+            # print("tariff_data.py/_configure_ui_tariffs", self.static_imports.to_string())
             
             # Modify the tariff lookup so that it contains a special tariff type for each custom tariff. 
-            self.lookup.loc[dynamic_tariff['name'], 'tariff_type'] = 'custom'
+            self.lookup.loc[ui_tariff['name'], 'tariff_type'] = 'custom'
             for parameter in ['daily_fixed_rate', 'block_rate_1', 'block_rate_2', 'block_rate_3', 'high_1', 'high_2', 'metering_sc_non_cap', 'fit_flat_rate']:
-                if parameter in dynamic_tariff:
-                    self.lookup.loc[dynamic_tariff['name'], parameter] = dynamic_tariff[parameter]
+                if parameter in ui_tariff:
+                    self.lookup.loc[ui_tariff['name'], parameter] = ui_tariff[parameter]
     
     

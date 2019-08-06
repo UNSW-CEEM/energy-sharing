@@ -9,6 +9,7 @@
 # see <http://www.gnu.org/licenses/>.
 # Contact: m.roberts@unsw.edu.au
 
+# Enables model to be run from .csv instead of UI
 # Remaking a module to interact with the script.
 
 import os

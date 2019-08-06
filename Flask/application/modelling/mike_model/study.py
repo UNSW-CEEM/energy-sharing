@@ -20,10 +20,10 @@ class Study:
                  base_path,
                  project,
                  study_name,
-                 pv_path, 
+                 pv_path,
                  load_path,
                  participants,
-                 dynamic_tariffs,
+                 UI_tariffs,
                  study_parameters,
                  solar_skiprows,
                  load_skiprows
@@ -225,7 +225,7 @@ class Study:
             output_path=self.output_path,
             parameter_list=parameter_list,
             ts=self.ts_ng,
-            dynamic_tariffs = dynamic_tariffs)
+            ui_tariffs= UI_tariffs)
 
         self.tariff_data.generateStaticTariffs()
         # -----------------------------
