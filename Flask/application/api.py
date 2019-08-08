@@ -261,6 +261,7 @@ def test_run_sim(params):
     emit('status_channel',{'data':{'status':'finished'}})
     emit('chart_results_channel', {"data": results})
     status_callback("Modelling Complete")
+    print(json.dumps(params, indent=1))
 
 
 
