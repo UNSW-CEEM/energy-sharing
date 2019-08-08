@@ -84,19 +84,20 @@ class OSFileService(FileService):
         if not new_file.filename.lower().endswith('csv'):
             return False, "Error: Expected CSV File"
         
-        # try:
-        contents_str = new_file.read().decode("utf-8") 
-        reader = csv.DictReader(io.StringIO(contents_str))
-        for line in reader:
-            if 'timestamp' not in line:
-                return False, "timestamp column not found"
-            if line['timestamp'].isspace() or line['timestamp'] == '':
-                return False, "Blank timestamp found - check end of file perhaps?"
-            if not re.compile("^[0-9]+/[0-9]+/[0-9]+ [0-9]+:[0-9][0-9]$").match(line['timestamp']):
-                return False, " Incorrectly formatted timestamp found: "+str(line['timestamp'])+"-  Must follow DD/MM/YYYY HH:mm: "
-        # except:
-        #     return False, "Could not parse CSV file - check formatting."
-        
+        try:
+            contents_str = new_file.read().decode("utf-8") 
+            reader = csv.DictReader(io.StringIO(contents_str).read().splitlines())
+            for line in reader:
+                print(line)
+                if 'timestamp' not in line:
+                    return False, "timestamp column not found"
+                if line['timestamp'].isspace() or line['timestamp'] == '':
+                    return False, "Blank timestamp found - check end of file perhaps?"
+                if not re.compile("^[0-9]+/[0-9]+/[0-9]+ [0-9]+:[0-9][0-9]$").match(line['timestamp']):
+                    return False, " Incorrectly formatted timestamp found: "+str(line['timestamp'])+"-  Must follow DD/MM/YYYY HH:mm: "
+        except:
+            return False, "Could not parse CSV file - check formatting."
+        new_file.seek(0)
         return True, "Success"
 
     def save(self, file, save_type):
