@@ -71,6 +71,7 @@ class Scenario:
         # ---------------------------------
         # ie. Ensure that for each participant there is a corresponding PV data set, 
         # and that duplicates are present where needed
+        #todo MR!!! reintroduce option for scenario-specific pv
         self._generate_pv_profiles()
 
 
@@ -109,7 +110,8 @@ class Scenario:
         #  Slice tariff_lookup table for this scenario
         self.tariff_lookup = study.tariff_data.lookup.loc[tariff_short_list]
         
-        
+        # NB Dynamic here means "load dependent" - ie has to be calculated on teh fly, iterating thru' timeseries
+        # cf "static tariffs" which can be calculated for the whole timeseries at once.
 
         self.dynamic_list = [t for t in tariff_short_list
                              if any(
@@ -433,7 +435,7 @@ class Scenario:
                                                      name=net.load_name))
 
     def _generate_pv_profiles(self):
-
+        # todo MR!!! This is where i need to reintroduce option for scenario-specific pv
         # Generate PV Data Source
         if not self.pv_exists:
             self.pv = PVCollectionFactory().empty_collection(self.ts.get_date_times(), self.study.get_solar_profiles())

@@ -1,60 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1ea7e589-91be-4b54-8c0c-7b170d840f85" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/mike_model/load.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/mike_model/pv.py" afterDir="false" />
+    <list default="true" id="1ea7e589-91be-4b54-8c0c-7b170d840f85" name="Default" comment="Mike branch to reinstate csv version and add functionality">
+      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/mike_model/morePVs_legacy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Flask/mike_params1.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Flask/mike_runner2.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/_Notes/luke_chat.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/energy-sharing.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/energy-sharing.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flask/Pipfile" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/Pipfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flask/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/data/luomi/defaults/load_data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/data/luomi/defaults/load_data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/data/luomi/defaults/solar_data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/data/luomi/defaults/solar_data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/saved_tariffs/static_export_tariffs.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/saved_tariffs/static_export_tariffs.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/saved_tariffs/static_import_tariffs.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/saved_tariffs/static_import_tariffs.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/saved_tariffs/static_solar_import_tariffs.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/saved_tariffs/static_solar_import_tariffs.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/mike_model/battery.py" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/mike_model/battery.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/mike_model/customer.py" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/mike_model/customer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/mike_model/network.py" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/mike_model/network.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/inputs/study_ceem_ui_default.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/inputs/study_ceem_ui_default.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/mike_model/new_sim.py" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/mike_model/new_sim.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Flask/application/modelling/mike_model/scenario.py" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/mike_model/scenario.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Flask/application/modelling/mike_model/study.py" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/mike_model/study.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/mike_model/tariff.py" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/mike_model/tariff.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/mike_model/tariff_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/mike_model/tariff_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/mike_model/timeseries.py" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/mike_model/timeseries.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/ui_interfaces/parameters.py" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/ui_interfaces/parameters.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Vue/app/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Vue/app/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Flask/mike_runner.py" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/mike_runner.py" afterDir="false" />
     </list>
-    <ignored path=".idea/energy-sharing.iml" />
-    <ignored path=".idea/misc.xml" />
-    <ignored path=".idea/modules.xml" />
-    <ignored mask="*.iml" />
-    <ignored path="Electron/electron-api-demos-master/" />
-    <ignored path="Electron/app/node_modules/electron/dist/Electron.app/Contents/Frameworks/Electron Framework.framework/Versions/Current/" />
-    <ignored path="Electron/app/node_modules/electron/dist/Electron.app/Contents/Frameworks/Electron Framework.framework/Libraries/" />
-    <ignored path="Electron/app/node_modules/electron/dist/Electron.app/Contents/Frameworks/Electron Framework.framework/Resources/" />
-    <ignored path="Electron/app/node_modules/electron/dist/Electron.app/Contents/Frameworks/Mantle.framework/Versions/Current/" />
-    <ignored path="Electron/app/node_modules/electron/dist/Electron.app/Contents/Frameworks/Mantle.framework/Headers/" />
-    <ignored path="Electron/app/node_modules/electron/dist/Electron.app/Contents/Frameworks/Mantle.framework/Modules/" />
-    <ignored path="Electron/app/node_modules/electron/dist/Electron.app/Contents/Frameworks/Mantle.framework/Resources/" />
-    <ignored path="Electron/app/node_modules/electron/dist/Electron.app/Contents/Frameworks/ReactiveCocoa.framework/Versions/Current/" />
-    <ignored path="Electron/app/node_modules/electron/dist/Electron.app/Contents/Frameworks/ReactiveCocoa.framework/Headers/" />
-    <ignored path="Electron/app/node_modules/electron/dist/Electron.app/Contents/Frameworks/ReactiveCocoa.framework/Modules/" />
-    <ignored path="Electron/app/node_modules/electron/dist/Electron.app/Contents/Frameworks/ReactiveCocoa.framework/Resources/" />
-    <ignored path="Electron/app/node_modules/electron/dist/Electron.app/Contents/Frameworks/Squirrel.framework/Versions/Current/" />
-    <ignored path="Electron/app/node_modules/electron/dist/Electron.app/Contents/Frameworks/Squirrel.framework/Headers/" />
-    <ignored path="Electron/app/node_modules/electron/dist/Electron.app/Contents/Frameworks/Squirrel.framework/Modules/" />
-    <ignored path="Electron/app/node_modules/electron/dist/Electron.app/Contents/Frameworks/Squirrel.framework/Resources/" />
-    <ignored path="Electron/app/node_modules/" />
-    <ignored path=".idea/dictionaries/davidmartin.xml" />
-    <ignored path="important_notes.txt" />
-    <ignored path="Vue/app/Notes/important_notes.txt" />
-    <ignored path="Vue/app/Notes/ModelFooterNotes" />
-    <ignored path="_Notes/API Notes" />
-    <ignored path="Vue/app/src/pages/inputs/ModelDataWithNonWorkingCode.vue" />
-    <ignored path="Flask/application/modelling/test_output/" />
-    <ignored path="Flask/application/modelling/mike_model/temp_data_location/" />
-    <ignored path="Flask/application/modelling/data/luomi/output/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
-    <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -62,45 +23,6 @@
   </component>
   <component name="FavoritesManager">
     <favorites_list name="energy-sharing" />
-  </component>
-  <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5">
-      <split-first>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="ModelFinancing.vue" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelFinancing.vue">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="675">
-                  <caret line="47" column="20" selection-start-line="47" selection-start-column="20" selection-end-line="47" selection-end-column="20" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="ModelSelection.vue" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelSelection.vue">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1605">
-                  <caret line="117" column="28" selection-start-line="117" selection-start-column="28" selection-end-line="117" selection-end-column="28" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="scratch_2.txt" pinned="false" current-in-tab="true">
-            <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_2.txt">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="89">
-                  <caret line="29" column="60" selection-start-line="29" selection-start-column="60" selection-end-line="29" selection-end-column="60" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -111,104 +33,12 @@
       </list>
     </option>
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>essential_load_data_aie_26_feb_1_may.csv</find>
-      <find>bb_pvoutput_solar_data_26_feb_1_may</find>
-      <find>solar_data</find>
-      <find>load_data</find>
-      <find>print</find>
-      <find>pythoncom</find>
-      <find>win32</find>
-      <find>Network</find>
-      <find>Timeseries</find>
-      <find>ts</find>
-      <find>pv_filename</find>
-      <find>initialise</find>
-      <find>participant_</find>
-      <find>load_data.csv</find>
-      <find>keyframes</find>
-      <find>finances</find>
-      <find>upload</find>
-      <find>size</find>
-      <find>save_ser</find>
-      <find>.csv</find>
-    </findStrings>
-    <replaceStrings>
-      <replace>solar_data.csv</replace>
-      <replace>load_data.csv</replace>
-      <replace>defaults/load_data</replace>
-      <replace>self.ts</replace>
-      <replace>profile_</replace>
-      <replace>financing</replace>
-    </replaceStrings>
-    <dirStrings>
-      <dir>$PROJECT_DIR$/Vue/app/src</dir>
-    </dirStrings>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
         <entry key="$PROJECT_DIR$" value="BetaRelease" />
       </map>
-    </option>
-  </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/Vue/app/src/charts/LineChart.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/charts/RevParticipant.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/charts/RevRCC.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/charts/EnergyGenCon.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/charts/EnergyCC.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/mixins/config_save_load.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelResultsTwo.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/charts/TPBChart.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelResultsThree.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/App.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelResults_Menu.vue" />
-        <option value="$PROJECT_DIR$/Flask/application/modelling/ui_interfaces/folder_routes.py" />
-        <option value="$PROJECT_DIR$/Vue/app/src/charts/_RevParticipant.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/charts/_RevRCC.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/charts/_EnergyGenCon.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/charts/_EnergyCC.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/charts/_TPB.vue" />
-        <option value="$PROJECT_DIR$/Flask/application/modelling/luomi_model/battery.py" />
-        <option value="$PROJECT_DIR$/Flask/application/modelling/ui_interfaces/central_battery.py" />
-        <option value="$PROJECT_DIR$/Flask/application/modelling/ui_interfaces/result_parsers.py" />
-        <option value="$PROJECT_DIR$/Flask/application/modelling/data/shared/ui_participants/user_config.csv" />
-        <option value="$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelDataNew.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelData.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/pages/SideNavBar.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/components/SolarUpload.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/components/LoadUpload.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/mixins/SaveLoadSimple.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelResults.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelParticipantsRefactor.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/mixins/SaveLoadNew.vue" />
-        <option value="$PROJECT_DIR$/Flask/application/api.py" />
-        <option value="$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelBattery.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelSolar.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelDataSolar.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelReview.vue" />
-        <option value="$PROJECT_DIR$/Flask/application/modelling/data/shared/ui_tariffs/default_config.csv" />
-        <option value="$PROJECT_DIR$/Flask/application/modelling/data/shared/ui_financing/default_config.csv" />
-        <option value="$PROJECT_DIR$/Flask/application/services/file_service.py" />
-        <option value="$PROJECT_DIR$/Flask/application/modelling/ui_interfaces/parameters.py" />
-        <option value="$PROJECT_DIR$/Flask/application/modelling/data/shared/load/load_profiles.csv" />
-        <option value="$PROJECT_DIR$/Flask/application/modelling/data/shared/solar/solar_profiles.csv" />
-        <option value="$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelSelection_OLD.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/router.js" />
-        <option value="$PROJECT_DIR$/Vue/app/src/mixins/SaveLoad.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelSelection.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelDataLoad.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelTariffs.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelParticipants.vue" />
-        <option value="$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelFinancing.vue" />
-        <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_2.txt" />
-        <option value="$PROJECT_DIR$/Vue/app/src/store/store.js" />
-      </list>
     </option>
   </component>
   <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
@@ -227,250 +57,13 @@
       <path value="$PROJECT_DIR$/Vue/app/package.json" />
     </packageJsonPaths>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="y" value="53" />
-    <option name="width" value="1680" />
-    <option name="height" value="1027" />
-  </component>
+  <component name="ProjectId" id="1P82vEWP2klDjM3KevbVN322Acu" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Flask" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Flask" type="462c0819:PsiDirectoryNode" />
-              <item name="application" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Flask" type="462c0819:PsiDirectoryNode" />
-              <item name="application" type="462c0819:PsiDirectoryNode" />
-              <item name="modelling" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Flask" type="462c0819:PsiDirectoryNode" />
-              <item name="application" type="462c0819:PsiDirectoryNode" />
-              <item name="modelling" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Flask" type="462c0819:PsiDirectoryNode" />
-              <item name="application" type="462c0819:PsiDirectoryNode" />
-              <item name="modelling" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-              <item name="shared" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Flask" type="462c0819:PsiDirectoryNode" />
-              <item name="application" type="462c0819:PsiDirectoryNode" />
-              <item name="modelling" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-              <item name="shared" type="462c0819:PsiDirectoryNode" />
-              <item name="load" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Flask" type="462c0819:PsiDirectoryNode" />
-              <item name="application" type="462c0819:PsiDirectoryNode" />
-              <item name="modelling" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-              <item name="shared" type="462c0819:PsiDirectoryNode" />
-              <item name="solar" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Flask" type="462c0819:PsiDirectoryNode" />
-              <item name="application" type="462c0819:PsiDirectoryNode" />
-              <item name="modelling" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-              <item name="shared" type="462c0819:PsiDirectoryNode" />
-              <item name="ui_financing" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Flask" type="462c0819:PsiDirectoryNode" />
-              <item name="application" type="462c0819:PsiDirectoryNode" />
-              <item name="modelling" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-              <item name="shared" type="462c0819:PsiDirectoryNode" />
-              <item name="ui_participants" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Flask" type="462c0819:PsiDirectoryNode" />
-              <item name="application" type="462c0819:PsiDirectoryNode" />
-              <item name="modelling" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-              <item name="shared" type="462c0819:PsiDirectoryNode" />
-              <item name="ui_tariffs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Flask" type="462c0819:PsiDirectoryNode" />
-              <item name="application" type="462c0819:PsiDirectoryNode" />
-              <item name="modelling" type="462c0819:PsiDirectoryNode" />
-              <item name="luomi_model" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Flask" type="462c0819:PsiDirectoryNode" />
-              <item name="application" type="462c0819:PsiDirectoryNode" />
-              <item name="modelling" type="462c0819:PsiDirectoryNode" />
-              <item name="mike_model" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Flask" type="462c0819:PsiDirectoryNode" />
-              <item name="application" type="462c0819:PsiDirectoryNode" />
-              <item name="modelling" type="462c0819:PsiDirectoryNode" />
-              <item name="mike_model" type="462c0819:PsiDirectoryNode" />
-              <item name="temp_data_location" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Flask" type="462c0819:PsiDirectoryNode" />
-              <item name="application" type="462c0819:PsiDirectoryNode" />
-              <item name="modelling" type="462c0819:PsiDirectoryNode" />
-              <item name="ui_interfaces" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Flask" type="462c0819:PsiDirectoryNode" />
-              <item name="application" type="462c0819:PsiDirectoryNode" />
-              <item name="services" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Flask" type="462c0819:PsiDirectoryNode" />
-              <item name="application" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Vue" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Vue" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Vue" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="public" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Vue" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Vue" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="charts" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Vue" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Vue" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="mixins" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Vue" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="pages" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Vue" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="pages" type="462c0819:PsiDirectoryNode" />
-              <item name="inputs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="energy-sharing" type="462c0819:PsiDirectoryNode" />
-              <item name="Vue" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="store" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Scratches and Consoles" type="1a2a3e82:ScratchProjectViewPane$MyProjectNode" />
-            </path>
-            <path>
-              <item name="energy-sharing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Scratches and Consoles" type="1a2a3e82:ScratchProjectViewPane$MyProjectNode" />
-              <item name="Scratches" type="d62648e6:ScratchProjectViewPane$MyRootNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="Scope" />
-    </panes>
-  </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="TEXT&#10;JavaScript" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../morePVs" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="PyConsoleConfigurable.Python Console" />
@@ -481,17 +74,16 @@
         <option name="myUseModuleSdk" value="true" />
         <option name="myModuleName" value="energy-sharing" />
         <option name="myWorkingDirectory" value="$PROJECT_DIR$/Flask" />
-        <option name="myAddSourceRoots" value="true" />
       </console-settings>
     </option>
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\z5044992\Documents\python\energy-sharing\Flask" />
       <recent name="$PROJECT_DIR$/Vue/app/src/pages/inputs" />
       <recent name="$PROJECT_DIR$/Vue/app/src/mixins" />
       <recent name="$PROJECT_DIR$/Flask/application/modelling/data/shared/ui_participants" />
       <recent name="$PROJECT_DIR$/Flask/application/modelling/data/shared/solar" />
-      <recent name="$PROJECT_DIR$/Flask/application/modelling/data/shared/load" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/Flask/application/modelling/data/mike/load_profiles/W" />
@@ -512,6 +104,78 @@
         </RuleState>
       </list>
     </option>
+  </component>
+  <component name="RunManager" selected="Python.mike_runner2">
+    <configuration name="mike_runner (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="energy-sharing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Flask" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Flask/mike_runner.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="mike_runner" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="energy-sharing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Flask" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="mike_runner" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="true" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="mike_runner2" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="energy-sharing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Flask" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Flask/mike_runner2.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.mike_runner2" />
+        <item itemvalue="Python.mike_runner (1)" />
+        <item itemvalue="Python.mike_runner" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -870,68 +534,6 @@
     <option name="localTasksCounter" value="181" />
     <servers />
   </component>
-  <component name="TodoView" selected-index="4">
-    <todo-panel id="selected-file">
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
-    <todo-panel id="all">
-      <are-packages-shown value="true" />
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
-  </component>
-  <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1680" height="1027" extended-state="6" />
-    <layout>
-      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.4993895" weight="0.32903227" />
-      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.502442" side_tool="true" weight="0.25698924" />
-      <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="7" sideWeight="0.497558" visible="true" weight="0.25698924" />
-      <window_info anchor="bottom" id="Python Console" order="7" weight="0.32903227" />
-      <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Terminal" order="7" sideWeight="0.498779" weight="0.8397849" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49517685" visible="true" weight="0.12087912" />
-      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="right" id="Database" order="3" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32903227" />
-      <window_info anchor="right" id="SciView" order="3" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" sideWeight="0.50482315" side_tool="true" weight="0.15201466" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection Results" order="8" weight="0.32903227" />
-      <window_info anchor="bottom" id="Messages" order="7" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-    </layout>
-    <layout-to-restore>
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49839744" visible="true" weight="0.18864469" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.498779" weight="0.2311828" />
-      <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Inspection Results" order="14" weight="0.32903227" />
-      <window_info anchor="bottom" id="Python Console" order="10" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info anchor="right" id="Database" order="4" />
-      <window_info anchor="bottom" id="Terminal" order="11" visible="true" weight="0.2580645" />
-      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.501221" side_tool="true" weight="0.2311828" />
-      <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="right" id="SciView" order="3" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32903227" />
-      <window_info anchor="bottom" id="Messages" order="13" />
-      <window_info id="Favorites" order="2" sideWeight="0.5016026" side_tool="true" weight="0.1959707" />
-    </layout-to-restore>
-  </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
@@ -939,8 +541,18 @@
     <option featureType="com.intellij.fileTypeFactory" implementationName="Pipfile" />
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.md" />
   </component>
-  <component name="VcsContentAnnotationSettings">
-    <option name="myLimit" value="2678400000" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Added some more charts and parsers for the chart data." />
@@ -972,391 +584,38 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="7" />
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Flask/mike_runner.py</url>
+          <line>11</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Flask/mike_runner2.py</url>
+          <line>122</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Flask/mike_runner2.py</url>
+          <line>124</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Flask/mike_runner2.py</url>
+          <line>19</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Flask/mike_runner2.py</url>
+          <line>30</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Flask/mike_runner2.py</url>
+          <line>40</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+      </breakpoints>
     </breakpoint-manager>
-  </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelReview.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="358">
-          <caret line="42" column="14" selection-start-line="42" selection-start-column="14" selection-end-line="42" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/data/shared/ui_tariffs/user_config.csv">
-      <provider selected="true" editor-type-id="csv-text-editor" />
-      <provider editor-type-id="csv-table-editor">
-        <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/data/shared/ui_financing/default_config.csv">
-      <provider selected="true" editor-type-id="csv-text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
-        </state>
-      </provider>
-      <provider editor-type-id="csv-table-editor">
-        <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Vue/app/src/mixins/SaveLoad_Defunct.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="161">
-          <caret line="63" lean-forward="true" selection-start-line="63" selection-end-line="63" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/data/shared/ui_tariffs/default_config.csv">
-      <provider selected="true" editor-type-id="csv-text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="21" lean-forward="true" selection-start-line="4" selection-start-column="21" selection-end-line="4" selection-end-column="21" />
-        </state>
-      </provider>
-      <provider editor-type-id="csv-table-editor">
-        <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/ui_interfaces/result_parsers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="430">
-          <caret line="61" selection-start-line="61" selection-end-line="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/ui_interfaces/participants.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/services/file_service.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="94" lean-forward="true" selection-start-line="94" selection-end-line="94" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/api.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="213">
-          <caret line="136" selection-start-line="136" selection-end-line="136" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/luomi_model/util.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
-          <folding>
-            <element signature="e#16#31#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/data/shared/load/load_profiles_2.csv">
-      <provider selected="true" editor-type-id="csv-text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" selection-start-line="1" selection-end-line="38" selection-end-column="81" />
-        </state>
-      </provider>
-      <provider editor-type-id="csv-table-editor">
-        <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/data/shared/load/load_profiles.csv">
-      <provider selected="true" editor-type-id="csv-text-editor">
-        <state relative-caret-position="570">
-          <caret line="38" column="81" selection-start-line="38" selection-start-column="81" selection-end-line="38" selection-end-column="81" />
-        </state>
-      </provider>
-      <provider editor-type-id="csv-table-editor">
-        <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/data/shared/solar/solar_profiles_2.csv">
-      <provider selected="true" editor-type-id="csv-text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" selection-start-line="1" selection-end-line="32" selection-end-column="38" />
-        </state>
-      </provider>
-      <provider editor-type-id="csv-table-editor">
-        <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/old_scripts/byron_example.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-242" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/data/luomi/defaults/solar_data.csv">
-      <provider selected="true" editor-type-id="csv-text-editor" />
-      <provider editor-type-id="csv-table-editor">
-        <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/data/shared/solar/solar_profiles.csv">
-      <provider selected="true" editor-type-id="csv-text-editor">
-        <state relative-caret-position="480">
-          <caret line="32" column="38" selection-start-line="32" selection-start-column="38" selection-end-line="32" selection-end-column="38" />
-        </state>
-      </provider>
-      <provider editor-type-id="csv-table-editor">
-        <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/mike_model/new_sim.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/ui_interfaces/central_battery.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/scenarios/ceem_ui_default_001.csv">
-      <provider selected="true" editor-type-id="csv-text-editor" />
-      <provider editor-type-id="csv-table-editor">
-        <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/mike_model/battery.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="68" selection-start-line="21" selection-start-column="64" selection-end-line="21" selection-end-column="68" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/mike_model/customer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2552">
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/mike_model/network.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-7569">
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/mike_model/scenario.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="18" lean-forward="true" selection-start-line="3" selection-start-column="18" selection-end-line="3" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/mike_model/tariff.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1892">
-          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/mike_model/tariff_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/mike_model/timeseries.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="19" lean-forward="true" selection-start-line="10" selection-start-column="19" selection-end-line="10" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/mike_model/main_sim.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1019">
-          <caret line="88" column="26" lean-forward="true" selection-start-line="88" selection-start-column="26" selection-end-line="88" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/ui_interfaces/csv_helpers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="465">
-          <caret line="31" column="3" lean-forward="true" selection-start-line="31" selection-start-column="3" selection-end-line="31" selection-end-column="3" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/templates/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Vue/app/src/pages/About.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Vue/app/src/pages/Contact.vue">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Vue/app/src/components/HelloWorld.vue">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Vue/app/src/views/Home.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Vue/app/src/pages/Home.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="11" lean-forward="true" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/ui_interfaces/parameters.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="25" column="17" lean-forward="true" selection-start-line="25" selection-start-column="17" selection-end-line="25" selection-end-column="17" />
-          <folding>
-            <element signature="e#27#92#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelBattery.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="86">
-          <caret line="38" column="20" lean-forward="true" selection-start-line="38" selection-start-column="20" selection-end-line="38" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelParticipants_OLD.vue">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Vue/app/src/router.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="35" lean-forward="true" selection-start-line="3" selection-start-column="35" selection-end-line="3" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelSelection_OLD.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="16" selection-start-line="7" selection-start-column="16" selection-end-line="7" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Vue/app/src/pages/SideNavBar.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="45" selection-start-line="17" selection-start-column="45" selection-end-line="17" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelTariffs.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2235">
-          <caret line="151" column="21" selection-start-line="151" selection-start-column="21" selection-end-line="151" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Vue/app/src/mixins/SaveLoad.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1125">
-          <caret line="75" column="35" selection-start-line="75" selection-start-column="35" selection-end-line="75" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelDataLoad.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2085">
-          <caret line="139" selection-start-line="139" selection-end-line="139" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/ui_interfaces/folder_routes.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="33" selection-start-line="21" selection-start-column="33" selection-end-line="21" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelParticipants.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="329">
-          <caret line="22" column="47" selection-start-line="22" selection-start-column="47" selection-end-line="22" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelFinancing.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="675">
-          <caret line="47" column="20" selection-start-line="47" selection-start-column="20" selection-end-line="47" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Vue/app/src/store/store.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="32" column="39" selection-start-line="32" selection-start-column="39" selection-end-line="32" selection-end-column="39" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_2.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="89">
-          <caret line="29" column="60" selection-start-line="29" selection-start-column="60" selection-end-line="29" selection-end-column="60" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Flask/application/modelling/mike_model/study.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3211">
-          <caret line="84" lean-forward="true" selection-start-line="84" selection-end-line="84" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Vue/app/src/pages/inputs/ModelSelection.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1605">
-          <caret line="117" column="28" selection-start-line="117" selection-start-column="28" selection-end-line="117" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
   </component>
 </project>

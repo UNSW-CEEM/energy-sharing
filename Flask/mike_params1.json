@@ -1,0 +1,99 @@
+{
+    "model_selection": {
+     "model_type": "mike",
+     "network_type": null
+    },
+     "model_data_sources_mike": {
+     "selected_solar_file": "solar_profiles_demo.csv",
+     "selected_load_file": "load_profiles_demo.csv"
+    },
+    "model_tariffs_mike": [
+     {
+      "name": "user_interface",
+      "block_rate_1": 0,
+      "block_rate_2": 0,
+      "block_rate_3": 0,
+      "high_1": 1,
+      "high_2": 2,
+      "metering_sc_non_cap": 0,
+      "fit_flat_rate": 0,
+      "static_imports": [
+       {
+        "start_hr": 0,
+        "end_hr": 7,
+        "price": 0.2
+       },
+       {
+        "start_hr": 7,
+        "end_hr": 15,
+        "price": 0.4
+       },
+       {
+        "start_hr": 15,
+        "end_hr": 24,
+        "price": 0.2
+       }
+      ],
+      "static_solar_imports": [
+       {
+        "start_hr": 0,
+        "end_hr": 7,
+        "price": 0.2
+       },
+       {
+        "start_hr": 7,
+        "end_hr": 15,
+        "price": 0.4
+       },
+       {
+        "start_hr": 15,
+        "end_hr": 24,
+        "price": 0.2
+       }
+      ],
+      "static_exports": [
+       {
+        "start_hr": 0,
+        "end_hr": 7,
+        "price": 0.2
+       },
+       {
+        "start_hr": 7,
+        "end_hr": 15,
+        "price": 0.4
+       },
+    {
+        "start_hr": 15,
+        "end_hr": 24,
+        "price": 0.2
+       }
+      ],
+      "daily_fixed_rate": 1
+     }
+    ],
+    "study_parameters_mike": {
+     "scenario": 1,
+     "arrangement": "btm_p_u",
+     "pv_cap_id": "W_max_yield",
+     "pv_capex_scaleable": false,
+     "en_capex_id": "capex_med",
+     "a_term": 20,
+     "a_rate": 0.06,
+     "pv_scaleable": false,
+     "pv_kW_peak": "",
+     "notes": "",
+     "tariffs": {
+      "cp": "TIDNULL",
+      "parent": "EA305_TOU12",
+      "network_tariff": "EA305"
+     },
+     "common_property_load_profile": "profile_1",
+     "common_property_solar_profile": "profile_1",
+     "central_solar_profile": "profile_1",
+     "central_battery_id": "pw_26",
+     "central_battery_strategy": "ed1700_cmax_dmax",
+     "Participant 1_battery_id": "pw_78",
+     "Participant 1_battery_strategy": "ed1730_cmax_dmax",
+     "Participant 1_battery_capacity_kWh": 10
+    }
+}

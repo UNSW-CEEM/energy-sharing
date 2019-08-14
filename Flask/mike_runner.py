@@ -8,7 +8,6 @@ def simple_status_callback(message):
 with open('mike_params.json') as params_file:
     params = json.load(params_file)
     print(params)
-
     wrapper = MikeWrapper()
     wrapper.load(params)
     wrapper.create_objects()

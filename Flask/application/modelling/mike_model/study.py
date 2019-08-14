@@ -43,11 +43,10 @@ class Study:
         print("study.py/__init__", "shared_solar_profile", study_parameters['central_solar_profile'])
         print("study.py/__init__", "shared_solar_profile", study_parameters['common_property_solar_profile'])
 
-        # self.use_threading = False
 
         # reference files
         # We don't want to load this data on the fly from the UI at all - it's seemingly there to provide additional information
-        # ---------------
+        # Hmmmm.... some of this does need to come from the UI
         self.reference_path = os.path.join(self.base_path, 'reference')  # 'reference_TEST'
         self.input_path = os.path.join(self.project_path, 'inputs')
         tariff_name = 'tariff_lookup.csv'
@@ -364,6 +363,7 @@ class Study:
         logging.info("Running Scenario number %i ", scenario_name)
         # Initialise scenario
         scenario = Scenario(scenario_name=scenario_name, study=self, timeseries=self.ts_ng, solar_skiprows=self.solar_skiprows)
+        # todo !!MR   Have a look at Scenario and see wheere it gets pv_profile from.... can we revert to scenario-dependent pv as an option???
         eno = Network(scenario=scenario, study=self, timeseries=self.ts_ng)
         # N.B. in embedded network scenarios, eno is the actual embedded network operator,
         # but in other scenarios, it is a virtual intermediary to organise energy and cash flows
@@ -373,9 +373,6 @@ class Study:
         # Set up pv profile if allocation not load-dependent
         if scenario.pv_allocation == 'fixed':
             eno.allocatePV(scenario, scenario.pv)
-
-        # if scenario.has_solar_block:
-        #     eno.initialiseDailySolarBlockQuotas(scenario)
 
         # Iterate through all load profiles for this scenario:
         # for load_name in scenario.load_list:
@@ -422,12 +419,6 @@ class Study:
         if scenario.log_timeseries_brief:
             eno.logTimeseriesBrief(scenario)
 
-        # collate / log data for all loads in scenario
-        # TODO Work out how to remove this global.
-        # if self.use_threading is 'True':
-        #     with lock:
-        #         scenario.log_scenario_data()
-        # else:
         scenario.log_scenario_data()
 
         logging.info('Completed Scenario %i', scenario_name)

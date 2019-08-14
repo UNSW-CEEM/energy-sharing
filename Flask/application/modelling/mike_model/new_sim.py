@@ -14,7 +14,7 @@
 import os
 from ..mike_model.study import Study
 
-# Need base_path, project study_name, override_output, use_threading
+# Need base_path, project study_name, override_output,
 
 
 class NewSim:

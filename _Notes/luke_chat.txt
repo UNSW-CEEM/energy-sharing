@@ -1,0 +1,40 @@
+I’ve just pushed up a version that works :slightly_smiling_face:
+If you look in the mike branch, I’ve put two files in the Flask folder
+one is mike_params.json
+that has all of the configuration parameters for running the model
+Most of them will be either familiar to you, or obvious what they do
+hit me up though if youre confused
+the second file is mike_runner.py
+thats the script that runs the program and spits out the output
+if you want, you could nuke your current changes by typing git reset --hard
+then git pull would bring down the new changes i made
+then go into the Flask folder and run python mike_runner.py
+should be all good :slightly_smiling_face:
+Mike 10:23 AM
+Gawd bless ya Luke. Thanks! :grin:
+Luke 10:23 AM
+No problem at all :slightly_smiling_face: Hope it helps!
+Mike 10:25 AM
+So i just need to read my .csv files into params dict and I'll  be away.... beautiful.
+Luke 10:25 AM
+Yep! They’ll need to live in the same folder as the other .csv files
+and the participants will need associated profiles (column headings in those csvs)
+Screenshot 2019-08-07 20.26.35.png 
+Screenshot 2019-08-07 20.26.35.png
+
+
+Mike 10:29 AM
+Cool. By 'same folder' you mean modelling\data\mike with my old file structure (load_profiles, pv_profiles, reference, etc....) within it?
+Luke 10:30 AM
+No, actually, now for load and solar data it’s modelling\data\shared - \load or \solar
+sharing is caring
+forgot about that one
+Mike 10:32 AM
+sharing IS caring, Luke. :grin:
+cool... and my reference files and 'study' files are in data\mike still...
+Luke 10:32 AM
+yeah, all the model-specific stuff is still in data\mike - just needed a common place to put the new-format load and solar files :slightly_smiling_face:
+Mike 10:33 AM
+'new format' - ah yes. Just the time format I need to change on my old load and pv data?
+Luke 10:34 AM
+I think so yes - its been so many iterations but Im 99% sure it was just the time format
