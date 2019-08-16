@@ -120,13 +120,19 @@ class Tariff:
         else:
             self.is_solar_inst = False
 
-        # # Get solar tariff data:
+        # Get solar tariff data:
         # SOLAR BLOCK TARIFF IMPLEMENTATION INCORRECT - REMOVED
         # # NB solar block tariff period is NOT adjusted for DST
         if tariff_id in scenario.solar_list:
-            
             # Solar import tariff is static TOU tariff for instantaneous solar quota
             self.solar_import_tariff = (scenario.static_solar_imports[tariff_id]).values
+
+
+
+
+
+
+
             pass
         else:
             self.solar_import_tariff = np.zeros(self.ts.get_num_steps())

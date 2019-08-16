@@ -23,7 +23,7 @@ class TariffData:
         os.makedirs(self.saved_tariff_path, exist_ok=True)
         # read csv of tariff parameters
         self.lookup = pd.read_csv(tariff_lookup_path, index_col=[0])
-        self.all_tariffs = [t for t in self.lookup.index if t in parameter_list]  # list of all tariff ids
+        self.all_tariffs = [t for t in self.lookup.index if t in parameter_list and t != None]  # list of all tariff ids
         # set up dfs for static import and export tariffs
         self.static_imports = pd.DataFrame(
             index=pd.DatetimeIndex(data=self.ts.get_date_times())
@@ -43,8 +43,6 @@ class TariffData:
 
     def generateStaticTariffs(self):
         """ Creates time-based rates for all load-independent tariffs."""
-
-       
 
         for tid in self.all_tariffs:
             # apply discounts to all tariffs:
@@ -171,7 +169,7 @@ class TariffData:
         
     def _configure_ui_tariffs(self):
         """This is a parser to get the data from the dynamic tariffs UI construction into the dataframe format used in the Mike model. """
-        # Loop through each dynamic tariff in the list. 
+        # Loop through each dynamic (UI) tariff in the list.
         for ui_tariff in self.ui_tariffs:
             print("tariff_data.py/_configure_ui_tariffs()", ui_tariff)
             # Add they dynamic tariff's static import data
@@ -188,7 +186,7 @@ class TariffData:
                     static_imports.append(0)
             self.static_imports[ui_tariff['name']] = static_imports
 
-            # Add they dynamic tariff's static solar import data
+            # Add the dynamic (UI) tariff's static solar import data
             static_solar_imports = []
             for key in self.static_solar_imports.index:
                 dt = pendulum.instance(key)

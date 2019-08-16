@@ -263,7 +263,7 @@ class MikeWrapper:
         end_idx = 0
         for index, row in df.iterrows():
             dt = pd.datetime.strptime(row['timestamp'], '%d/%m/%Y %H:%M')
-            print(index, row['timestamp'])
+            #print(index, row['timestamp'])
             if dt.isoformat() == start.isoformat():
                 start_idx = index + 1
             if dt.isoformat() == end.isoformat():

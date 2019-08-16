@@ -103,14 +103,13 @@ class Scenario:
         tariff_short_list = [self.tariff_in_use[customer] for customer in self.tariff_in_use] + [self.dnsp_tariff]  # list of tariffs in use
         tariff_short_list = list(set(tariff_short_list))  # drop duplicates
         for tariff_id in tariff_short_list:
-
             if (tariff_id not in study.tariff_data.lookup.index) and (tariff_id not in [t['name'] for t in self.study.tariff_data.ui_tariffs]):
                 msg = '******Exception: Tariff ' + tariff_id + ' is not in tariff_lookup.csv'
                 raise Exception(msg)
         #  Slice tariff_lookup table for this scenario
         self.tariff_lookup = study.tariff_data.lookup.loc[tariff_short_list]
         
-        # NB Dynamic here means "load dependent" - ie has to be calculated on teh fly, iterating thru' timeseries
+        # NB Dynamic here means "load dependent" - ie has to be calculated on the fly, iterating thru' timeseries
         # cf "static tariffs" which can be calculated for the whole timeseries at once.
 
         self.dynamic_list = [t for t in tariff_short_list

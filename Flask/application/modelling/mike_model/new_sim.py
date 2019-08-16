@@ -85,3 +85,4 @@ class NewSim:
     def run(self):
         for scenario in self.study.get_scenario_list():
             self.study.run_scenario(scenario)
+

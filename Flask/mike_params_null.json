@@ -1,0 +1,333 @@
+{
+    "model_selection": {
+     "model_type": "mike",
+     "network_type": null
+    },
+  "model_participants_mike": [
+     {
+      "row_id": 0,
+      "row_inputs": [
+       {
+        "name": "participant_id",
+        "value": "Participant 1"
+       },
+       {
+        "name": "retail_tariff_type",
+        "value": "user_interface"
+       },
+       {
+        "name": "load_profile",
+        "value": "profile_1"
+       },
+       {
+        "name": "solar_profile",
+        "value": "profile_1"
+       }
+      ]
+     },
+     {
+      "row_id": 1,
+      "row_inputs": [
+       {
+        "name": "participant_id",
+        "value": "Participant 2"
+       },
+       {
+        "name": "retail_tariff_type",
+        "value": "user_interface"
+       },
+       {
+        "name": "load_profile",
+        "value": "profile_2"
+       },
+       {
+        "name": "solar_profile",
+        "value": "profile_2"
+       }
+      ]
+     },
+     {
+      "row_id": 2,
+      "row_inputs": [
+       {
+        "name": "participant_id",
+        "value": "Participant 3"
+       },
+       {
+        "name": "retail_tariff_type",
+        "value": "user_interface"
+       },
+       {
+        "name": "load_profile",
+        "value": "profile_3"
+       },
+       {
+        "name": "solar_profile",
+        "value": "profile_3"
+       }
+      ]
+     },
+     {
+      "row_id": 3,
+      "row_inputs": [
+       {
+        "name": "participant_id",
+        "value": "Participant 4"
+       },
+       {
+        "name": "retail_tariff_type",
+        "value": "user_interface"
+       },
+       {
+        "name": "load_profile",
+        "value": "profile_4"
+       },
+       {
+        "name": "solar_profile",
+        "value": "profile_4"
+       }
+      ]
+     },
+     {
+      "row_id": 4,
+      "row_inputs": [
+       {
+        "name": "participant_id",
+        "value": "Participant 5"
+       },
+       {
+        "name": "retail_tariff_type",
+        "value": "user_interface"
+       },
+       {
+        "name": "load_profile",
+        "value": "profile_5"
+       },
+       {
+        "name": "solar_profile",
+        "value": "profile_5"
+       }
+      ]
+     },
+     {
+      "row_id": 5,
+      "row_inputs": [
+       {
+        "name": "participant_id",
+        "value": "Participant 6"
+       },
+       {
+        "name": "retail_tariff_type",
+        "value": "user_interface"
+       },
+       {
+        "name": "load_profile",
+        "value": "profile_6"
+       },
+       {
+        "name": "solar_profile",
+        "value": "profile_6"
+       }
+      ]
+     },
+     {
+      "row_id": 6,
+      "row_inputs": [
+       {
+        "name": "participant_id",
+        "value": "Participant 7"
+       },
+       {
+        "name": "retail_tariff_type",
+        "value": "user_interface"
+       },
+       {
+        "name": "load_profile",
+        "value": "profile_7"
+       },
+       {
+        "name": "solar_profile",
+        "value": "profile_7"
+       }
+      ]
+     },
+     {
+      "row_id": 7,
+      "row_inputs": [
+       {
+        "name": "participant_id",
+        "value": "Participant 8"
+       },
+       {
+        "name": "retail_tariff_type",
+        "value": "user_interface"
+       },
+       {
+        "name": "load_profile",
+        "value": "profile_8"
+       },
+       {
+        "name": "solar_profile",
+        "value": "profile_8"
+       }
+      ]
+     },
+     {
+      "row_id": 8,
+      "row_inputs": [
+       {
+        "name": "participant_id",
+        "value": "Participant 9"
+       },
+       {
+        "name": "retail_tariff_type",
+        "value": "user_interface"
+       },
+       {
+        "name": "load_profile",
+        "value": "profile_9"
+       },
+       {
+        "name": "solar_profile",
+        "value": "profile_9"
+       }
+      ]
+     },
+     {
+      "row_id": 9,
+      "row_inputs": [
+       {
+        "name": "participant_id",
+        "value": "Participant 10"
+       },
+       {
+        "name": "retail_tariff_type",
+        "value": "user_interface"
+       },
+       {
+        "name": "load_profile",
+        "value": "profile_10"
+       },
+       {
+        "name": "solar_profile",
+        "value": "profile_10"
+       }
+      ]
+     },
+     {
+      "row_id": 10,
+      "row_inputs": [
+       {
+        "name": "participant_id",
+        "value": "Participant 11"
+       },
+       {
+        "name": "retail_tariff_type",
+        "value": "user_interface"
+       },
+       {
+        "name": "load_profile",
+        "value": "profile_11"
+       },
+       {
+        "name": "solar_profile",
+        "value": "profile_11"
+       }
+      ]
+     }
+    ],
+     "model_data_sources_mike": {
+     "selected_solar_file": null,
+     "selected_load_file": null
+    },
+    "model_tariffs_mike": [
+     {
+      "name": "user_interface",
+      "block_rate_1": 0,
+      "block_rate_2": 0,
+      "block_rate_3": 0,
+      "high_1": 1,
+      "high_2": 2,
+      "metering_sc_non_cap": 0,
+      "fit_flat_rate": 0,
+      "static_imports": [
+       {
+        "start_hr": 0,
+        "end_hr": 7,
+        "price": 0.2
+       },
+       {
+        "start_hr": 7,
+        "end_hr": 15,
+        "price": 0.4
+       },
+       {
+        "start_hr": 15,
+        "end_hr": 24,
+        "price": 0.2
+       }
+      ],
+      "static_solar_imports": [
+       {
+        "start_hr": 0,
+        "end_hr": 7,
+        "price": 0.2
+       },
+       {
+        "start_hr": 7,
+        "end_hr": 15,
+        "price": 0.4
+       },
+       {
+        "start_hr": 15,
+        "end_hr": 24,
+        "price": 0.2
+       }
+      ],
+      "static_exports": [
+       {
+        "start_hr": 0,
+        "end_hr": 7,
+        "price": 0.2
+       },
+       {
+        "start_hr": 7,
+        "end_hr": 15,
+        "price": 0.4
+       },
+    {
+        "start_hr": 15,
+        "end_hr": 24,
+        "price": 0.2
+       }
+      ],
+      "daily_fixed_rate": 1
+     }
+    ],
+    "study_parameters_mike": {
+     "scenario": 1,
+     "arrangement": null,
+     "pv_cap_id": null,
+     "pv_capex_scaleable": false,
+     "en_capex_id": null,
+     "a_term": null,
+     "a_rate": null,
+     "pv_scaleable": null,
+     "pv_kW_peak": null,
+     "notes": null,
+     "tariffs": {
+      "cp": "TIDNULL",
+      "parent": "TIDNULL",
+      "network_tariff": "TIDNULL",
+      "all_residents": "TIDNULL"
+     },
+     "common_property_load_profile": null,
+     "common_property_solar_profile": null,
+     "central_solar_profile": null,
+     "central_battery_id": null,
+     "central_battery_strategy": null,
+     "Participant 1_battery_id": null,
+     "Participant 1_battery_strategy": null,
+     "Participant 1_battery_capacity_kWh": null
+    }
+}

@@ -353,6 +353,7 @@ class Study:
         # Save remaining results for all scenarios
         op_file = os.path.join(self.output_path, self.name + '_results.csv')
         util.df_to_csv(self.op, op_file)
+        print(op_file)
 
     def get_scenario_list(self):
         return self.scenario_list
@@ -363,7 +364,7 @@ class Study:
         logging.info("Running Scenario number %i ", scenario_name)
         # Initialise scenario
         scenario = Scenario(scenario_name=scenario_name, study=self, timeseries=self.ts_ng, solar_skiprows=self.solar_skiprows)
-        # todo !!MR   Have a look at Scenario and see wheere it gets pv_profile from.... can we revert to scenario-dependent pv as an option???
+        # todo !!MR   Have a look at Scenario and see where it gets pv_profile from.... can we revert to scenario-dependent pv as an option???
         eno = Network(scenario=scenario, study=self, timeseries=self.ts_ng)
         # N.B. in embedded network scenarios, eno is the actual embedded network operator,
         # but in other scenarios, it is a virtual intermediary to organise energy and cash flows

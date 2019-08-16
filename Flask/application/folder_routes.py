@@ -32,8 +32,11 @@ LUOMI_OUTPUT_DIR_NAME = "output"
 
 MIKE_DIR_NAME = "mike"
 MIKE_STUDIES_DIR_NAME = "studies"
+
+# todo MR!! restore these defaults for GUI and take project and study from mike_runner2 inputs
 MIKE_PROJECT_NAME = "ceem_ui"
 MIKE_STUDY_NAME = "ceem_ui_default"
+
 MIKE_MODEL_INPUTS = "inputs"
 MIKE_MODEL_OUTPUTS = "outputs"
 

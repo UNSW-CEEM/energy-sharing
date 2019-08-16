@@ -1,0 +1,2 @@
+scenario,pv_filename,load_file,arrangement,pv_cap_id,cp,all_residents,parent,network_tariff,en_capex_id,a_term,a_rate
+163,C_max_pv.csv,C_building_profile_kWh_POS.csv,en_pv,C_max_pv,TIDNULL,TIDNULL,EA225_p_TOU9,EA225_p,capex_med,20,0.06

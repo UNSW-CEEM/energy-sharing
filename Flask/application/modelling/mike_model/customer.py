@@ -49,6 +49,7 @@ class Customer:
         self.tariff_id = customer_tariff_id
         self.scenario = scenario
         self.tariff = Tariff(tariff_id=self.tariff_id, scenario=scenario)
+        print(self,self.tariff_id)
 
     def initialise_customer_pv(self, pv_generation):  # 1-D array
         self.generation = pv_generation
