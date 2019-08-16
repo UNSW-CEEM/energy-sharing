@@ -177,23 +177,27 @@ class MikeWrapper:
     def load_data_sources(self, ui_inputs):
         
         if "model_data_sources_mike" in ui_inputs:
-            self.solar_filename = ui_inputs["model_data_sources_mike"]['selected_solar_file']
-            self.load_filename = ui_inputs["model_data_sources_mike"]['selected_load_file']
-            
-            
-            # This code figures out where the datasets need to be chopped such that they match.
-            start, end = self.find_time_periods(self.solar_filename, self.load_filename)
-            self.solar_skiprows = self.find_skiprows(
-                os.path.join(self.folder_routes.solar_profiles_dir, self.solar_filename),
-                start,
-                end
-            )
+            self.solar_filename = ui_inputs['model_data_sources_mike']['selected_solar_file']
+            self.load_filename = ui_inputs['model_data_sources_mike']['selected_load_file']
 
-            self.load_skiprows = self.find_skiprows(
-                os.path.join(self.folder_routes.load_profiles_dir, self.load_filename),
-                start,
-                end
-            )
+            # If bau or en, no solar file needed
+            if ui_inputs['study_parameters_mike']['arrangement'] in ['en','bau']:
+                self.solar_skiprows = 0
+                self.load_skiprows = 0
+            else:
+                # This code figures out where the datasets need to be chopped such that they match.
+                start, end = self.find_time_periods(self.solar_filename, self.load_filename)
+                self.solar_skiprows = self.find_skiprows(
+                    os.path.join(self.folder_routes.solar_profiles_dir, self.solar_filename),
+                    start,
+                    end
+                )
+
+                self.load_skiprows = self.find_skiprows(
+                    os.path.join(self.folder_routes.load_profiles_dir, self.load_filename),
+                    start,
+                    end
+                )
 
             # self.time_periods = util.generate_dates_in_range(start, end, 30)
 

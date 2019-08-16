@@ -26,14 +26,21 @@ class NewSim:
         # pv_path = os.path.join(base_path, 'pv_profiles', 'ceem_ui_default.csv')
         # load_path = os.path.join(base_path, 'load_profiles', 'ceem_ui_default','ceem_ui_default.csv')
 
-        pv_path = os.path.join(folder_routes.get_route("data_dir"), 'shared','solar', solar_filename)
-        load_path = os.path.join(folder_routes.get_route("data_dir"), 'shared','load', load_filename)
+        load_path = os.path.join(folder_routes.get_route("data_dir"), 'shared', 'load', load_filename)
 
         print("new_sim.py/NewSim()/__init__", "Base Directory", base_path)
         print("new_sim.py/NewSim()/__init__", "Project Directory", self.project)
-        print("new_sim.py/NewSim()/__init__", "PV Path", pv_path)
         print("new_sim.py/NewSim()/__init__", "Load Path", load_path)
         print("new_sim.py/NewSim()/__init__", "Study Name", self.study_name)
+
+        # If bau or en, no solar file needed
+        if study_parameters['arrangement'] not in ['en','bau']:
+            pv_path = os.path.join(folder_routes.get_route("data_dir"), 'shared','solar', solar_filename)
+        else:
+            pv_path =''
+        print("new_sim.py/NewSim()/__init__", "PV Path", pv_path)
+
+
         
         # print("\n\n It be working", self.base_dir, "\n", self.project, self.study_name)
 

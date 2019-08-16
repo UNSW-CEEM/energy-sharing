@@ -3,7 +3,7 @@ import pandas as pd
 class PVCollectionFactory():
     def empty_collection(self, date_times, labels):
         data = pd.DataFrame(index=pd.DatetimeIndex(data=date_times), columns=labels).fillna(0)
-        data.set_index('timestamp', inplace=True)
+        data.index.name = 'timestamp'
         return PVCollection(data)
     
     def from_file(self, file_path, skiprows):

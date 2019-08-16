@@ -1,3 +1,4 @@
+# Was mike_runner
 import json
 import sys
 import os
@@ -48,7 +49,7 @@ def transfer_df_to_dict(study_parameters, params,scenario_list,load_path, pv_pat
     print(dfload.columns)
     participant_list = dfload.columns.tolist()
     params["model_participants_mike"] = []
-    for participant in participant_list:
+    for participant in [p for p in participant_list if p != 'cp']:
         # For now, take tariff information from the first scenario:
         if 'all_residents' in study_parameters.columns:
             tariff = study_parameters.loc[study_parameters.index[0],'all_residents']
@@ -97,22 +98,23 @@ def transfer_df_to_dict(study_parameters, params,scenario_list,load_path, pv_pat
     # Transfer tariff parameters:
     if 'cp' in study_parameters.columns:
         params['study_parameters_mike']['tariffs']['cp'] = study_parameters.loc[s, 'cp']
-    if 'en' in study_parameters.loc[s, 'arrangement']:
-        params['study_parameters_mike']['tariffs']['parent'] = study_parameters.fillna('TIDNULL').loc[s, 'parent']
-    if 'network_tariff' in study_parameters.columns:
-        params['study_parameters_mike']['tariffs']['network_tariff'] = study_parameters.loc[s, 'network_tariff']
+    params['study_parameters_mike']['tariffs']['parent'] = study_parameters.fillna('TIDNULL').loc[s, 'parent']
+    params['study_parameters_mike']['tariffs']['network_tariff'] = study_parameters.fillna('TIDNULL').loc[s, 'network_tariff']
 
 
     #todo MR!! Allow 'all' and individual customer tariffs  per scenario
     # Transfer cp pointers
     if 'cp' in study_parameters.columns:
         params['study_parameters_mike']['common_property_load_profile'] = 'cp'
-        params['study_parameters_mike']['common_property_solar_profile'] = '' # May need to be conditional??
+        if not params['study_parameters_mike']['arrangement'] in ['bau', 'en', 'btm_i_u', 'btm_s_u', 'btm_p_u']:
+            params['study_parameters_mike']['common_property_solar_profile'] = 'cp'
 
     # Transfer central pv pointer  - check these conditions cover all cases
     #todo MR!!  central pv and bess pointers need option of being per-scenario parameters
     if 'en' in study_parameters.loc[s, 'arrangement']:
         params['study_parameters_mike']['central_solar_profile'] = 'pv'
+    # else:
+    #     params['study_parameters_mike']['central_solar_profile'] = ''
         #todo MR!! Make central pv pointer consistent with legacy and future cases
 
 
@@ -131,42 +133,48 @@ def transfer_df_to_dict(study_parameters, params,scenario_list,load_path, pv_pat
 
 
 def main(base_path,project,study_name, override_output = ''):
-    with open('mike_params_null.json') as params_file:
-        params = json.load(params_file)
-        print(params)
-        # Load data from .csv files but...
-        # keeping (for the moment) default, redundant, UI-specific and Luke additions from .json file
-        # Copying data aquisition scripts from original morePVs....
-        # So open `study_...csv` and import into params dict:
+#     with open('mike_params_null.json') as params_file:
+#         params = json.load(params_file)
+    params ={'model_participants_mike':[],
+             'model_data_sources_mike':{},
+             'model_tariffs_mike': [],
+             'study_parameters_mike': {
+                 'tariffs': {}
+             }
+             }
+    print(params)
+    # Load data from .csv files but...
+    # keeping (for the moment) default, redundant, UI-specific and Luke additions from .json file
+    # Copying data aquisition scripts from original morePVs....
+    # So open `study_...csv` and import into params dict:
 
-        # Identify `study....csv` file with input parameters for all scenarios in study
-        # Some of these paths may have changed...?
-        project_path = os.path.join(base_path, 'mike','studies', project)
-        input_path = os.path.join(project_path, 'inputs')
-        study_filename = 'study_' + study_name + '.csv'
-        study_file = os.path.join(input_path, study_filename)
-        # Load and Pv profiles are now in shared folder:
-        #todo: MR?? Maybe add an option for shared or mike as source folder?
-        load_path = os.path.join(base_path,'shared','load')
-        pv_path = os.path.join(base_path,'shared','solar')
+    # Identify `study....csv` file with input parameters for all scenarios in study
+    # Some of these paths may have changed...?
+    project_path = os.path.join(base_path, 'mike','studies', project)
+    input_path = os.path.join(project_path, 'inputs')
+    study_filename = 'study_' + study_name + '.csv'
+    study_file = os.path.join(input_path, study_filename)
+    # Load and Pv profiles are now in shared folder:
+    load_path = os.path.join(base_path,'shared','load')
+    pv_path = os.path.join(base_path,'shared','solar')
 
-        # read csv into df (it's what i know...)
-        # ---------------------------------------
-        study_parameters = pd.read_csv(study_file)
-        study_parameters.set_index('scenario', inplace=True)
-        scenario_list = [s for s in study_parameters.index if not pd.isnull(s)]
+    # read csv into df (it's what i know...)
+    # ---------------------------------------
+    study_parameters = pd.read_csv(study_file)
+    study_parameters.set_index('scenario', inplace=True)
+    scenario_list = [s for s in study_parameters.index if not pd.isnull(s)]
 
-        params = transfer_df_to_dict(study_parameters, params, scenario_list, load_path, pv_path)
-        #params = get_participants_from_load(load_path, params)
-        print(params)
+    params = transfer_df_to_dict(study_parameters, params, scenario_list, load_path, pv_path)
+    #params = get_participants_from_load(load_path, params)
+    print(params)
 
 
-        wrapper = MikeWrapper()
-        wrapper.load(params)
-        wrapper.create_objects()
-        results = wrapper.run(simple_status_callback)
-        print(results)
-        wrapper.mike_model.study.log_study_data()
+    wrapper = MikeWrapper()
+    wrapper.load(params)
+    wrapper.create_objects()
+    results = wrapper.run(simple_status_callback)
+    print(results)
+    wrapper.mike_model.study.log_study_data()
 
 
 
@@ -178,7 +186,7 @@ if __name__ == "__main__":
     #default_base_path = 'C:\\Users\\z5044992\\OneDrive - UNSW\\python\\en\\DATA_EN_5'  #(Mike's PC)
     #default_base_path = '/Users/mikeroberts/OneDrive - UNSW/python/en/DATA_EN_5'  #(Mike's Mac)
     default_project = 'ww1'
-    default_study = 'C_bldg2_163'
+    default_study = 'C_bldg2_0'
     # Import arguments - allows multi-processing from command line
     # ------------------------------------------------------------
     opts = {}

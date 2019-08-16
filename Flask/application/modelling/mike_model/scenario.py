@@ -239,10 +239,10 @@ class Scenario:
         # --------------------------------------------------------
         # Calc total annual capex repayments for pv in this scenario
         # --------------------------------------------------------
-        self.pv_cap_id = self.parameters['pv_cap_id']
         if not self.pv_exists:
             self.pv_capex_repayment = 0
         else:
+            self.pv_cap_id = self.parameters['pv_cap_id']
             # Calculate pv capex
             # ------------------
             # PV capex includes inverter replacement if amortization period > inverter lifetime

@@ -40,8 +40,11 @@ class Study:
         self.solar_skiprows = solar_skiprows
 
         print("study.py/__init__", "common_property_load_profile", study_parameters['common_property_load_profile'])
-        print("study.py/__init__", "shared_solar_profile", study_parameters['central_solar_profile'])
-        print("study.py/__init__", "shared_solar_profile", study_parameters['common_property_solar_profile'])
+        # Add cp or central system if they exists
+        if 'central_solar_profile' in study_parameters:
+            print("study.py/__init__", "shared_solar_profile", study_parameters['central_solar_profile'])
+        if 'common_property_solar_profile' in study_parameters:
+            print("study.py/__init__", "shared_solar_profile", study_parameters['common_property_solar_profile'])
 
 
         # reference files
@@ -146,14 +149,18 @@ class Study:
         # --------------
         #  Locate pv data
         # --------------
+        # This made conditional to avoid false error for 'bau' or 'en' arrangements with no pv
         self.pv_path = pv_path
-        if os.path.isfile(self.pv_path):
-            self.pv_exists = True
+        if self.study_parameters['arrangement'] not in ['en', 'bau']:
+            if os.path.isfile(self.pv_path):
+                self.pv_exists = True
+            else:
+                self.pv_exists = False
+                raise Exception("PV Data not found: "+self.pv_path)
+                logging.info('************Missing PV Profile ***************')
+                sys.exit("Missing PV data")
         else:
             self.pv_exists = False
-            raise Exception("PV Data not found: "+self.pv_path)
-            logging.info('************Missing PV Profile ***************')
-            sys.exit("Missing PV data")
        
         # --------------------------------------
         #  read capex costs into reference tables

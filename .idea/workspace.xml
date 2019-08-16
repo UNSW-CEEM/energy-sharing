@@ -1,50 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1ea7e589-91be-4b54-8c0c-7b170d840f85" name="Default" comment="Reads MOST parameters from study_csv and runs luke script">
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/ceem_ui_default_customer_results.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/ceem_ui_default_results.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/ceem_ui_default_results_std_dev.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/scenarios/ceem_ui_default_163.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default_customer_results.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default_results.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default_results_std_dev.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ww1/inputs/study_C_bldg2.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ww1/inputs/study_C_bldg2_0.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ww1/inputs/study_C_bldg2_100.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ww1/inputs/study_C_bldg2_163.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ww1/outputs/C_bldg2_results_LEGACY.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ww1/outputs/study_C_bldg2_163/saved_tariffs/static_export_tariffs.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ww1/outputs/study_C_bldg2_163/saved_tariffs/static_import_tariffs.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ww1/outputs/study_C_bldg2_163/saved_tariffs/static_solar_import_tariffs.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ww1/outputs/study_C_bldg2_163/scenarios/study_C_bldg2_163_163.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/data/shared/load/C_building_profile_kWh_POS.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/data/shared/load/load_profiles_mike.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/data/shared/solar/C_max_pv.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/data/shared/solar/solar_profiles_mike.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/mike_model/convert_profiles.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/mike_model/mike_notes.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/mike_params_null.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/mike_runner2.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/morePVs2.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Flask/scratch - solar tariffs.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="1ea7e589-91be-4b54-8c0c-7b170d840f85" name="Default" comment="Script now running from morePVs2 but issues with cp, folder_routes and solar tariffs unresolved">
+      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/scenarios/ceem_ui_default_000.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ww1/outputs/C_bldg2_customer_results.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flask/application/folder_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/folder_routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/inputs/study_ceem_ui_default.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/inputs/study_ceem_ui_default.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/ceem_ui_default_customer_results.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/ceem_ui_default_customer_results.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/ceem_ui_default_results.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/ceem_ui_default_results.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/ceem_ui_default_results_std_dev.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/ceem_ui_default_results_std_dev.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/saved_tariffs/static_export_tariffs.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/saved_tariffs/static_export_tariffs.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/saved_tariffs/static_import_tariffs.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/saved_tariffs/static_import_tariffs.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/saved_tariffs/static_solar_import_tariffs.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/saved_tariffs/static_solar_import_tariffs.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/scenarios/ceem_ui_default_001.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/scenarios/ceem_ui_default_001.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/mike_model/customer.py" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/mike_model/customer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/mike_model/morePVs2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/scenarios/ceem_ui_default_163.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/data/mike/studies/ceem_ui/outputs/ceem_ui_default/scenarios/ceem_ui_default_163.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/mike_model/mike_notes.md" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/mike_model/mike_notes.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/mike_model/network.py" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/mike_model/network.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Flask/application/modelling/mike_model/new_sim.py" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/mike_model/new_sim.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/mike_model/pv.py" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/mike_model/pv.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Flask/application/modelling/mike_model/scenario.py" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/mike_model/scenario.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Flask/application/modelling/mike_model/study.py" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/mike_model/study.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/mike_model/tariff.py" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/mike_model/tariff.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flask/application/modelling/mike_model/tariff_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/mike_model/tariff_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Flask/application/modelling/ui_interfaces/mike.py" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/application/modelling/ui_interfaces/mike.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flask/mike_runner2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Flask/mike_runner.py" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/mike_runner.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Flask/mike_runner2.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Flask/morePVs2.py" beforeDir="false" afterPath="$PROJECT_DIR$/Flask/morePVs_reloaded.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -140,49 +117,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.mike_runner2">
-    <configuration name="mike_runner (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="energy-sharing" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Flask" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Flask/mike_runner.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="mike_runner" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="energy-sharing" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Flask" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="mike_runner" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="true" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Python.morePVs_reloaded">
     <configuration name="mike_runner2" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="energy-sharing" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -195,7 +130,49 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\Users\z5044992\Documents\python\energy-sharing\Flask\morePVs2.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\z5044992\Documents\python\energy-sharing\Flask\morePVs_reloaded.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="morePVs2" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="energy-sharing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Flask" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="C:\Users\z5044992\Documents\python\energy-sharing\Flask\morePVs_reloaded.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="morePVs_reloaded" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="energy-sharing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Flask" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Flask/morePVs_reloaded.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -225,12 +202,34 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="study" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="energy-sharing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Flask/application/modelling/mike_model" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Flask/application/modelling/mike_model/study.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.morePVs_reloaded" />
+        <item itemvalue="Python.morePVs2" />
+        <item itemvalue="Python.study" />
         <item itemvalue="Python.mike_runner2" />
         <item itemvalue="Python.scenario" />
-        <item itemvalue="Python.mike_runner (1)" />
-        <item itemvalue="Python.mike_runner" />
       </list>
     </recent_temporary>
   </component>
@@ -244,13 +243,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1539567518291</updated>
-    </task>
-    <task id="LOCAL-00133" summary="Deleting output files.">
-      <created>1548115269066</created>
-      <option name="number" value="00133" />
-      <option name="presentableId" value="LOCAL-00133" />
-      <option name="project" value="LOCAL" />
-      <updated>1548115269066</updated>
     </task>
     <task id="LOCAL-00134" summary="Added a simple save config to csv system.">
       <created>1548115286161</created>
@@ -588,7 +580,14 @@
       <option name="project" value="LOCAL" />
       <updated>1565771915091</updated>
     </task>
-    <option name="localTasksCounter" value="182" />
+    <task id="LOCAL-00182" summary="Script now running from morePVs2 but issues with cp, folder_routes and solar tariffs unresolved">
+      <created>1565916234682</created>
+      <option name="number" value="00182" />
+      <option name="presentableId" value="LOCAL-00182" />
+      <option name="project" value="LOCAL" />
+      <updated>1565916234683</updated>
+    </task>
+    <option name="localTasksCounter" value="183" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -613,7 +612,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Parsing some results from the Mike model. TPB added." />
     <MESSAGE value="Fixed up a bug with the battery not using floats." />
     <MESSAGE value="Deleting excess results." />
     <MESSAGE value="Added a file upload component." />
@@ -638,40 +636,46 @@
     <MESSAGE value="Model Selection small refactor." />
     <MESSAGE value="minor changes." />
     <MESSAGE value="Reads MOST parameters from study_csv and runs luke script" />
-    <option name="LAST_COMMIT_MESSAGE" value="Reads MOST parameters from study_csv and runs luke script" />
+    <MESSAGE value="Script now running from morePVs2 but issues with cp, folder_routes and solar tariffs unresolved" />
+    <option name="LAST_COMMIT_MESSAGE" value="Script now running from morePVs2 but issues with cp, folder_routes and solar tariffs unresolved" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Flask/mike_runner.py</url>
-          <line>11</line>
+          <line>12</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Flask/application/modelling/mike_model/tariff.py</url>
-          <line>144</line>
-          <option name="timeStamp" value="38" />
+          <url>file://$PROJECT_DIR$/Flask/application/modelling/ui_interfaces/mike.py</url>
+          <line>237</line>
+          <option name="timeStamp" value="60" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Flask/application/modelling/mike_model/tariff.py</url>
-          <line>125</line>
-          <option name="timeStamp" value="39" />
+          <url>file://$PROJECT_DIR$/Flask/application/modelling/mike_model/study.py</url>
+          <line>416</line>
+          <option name="timeStamp" value="73" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Flask/application/modelling/mike_model/tariff.py</url>
-          <line>10</line>
-          <option name="timeStamp" value="41" />
+          <url>file://$PROJECT_DIR$/Flask/application/modelling/mike_model/network.py</url>
+          <line>374</line>
+          <option name="timeStamp" value="74" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Flask/application/modelling/mike_model/tariff.py</url>
-          <line>52</line>
-          <option name="timeStamp" value="42" />
+          <url>file://$PROJECT_DIR$/Flask/application/modelling/mike_model/network.py</url>
+          <line>371</line>
+          <option name="timeStamp" value="75" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Flask/application/modelling/mike_model/tariff.py</url>
-          <line>59</line>
-          <option name="timeStamp" value="43" />
+          <url>file://$PROJECT_DIR$/Flask/application/modelling/mike_model/network.py</url>
+          <line>372</line>
+          <option name="timeStamp" value="76" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Flask/morePVs_reloaded.py</url>
+          <line>172</line>
+          <option name="timeStamp" value="77" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

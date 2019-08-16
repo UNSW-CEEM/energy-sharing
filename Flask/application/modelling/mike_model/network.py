@@ -154,8 +154,9 @@ class Network(Customer):
             # Dividing by the total network load (to find fraction of network load used)
             # If there's no data, filling in 1/ num_residents
             # Then multiplying pv by that fraction. 
-            
-            network_load_fractions = self.nl_profile.to_df().div(self.nl_profile.get_aggregate_data(), axis=0).fillna(1 / len(self.study.get_load_profiles()))
+            # Mike - here should be number of residents + cp
+            network_load_fractions = self.nl_profile.to_df().div(self.nl_profile.get_aggregate_data(), axis=0).fillna(1 / (len(self.study.get_participant_names()) + 1))
+            #network_load_fractions = self.nl_profile.to_df().div(self.nl_profile.get_aggregate_data(), axis=0).fillna(1 / len(self.study.get_load_profiles()))
             self.pv.multiply_by_timeseries('total', network_load_fractions)
 
         elif any(word in scenario.arrangement for word in ['btm_s_u', 'btm_p_u']):
@@ -166,7 +167,9 @@ class Network(Customer):
             self.pv.rename_system(system_name, 'total')
             # Get units only
             load_units_only = self.nl_profile.to_df().copy().drop('cp', axis=1)
-            load_fractions = load_units_only.div(load_units_only.sum(axis=1), axis=0).fillna(1 / len(self.study.get_load_profiles()))
+            # Mike - here should be number of residents only (not cp)
+            load_fractions = load_units_only.div(load_units_only.sum(axis=1), axis=0).fillna(1 / len(self.study.get_participant_names()))
+            #load_fractions = load_units_only.div(load_units_only.sum(axis=1), axis=0).fillna(1 / len(self.study.get_load_profiles()))
             self.pv.multiply_by_timeseries('total', load_fractions)
             if('cp' in self.pv.get_system_names()):
                 self.pv.scale_system('cp', 0)
@@ -189,7 +192,8 @@ class Network(Customer):
 
         # Initialise all residents with their allocated PV generation
         # -----------------------------------------------------------
-        for c in self.study.get_participant_names():
+        #todo MR!! Sort this - to cp or not to cp
+        for c in self.study.get_participant_names() :  # Mike - added cp here then took it away again
             self.resident[c].initialise_customer_pv(np.array(self.pv.get_data(self.study.get_solar_profile(c))).astype(np.float64))
         self.initialise_customer_pv(np.array(self.pv.get_data('central')).astype(np.float64))
 
@@ -355,7 +359,8 @@ class Network(Customer):
         """Calculate all internal energy flows for all timesteps (no storage or dm)."""
 
         # Calculate flows for each resident and cumulative values for ENO
-        for c in self.study.get_participant_names():
+        #todo MR!! Sort this - to cp or not to cp
+        for c in self.study.get_participant_names():  # Mike - added cp here then took it away again + ['cp']
             self.resident[c].calc_static_energy()
             # Cumulative load and generation are what the "ENO" presents to the retailer:
             self.cum_resident_imports += self.resident[c].imports
@@ -382,7 +387,7 @@ class Network(Customer):
         # ---------------------------------------------------------------
         # Calculate flows for each resident and cumulative values for ENO
         # ---------------------------------------------------------------
-        for c in self.study.get_participant_names():
+        for c in self.study.get_participant_names() + ['cp']:  # Mike - added cp
             # Calc flows (inc battery dispatch) for each resident
             # ---------------------------------------------------
             self.resident[c].calc_dynamic_energy(step)
@@ -488,11 +493,11 @@ class Network(Customer):
         elif 'btm_s_c' in scenario.arrangement:
             # For btm_s_c, apportion capex costs equally between units and cp.
             # (Not ideal - needs more sophisticated analysis of practical btm_s arrangements)
-            for c in self.study.get_participant_names():
-                self.resident[c].pv_capex_repayment = scenario.pv_capex_repayment / len(self.study.get_participant_names())
-                self.resident[c].en_capex_repayment = scenario.en_capex_repayment / len(self.study.get_participant_names())
-                self.resident[c].en_opex = scenario.en_opex / len(self.study.get_participant_names())
-                self.resident[c].bat_capex_repayment += central_bat_capex_repayment / len(self.study.get_participant_names())
+            for c in self.study.get_participant_names() + ['cp']:  # Mike - added cp here and `+1` in next 4 lines
+                self.resident[c].pv_capex_repayment = scenario.pv_capex_repayment / (len(self.study.get_participant_names()) +1)
+                self.resident[c].en_capex_repayment = scenario.en_capex_repayment / (len(self.study.get_participant_names()) +1)
+                self.resident[c].en_opex = scenario.en_opex / (len(self.study.get_participant_names()) +1)
+                self.resident[c].bat_capex_repayment += central_bat_capex_repayment / (len(self.study.get_participant_names()) +1)
 
         elif 'btm_s_u' in scenario.arrangement:
             # For btm_s_u, apportion capex costs equally between units only
@@ -521,7 +526,7 @@ class Network(Customer):
             # Building import is sum of customer imports
             self.total_building_export = 0
             self.total_import = 0
-            for c in self.study.get_participant_names():
+            for c in self.study.get_participant_names() +['cp']:  # Mike - added cp here
                 self.total_building_export += self.resident[c].exports.sum()
                 self.total_import += self.resident[c].imports.sum()
         elif 'en' in scenario.arrangement:
@@ -559,7 +564,7 @@ class Network(Customer):
         # Calculate coincidence (ie overlap of load and generation profiles accounting for battery losses)
         # ...for individual or btm PV:
         if self.pv_exists:
-            for c in self.study.get_participant_names():
+            for c in self.study.get_participant_names() +['cp']:  # Mike - added cp
                 if self.resident[c].has_battery:
                     self.resident[c].coincidence = np.minimum(self.resident[c].load,
                                                               self.resident[c].generation +
