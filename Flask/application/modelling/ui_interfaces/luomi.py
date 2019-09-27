@@ -84,14 +84,15 @@ class LuomiWrapper:
     def load_central_services(self, ui_inputs):
         key = "central_services"
         if key in ui_inputs:
-            print(ui_inputs[key])
+            # print(ui_inputs[key])
             self.ui_central_battery.load(ui_inputs[key])
 
     def load_tariffs(self, ui_inputs):
         # key = "model_tariffs"
         # if key in ui_inputs:
         #     self.ui_tariffs.load(ui_inputs[key])
-        self.ui_tariffs = ui_inputs['tariffs'] #This just grabs the new tariffs object from the ui inputs
+        self.ui_tariffs = ui_inputs['tariffs']  # This just grabs the new tariffs object from the ui inputs
+        # print('\n\n\n', self.ui_tariffs, '\n\n\n')
 
     def load_participants(self, ui_inputs):
         key = "model_participants"
@@ -103,7 +104,6 @@ class LuomiWrapper:
         if key in ui_inputs:
             start, end = self.find_time_periods(ui_inputs[key])
             self.time_periods = util.generate_dates_in_range(start, end, 30)
-
 
     def create_objects(self):
     
@@ -126,9 +126,8 @@ class LuomiWrapper:
 
         self.model_tariffs = Luomi_Tariffs(self.ui_tariffs)
         
-        print("parameters.py/create_luomi_objects","Made LUOMI Objects without error")
+        print("parameters.py/create_luomi_objects", "Made LUOMI Objects without error")
 
-    
     def run(self, status):
         info_tag = ""
         # print("RUN_LUOMI_TIME_PERIODS", self.time_periods)
@@ -140,7 +139,6 @@ class LuomiWrapper:
         parsed_results = self.ui_results_parser.luomi_temp_parser(info_tag)
         
         return parsed_results
-
 
     # Might move this later.
     def find_time_periods(self, frontend_data):

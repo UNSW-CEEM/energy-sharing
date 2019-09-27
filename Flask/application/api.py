@@ -250,7 +250,7 @@ def test_run_sim(params):
     elif model == 'mike':
         wrapper = MikeWrapper()
     else:
-        raise Exception("Model was neither mike nor luomi: "+ str(model))
+        raise Exception("Model was neither mike nor luomi: " + str(model))
 
     wrapper.load(params)
     wrapper.create_objects()
@@ -258,10 +258,9 @@ def test_run_sim(params):
 
     print("api.test_run_sim()", "Model Results", json.dumps(results, indent=1))
 
-    emit('status_channel',{'data':{'status':'finished'}})
+    emit('status_channel', {'data': {'status': 'finished'}})
     emit('chart_results_channel', {"data": results})
     status_callback("Modelling Complete")
-
 
 
 def status_callback(message):
@@ -287,9 +286,6 @@ def status_callback(message):
             }
         )
        
-    
-    
-
 
 if __name__ == 'main':
     socketio.run(app, debug=True)

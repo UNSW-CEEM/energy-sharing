@@ -3,11 +3,12 @@ import pandas as pd
 import datetime
 import io
 
+
 class Tariffs():
 
     def __init__(self, tariff_config_dict):
         self.config = tariff_config_dict
-        print("What you're looking for",self.config['retail']['daily_charge'])
+        print("What you're looking for", self.config['retail']['daily_charge'])
     
     def get_variable_retail_tariff(self, date_time, retail_tariff_type):
         # Get data from df
@@ -18,14 +19,14 @@ class Tariffs():
         block_1_charge = float(self.config['retail']['block_1_tariff'])
         block_2_charge = float(self.config['retail']['block_2_tariff'])
         
-        peak_start_time	= float(self.config['tou_times'][1])
+        peak_start_time = float(self.config['tou_times'][1])
         peak_end_time = float(self.config['tou_times'][2])
-        peak_start_time_2 = float(self.config['tou_times'][1]) #Making these the same - just going to have one peak for the moment but leaving the option for 2. 
-        peak_end_time_2	= float(self.config['tou_times'][2])
-        shoulder_start_time	= float(self.config['tou_times'][0])
+        peak_start_time_2 = float(self.config['tou_times'][1])  # Making these the same - just going to have one peak for the moment but leaving the option for 2.
+        peak_end_time_2 = float(self.config['tou_times'][2])
+        shoulder_start_time = float(self.config['tou_times'][0])
         shoulder_end_time = float(self.config['tou_times'][1])
         shoulder_start_time_2 = float(self.config['tou_times'][2])
-        shoulder_end_time_2	= float(self.config['tou_times'][3])
+        shoulder_end_time_2 = float(self.config['tou_times'][3])
         block_1_volume = float(self.config['retail']['block_1_volume'])
         block_2_volume = float(self.config['retail']['block_2_volume'])
         

@@ -112,9 +112,9 @@
                 </div>
                 <div class="container-content">
                     <div class="tariffs">
-                        <!-- <div class="input">
+                        <div class="input">
                             Energy <input v-model="input_data.tariffs.local_solar.energy"/> <span class="units">($/kWh)</span>
-                        </div> -->
+                        </div>
                         <div class="input">
                             Retail <input v-model="input_data.tariffs.local_solar.retail"/> <span class="units">($/kWh)</span>
                         </div>
