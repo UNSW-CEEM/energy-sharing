@@ -110,10 +110,11 @@ def simulate(time_periods, mynetwork, my_tariffs, results, status_callback=None)
                 else:
                     variable_tariff = offpeak_charge
                 # Apply the tariff
-                results.set_participant_variable_charge(time, p.get_id(),variable_tariff * external_grid_import )
+                results.set_participant_variable_charge(time, p.get_id(),variable_tariff * external_grid_import)
 
             # Total bill
-
+            participant_duos_payments = results.get_participant_duos_payments(time, p.get_id())
+            participant_tuos_payments = results.get_participant_tuos_payments(time, p.get_id())
             participant_variable_charge = results.get_participant_variable_charge(time, p.get_id())
             local_solar_import_charge = results.get_local_solar_import_charge(time, p.get_id())
             central_batt_import_charge = results.get_central_batt_import_charge(time, p.get_id())
@@ -123,7 +124,7 @@ def simulate(time_periods, mynetwork, my_tariffs, results, status_callback=None)
             fixed_charge = results.get_fixed_charge(time, p.get_id())
 
             # Add charges and subtract revenue for total bill
-            total_bill = participant_variable_charge + local_solar_import_charge + central_batt_import_charge + fixed_charge - local_solar_sales_revenue - central_batt_solar_sales_revenue - export_to_grid_solar_sales_revenue 
+            total_bill = participant_variable_charge + participant_duos_payments + participant_tuos_payments + local_solar_import_charge + central_batt_import_charge + fixed_charge - local_solar_sales_revenue - central_batt_solar_sales_revenue - export_to_grid_solar_sales_revenue 
             results.set_total_participant_bill(time, p.get_id(), total_bill)
 
     
@@ -384,6 +385,7 @@ def simulate(time_periods, mynetwork, my_tariffs, results, status_callback=None)
         previous_month = time_periods[0].month
 
         for time in time_periods:
+            
             # Update callback status
             if status_callback:
                 percent_finished += single_step_percent
@@ -440,6 +442,8 @@ def simulate(time_periods, mynetwork, my_tariffs, results, status_callback=None)
                 else:
                     variable_tariff = offpeak_charge
                 # Apply the tariff 
+                # print("LUKE NUOS", variable_tariff, external_grid_import)
+                # print("LUKE NUOS offpeak, shoulder and peak charges", offpeak_charge, shoulder_charge, peak_charge)
                 results.set_participant_nuos_payments(time, p.get_id(), variable_tariff * external_grid_import)
             
             # Demand tariff includes TOU component which is handled above. In addition, the demand component is calculated for each participant
@@ -504,6 +508,8 @@ def simulate(time_periods, mynetwork, my_tariffs, results, status_callback=None)
         results.set_retailer_grid_import_revenue_fixed(time, total_fixed)
         results.set_retailer_grid_import_revenue_variable(time, total_variable)
         results.set_retailer_local_solar_import_revenue(time, total_local_solar)
+        # print("LUKE RETAIL CENTRAL BATTERY 'income'", my_tariffs.get_retail_income_on_central_batt_import(time))
+        # print("LUKE RETAIL CENTRAL BATTERY 'gross participant central import'", gross_participant_central_battery_import)
         results.set_retailer_central_battery_import_revenue(time, my_tariffs.get_retail_income_on_central_batt_import(time) * gross_participant_central_battery_import)
         total_retailer_revenue = results.get_retailer_grid_import_revenue_fixed(time) + results.get_retailer_grid_import_revenue_variable(time) + results.get_retailer_local_solar_import_revenue(time) + results.get_retailer_central_battery_import_revenue(time)
         results.set_retailer_total_revenue(time, total_retailer_revenue)

@@ -45,7 +45,7 @@ class Tariffs():
         """
             The amount which the Participant pays for local solar they consume.
         """
-        local_solar_import_tariff = float(self.config['local_solar']['energy']) + float(self.config['local_solar']['retail']) + float(self.config['local_solar']['duos'])
+        local_solar_import_tariff = float(self.config['local_solar']['energy']) + float(self.config['local_solar']['retail']) + float(self.config['local_solar']['duos']) + float(self.config['local_solar']['tuos'])
         return local_solar_import_tariff
     
 
@@ -64,7 +64,15 @@ class Tariffs():
     def get_central_batt_buy_tariff(self,date_time):
         """This is the tariff paid by the participant to the battery when consuming battery export electricity."""
         """Input in UI"""
-        participant_central_battery_import_tariff = float(self.config['central_battery']['energy']) + float(self.config['central_battery']['retail']) + float(self.config['central_battery']['duos']) + float(self.config['central_battery']['profit'])
+        participant_central_battery_import_tariff = float(self.config['central_battery']['energy']) + float(self.config['central_battery']['retail']) + float(self.config['central_battery']['duos']) + float(self.config['central_battery']['tuos']) + float(self.config['central_battery']['nuos']) + float(self.config['central_battery']['profit'])
+        # print(self.config['central_battery'])
+        # print("energy", self.config['central_battery']['energy'])
+        # print("retail", self.config['central_battery']['retail'])
+        # print("duos", self.config['central_battery']['duos'])
+        # print("tuos", self.config['central_battery']['tuos'])
+        # print("nuos", self.config['central_battery']['nuos'])
+        # print("profit", self.config['central_battery']['profit'])
+        
         # print(participant_central_battery_import_tariff)
         return participant_central_battery_import_tariff
 

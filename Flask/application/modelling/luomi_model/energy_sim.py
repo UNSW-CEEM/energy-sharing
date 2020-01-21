@@ -89,13 +89,15 @@ def simulate(time_periods, mynetwork, my_tariffs, results, status_callback=None)
 
                 # Allocate battery export when there is battery export and all solar has been used by this participant
                 if battery_allocation > 0 and reject_solar <= 0 :
+                    print("SUP I got some BATTERY OPERATION going right now.")
                     participant_net_export = participants_list_sorted.loc[p,'net_export']
                     participant_central_batt_import = min(abs(battery_allocation), abs(participant_net_export) - abs(local_solar_import))
                     results.set_participant_central_batt_import(time, p, participant_central_batt_import)
                     available_batt -= participant_central_batt_import
                     battery_allocation = float(available_batt) / float(num_remaining_participants) if num_remaining_participants > 0 else 0
-
-                    
+                # else:
+                #     print('Battery not operating', battery_allocation, reject_solar)
+                
         # Save any solar left over after the allocation process to df_network_energy_flows
         results.set_unallocated_local_solar(time, available_solar)
 
